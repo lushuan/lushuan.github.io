@@ -1,23 +1,941 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
 
-{% block title %}{{ config.title }}{% if theme.index_with_subtitle and config.subtitle %} - {{config.subtitle }}{% endif %}{% endblock %}
 
-{% block page_class %}
-  {% if is_home() %} page-home {% endif %}
-{% endblock %}
 
-{% block content %}
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://example.com/"/>
+
+
+
+
+
+  <title>Hexo</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left 
+   page-home 
+ ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
   <section id="posts" class="posts-expand">
-    {% for post in page.posts %}
-      {{ post_template.render(post, true) }}
-    {% endfor %}
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/06/MySQL/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/05/06/MySQL/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-05-06T11:11:56+08:00">
+                2022-05-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>[TOC]</p>
+<h1 id="数据表的基本操作"><a href="#数据表的基本操作" class="headerlink" title="数据表的基本操作"></a>数据表的基本操作</h1><h1 id="数据类型和运算符"><a href="#数据类型和运算符" class="headerlink" title="数据类型和运算符"></a>数据类型和运算符</h1><h1 id="Mysql函数"><a href="#Mysql函数" class="headerlink" title="Mysql函数"></a>Mysql函数</h1><h2 id="数学函数"><a href="#数学函数" class="headerlink" title="数学函数"></a>数学函数</h2><ul>
+<li>abs(x) 绝对值</li>
+<li>pi() 圆周率</li>
+<li>sort(x) 平方根</li>
+<li>mod(x,y) 求余</li>
+<li>celil(x) celiling(x) floor(x) 获取整数函数</li>
+<li>rand() rand(x) 获取随机函数</li>
+<li>round(x) round(x,y) truncate(x,y) 四舍五入保留y位小数</li>
+<li>sign(x) 符号函数</li>
+<li>pow(x,y) power(x,y)和degree(x) 幂运算</li>
+<li>exp(x) 以e为底的x次方</li>
+<li>log(x) 和log10(x) 对数运算</li>
+<li>radlans(x)和degrees(x) 角度和弧度相互转换</li>
+<li>sin(x) asin(x) 正弦函数和反正弦函数</li>
+<li>cos(x) acos(x) 余弦函数和反余弦函数</li>
+<li>tan(x) atan(x) 正切函数和反正切函数<h2 id="字符串函数"><a href="#字符串函数" class="headerlink" title="字符串函数"></a>字符串函数</h2></li>
+<li>concat(s1,s2,s3,…sn) concat_ws(x,s1,s2,s3,..sn) 合并字符串函数，x为指定分隔符</li>
+<li>insert(s1,x,len,s2) 替换字符串函数</li>
+<li>upper(s) lower(s) 大小写转换</li>
+<li>left(s,n) right(s,n )获取指定长度的字符串函数</li>
+<li>lpad(s1,len,s2) rpad(s1,len,s2) 填充字符串的函数</li>
+<li>ltrim(s) rtrim(s) trim(s) 删除空格函数</li>
+<li>trim(s1 from s) 删除指定字符串的函数</li>
+<li>repeat(s,n) 重复生成字符串的函数</li>
+<li>space(n) 空格函数</li>
+<li>replace(s,s1,s2) 替换函数</li>
+<li>strcmp(s1,s2) 比较字符串大小函数</li>
+<li>substring(s,n,len) 获取子串函数</li>
+<li>reverse(s) 逆序字符串</li>
+</ul>
+<h2 id="日期和时间函数"><a href="#日期和时间函数" class="headerlink" title="日期和时间函数"></a>日期和时间函数</h2><ul>
+<li>curdate() current_date() curtime() current_time() current_timestamp() localtime() now() sysdate() 当前日期的函数和当前时间的函数</li>
+<li>unix_timestamp() unix时间戳函数</li>
+<li>utc_date() utc_time() 获取utc日期的函数和utc时间的函数</li>
+<li>month(date) monthname(date)获取月份的函数，数值和英文</li>
+<li>获取星期的函数dayname(date) dayofweek(date) weekday(date) dayofweek和weekday索引不同</li>
+<li>dayofyear(date) dayofmonth(date) 获取天数的函数</li>
+<li>year() quarter() minute() second()</li>
+<li>extract(type from date) </li>
+<li>time_to_sec(s) sec_to_time(n) 时间到秒的转换和秒到时间的转换</li>
+<li>date_add(date,interval expr type) adddate(date,interval expr type) 例如：select date_add(now(),interval 1 day),adddate(now(),interval 1 day);<br>type 类型  <ul>
+<li>MICROSECOND</li>
+<li>SECOND</li>
+<li>MINUTE</li>
+<li>HOUR</li>
+<li>DAY</li>
+<li>WEEK</li>
+<li>MONTH</li>
+<li>QUARTER</li>
+<li>YEAR</li>
+<li>SECOND_MICROSECOND</li>
+<li>MINUTE_SECOND</li>
+<li>HOUR_MICROSECOND</li>
+<li>HOUR_SECOND</li>
+<li>HOUR_MINUTE</li>
+<li>DAY_MICROSECOND</li>
+<li>DAY_SECOND</li>
+<li>DAY_MINUTE</li>
+<li>DAY_HOUR</li>
+<li>YEAR_MONTH</li>
+</ul>
+</li>
+<li>date_format(date,format) 日期和时间格式化<br>formate 格式   <ul>
+<li>%a 工作日的缩写</li>
+<li>%b 月份的缩写</li>
+<li>%c 月份，数字形式</li>
+<li>%D 带有英语后缀的该月日期</li>
+<li>%d 该月日期(00..31)</li>
+<li>%e 该月日期(0..31)</li>
+<li>%f 微秒</li>
+<li>%H 2位数表示24小时</li>
+<li>%h 2位数表示12小时</li>
+<li>%i 分钟，数字形式</li>
+<li>%j 一天中的天数</li>
+<li>%k 以24小时表示时间</li>
+<li>%l 以12小时表示时间</li>
+<li>%M 月份名称，英文</li>
+<li>%m 月份名称，数字</li>
+<li>%p 上午还是下午</li>
+<li>%W 工作日名称</li>
+<li>%w 一周中的每日</li>
+<li>%Y 四位数表示年份</li>
+<li>%y 两位数表示年份</li>
+<li>%% %字符串<h2 id="条件判断函数"><a href="#条件判断函数" class="headerlink" title="条件判断函数"></a>条件判断函数</h2></li>
+</ul>
+</li>
+<li>if(expr,v1,v2) 类似三目运算符,如if(1&gt;2,’false’,’true’)</li>
+<li>ifnull(v1,v2) v1非null则返回v1否则返回值v2</li>
+<li>case函数 case expr when v1 then r1 [when v2 then r2] [else rn] end<h2 id="系统信息函数"><a href="#系统信息函数" class="headerlink" title="系统信息函数"></a>系统信息函数</h2></li>
+<li>version() 查看mysql 版本号</li>
+<li>datebase() schema() 数据库名称</li>
+<li>user() current_user() system_user() session_user()</li>
+<li>charset(str) 获取字符串的字符集<h2 id="加-解密函数"><a href="#加-解密函数" class="headerlink" title="加/解密函数"></a>加/解密函数</h2></li>
+<li>password(str) </li>
+<li>md5(str) </li>
+<li>encode(str,pswd_str)</li>
+<li>decode(crpt_str,pswd_str)<h2 id="其它函数"><a href="#其它函数" class="headerlink" title="其它函数"></a>其它函数</h2></li>
+<li>cast(x as type) convert(x,type) 字符类型转换函数<br>type 值有  <ul>
+<li>BINARY</li>
+<li>CHAR(N)</li>
+<li>DATE</li>
+<li>TIME</li>
+<li>DATETIME</li>
+<li>DECIMAL</li>
+<li>SIGNED</li>
+<li>UNSIGNED<br>例如<br><code>select CAST(&quot;22&quot; AS SIGNED),convert(&quot;22&quot;, SIGNED),convert(&quot;2021-01-21 23:12:11&quot;,time); </code></li>
+</ul>
+</li>
+<li>inet_aton() inet_ntoa() ip地址和数字相互转换函数<h1 id="查询数据"><a href="#查询数据" class="headerlink" title="查询数据"></a>查询数据</h1><h1 id="插入更新和删除数据"><a href="#插入更新和删除数据" class="headerlink" title="插入更新和删除数据"></a>插入更新和删除数据</h1><h1 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h1><h2 id="索引简介"><a href="#索引简介" class="headerlink" title="索引简介"></a>索引简介</h2>索引是一个单独、存储在磁盘上的数据结构，它们包含着对数据表里所有记录的引用指针。<br>索引的存储类型有两种  </li>
+<li>BTREE</li>
+<li>HASH<br>存储引擎MyISAM和InnoDB只支持BTREE,MEMORY/HEAP引擎支持HASH和BTREE  <h3 id="索引分类"><a href="#索引分类" class="headerlink" title="索引分类"></a>索引分类</h3></li>
+<li>普通索引和唯一索引</li>
+<li>单列索引和组合索引</li>
+<li>全文索引</li>
+<li>空间索引<h3 id="索引设计原则"><a href="#索引设计原则" class="headerlink" title="索引设计原则"></a>索引设计原则</h3></li>
+<li>索引并非越多越好，一个表中有大量索引，不仅占用磁盘空间，而且会影响INSERT,DELETE,UPDATE等语句的性能，因为当表中的数据更改时，索引也会进行调整和更新。</li>
+<li>避免对经常更新的表进行过多的索引，并且索引中的列尽可能少。面对经常查询的字段应该创建索引，弹药避免添加不必要的字段</li>
+<li>数据量小的表最好不要使用索引，由于数据较少，查询花费的时间可能比遍历索引的时间还要短，索引可能不会产生优化效果</li>
+<li>在条件表达式中经常用到的不同值较多的列上建立索引，在不同值很少的列上不要创建索引。比如学生表中的性别“男”和“女”</li>
+<li>当唯一性是某种数据本身的特征时，指定唯一索引。使用唯一索引需要确保定义的列上的完整性，以提高查询速度。</li>
+<li>在频繁仅需排序或分组(即进行group by或order by操作)的列上建立索引，如果待排序的列上有多个，可以在这些列上建立组合索引。<h2 id="创建索引"><a href="#创建索引" class="headerlink" title="创建索引"></a>创建索引</h2><h3 id="alter-table"><a href="#alter-table" class="headerlink" title="alter table"></a>alter table</h3>alter table table_name [UNIQUE|FULLTEXT|SPATIAL] [INDEX|KEY] [index_name] (column[length],…) [ASC|DESC]<br>alter table book add index bkxxIdx ( comment(50) )<h3 id="create-Index"><a href="#create-Index" class="headerlink" title="create Index"></a>create Index</h3>CREATE [UNIQUE|FULLTEXT|SPATIAL] INDEX index_name on table_name  (col_name[length],..) [ASC|DESC]<br><code>CREATE INDEX bkxxIdx ON book(comment)</code></li>
+</ul>
+<h2 id="删除索引"><a href="#删除索引" class="headerlink" title="删除索引"></a>删除索引</h2><p><code>ALTER TABLE TABLE_NAME DROP INDEX inde_name;</code></p>
+<p><code>DROP INDEX index_name on table_name</code></p>
+<h1 id="Mysql-用户管理"><a href="#Mysql-用户管理" class="headerlink" title="Mysql 用户管理"></a>Mysql 用户管理</h1><h2 id="账户管理"><a href="#账户管理" class="headerlink" title="账户管理"></a>账户管理</h2><h3 id="登录和退出服务器"><a href="#登录和退出服务器" class="headerlink" title="登录和退出服务器"></a>登录和退出服务器</h3><p>mysql</p>
+<ul>
+<li>-h 主机名</li>
+<li>-u 用户</li>
+<li>-p 密码</li>
+<li>-P 端口</li>
+<li>数据库名，可以在命令的最后指定</li>
+<li>-e 执行sql语句<br>登录数据库实例test并执行sql语句<br><code>mysql -h 172.16.24.12 -u root -p test -e &quot;desc student&quot;</code><h3 id="新建普通用户"><a href="#新建普通用户" class="headerlink" title="新建普通用户"></a>新建普通用户</h3><h4 id="使用create-user创建"><a href="#使用create-user创建" class="headerlink" title="使用create user创建"></a>使用create user创建</h4><code>create user &#39;tom&#39;@&#39;localhost&#39; identified by &#39;mypass&#39;;</code><br>主机名定义为%则表示对所有主机开放权限  <h4 id="使用grant-语句创建用户（推荐ps-直接进行赋权）"><a href="#使用grant-语句创建用户（推荐ps-直接进行赋权）" class="headerlink" title="使用grant 语句创建用户（推荐ps 直接进行赋权）"></a>使用grant 语句创建用户（推荐ps 直接进行赋权）</h4>语法<br><code>grant privileges on db.table to user@host [identified by &#39;password&#39;]  [,user[ identified by &#39;password&#39;]] [ with grant option]</code></li>
+</ul>
+<p><code>grant select,update on *.* to &#39;testuser&#39;@&#39;localhost&#39; identified by &#39;testpwd&#39;;</code></p>
+<h3 id="删除普通用户"><a href="#删除普通用户" class="headerlink" title="删除普通用户"></a>删除普通用户</h3><h4 id="使用drop-user"><a href="#使用drop-user" class="headerlink" title="使用drop user"></a>使用drop user</h4><p><code>drop user user1 [,user2]; </code></p>
+<p><code>drop user &#39;testuser&#39;@&#39;localhost&#39;</code></p>
+<h4 id="使用delete-语句"><a href="#使用delete-语句" class="headerlink" title="使用delete 语句"></a>使用delete 语句</h4><p><code>delete from MYSQL.user where host=&#39;hostname&#39; and user =&#39;username&#39;;</code></p>
+<h3 id="root用户更改密码"><a href="#root用户更改密码" class="headerlink" title="root用户更改密码"></a>root用户更改密码</h3><h4 id="使用mysqladmin"><a href="#使用mysqladmin" class="headerlink" title="使用mysqladmin"></a>使用mysqladmin</h4><p>语法<br>mysqladmin -u username -h localhost -p password “newpassword”</p>
+<h4 id="修改mysql-user表"><a href="#修改mysql-user表" class="headerlink" title="修改mysql user表"></a>修改mysql user表</h4><h3 id="修改普通用户密码"><a href="#修改普通用户密码" class="headerlink" title="修改普通用户密码"></a>修改普通用户密码</h3><p><code>set password for &#39;user&#39;@&#39;host&#39; = password(&#39;newpassword&#39;)</code></p>
+<p>普通用户登录修改自己的密码<br>set password=password(‘newpassword’);</p>
+<h2 id="授权管理"><a href="#授权管理" class="headerlink" title="授权管理"></a>授权管理</h2><h3 id="mysql-各种权限"><a href="#mysql-各种权限" class="headerlink" title="mysql 各种权限"></a>mysql 各种权限</h3><ul>
+<li>create</li>
+<li>drop</li>
+<li>grant option</li>
+<li>reference</li>
+<li>event</li>
+<li>alter</li>
+<li>delete</li>
+<li>index</li>
+<li>insert</li>
+<li>select</li>
+<li>update</li>
+<li>create temporary tables</li>
+<li>lock tables</li>
+<li>trigger</li>
+<li>create view</li>
+<li>show view</li>
+<li>…</li>
+</ul>
+<h3 id="授权"><a href="#授权" class="headerlink" title="授权"></a>授权</h3><ul>
+<li>全局层级 grant all on *.*和revoke all on *.*只授予和撤销全局权限。</li>
+<li>数据库层级 grant all db_name.和revoke all db_name.* 只授予和撤销指定数据库权限</li>
+<li>表层级 grant all on db_name.table_name 和revoke all on db_name.table_name</li>
+<li>列层级</li>
+<li>子程序级</li>
+</ul>
+<h3 id="收回权限"><a href="#收回权限" class="headerlink" title="收回权限"></a>收回权限</h3><h4 id="方式一"><a href="#方式一" class="headerlink" title="方式一"></a>方式一</h4><p><code>revoke all privileges grant, option from &#39;user&#39;@&#39;localhost&#39; [,&#39;user&#39;@&#39;host&#39; ...]</code></p>
+<h4 id="方式二"><a href="#方式二" class="headerlink" title="方式二"></a>方式二</h4><p><code>revoke priv_type [(columns)] [,priv_type [(columns)]] ... on table1,table2 from &#39;user&#39;@&#39;host&#39;  [, &#39;user&#39;@&#39;host&#39; ...]</code>  </p>
+<p>如：<br><code>revoke update on *.* from &#39;testuser&#39;@&#39;localhost&#39;;</code></p>
+<h3 id="查看权限"><a href="#查看权限" class="headerlink" title="查看权限"></a>查看权限</h3><p>show grants for ‘user‘@’host’;</p>
+<h1 id="数据备份与恢复"><a href="#数据备份与恢复" class="headerlink" title="数据备份与恢复"></a>数据备份与恢复</h1><h2 id="数据备份"><a href="#数据备份" class="headerlink" title="数据备份"></a>数据备份</h2><h3 id="mysqldump"><a href="#mysqldump" class="headerlink" title="mysqldump"></a>mysqldump</h3><p>语法<br><code>mysqldump -u user -h host -p password dbname[tbname,[tbname],...] &gt; filename.sql</code>  </p>
+<p><strong>备份单个数据库</strong><br><code>mysqldump -u user -h host -p password dbname &gt; filename.sql</code>   </p>
+<p><strong>备份多个数据库</strong><br><code>mysqldump -u user -h host -p password --databases dbname1 dbname2 dbnameN &gt; filename.sql</code>  </p>
+<p><strong>备份所有的数据库</strong><br><code>mysqldump -u user -h host -p password --all-databases &gt; filename.sql</code></p>
+<h2 id="数据恢复"><a href="#数据恢复" class="headerlink" title="数据恢复"></a>数据恢复</h2><h3 id="mysql"><a href="#mysql" class="headerlink" title="mysql"></a>mysql</h3><p>语法<br><code>mysql -u user -p [dbname] &lt; filename.sql</code></p>
+<p>登录到服务器通过source命令<br><code>source /path/.../filename.sql</code></p>
+<h2 id="表的导出和导入"><a href="#表的导出和导入" class="headerlink" title="表的导出和导入"></a>表的导出和导入</h2><h3 id="导出"><a href="#导出" class="headerlink" title="导出"></a>导出</h3><h4 id="select导出文本文件"><a href="#select导出文本文件" class="headerlink" title="select导出文本文件"></a>select导出文本文件</h4><p>语句格式<br><code>select columnlist from table where condition into outfile &#39;filename&#39; [options]</code><br>options  选项</p>
+<ul>
+<li>FIELDS TERMINATED BY ‘value’ 设置字符分隔符号</li>
+<li>FIELDS ENCLOSE BY ‘value’ 设置字段的包围符</li>
+<li>FIELDS ESCAPED BY ‘value’ 设置如何读取和写入特殊字符串只能为单个字符，即设置转义字符，默认为’\‘</li>
+<li>LINES STARTING BY ‘VALUES’ 设置每行数据开头的字符，可以为每个或多个字符，默认情况下不使用任何字符</li>
+<li>LINES TERMINATED BY ‘VALUES’ 设置每行数据结尾的字符，可以为单个字符或多个字符，默认值为’\n’</li>
+</ul>
+<p>eg:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from test into outfile &quot;/tmp/test3.txt&quot; </span><br><span class="line">     fields </span><br><span class="line">     terminated by &#x27;,&#x27; </span><br><span class="line">     enclosed by &#x27;\&quot;&#x27; </span><br><span class="line">     escaped by &#x27;\&#x27;&#x27; </span><br><span class="line">     lines terminated by &#x27;\r\n&#x27;;</span><br><span class="line">Query OK, 2 rows affected (0.01 sec)</span><br></pre></td></tr></table></figure>
+<h4 id="mysqldump导出文本文件"><a href="#mysqldump导出文本文件" class="headerlink" title="mysqldump导出文本文件"></a>mysqldump导出文本文件</h4><p>语法格式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mysqldump  -T path -u root -p  dbname [dbname] [options]</span><br><span class="line"></span><br><span class="line">--OPTIONS 选项  </span><br><span class="line">--fields-terminated-by=value  字段分隔符  </span><br><span class="line">--fields-enclosed-by=value   字段包围符  </span><br><span class="line">--fields-optionally-enclosed-by=value  字段包围符，只能为单个字符，只能包含char和varchar等字符数据类型字段  </span><br><span class="line">--fields-escaped-by=value   控制如何写入和读取特殊字符，只能为单个字符  </span><br><span class="line">--lines-terminated-by=value 设置每行数据结尾字符  </span><br></pre></td></tr></table></figure>
+
+<h4 id="mysql-导出文本文件"><a href="#mysql-导出文本文件" class="headerlink" title="mysql 导出文本文件"></a>mysql 导出文本文件</h4><p><code>mysql -h host -u user -p --execute=&quot;sql查询语句&quot; dbname &gt; filename.txt</code><br>–vertical 将每条记录分为多行显示  </p>
+<h3 id="导入"><a href="#导入" class="headerlink" title="导入"></a>导入</h3><h4 id="使用-mysqlimport-命令导入文本文件"><a href="#使用-mysqlimport-命令导入文本文件" class="headerlink" title="使用 mysqlimport 命令导入文本文件"></a>使用 mysqlimport 命令导入文本文件</h4><p>语法格式 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mysqlimport -u root -p dbname filename.txt [OPTIONS]</span><br><span class="line"></span><br><span class="line">-- OPTIONS 选项</span><br><span class="line">-- fields-terminated-by=value  设置字段的分隔符</span><br><span class="line">-- fields-enclosed-by=value  设置字段的包围符号</span><br><span class="line">-- fields-optionally-enclosed-by=value  </span><br><span class="line">-- fields-escaped-by=value  </span><br><span class="line">-- lines-terminated-by=value 设置每行数据的结尾符号，默认&#x27;\n&#x27;</span><br><span class="line">-- ignore-lines=n  忽略数据文件的前n行</span><br></pre></td></tr></table></figure>
+
+<h1 id="Mysql日志"><a href="#Mysql日志" class="headerlink" title="Mysql日志"></a>Mysql日志</h1><h1 id="性能优化"><a href="#性能优化" class="headerlink" title="性能优化"></a>性能优化</h1><h2 id="优化查询"><a href="#优化查询" class="headerlink" title="优化查询"></a>优化查询</h2><h2 id="优化数据库结构"><a href="#优化数据库结构" class="headerlink" title="优化数据库结构"></a>优化数据库结构</h2><h2 id="优化mysql服务器"><a href="#优化mysql服务器" class="headerlink" title="优化mysql服务器"></a>优化mysql服务器</h2><h1 id="Mysql-Replication"><a href="#Mysql-Replication" class="headerlink" title="Mysql Replication"></a>Mysql Replication</h1><h1 id="Mysql-管理利器-MySQL-Utilities"><a href="#Mysql-管理利器-MySQL-Utilities" class="headerlink" title="Mysql 管理利器 MySQL Utilities"></a>Mysql 管理利器 MySQL Utilities</h1>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/06/hello-world/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/05/06/hello-world/" itemprop="url">Hello World</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-05-06T10:27:52+08:00">
+                2022-05-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
-  {% include '_partials/pagination.swig' %}
-{% endblock %}
+  
 
-{% block sidebar %}
-  {{ sidebar_template.render(false) }}
-{% endblock %}
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="" />
+          <p class="site-author-name" itemprop="name"></p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+    <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
