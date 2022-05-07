@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://lushuan.github.io/tags/index.html</loc>
+    
+    <lastmod>2022-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://lushuan.github.io/2022/05/06/hello-world/</loc>
     
     <lastmod>2022-05-07</lastmod>
@@ -21,15 +30,6 @@
   
   <url>
     <loc>https://lushuan.github.io/2022/05/07/linux/</loc>
-    
-    <lastmod>2022-05-07</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://lushuan.github.io/tags/index.html</loc>
     
     <lastmod>2022-05-07</lastmod>
     
@@ -74,6 +74,13 @@
 
   
   <url>
+    <loc>https://lushuan.github.io/tags/disk/</loc>
+    <lastmod>2022-05-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://lushuan.github.io/tags/k8s/</loc>
     <lastmod>2022-05-07</lastmod>
     <changefreq>weekly</changefreq>
@@ -87,24 +94,17 @@
     <priority>0.2</priority>
   </url>
   
-  <url>
-    <loc>https://lushuan.github.io/tags/disk/</loc>
-    <lastmod>2022-05-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
 
   
   <url>
-    <loc>https://lushuan.github.io/categories/Kubernetes/</loc>
+    <loc>https://lushuan.github.io/categories/Linux/</loc>
     <lastmod>2022-05-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://lushuan.github.io/categories/Linux/</loc>
+    <loc>https://lushuan.github.io/categories/Kubernetes/</loc>
     <lastmod>2022-05-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>

@@ -1,13 +1,13 @@
+https://lushuan.github.io/tags/index.html
 https://lushuan.github.io/2022/05/06/hello-world/
 https://lushuan.github.io/about/index.html
 https://lushuan.github.io/2022/05/07/linux/
-https://lushuan.github.io/tags/index.html
 https://lushuan.github.io/404.html
 https://lushuan.github.io/categories/index.html
 https://lushuan.github.io/2022/05/06/article/
 https://lushuan.github.io/
+https://lushuan.github.io/tags/disk/
 https://lushuan.github.io/tags/k8s/
 https://lushuan.github.io/tags/docker/
-https://lushuan.github.io/tags/disk/
-https://lushuan.github.io/categories/Kubernetes/
 https://lushuan.github.io/categories/Linux/
+https://lushuan.github.io/categories/Kubernetes/
