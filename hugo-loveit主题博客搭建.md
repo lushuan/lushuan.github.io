@@ -142,3 +142,7 @@ Disqus、Gitalk和Valine是三种常见的评论系统，它们在功能、特�
 
 ## 采坑
 1. [从Hexo迁移至Hugo以及使用LoveIt主题的踩坑记录](https://cloud.tencent.com/developer/article/1932817)
+
+## 总结
+ 借鉴[使用HUGO搭建个人博客](https://www.jianshu.com/p/4669fb3bf35a)可以将博客搭建起来，通过[hugoloveit主题官网](https://hugoloveit.com/zh-cn/theme-documentation-basics/)
+ 可以进行对主题进行个性化配置，[主题文档内容编写参考该文章](https://hugoloveit.com/zh-cn/theme-documentation-content/)
