@@ -14,7 +14,7 @@
 ### 快速操作
 查看版本：hugo version
 
-新建一篇文章： hugo new post/my-first-blog.md
+新建一篇文章,在content目录下创建一个post目录： hugo new post/my-first-blog.md
 
 生成静态文件： hugo -t even
 
@@ -124,6 +124,10 @@ Disqus、Gitalk和Valine是三种常见的评论系统，它们在功能、特�
    - 可以使用Valine Admin工具进行评论的管理和审核。
 
 总体而言，这三个评论系统都有各自的优势和适用场景。Disqus功能强大，适用于全球范围内的社交化评论需求；Gitalk简单易用，适合开发者使用；Valine轻便高效，适用于个人博客网站。选择适合自己需求的评论系统需要考虑使用成本、功能需求和用户体验等因素。
+## 域名
+1. [新网域名](https://www.xinnet.com/domain/domainQueryResult.html?prefix=xmddlu&suffix=.cn)
+2. [gitee 关闭个人购买域名入口](https://help.gitee.com/services/gitee-pages/pro/)
+
 
 ## 参考
 1. [Hugo的工作原理](https://hugo.aiaide.com/post/hugo%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/#:~:text=%E6%96%87%E7%AB%A0%E5%B0%B1%E6%98%AF%E4%BD%9C%E8%80%85%E9%9C%80%E8%A6%81%E6%92%B0%E5%86%99%E7%9A%84%E5%86%85%E5%AE%B9%2C%20%E4%BB%96%E4%BB%A5markdown%E6%A0%BC%E5%BC%8F%E7%9A%84%E6%96%87%E4%BB%B6%E5%AD%98%E6%94%BE%E5%9C%A8content%E7%9B%AE%E5%BD%95%E4%B8%8B%E9%9D%A2.%20%E6%88%91%E4%BB%AC%E6%97%A2%E5%8F%AF%E4%BB%A5%E9%80%9A%E8%BF%87%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%9A%84%E6%96%B9%E5%BC%8F%E5%88%9B%E5%BB%BA%E6%96%87%E7%AB%A0%20hugo%20new%20about.md%2C%20%E4%B9%9F%E5%8F%AF%E4%BB%A5%E9%80%9A%E8%BF%87%E6%89%8B%E5%B7%A5%E7%9A%84%E6%96%B9%E5%BC%8F%E5%9C%A8content%E5%88%9B%E5%BB%BA.%20%E9%80%9A%E5%B8%B8%E6%88%91%E4%BB%AC%E6%8A%8A%E5%8D%95%E7%8B%AC%E7%9A%84%E6%96%87%E7%AB%A0%E5%86%85%E5%AE%B9%E6%94%BE%E5%9C%A8content%E7%9B%AE%E5%BD%95%E4%B8%8B%E9%9D%A2%2C,%E5%8D%B3%3A%20%E9%A1%B5%E9%9D%A2%20%3D%20%E6%96%87%E7%AB%A0%20%2B%20%E6%A8%A1%E6%9D%BF.%20hugo%E4%BC%9A%E6%A0%B9%E6%8D%AE%E4%B8%80%E5%AE%9A%E7%9A%84%E8%A7%84%E5%88%B6%E5%8E%BB%E5%AF%BB%E6%89%BE%E6%96%87%E7%AB%A0%E5%AF%B9%E5%BA%94%E7%9A%84%E6%A8%A1%E6%9D%BF%E9%A1%B5%E9%9D%A2%2C%20%E4%BB%8E%E8%80%8C%E7%94%9F%E6%88%90%E9%A1%B5%E9%9D%A2.)
