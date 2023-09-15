@@ -46,6 +46,11 @@ hugo server -t casper -D  # -D draft: true  自动调整为 draft: false
 hugo serve --disableFastRender
 
 ```
+4. 部署至github和gitee
+```yaml
+hugo --theme=LoveIt --baseUrl="http://lu_shuan.gitee.io/hugolu/"
+
+```
 
 ### 内容文章的元信息
 ```yaml
