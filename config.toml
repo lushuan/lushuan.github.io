@@ -4,7 +4,7 @@ baseURL = "http://lu_shuan.gitee.io/hugolu/"
 theme = "LoveIt"
 
 # 网站标题
-title = "我的全新 Hugo 网站"
+title = "西门带刀"
 
 # 网站语言, 仅在这里 CN 大写 ["en", "zh-CN", "fr", "pl", ...]
 languageCode = "zh-CN"
@@ -36,7 +36,7 @@ defaultContentLanguage = "zh-cn"
 [languages]
   [languages.zh-cn]
     weight = 2
-    title = "我的全新 Hugo 网站"
+    title = "西门带刀"
     languageCode = "zh-CN"
     languageName = "简体中文"
     hasCJKLanguage = true
@@ -130,7 +130,7 @@ defaultContentLanguage = "zh-cn"
   # 网站标题, 用于 Open Graph 和 Twitter Cards
   title = "我的网站"
   # 网站描述, 用于 RSS, SEO, Open Graph 和 Twitter Cards
-  description = "这是我的全新 Hugo 网站"
+  description = "知识有两种，一种是你知道的，一种是你知道在哪里能找到的！ --塞缪尔·约翰逊"
   # 网站图片, 用于 Open Graph 和 Twitter Cards
   images = ["/logo.png"]
 
@@ -242,7 +242,7 @@ defaultContentLanguage = "zh-cn"
       #  主页显示的网站标题 (支持 HTML 格式)
       title = ""
       # 主页显示的网站副标题 (允许 HTML 格式)
-      subtitle = "这是我的全新 Hugo 网站"
+      subtitle = "知识有两种，一种是你知道的，一种是你知道在哪里能找到的！ --塞缪尔·约翰逊"
       #imageWidth= 350  # 设置图像尺寸
       #imageHeight= 350 # 设置图像尺寸
       # 是否为副标题显示打字机动画
