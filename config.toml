@@ -64,8 +64,22 @@ defaultContentLanguage = "zh-cn"
       name = "分类"
       url = "/categories/"
       title = ""
-
-
+    [[languages.zh-cn.menu.main]]
+      weight = 4
+      identifier = "about"
+      pre = ""
+      post = ""
+      name = "关于"
+      url = "/about/"
+      title = "About"
+    [[languages.zh-cn.menu.main]]
+      weight = 5
+      identifier = "friends"
+      pre = ""
+      post = ""
+      name = "友链"
+      url = "/friends/"
+      title = "friends"
 
 # 作者配置
 [author]
@@ -131,7 +145,7 @@ defaultContentLanguage = "zh-cn"
       # LOGO 的 URL
       logo = ""
       # 标题名称
-      name = "西门带刀2"
+      name = "西门带刀"
       # 你可以在名称 (允许 HTML 格式) 之前添加其他信息, 例如图标
       pre = ""
       # 你可以在名称 (允许 HTML 格式) 之后添加其他信息, 例如图标
@@ -159,6 +173,8 @@ defaultContentLanguage = "zh-cn"
 
   #  Section (所有文章) 页面配置
   [params.section]
+    # 显示最近更新文章的数量
+    lastUpdatedSize = 15
     # section 页面每页显示文章数量
     paginate = 20
     # 日期格式 (月和日)
@@ -222,7 +238,7 @@ defaultContentLanguage = "zh-cn"
       # Gravatar 邮箱，用于优先在主页显示的头像
       gravatarEmail = ""
       # 主页显示头像的 URL
-      avatarURL = "images/logo.png"
+      avatarURL = "images/avatar.png"
       #  主页显示的网站标题 (支持 HTML 格式)
       title = ""
       # 主页显示的网站副标题 (允许 HTML 格式)
