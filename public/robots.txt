@@ -61,4 +61,4 @@ Disallow: /
 User-agent: ZoominfoBot
 Disallow: /
 
-Sitemap: http://example.org/sitemap.xml
+Sitemap: http://lu_shuan.gitee.io/sitemap.xml
