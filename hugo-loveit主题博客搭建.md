@@ -1,4 +1,4 @@
-hu## 项目目录
+## 项目目录
 ```yaml
 .
 ├── config.toml     # 网站的配置信息
@@ -50,6 +50,17 @@ hugo serve --disableFastRender
 hugo --theme=LoveIt --baseUrl="http://lu_shuan.gitee.io/hugolu/"
 
 ```
+## 部署至github
+```commandline
+cd public
+git init
+git add . -A
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/lushuan/lushuan.github.io.git
+git push -u origin main
+```
+## 扩展
 
 ### 内容文章的元信息
 ```yaml
@@ -81,6 +92,8 @@ prev: /tutorials/automated-deployments  # 上一篇博客地址
 ---
 ```
 在使用hugo server -D预览网站无误后可正式发布网站到域名供大家浏览。将要发布的文章内draft改为false后执行命令
+
+
 
 ### 开发和生产环境的区别
 Current environment is "development". The "comment system", "CDN" and "fingerprint" will be disabled.
@@ -138,6 +151,7 @@ Disqus、Gitalk和Valine是三种常见的评论系统，它们在功能、特�
 7. [Hugo系列(3.3) - LoveIt主题美化与博客功能增强 · 第四章](https://lewky.cn/posts/hugo-3-3/)
 8. [【博客写作指南】创意封面设计与选择](https://zhuanlan.zhihu.com/p/652711765)
 9. [hugo 中文文档](https://www.gohugo.org/)
+10. [用Hugo搭建博客并部署到GitHub Pages](https://www.cnblogs.com/RyanXing/p/Hugo.html#2-%e9%83%a8%e7%bd%b2)
 
 
 ## 采坑
