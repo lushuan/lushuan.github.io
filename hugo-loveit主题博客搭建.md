@@ -1,4 +1,4 @@
-## 项目目录
+hu## 项目目录
 ```yaml
 .
 ├── config.toml     # 网站的配置信息
@@ -23,7 +23,6 @@
 正常启动服务后，在浏览器打开 http://localhost:1313/ 看到我们的网站。
 
 ## 文章编写与发布
-
 
 1. 构建网站
 ```yaml
@@ -138,6 +137,7 @@ Disqus、Gitalk和Valine是三种常见的评论系统，它们在功能、特�
 6. [玩遍博客网站，我整理了全套的建站技术栈](https://www.yulisay.com/d/kljqu.html)
 7. [Hugo系列(3.3) - LoveIt主题美化与博客功能增强 · 第四章](https://lewky.cn/posts/hugo-3-3/)
 8. [【博客写作指南】创意封面设计与选择](https://zhuanlan.zhihu.com/p/652711765)
+9. [hugo 中文文档](https://www.gohugo.org/)
 
 
 ## 采坑
