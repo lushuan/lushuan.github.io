@@ -1,0 +1,16 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Linux - 标签 - 西门带刀</title>
+        <link>http://localhost:1313/tags/linux/</link>
+        <description>Linux - 标签 - 西门带刀</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Fri, 15 Sep 2023 09:44:54 &#43;0800</lastBuildDate><atom:link href="http://localhost:1313/tags/linux/" rel="self" type="application/rss+xml" /><item>
+    <title>linux</title>
+    <link>http://localhost:1313/second/</link>
+    <pubDate>Fri, 15 Sep 2023 09:44:54 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/second/</guid>
+    <description><![CDATA[second linux]]></description>
+</item>
+</channel>
+</rss>

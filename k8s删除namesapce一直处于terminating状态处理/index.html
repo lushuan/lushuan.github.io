@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>K8s删除Namesapce一直处于Terminating状态处理 - 西门带刀</title><meta name="Description" content="知识有两种，一种是你知道的，一种是你知道在哪里能找到的！ --塞缪尔·约翰逊"><meta property="og:url" content="http://localhost:1313/k8s%E5%88%A0%E9%99%A4namesapce%E4%B8%80%E7%9B%B4%E5%A4%84%E4%BA%8Eterminating%E7%8A%B6%E6%80%81%E5%A4%84%E7%90%86/">
+  <meta property="og:site_name" content="西门带刀">
+  <meta property="og:title" content="K8s删除Namesapce一直处于Terminating状态处理">
+  <meta property="og:description" content="k8s namespace 无法删除记录 名字空间yaml 文件 1 2 3 4 kind: Namespace apiVersion: v1 metadata: name: kube-logging 删除卡住 1 2 $ sudo kubectl delete -f kube-logging.yaml --wait=true namespace &#34;kube-logging&#34; deleted # 长久的等待 强制删除（无效果） 1 sudo kubectl delete ns kube-logging --grace-period=0 --force 排查">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2023-05-27T12:06:37+08:00">
+    <meta property="article:modified_time" content="2024-06-26T12:06:37+08:00">
+    <meta property="article:tag" content="Kubernetes排障">
+    <meta property="og:image" content="http://localhost:1313/logo.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/logo.png">
+  <meta name="twitter:title" content="K8s删除Namesapce一直处于Terminating状态处理">
+  <meta name="twitter:description" content="k8s namespace 无法删除记录 名字空间yaml 文件 1 2 3 4 kind: Namespace apiVersion: v1 metadata: name: kube-logging 删除卡住 1 2 $ sudo kubectl delete -f kube-logging.yaml --wait=true namespace &#34;kube-logging&#34; deleted # 长久的等待 强制删除（无效果） 1 sudo kubectl delete ns kube-logging --grace-period=0 --force 排查">
+      <meta name="twitter:site" content="@xxxx">
+<meta name="application-name" content="我的网站">
+<meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://localhost:1313/k8s%E5%88%A0%E9%99%A4namesapce%E4%B8%80%E7%9B%B4%E5%A4%84%E4%BA%8Eterminating%E7%8A%B6%E6%80%81%E5%A4%84%E7%90%86/" /><link rel="prev" href="http://localhost:1313/k8s_v1.20.x%E5%88%9B%E5%BB%BApvc%E6%8A%A5%E9%94%99/" /><link rel="next" href="http://localhost:1313/dockerfile%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BC%98%E5%8C%96/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "K8s删除Namesapce一直处于Terminating状态处理",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost:1313\/k8s%E5%88%A0%E9%99%A4namesapce%E4%B8%80%E7%9B%B4%E5%A4%84%E4%BA%8Eterminating%E7%8A%B6%E6%80%81%E5%A4%84%E7%90%86\/"
+        },"genre": "posts","keywords": "Kubernetes排障","wordcount":  703 ,
+        "url": "http:\/\/localhost:1313\/k8s%E5%88%A0%E9%99%A4namesapce%E4%B8%80%E7%9B%B4%E5%A4%84%E4%BA%8Eterminating%E7%8A%B6%E6%80%81%E5%A4%84%E7%90%86\/","datePublished": "2023-05-27T12:06:37+08:00","dateModified": "2024-06-26T12:06:37+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "lushuan"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="西门带刀">西门带刀</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/" title="About"> 关于 </a><a class="menu-item" href="/friends/" title="friends"> 友链 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="西门带刀">西门带刀</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="About">关于</a><a class="menu-item" href="/friends/" title="friends">友链</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">K8s删除Namesapce一直处于Terminating状态处理</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/kubernetes/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Kubernetes</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-05-27">2023-05-27</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 703 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 2 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="true">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#解决方式">解决方式</a></li>
+        <li><a href="#总结">总结</a></li>
+        <li><a href="#补充-k8s-finalizers">补充 K8s Finalizers</a></li>
+      </ul>
+    </li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p>k8s namespace 无法删除记录</p>
+<p>名字空间yaml 文件</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-Yaml" data-lang="Yaml"><span class="line"><span class="cl"><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Namespace</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">kube-logging</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>删除卡住</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ sudo kubectl delete -f kube-logging.yaml --wait<span class="o">=</span><span class="nb">true</span>
+</span></span><span class="line"><span class="cl">namespace <span class="s2">&#34;kube-logging&#34;</span> deleted <span class="c1"># 长久的等待</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>强制删除（无效果）</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">sudo kubectl delete ns kube-logging  --grace-period<span class="o">=</span><span class="m">0</span> --force
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>排查思路
+查看命名空间下的所有资源</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">kubectl api-resources -o name --verbs<span class="o">=</span>list --namespaced <span class="p">|</span> xargs -n <span class="m">1</span> kubectl get --show-kind --ignore-not-found -n kube-logging
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>输出结果该命名空间下无关联的相关资源</p>
+<h3 id="解决方式">解决方式</h3>
+<p>一行命令解决，注意替换两处待删命名空间字样</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">kubectl get namespace <span class="s2">&#34;待删命名空间&#34;</span> -o json <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  <span class="p">|</span> tr -d <span class="s2">&#34;\n&#34;</span> <span class="p">|</span> sed <span class="s2">&#34;s/\&#34;finalizers\&#34;: \[[^]]\+\]/\&#34;finalizers\&#34;: []/&#34;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  <span class="p">|</span> kubectl replace --raw /api/v1/namespaces/待删命名空间/finalize -f -
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="总结">总结</h3>
+<ul>
+<li>创建namesapce时注入finalizers会导致namespace无法</li>
+<li>可以通过edit ns 的方式将finalizers 置空或者上面的一行命令解决的方式，本质是一致的</li>
+</ul>
+<h3 id="补充-k8s-finalizers">补充 K8s Finalizers</h3>
+<p>Finalizers 字段属于 Kubernetes GC 垃圾收集器，是一种删除拦截机制，能够让控制器实现异步的删除前（Pre-delete）回调。其存在于任何一个资源对象的 Meta[1] 中，在 k8s 源码中声明为 []string，该 Slice 的内容为需要执行的拦截器名称。</p>
+<p>对带有 Finalizer 的对象的第一个删除请求会为其 metadata.deletionTimestamp 设置一个值，但不会真的删除对象。一旦此值被设置，finalizers 列表中的值就只能被移除。</p>
+<p>当 metadata.deletionTimestamp 字段被设置时，负责监测该对象的各个控制器会通过轮询对该对象的更新请求来执行它们所要处理的所有 Finalizer。当所有 Finalizer 都被执行过，资源被删除。</p>
+<p>metadata.deletionGracePeriodSeconds 的取值控制对更新的轮询周期</p>
+<p>当 finalizers 字段为空时，k8s 认为删除已完成。</p>
+<h2 id="参考">参考</h2>
+<ol>
+<li><a href="https://blog.csdn.net/shenyuanhaojie/article/details/126249072" target="_blank" rel="noopener noreffer ">k8s 如何让 ns 无法删除</a></li>
+<li><a href="https://blog.csdn.net/Wqr_18390921824/article/details/124208510?spm=1001.2101.3001.6650.1&amp;utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-1-124208510-blog-115963541.235%5Ev38%5Epc_relevant_sort_base2&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-1-124208510-blog-115963541.235%5Ev38%5Epc_relevant_sort_base2&amp;utm_relevant_index=2" target="_blank" rel="noopener noreffer ">kubernetes_Namespace无法删除的解决方法</a></li>
+<li><a href="http://www.taodudu.cc/news/show-1094934.html?action=onClick" target="_blank" rel="noopener noreffer ">K8S从懵圈到熟练 - 我们为什么会删除不了集群的命名空间？</a></li>
+<li><a href="https://www.cnblogs.com/hellxz/p/17450248.html" target="_blank" rel="noopener noreffer ">k8s问题解决 - 删除命名空间长时间处于terminating状态</a></li>
+<li><a href="http://www.taodudu.cc/news/show-2899643.html?action=onClick" target="_blank" rel="noopener noreffer ">熟悉又陌生的 k8s 字段：finalizers</a></li>
+</ol>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2024-06-26</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/k8s%E5%88%A0%E9%99%A4namesapce%E4%B8%80%E7%9B%B4%E5%A4%84%E4%BA%8Eterminating%E7%8A%B6%E6%80%81%E5%A4%84%E7%90%86/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://localhost:1313/k8s%E5%88%A0%E9%99%A4namesapce%E4%B8%80%E7%9B%B4%E5%A4%84%E4%BA%8Eterminating%E7%8A%B6%E6%80%81%E5%A4%84%E7%90%86/" data-title="K8s删除Namesapce一直处于Terminating状态处理" data-via="xxxx" data-hashtags="Kubernetes排障"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/k8s%E5%88%A0%E9%99%A4namesapce%E4%B8%80%E7%9B%B4%E5%A4%84%E4%BA%8Eterminating%E7%8A%B6%E6%80%81%E5%A4%84%E7%90%86/" data-hashtag="Kubernetes排障"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="http://localhost:1313/k8s%E5%88%A0%E9%99%A4namesapce%E4%B8%80%E7%9B%B4%E5%A4%84%E4%BA%8Eterminating%E7%8A%B6%E6%80%81%E5%A4%84%E7%90%86/" data-title="K8s删除Namesapce一直处于Terminating状态处理"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://localhost:1313/k8s%E5%88%A0%E9%99%A4namesapce%E4%B8%80%E7%9B%B4%E5%A4%84%E4%BA%8Eterminating%E7%8A%B6%E6%80%81%E5%A4%84%E7%90%86/" data-title="K8s删除Namesapce一直处于Terminating状态处理"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/k8s%E5%88%A0%E9%99%A4namesapce%E4%B8%80%E7%9B%B4%E5%A4%84%E4%BA%8Eterminating%E7%8A%B6%E6%80%81%E5%A4%84%E7%90%86/" data-title="K8s删除Namesapce一直处于Terminating状态处理"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/kubernetes%E6%8E%92%E9%9A%9C/">Kubernetes排障</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/k8s_v1.20.x%E5%88%9B%E5%BB%BApvc%E6%8A%A5%E9%94%99/" class="prev" rel="prev" title="Kubernetes v1.20创建PVC报错"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Kubernetes v1.20创建PVC报错</a>
+            <a href="/dockerfile%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BC%98%E5%8C%96/" class="next" rel="next" title="Dockerfile介绍及优化">Dockerfile介绍及优化<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">我是有底线的</div><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.126.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2024</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">lushuan</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

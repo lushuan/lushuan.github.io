@@ -1,0 +1,217 @@
+# Kubernetes的基本概念和术语
+
+#  资源对象概述
+Kubernetes中的基本概念和术语大多是围绕资源对象（Resource
+Object）来说的，而资源对象在总体上可分为以下两类。
+
+- 某种资源的对象，例如节点（Node）、Pod、服务（Service）、存储卷（Volume）。
+- 与资源对象相关的事物与动作，例如标签（Label）、注解（Annotation）、命名空间（Namespace）、部署（Deployment）、HPA、PVC。
+
+#   集群类
+集群（Cluster）表示一个由Master和Node组成的Kubernetes集群。
+
+## Master  
+Master指的是集群的控制节点。在每个Kubernetes集群中都需要有一个或一组被称为Master的节点，来负责整个集群的管理和控制。Master通常占据一个独立的服务器（在高可用部署中建议至少使用3台服务器），是整个集群的"大脑"，如果它发生宕机或者不可用，那么对集群内容器应用的管理都将无法实施。
+
+在Master上运行着以下关键进程。
+- Kubernetes API Server（kube-apiserver）：提供HTTP RESTfulAPI接口的主要服务，是Kubernetes里对所有资源进行增、删、改、查等操作的唯一入口，也是集群控制的入口进程。
+- Kubernetes Controller Manager（kube-controller-manager）：Kubernetes里所有资源对象的自动化控制中心，可以将其理解为资源对象的"大总管"。
+- Kubernetes Scheduler（kube-scheduler）：负责资源调度（Pod调度）的进程，相当于公交公司的调度室。
+
+另外，在Master上通常还需要部署etcd服务
+
+## Node
+
+Kubernetes集群中除Master外的其他服务器被称为Node，Node在较早的版本中也被称为Minion。与Master一样，Node可以是一台物理主机，也可以是一台虚拟机。Node是Kubernetes集群中的工作负载节点，每个Node都会被Master分配一些工作负载（Docker容器），当某个Node宕机时，其上的工作负载会被Master自动转移到其他Node上。
+
+在每个Node上都运行着以下关键进程。  
+- kubelet：负责Pod对应容器的创建、启停等任务，同时与Master密切协作，实现集群管理的基本功能。
+- kube-proxy：实现Kubernetes Service的通信与负载均衡机制的服务。
+- 容器运行时（如Docker）：负责本机的容器创建和管理。Node可以在运行期间动态增加到Kubernetes集群中，前提是在这个Node上已正确安装、配置和启动了上述关键进程。在默认情况下，kubelet会向Master注册自己，这也是Kubernetes推荐的Node管理方式。一旦Node被纳入集群管理范畴，kubelet进程就会定时向Master汇报自身的情报，例如操作系统、主机CPU和内存使用情况，以及当前有哪些Pod在运行等，这样Master就可以获知每个Node的资源使用情况，并实现高效均衡的资源调度策略。而某个Node在超过指定时间不上报信息时，会被Master判定为"失联"，该Node的状态就被标记为不可用（NotReady），Master随后会触发"工作负载大转移"的自动流程。
+
+#  应用类
+Kubernetes中属于应用类的概念和相应的资源对象类型最多，所以应用类也是需要重点学习的一类。
+
+##  Service与Pod  
+应用类相关的资源对象主要是围绕Service（服务）和Pod这两个核心对象展开的。
+
+一般说来，Service指的是无状态服务，通常由多个程序副本提供服务，在特殊情况下也可以是有状态的单实例服务，比如MySQL这种数据存储类的服务。与我们常规理解的服务不同，Kubernetes里的Service具有一个全局唯一的虚拟ClusterIP地址，Service一旦被创建，Kubernetes就会自动为它分配一个可用的ClusterIP地址，而且在Service的整个生命周期中，它的ClusterIP地址都不会改变，客户端可以通过这个虚拟IP地址+服务的端口直接访问该服务，再通过部署Kubernetes集群的DNS服务，就可以实现Service Name（域名）到ClusterIP地址的DNS映射功能，我们只要使用服务的名称（DNS名称）即可完成到目标服务的访问请求。"服务发现"这个传统架构中的棘手问题在这里首次得以完美解决，同时，凭借ClusterIP地址的独特设计，Kubernetes进一步实现了Service的透明负载均衡和故障自动恢复的高级特性。
+
+通过分析、识别并建模系统中的所有服务为微服务——Kubernetes Service，我们的系统最终由多个提供不同业务能力而又彼此独立的微服务单元组成，服务之间通过TCP/IP进行通信，从而形成强大又灵活的弹性网格，拥有强大的分布式能力、弹性扩展能力、容错能力，程序架构也变得简单和直观许多
+
+## Pod
+为什么Kubernetes会设计出一个全新的Pod概念并且Pod有这样特殊的组成结构？原因如下。
+
+- 为多进程之间的协作提供一个抽象模型，使用Pod作为基本的调度、复制等管理工作的最小单位，让多个应用进程能一起有效地调度和伸缩。
+- Pod里的多个业务容器共享Pause容器的IP，共享Pause容器挂接的Volume，这样既简化了密切关联的业务容器之间的通信问题，也很好地解决了它们之间的文件共享问题。
+
+Kubernetes为每个Pod都分配了唯一的IP地址，称之为Pod IP，一个Pod里的多个容器共享Pod IP地址。Kubernetes要求底层网络支持集群内任意两个Pod之间的TCP/IP直接通信，这通常采用虚拟二层网络技术实现，例如Flannel、OpenvSwitch等，因此我们需要牢记一点：在Kubernetes里，一个Pod里的容器与另外主机上的Pod容器能够直接通信。
+
+Pod其实有两种类型：普通的Pod及静态Pod（Static Pod）。后者比较特殊，它并没被存放在Kubernetes的etcd中，而是被存放在某个具体的Node上的一个具体文件中，并且只能在此Node上启动、运行。而普通的Pod一旦被创建，就会被放入etcd中存储，随后被Kubernetes Master调度到某个具体的Node上并绑定（Binding），该Pod被对应的Node上的kubelet进程实例化成一组相关的Docker容器并启动。在默认情况下，当Pod里的某个容器停止时，Kubernetes会自动检测到这个问题并且重新启动这个Pod（重启Pod里的所有容器），如果Pod所在的Node宕机，就会将这个Node上的所有Pod都重新调度到其他节点上。
+
+Pod、容器与Node的关系
+![Pod、容器与Node的关系](/images\kubernetes\basic\pod-node.png)
+
+##  Label与标签选择器
+Label（标签）是Kubernetes系统中的另一个核心概念，相当于我们熟悉的"标签"。一个Label是一个key=value的键值对，其中的key与value由用户自己指定。Label可以被附加到各种资源对象上，例如Node、Pod、Service、Deployment等，一个资源对象可以定义任意数量的Label，同一个Label也可以被添加到任意数量的资源对象上。Label通常在资源对象定义时确定，也可以在对象创建后动态添加或者删除。我们可以通过给指定的资源对象捆绑一个或多个不同的Label来实现多维度的资源分组管理功能，以便灵活、方便地进行资源分配、调度、配置、部署等管理工作，例如，部署不同版本的应用到不同的环境中，以及监控、分析应用（日志记录、监控、告警）等。一些常用的Label示例如下。
+
+- 版本标签：release：stable和release：canary。
+- 环境标签：environment：dev、environment：qa和environment：production。
+- 架构标签：tier：frontend、tier：backend和tier：middleware。
+- 分区标签：partition：customerA和partition：customerB。
+- 质量管控标签：track：daily和track：weekly
+
+Label也是Pod的重要属性之一，其重要性仅次于Pod的端口，我们几乎见不到没有Label的Pod
+
+Service很重要的一个属性就是标签选择器，如果我们不小心把标签选择器写错了，就会出现指鹿为马的闹剧。如果恰好匹
+配到了另一种Pod实例，而且对应的容器端口恰好正确，服务可以正常连接，则很难排查问题，特别是在有众多Service的复杂系统中。
+
+## Pod与Deployment
+前面提到，大部分Service都是无状态的服务，可以由多个Pod副本实例提供服务。通常情况下，每个Service对应的Pod服务实例数量都是固定的，如果一个一个地手工创建Pod实例，就太麻烦了，最好是用模板的思路，即提供一个Pod模板（Template），然后由程序根据我们指定的模板自动创建指定数量的Pod实例。这就是Deployment这个资源对象所要完成的事情了。
+
+## Service的ClusterIP地址
+既然每个Pod都会被分配一个单独的IP地址，而且每个Pod都提供了一个独立的Endpoint（Pod IP+containerPort）以被客户端访问，那么现在多个Pod副本组成了一个集群来提供服务，客户端如何访问它们呢？传统的做法是部署一个负载均衡器（软件或硬件），为这组Pod开启一个对外的服务端口如8000端口，并且将这些Pod的Endpoint列表加入8000端口的转发列表中，客户端就可以通过负载均衡器的对外IP地址+8000端口来访问此服务了。Kubernetes也是类似的做法，Kubernetes内部在每个Node上都运行了一套全局的虚拟负载均衡器，自动注入并自动实时更新集群中所有Service的路由表，通过iptables或者IPVS机制，把对Service的请求转发到其后端对应的某个Pod实例上，并在内部实现服务的负载均衡与会话保持机制。不仅如此，Kubernetes还采用了一种很巧妙又影响深远的设计——ClusterIP地址。我们知道，Pod的Endpoint地址会随着Pod的销毁和重新创建而发生改变，因为新Pod的IP地址与之前旧Pod的不同。Service一旦被创建，Kubernetes就会自动为它分配一个全局唯一的虚拟IP地址——ClusterIP地址，而且在Service的整个生命周期内，其ClusterIP地址不会发生改变，这样一来，每个服务就变成了具备唯一IP地址的通信节点，远程服务之间的通信问题就变成了基础的TCP网络通信问题。
+
+之所以说ClusterIP地址是一种虚拟IP地址，原因有以下几点。    
+- ClusterIP地址仅仅作用于Kubernetes Service这个对象，并由Kubernetes管理和分配IP地址（来源于ClusterIP地址池），与Node和Master所在的物理网络完全无关。
+- 因为没有一个"实体网络对象"来响应，所以ClusterIP地址无法被Ping通。ClusterIP地址只能与Service Port组成一个具体的服务访问端点，单独的ClusterIP不具备TCP/IP通信的基础。
+- ClusterIP属于Kubernetes集群这个封闭的空间，集群外的节点要访问这个通信端口，则需要做一些额外的工作
+
+## Service的外网访问问题
+前面提到，服务的ClusterIP地址在Kubernetes集群内才能被访问，那么如何让集群外的应用访问我们的服务呢？这也是一个相对复杂的问题。要弄明白这个问题的解决思路和解决方法，我们需要先弄明白
+
+Kubernetes的三种IP，这三种IP分别如下。
+- Node IP：Node的IP地址。
+- Pod IP：Pod的IP地址。
+- Service IP：Service的IP地址。
+
+首先，Node IP是Kubernetes集群中每个节点的物理网卡的IP地址，是一个真实存在的物理网络，所有属于这个网络的服务器都能通过这个网络直接通信，不管其中是否有部分节点不属于这个Kubernetes集群。这也表明Kubernetes集群之外的节点访问Kubernetes集群内的某个节点或者TCP/IP服务时，都必须通过Node IP通信。
+
+其次，Pod IP是每个Pod的IP地址，在使用Docker作为容器支持引擎的情况下，它是Docker Engine根据docker0网桥的IP地址段进行分配的，通常是一个虚拟二层网络。前面说过，Kubernetes要求位于不同Node上的Pod都能够彼此直接通信，所以Kubernetes中一个Pod里的容器访问另外一个Pod里的容器时，就是通过Pod IP所在的虚拟二层网络进行通信的，而真实的TCP/IP流量是通过Node IP所在的物理网卡流出的。
+
+在Kubernetes集群内，Service的ClusterIP地址属于集群内的地址，无法在集群外直接使用这个地址。为了解决这个问题，Kubernetes首先引入了NodePort这个概念，NodePort也是解决集群外的应用访问集群内服务的直接、有效的常见做法
+
+NodePort的实现方式是，在Kubernetes集群的每个Node上都为需要外部访问的Service开启一个对应的TCP监听端口，外部系统只要用任意一个Node的IP地址+NodePort端口号即可访问此服务，在任意Node上运行netstat命令，就可以看到有NodePort端口被监听。
+
+## NodePort 存在的一问题引出了Ingress对象  
+
+NodePort的确功能强大且通用性强，但也存在一个问题，即每个Service都需要在Node上独占一个端口，而端口又是有限的物理资源，那能不能让多个Service共用一个对外端口呢？这就是后来增加的Ingress资源对象所要解决的问题。在一定程度上，我们可以把Ingress的实现机制理解为基于Nginx的支持虚拟主机的HTTP代理。
+
+## 有状态的应用集群
+我们知道，Deployment对象是用来实现无状态服务的多副本自动控制功能的，那么有状态的服务，比如ZooKeeper集群、MySQL高可用集群（3节点集群）、Kafka集群等是怎么实现自动部署和管理的呢？这个问题就复杂多了，这些一开始是依赖StatefulSet解决的，但后来发现对于一些复杂的有状态的集群应用来说，StatefulSet还是不够通用和强大，所以后面又出现了Kubernetes Operator。
+
+我们先说说StatefulSet。StatefulSet之前曾用过PetSet这个名称，很多人都知道，在IT世界里，有状态的应用被类比为宠物（Pet），无状态的应用则被类比为牛羊，每个宠物在主人那里都是"唯一的存在"，宠物生病了，我们是要花很多钱去治疗的，需要我们用心照料，而无差别的牛羊则没有这个待遇。总结下来，在有状态集群中一般有如下特殊共性。
+
+
+- 每个节点都有固定的身份ID，通过这个ID，集群中的成员可以相互发现并通信。
+- 集群的规模是比较固定的，集群规模不能随意变动。
+- 集群中的每个节点都是有状态的，通常会持久化数据到永久存储中，每个节点在重启后都需要使用原有的持久化数据。
+- 集群中成员节点的启动顺序（以及关闭顺序）通常也是确定的。
+- 如果磁盘损坏，则集群里的某个节点无法正常运行，集群功能受损
+
+StatefulSet从本质上来说，可被看作Deployment/RC的一个特殊变种，它有如下特性。
+
+- StatefulSet里的每个Pod都有稳定、唯一的网络标识，可以用来发现集群内的其他成员。假设StatefulSet的名称为kafka，那么第1个Pod叫kafka-0，第2个叫kafka-1，以此类推。
+- StatefulSet控制的Pod副本的启停顺序是受控的，操作第n个Pod时，前n-1个Pod已经是运行且准备好的状态。
+- StatefulSet里的Pod采用稳定的持久化存储卷，通过PV或PVC来实现，删除Pod时默认不会删除与StatefulSet相关的存储卷（为了保证数据安全）。
+StatefulSet除了要与PV卷捆绑使用，以存储Pod的状态数据，还要与Headless Service配合使用，即在每个StatefulSet定义中都要声明它属于哪个Headless Service。StatefulSet在Headless Service的基础上又为StatefulSet控制的每个Pod实例都创建了一个DNS域名，这个域名的格式
+如下：
+```
+${podname}.${headless service name}
+```
+
+StatefulSet的建模能力有限，面对复杂的有状态集群时显得力不从心，所以就有了后来的Kubernetes Operator框架和众多的Operator实现了。需要注意的是，Kubernetes Operator框架并不是面向普通用户的，而是面向Kubernetes平台开发者的。
+
+## 批处理应用
+除了无状态服务、有状态集群、常见的第三种应用，还有批处理应用。批处理应用的特点是一个或多个进程处理一组数据（图像、文件、视频等），在这组数据都处理完成后，批处理任务自动结束。为了支持这类应用，Kubernetes引入了新的资源对象——Job。
+
+Jobs控制器提供了两个控制并发数的参数：completions和parallelism，completions表示需要运行任务数的总数，parallelism表示并发运行的个数，例如设置parallelism为1，则会依次运行任务，在前面的任务运行后再运行后面的任务。Job所控制的Pod副本是短暂运行的，可以将其视为一组容器，其中的每个容器都仅运行一次。当Job控制的所有Pod副本都运行结束时，对应的Job也就结束了。Job在实现方式上与Deployment等副本控制器不同，Job生成的Pod副本是不能自动重启的，对应Pod副本的restartPolicy都被设置为Never，因此，当对应的Pod副本都执行完成时，相应的Job也就完成了控制使命。后来，Kubernetes增加了CronJob，可以周期性地执行某个任务。
+
+
+## 应用的配置问题
+
+通过前面的学习，我们初步理解了三种应用建模的资源对象，总结如下。
+- 无状态服务的建模：Deployment。
+- 有状态集群的建模：StatefulSet。
+- 批处理应用的建模：Job。
+在进行应用建模时，应该如何解决应用需要在不同的环境中修改配置的问题呢？这就涉及ConfigMap和Secret两个对象。
+
+ConfigMap顾名思义，就是保存配置项（key=value）的一个Map，如果你只是把它理解为编程语言中的一个Map，那就大错特错了。ConfigMap是分布式系统中"配置中心"的独特实现之一。我们知道，几乎所有应用都需要一个静态的配置文件来提供启动参数，当这个应用是一个分布式应用，有多个副本部署在不同的机器上时，配置文件的分发就成为一个让人头疼的问题，所以很多分布式系统都有一个配置中心组件，来解决这个问题。但配置中心通常会引入新的API，从而导致应用的耦合和侵入。
+
+- 用户将配置文件的内容保存到ConfigMap中，文件名可作为key，value就是整个文件的内容，多个配置文件都可被放入同一个ConfigMap。
+- 在建模用户应用时，在Pod里将ConfigMap定义为特殊的Volume进行挂载。在Pod被调度到某个具体Node上时，ConfigMap里的配置文件会被自动还原到本地目录下，然后映射到Pod里指定的配置目录下，这样用户的程序就可以无感知地读取配置了。
+- 在ConfigMap的内容发生修改后，Kubernetes会自动重新获取ConfigMap的内容，并在目标节点上更新对应的文件。
+
+
+接下来说说Secret。Secret也用于解决应用配置的问题，不过它解决的是对敏感信息的配置问题，比如数据库的用户名和密码、应用的数字证书、Token、SSH密钥及其他需要保密的敏感配置。对于这类敏感信息，我们可以创建一个Secret对象，然后被Pod引用。Secret中的数据要求以BASE64编码格式存放。注意，BASE64编码并不是加密的，在Kubernetes 1.7版本以后，Secret中的数据才可以以加密的形式进行保存，更加安全。
+
+## 应用的运维问题
+最后说说与应用的自动运维相关的几个重要对象。
+
+首先就是HPA（Horizontal Pod Autoscaler），如果我们用Deployment来控制Pod的副本数量，则可以通过手工运行kubectl scale命令来实现Pod扩容或缩容。如果仅仅到此为止，则显然不符合谷歌对Kubernetes的定位目标——自动化、智能化。在谷歌看来，分布式系统要能够根据当前负载的变化自动触发水平扩容或缩容，因为这一过程可能是频繁发生、不可预料的，所以采用手动控制的方式是不现实的，因此就有了后来的HPA这个高级功能。我们可以将HPA理解为Pod横向自动扩容，即自动控制Pod数量的增加或减少。通过追踪分析指定Deployment控制的所有目标Pod的负载变化情况，来确定是否需要有针对性地调整目标Pod的副本数量，这是HPA的实现原理。Kubernetes内置了基于Pod的CPU利用率进行自动扩缩容的机制，应用开发者也可以自定义度量指标如每秒请求数，来实现自定义的HPA功能。
+
+#  存储类
+存储类的资源对象主要包括Volume、Persistent Volume、PVC和StorageClass。
+
+首先看看基础的存储类资源对象——Volume（存储卷）
+
+Volume是Pod中能够被多个容器访问的共享目录。Kubernetes中的Volume概念、用途和目的与Docker中的Volume比较类似，但二者不能等价。首先，Kubernetes中的Volume被定义在Pod上，被一个Pod里的多个容器挂载到具体的文件目录下；其次，Kubernetes中的Volume与Pod的生命周期相同，但与容器的生命周期不相关，当容器终止或者重启时，Volume中的数据也不会丢失；最后，Kubernetes支持多种类型的Volume，例如GlusterFS、Ceph等分布式文件系统。Volume的使用也比较简单，在大多数情况下，我们先在Pod上声明一个Volume，然后在容器里引用该Volume并将其挂载（Mount）到容器里的某个目录下。举例来说，若我们要给之前的Tomcat Pod增加一个名为datavol的Volume，并将其挂载到容器的某个路径/mydata-data目录下，则只对Pod的定义文件做下修正即可。
+
+## emptyDir
+一个emptyDir是在Pod分配到Node时创建的。从它的名称就可以看出，它的初始内容为空，并且无须指定宿主机上对应的目录文件，因为这是Kubernetes自动分配的一个目录，当Pod从Node上移除时，emptyDir中的数据也被永久移除。emptyDir的一些用途如下。
+- 临时空间，例如用于某些应用程序运行时所需的临时目录，且无须永久保留。
+- 长时间任务执行过程中使用的临时目录。
+- 一个容器需要从另一个容器中获取数据的目录（多容器共享目录）。
+
+在默认情况下，emptyDir使用的是节点的存储介质，例如磁盘或者网络存储。还可以使用emptyDir.medium属性，把这个属性设置为"Memory"，就可以使用更快的基于内存的后端存储了。需要注意的是，这种情况下的emptyDir使用的内存会被计入容器的内存消耗，将受到资源限制和配额机制的管理。
+
+## hostPath
+hostPath为在Pod上挂载宿主机上的文件或目录，通常可以用于以下几方面。  
+- 在容器应用程序生成的日志文件需要永久保存时，可以使用宿主机的高速文件系统对其进行存储。
+- 需要访问宿主机上Docker引擎内部数据结构的容器应用时，可以通过定义hostPath为宿主机/var/lib/docker目录，使容器内部的应用可以直接访问Docker的文件系统。
+在使用这种类型的Volume时，需要注意以下几点。
+- 在不同的Node上具有相同配置的Pod，可能会因为宿主机上的目录和文件不同，而导致对Volume上目录和文件的访问结果不一致。
+- 如果使用了资源配额管理，则Kubernetes无法将hostPath在宿主机上使用的资源纳入管理。
+
+## 公有云Volume
+公有云提供的Volume类型包括谷歌公有云提供的GCEPersistentDisk、亚马逊公有云提供的AWS Elastic Block Store（EBSVolume）等。当我们的Kubernetes集群运行在公有云上或者使用公有云厂家提供的Kubernetes集群时，就可以使用这类Volume。
+
+## 其他类型的Volume
+- iscsi：将iSCSI存储设备上的目录挂载到Pod中。
+- nfs：将NFS Server上的目录挂载到Pod中。
+- glusterfs：将开源GlusterFS网络文件系统的目录挂载到Pod中。
+- rbd：将Ceph块设备共享存储（Rados Block Device）挂载到Pod中。
+- gitRepo：通过挂载一个空目录，并从Git库克隆（clone）一个git repository以供Pod使用。
+- configmap：将配置数据挂载为容器内的文件。
+- secret：将Secret数据挂载为容器内的文件。
+
+#  安全类
+
+安全始终是Kubernetes发展过程中的一个关键领域。
+
+从本质上来说，Kubernetes可被看作一个多用户共享资源的资源管理系统，这里的资源主要是各种Kubernetes里的各类资源对象，比如Pod、Service、Deployment等。只有通过认证的用户才能通过Kubernetes的API Server查询、创建及维护相应的资源对象，理解这一点很关键。
+
+Kubernetes里的用户有两类：我们开发的运行在Pod里的应用；普通用户，如典型的kubectl命令行工具，基本上由指定的运维人员（集群管理员）使用。在更多的情况下，我们开发的Pod应用需要通过API Server查询、创建及管理其他相关资源对象，所以这类用户才是Kubernetes的关键用户。为此，Kubernetes设计了Service Account这个特殊的资源对象，代表Pod应用的账号，为Pod提供必要的身份认证。在此基础上，Kubernetes进一步实现和完善了基于角色的访问控制权限系统——RBAC（Role-Based Access Control）。
+
+在默认情况下，Kubernetes在每个命名空间中都会创建一个默认的名称为default的Service Account，因此Service Account是不能全局使用的，只能被它所在命名空间中的Pod使用。通过以下命令可以查看集群中的所有Service Account：
+```
+sudo kubectl get sa -A
+```
+
+Service Account是通过Secret来保存对应的用户（应用）身份凭证的，这些凭证信息有CA根证书数据（ca.crt）和签名后的Token信息（Token）。在Token信息中就包括了对应的Service Account的名称，因此API Server通过接收到的Token信息就能确定Service Account的身份。在默认情况下，用户创建一个Pod时，Pod会绑定对应命名空间中的default这个Service Account作为其"公民身份证"。当Pod里的容器被创建时，Kubernetes会把对应的Secret对象中的身份信息（ca.crt、Token等）持久化保存到容器里固定位置的本地文件中，因此当容器里的用户进程通过Kubernetes提供的客户端API去访问API Server时，这些API会自动读取这些身份信息文件，并将其附加到HTTPS请求中传递给API Server以完成身份认证逻辑。在身份认证通过以后，就涉及"访问授权"的问题，这就是RBAC要解决的问题了。
+
+首先我们要学习的是Role这个资源对象，包括Role与ClusterRole两种类型的角色。角色定义了一组特定权限的规则，比如可以操作某类资源对象。局限于某个命名空间的角色由Role对象定义，作用于整个Kubernetes集群范围内的角色则通过ClusterRole对象定义。
+
+
+在RoleBinding中使用subjects（目标主体）来表示要授权的对象，这是因为我们可以授权三类目标账号：Group（用户组）、User（某个具体用户）和Service Account（Pod应用所使用的账号）。
+
+在安全领域，除了以上针对API Server访问安全相关的资源对象，还有一种特殊的资源对象——NetworkPolicy（网络策略），它是网络安全相关的资源对象，用于解决用户应用之间的网络隔离和授权问题。NetworkPolicy是一种关于Pod间相互通信，以及Pod与其他网络端点间相互通信的安全规则设定。
+
+NetworkPolicy资源使用标签选择Pod，并定义选定Pod所允许的通信规则。在默认情况下，Pod间及Pod与其他网络端点间的访问是没有限制的，这假设了Kubernetes集群被一个厂商（公司/租户）独占，其中部署的应用都是相互可信的，无须相互防范。但是，如果存在多个厂商共同使用一个Kubernetes集群的情况，则特别是在公有云环境中，不同厂商的应用要相互隔离以增加安全性，这就可以通过NetworkPolicy来实现了。
+
+
+
+
+
+
+

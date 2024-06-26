@@ -1,0 +1,32 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Tags - 标签 - 西门带刀</title>
+        <link>http://localhost:1313/tags/</link>
+        <description>Tags - 标签 - 西门带刀</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Wed, 26 Jun 2024 12:06:37 &#43;0800</lastBuildDate><atom:link href="http://localhost:1313/tags/" rel="self" type="application/rss+xml" /><item>
+    <title>Kubernetes</title>
+    <link>http://localhost:1313/tags/kubernetes/</link>
+    <pubDate>Wed, 26 Jun 2024 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/tags/kubernetes/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
+    <title>Docker</title>
+    <link>http://localhost:1313/tags/docker/</link>
+    <pubDate>Mon, 26 Jun 2023 16:25:58 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/tags/docker/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
+    <title>Kubernetes排障</title>
+    <link>http://localhost:1313/tags/kubernetes%E6%8E%92%E9%9A%9C/</link>
+    <pubDate>Sat, 27 May 2023 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/tags/kubernetes%E6%8E%92%E9%9A%9C/</guid>
+    <description><![CDATA[]]></description>
+</item>
+</channel>
+</rss>

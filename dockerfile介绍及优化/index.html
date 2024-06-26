@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>Dockerfile介绍及优化 - 西门带刀</title><meta name="Description" content="知识有两种，一种是你知道的，一种是你知道在哪里能找到的！ --塞缪尔·约翰逊"><meta property="og:url" content="http://localhost:1313/dockerfile%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BC%98%E5%8C%96/">
+  <meta property="og:site_name" content="西门带刀">
+  <meta property="og:title" content="Dockerfile介绍及优化">
+  <meta property="og:description" content="介绍 Dockerfile 是一个文本文件，其内包含了一条条的 指令(Instruction)，每一条指令 构建一层，因此每一条指令的内容，就是描述该层应当如何构建。">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2023-06-26T16:25:58+08:00">
+    <meta property="article:modified_time" content="2024-06-26T16:25:58+08:00">
+    <meta property="article:tag" content="Docker">
+    <meta property="og:image" content="http://localhost:1313/logo.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/logo.png">
+  <meta name="twitter:title" content="Dockerfile介绍及优化">
+  <meta name="twitter:description" content="介绍 Dockerfile 是一个文本文件，其内包含了一条条的 指令(Instruction)，每一条指令 构建一层，因此每一条指令的内容，就是描述该层应当如何构建。">
+      <meta name="twitter:site" content="@xxxx">
+<meta name="application-name" content="我的网站">
+<meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://localhost:1313/dockerfile%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BC%98%E5%8C%96/" /><link rel="prev" href="http://localhost:1313/k8s%E5%88%A0%E9%99%A4namesapce%E4%B8%80%E7%9B%B4%E5%A4%84%E4%BA%8Eterminating%E7%8A%B6%E6%80%81%E5%A4%84%E7%90%86/" /><link rel="next" href="http://localhost:1313/first_post/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Dockerfile介绍及优化",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost:1313\/dockerfile%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BC%98%E5%8C%96\/"
+        },"genre": "posts","keywords": "docker","wordcount":  799 ,
+        "url": "http:\/\/localhost:1313\/dockerfile%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BC%98%E5%8C%96\/","datePublished": "2023-06-26T16:25:58+08:00","dateModified": "2024-06-26T16:25:58+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "lushuan"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="西门带刀">西门带刀</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/" title="About"> 关于 </a><a class="menu-item" href="/friends/" title="friends"> 友链 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="西门带刀">西门带刀</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="About">关于</a><a class="menu-item" href="/friends/" title="friends">友链</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Dockerfile介绍及优化</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/docker/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Docker</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-06-26">2023-06-26</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 799 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 2 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="true">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#dockerfile-命令">Dockerfile 命令</a></li>
+    <li><a href="#dockerfile-小建议">Dockerfile 小建议</a></li>
+    <li><a href="#示例">示例</a>
+      <ul>
+        <li><a href="#nginx">nginx</a></li>
+        <li><a href="#tomcat">tomcat</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h1 id="介绍">介绍</h1>
+<p>Dockerfile 是一个文本文件，其内包含了一条条的 指令(Instruction)，每一条指令
+构建一层，因此每一条指令的内容，就是描述该层应当如何构建。</p>
+<p>一个简单Dockerfile文件</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-Dockerfile" data-lang="Dockerfile"><span class="line"><span class="cl"><span class="c"># VERSION 0.0.1</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">FROM</span><span class="s"> ubuntu</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">MAINTAINER</span><span class="s"> James Turnbull &#34;james@example.com&#34;</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">RUN</span> <span class="nb">echo</span> <span class="s2">&#34;deb http://archive.ubuntu.com/ubuntu precise main ↩</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span>universe<span class="s2">&#34; &gt; /etc/apt/sources.list</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">RUN</span> apt-get update<span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">RUN</span> apt-get install -y openssh-server<span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">RUN</span> mkdir /var/run/sshd<span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">RUN</span> <span class="nb">echo</span> <span class="s2">&#34;root:password&#34;</span> <span class="p">|</span> chpasswd<span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">EXPOSE</span><span class="s"> 22</span><span class="err">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><ol>
+<li>可以看的出来Dockerfile 包含一系列命令并附上参数</li>
+<li>每个命令都是大写开头，后面是跟着参数</li>
+</ol>
+<h2 id="dockerfile-命令">Dockerfile 命令</h2>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th style="text-align:left">解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FROM</td>
+<td style="text-align:left">指定基础镜像</td>
+</tr>
+<tr>
+<td>RUN</td>
+<td style="text-align:left">Dockerfile中的每个指令都会创建一个新的镜像层</td>
+</tr>
+<tr>
+<td>CMD</td>
+<td style="text-align:left">在容器中执行的命令</td>
+</tr>
+<tr>
+<td>EXPOSE</td>
+<td style="text-align:left">暴露端口</td>
+</tr>
+<tr>
+<td>ENV</td>
+<td style="text-align:left">设置环境变量</td>
+</tr>
+<tr>
+<td>COPY</td>
+<td style="text-align:left">拷贝本地文件和目录至镜像</td>
+</tr>
+<tr>
+<td>ADD</td>
+<td style="text-align:left">功能更丰富的添加拷贝指令，COPY优先于ADD</td>
+</tr>
+<tr>
+<td>ENTRYPOINT</td>
+<td style="text-align:left">ENTRYPOINT指令并不是必须的，ENTRYPOINT是一个脚本</td>
+</tr>
+<tr>
+<td>VOLUME</td>
+<td style="text-align:left">定义镜像中的某个目录为容器卷，会随机生成一个容器卷名</td>
+</tr>
+<tr>
+<td>WORKDIR</td>
+<td style="text-align:left">指定工作目录</td>
+</tr>
+<tr>
+<td>ARG</td>
+<td style="text-align:left">定义了可以通过docker build &ndash;build-arg命令传递并在Dockerfile中使用的变量。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="dockerfile-小建议">Dockerfile 小建议</h2>
+<ul>
+<li>要使用 tag，但不要 latest。</li>
+<li>Debian 挺好的，不要总 Ubuntu。</li>
+<li>apt-get update 在前，rm -rf /var/lib/apt/lists/* 在后。</li>
+<li>yum install，不忘 yum clean。</li>
+<li>多 RUN 要合并，来减少层数。</li>
+<li>无用的软件，不要乱安装。</li>
+<li>COPY 放最后，缓存很开心。</li>
+<li>善用 dockerignore，不浪费传输。</li>
+<li>不忘 MAINTAINER，这都是我的。</li>
+<li>容器只运行一个应用</li>
+</ul>
+<p>小结：（FROM）选择合适的基础镜像(alpine版本最好)，(RUN)在安装更新时勿忘删除缓存和安装包，
+多个命令聚合在一起减少构建时的层数，用不到的软件不要安装，(ADD和COPY)选COPY,（LABEL）添加镜像元数据，
+(MAINTAINER)让我知道是谁维护我，(ENV)设置默认的环境变量，（EXPOSE）说一下暴露的映射端口</p>
+<h2 id="示例">示例</h2>
+<h3 id="nginx">nginx</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-Dockerfile" data-lang="Dockerfile"><span class="line"><span class="cl"><span class="k">FROM</span><span class="s"> centos </span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">MAINTAINER</span><span class="s"> xianchao </span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">RUN</span> yum install wget -y <span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">RUN</span> yum install nginx -y <span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="c"># COPY index.html /usr/share/nginx/html/ </span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">EXPOSE</span><span class="s"> 80 </span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">ENTRYPOINT</span> <span class="p">[</span><span class="s2">&#34;/usr/sbin/nginx&#34;</span><span class="p">,</span><span class="s2">&#34;-g&#34;</span><span class="p">,</span><span class="s2">&#34;daemon off;&#34;</span><span class="p">]</span> <span class="err">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="tomcat">tomcat</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-Dockerfile" data-lang="Dockerfile"><span class="line"><span class="cl"><span class="k">FROM</span><span class="s"> centos </span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">MAINTAINER</span><span class="s"> xianchao </span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">RUN</span> yum install wget -y <span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">ADD</span> jdk-8u45-linux-x64.rpm /usr/local/ <span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">ADD</span> apache-tomcat-8.0.26.tar.gz /usr/local/ <span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">RUN</span> <span class="nb">cd</span> /usr/local <span class="o">&amp;&amp;</span> rpm -ivh jdk-8u45-linux-x64.rpm <span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">RUN</span> mv /usr/local/apache-tomcat-8.0.26 /usr/local/tomcat8 <span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">ENTRYPOINT</span> /usr/local/tomcat8/bin/startup.sh <span class="o">&amp;&amp;</span> tail -F <span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span>/usr/local/tomcat8/logs/catalina.out <span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">EXPOSE</span><span class="s"> 8080 </span><span class="err">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2024-06-26</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/dockerfile%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BC%98%E5%8C%96/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://localhost:1313/dockerfile%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BC%98%E5%8C%96/" data-title="Dockerfile介绍及优化" data-via="xxxx" data-hashtags="docker"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/dockerfile%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BC%98%E5%8C%96/" data-hashtag="docker"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="http://localhost:1313/dockerfile%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BC%98%E5%8C%96/" data-title="Dockerfile介绍及优化"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://localhost:1313/dockerfile%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BC%98%E5%8C%96/" data-title="Dockerfile介绍及优化"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/dockerfile%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BC%98%E5%8C%96/" data-title="Dockerfile介绍及优化"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/docker/">Docker</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/k8s%E5%88%A0%E9%99%A4namesapce%E4%B8%80%E7%9B%B4%E5%A4%84%E4%BA%8Eterminating%E7%8A%B6%E6%80%81%E5%A4%84%E7%90%86/" class="prev" rel="prev" title="K8s删除Namesapce一直处于Terminating状态处理"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>K8s删除Namesapce一直处于Terminating状态处理</a>
+            <a href="/first_post/" class="next" rel="next" title="First_post">First_post<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">我是有底线的</div><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.126.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2024</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">lushuan</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
