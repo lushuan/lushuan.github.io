@@ -49,6 +49,21 @@ echo "kuberntes"
 sudo kubectl get sa -A
 ```
 
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+      ports:
+        - containerPort: 80
+```
+
 ### 通过highlight 引入，并指定语言
 不指定语言会报错,随便指定语言会不显示
 {{< highlight demo >}}

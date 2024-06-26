@@ -152,7 +152,7 @@ Disqus、Gitalk和Valine是三种常见的评论系统，它们在功能、特�
 8. [【博客写作指南】创意封面设计与选择](https://zhuanlan.zhihu.com/p/652711765)
 9. [hugo 中文文档](https://www.gohugo.org/)
 10. [用Hugo搭建博客并部署到GitHub Pages](https://www.cnblogs.com/RyanXing/p/Hugo.html#2-%e9%83%a8%e7%bd%b2)
-
+11. [使用 Hugo 发布文章](https://tangzixiang.github.io/posts/2019/%E4%BD%BF%E7%94%A8-hugo-%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/)
 
 ## 采坑
 1. [从Hexo迁移至Hugo以及使用LoveIt主题的踩坑记录](https://cloud.tencent.com/developer/article/1932817)

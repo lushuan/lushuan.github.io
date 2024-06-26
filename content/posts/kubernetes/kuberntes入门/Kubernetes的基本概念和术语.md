@@ -7,8 +7,8 @@ draft: false
 toc:
   enable: true
 weight: false
-categories: [""]
-tags: [""]
+categories: ["Kubernetes"]
+tags: ["Kubernetes"]
 ---
 #  资源对象概述
 Kubernetes中的基本概念和术语大多是围绕资源对象（Resource
