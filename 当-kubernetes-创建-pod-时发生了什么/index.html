@@ -4,39 +4,39 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="noodp" />
-        <title>Kubernetes 网络排障 - 西门带刀</title><meta name="Description" content="知识有两种，一种是你知道的，一种是你知道在哪里能找到的！ --塞缪尔·约翰逊"><meta property="og:url" content="http://localhost:1313/kubernetes-%E7%BD%91%E7%BB%9C%E6%8E%92%E9%94%99/">
+        <title>当 Kubernetes 创建 Pod 时发生了什么 - 西门带刀</title><meta name="Description" content="知识有两种，一种是你知道的，一种是你知道在哪里能找到的！ --塞缪尔·约翰逊"><meta property="og:url" content="http://localhost:1313/%E5%BD%93-kubernetes-%E5%88%9B%E5%BB%BA-pod-%E6%97%B6%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88/">
   <meta property="og:site_name" content="西门带刀">
-  <meta property="og:title" content="Kubernetes 网络排障">
-  <meta property="og:description" content="记录一下kuberntes 遇到的问题场景及排查方向 DNS 解析异常 5 秒延时 如果DNS查询经常延时5秒才返回，通常是遇到内核 conntrack 冲突导致的丢包 解析超时">
+  <meta property="og:title" content="当 Kubernetes 创建 Pod 时发生了什么">
+  <meta property="og:description" content="当Kubernetes创建Pod时发生了什么-全景图 https://github.com/jamiehannaford/what-happens-when-k8s/tree/master/zh-cn">
   <meta property="og:locale" content="zh_CN">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2022-09-28T12:06:37+08:00">
+    <meta property="article:published_time" content="2023-03-26T12:06:37+08:00">
     <meta property="article:modified_time" content="2024-06-26T12:06:37+08:00">
-    <meta property="article:tag" content="Kubernetes排障">
+    <meta property="article:tag" content="Kubernetes">
     <meta property="og:image" content="http://localhost:1313/logo.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="http://localhost:1313/logo.png">
-  <meta name="twitter:title" content="Kubernetes 网络排障">
-  <meta name="twitter:description" content="记录一下kuberntes 遇到的问题场景及排查方向 DNS 解析异常 5 秒延时 如果DNS查询经常延时5秒才返回，通常是遇到内核 conntrack 冲突导致的丢包 解析超时">
+  <meta name="twitter:title" content="当 Kubernetes 创建 Pod 时发生了什么">
+  <meta name="twitter:description" content="当Kubernetes创建Pod时发生了什么-全景图 https://github.com/jamiehannaford/what-happens-when-k8s/tree/master/zh-cn">
       <meta name="twitter:site" content="@xxxx">
 <meta name="application-name" content="我的网站">
 <meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://localhost:1313/kubernetes-%E7%BD%91%E7%BB%9C%E6%8E%92%E9%94%99/" /><link rel="prev" href="http://localhost:1313/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1apiserver%E5%92%8Cetcd%E8%BF%9E%E6%8E%A5%E7%9A%84%E9%9A%8F%E6%9C%BA%E7%AB%AF%E5%8F%A3%E5%8D%A0%E7%94%A8%E5%86%B2%E7%AA%81%E9%97%AE%E9%A2%98/" /><link rel="next" href="http://localhost:1313/%E5%BD%93-kubernetes-%E5%88%9B%E5%BB%BA-pod-%E6%97%B6%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://localhost:1313/%E5%BD%93-kubernetes-%E5%88%9B%E5%BB%BA-pod-%E6%97%B6%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88/" /><link rel="prev" href="http://localhost:1313/kubernetes-%E7%BD%91%E7%BB%9C%E6%8E%92%E9%94%99/" /><link rel="next" href="http://localhost:1313/k8s_v1.20.x%E5%88%9B%E5%BB%BApvc%E6%8A%A5%E9%94%99/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
     {
         "@context": "http://schema.org",
         "@type": "BlogPosting",
-        "headline": "Kubernetes 网络排障",
+        "headline": "当 Kubernetes 创建 Pod 时发生了什么",
         "inLanguage": "zh-CN",
         "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": "http:\/\/localhost:1313\/kubernetes-%E7%BD%91%E7%BB%9C%E6%8E%92%E9%94%99\/"
-        },"genre": "posts","keywords": "Kubernetes排障","wordcount":  415 ,
-        "url": "http:\/\/localhost:1313\/kubernetes-%E7%BD%91%E7%BB%9C%E6%8E%92%E9%94%99\/","datePublished": "2022-09-28T12:06:37+08:00","dateModified": "2024-06-26T12:06:37+08:00","publisher": {
+            "@id": "http:\/\/localhost:1313\/%E5%BD%93-kubernetes-%E5%88%9B%E5%BB%BA-pod-%E6%97%B6%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88\/"
+        },"genre": "posts","keywords": "Kubernetes","wordcount":  27 ,
+        "url": "http:\/\/localhost:1313\/%E5%BD%93-kubernetes-%E5%88%9B%E5%BB%BA-pod-%E6%97%B6%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88\/","datePublished": "2023-03-26T12:06:37+08:00","dateModified": "2024-06-26T12:06:37+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
                 "@type": "Person",
@@ -107,125 +107,21 @@
                 <div class="container"><div class="toc" id="toc-auto">
             <h2 class="toc-title">目录</h2>
             <div class="toc-content" id="toc-content-auto"></div>
-        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Kubernetes 网络排障</h1><div class="post-meta">
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">当 Kubernetes 创建 Pod 时发生了什么</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/kubernetes/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Kubernetes</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2022-09-28">2022-09-28</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 415 字&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-03-26">2023-03-26</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 27 字&nbsp;
                 <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 1 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  data-kept="true">
                 <div class="details-summary toc-title">
                     <span>目录</span>
                     <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
                 </div>
-                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
-  <ul>
-    <li><a href="#dns-解析异常">DNS 解析异常</a>
-      <ul>
-        <li><a href="#解析超时">解析超时</a></li>
-      </ul>
-    </li>
-    <li><a href="#service-无法解析">Service 无法解析</a>
-      <ul>
-        <li><a href="#pod-与-dns-服务之间网络不通">Pod 与 DNS 服务之间网络不通</a></li>
-      </ul>
-    </li>
-  </ul>
-</nav></div>
-            </div><div class="content" id="content"><p>记录一下kuberntes 遇到的问题场景及排查方向</p>
-<h2 id="dns-解析异常">DNS 解析异常</h2>
-<p>5 秒延时
-如果DNS查询经常延时5秒才返回，通常是遇到内核 conntrack 冲突导致的丢包</p>
-<h3 id="解析超时">解析超时</h3>
-<p>如果容器内报 DNS 解析超时，先检查下集群 DNS 服务 (kube-dns/coredns) 的 Pod 是否 Ready，如果不是，查看日志信息。如果运行正常，再具体看下超时现象。</p>
-<h2 id="service-无法解析">Service 无法解析</h2>
-<p>集群 DNS 没有正常运行(kube-dns或CoreDNS)</p>
-<p>检查集群 DNS 是否运行正常:</p>
-<ul>
-<li>kubelet 启动参数 &ndash;cluster-dns 可以看到 dns 服务的 cluster ip:</li>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents"></nav></div>
+            </div><div class="content" id="content"><ul>
+<li><a href="https://hugo-picture.oss-cn-beijing.aliyuncs.com/what-happens-when-k8s.svg" target="_blank" rel="noopener noreffer ">当Kubernetes创建Pod时发生了什么-全景图</a></li>
+<li><a href="https://github.com/jamiehannaford/what-happens-when-k8s/tree/master/zh-cn" target="_blank" rel="noopener noreffer ">https://github.com/jamiehannaford/what-happens-when-k8s/tree/master/zh-cn</a></li>
 </ul>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ ps -ef <span class="p">|</span> grep kubelet
-</span></span><span class="line"><span class="cl">... /usr/bin/kubelet --cluster-dns<span class="o">=</span>172.16.14.217 ...
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>或者放置配置文件中</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ cat /var/lib/kubelet/config.yaml<span class="p">|</span>grep clusterDNS -A <span class="m">2</span>
-</span></span><span class="line"><span class="cl">clusterDNS:
-</span></span><span class="line"><span class="cl">- 172.16.0.10
-</span></span><span class="line"><span class="cl">clusterDomain: cluster.local
-</span></span></code></pre></td></tr></table>
-</div>
-</div><ul>
-<li>找到 dns 的 service:</li>
-</ul>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ kubectl get svc -n kube-system <span class="p">|</span> grep 172.16.14.217
-</span></span><span class="line"><span class="cl">kube-dns              ClusterIP   172.16.14.217   &lt;none&gt;        53/TCP,53/UDP              47d
-</span></span></code></pre></td></tr></table>
-</div>
-</div><ul>
-<li>看是否存在 endpoint:</li>
-</ul>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ kubectl -n kube-system describe svc kube-dns <span class="p">|</span> grep -i endpoints
-</span></span><span class="line"><span class="cl">Endpoints:         172.16.0.156:53,172.16.0.167:53
-</span></span><span class="line"><span class="cl">Endpoints:         172.16.0.156:53,172.16.0.167:53
-</span></span></code></pre></td></tr></table>
-</div>
-</div><ul>
-<li>检查 endpoint 的 对应 pod 是否正常:</li>
-</ul>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ kubectl -n kube-system get pod -o wide <span class="p">|</span> grep 172.16.0.156
-</span></span><span class="line"><span class="cl">kube-dns-898dbbfc6-hvwlr            3/3       Running   <span class="m">0</span>          8d        172.16.0.156   10.0.0.3
-</span></span></code></pre></td></tr></table>
-</div>
-</div><h3 id="pod-与-dns-服务之间网络不通">Pod 与 DNS 服务之间网络不通</h3>
-<p>检查下 pod 是否连不上 dns 服务，可以在 pod 里 telnet 一下 dns 的 53 端口:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># 连 dns service 的 cluster ip</span>
-</span></span><span class="line"><span class="cl">$ telnet 172.16.14.217 <span class="m">53</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>如果检查到是网络不通，就需要排查下网络设置:</p>
-<ul>
-<li>检查节点的安全组设置，需要放开集群的容器网段</li>
-<li>检查是否还有防火墙规则，检查 iptables</li>
-</ul>
-</div><div class="post-footer" id="post-footer">
+<center><img src="/images/kubernetes/what-happens-when-k8s.svg" width="50%" /></center></div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
@@ -233,23 +129,23 @@
             </div></div>
         <div class="post-info-line">
             <div class="post-info-md"><span>
-                            <a class="link-to-markdown" href="/kubernetes-%E7%BD%91%E7%BB%9C%E6%8E%92%E9%94%99/index.md" target="_blank">阅读原始文档</a>
+                            <a class="link-to-markdown" href="/%E5%BD%93-kubernetes-%E5%88%9B%E5%BB%BA-pod-%E6%97%B6%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88/index.md" target="_blank">阅读原始文档</a>
                         </span></div>
             <div class="post-info-share">
-                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://localhost:1313/kubernetes-%E7%BD%91%E7%BB%9C%E6%8E%92%E9%94%99/" data-title="Kubernetes 网络排障" data-via="xxxx" data-hashtags="Kubernetes排障"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/kubernetes-%E7%BD%91%E7%BB%9C%E6%8E%92%E9%94%99/" data-hashtag="Kubernetes排障"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="http://localhost:1313/kubernetes-%E7%BD%91%E7%BB%9C%E6%8E%92%E9%94%99/" data-title="Kubernetes 网络排障"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://localhost:1313/kubernetes-%E7%BD%91%E7%BB%9C%E6%8E%92%E9%94%99/" data-title="Kubernetes 网络排障"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/kubernetes-%E7%BD%91%E7%BB%9C%E6%8E%92%E9%94%99/" data-title="Kubernetes 网络排障"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://localhost:1313/%E5%BD%93-kubernetes-%E5%88%9B%E5%BB%BA-pod-%E6%97%B6%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88/" data-title="当 Kubernetes 创建 Pod 时发生了什么" data-via="xxxx" data-hashtags="Kubernetes"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/%E5%BD%93-kubernetes-%E5%88%9B%E5%BB%BA-pod-%E6%97%B6%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88/" data-hashtag="Kubernetes"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="http://localhost:1313/%E5%BD%93-kubernetes-%E5%88%9B%E5%BB%BA-pod-%E6%97%B6%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88/" data-title="当 Kubernetes 创建 Pod 时发生了什么"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://localhost:1313/%E5%BD%93-kubernetes-%E5%88%9B%E5%BB%BA-pod-%E6%97%B6%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88/" data-title="当 Kubernetes 创建 Pod 时发生了什么"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/%E5%BD%93-kubernetes-%E5%88%9B%E5%BB%BA-pod-%E6%97%B6%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88/" data-title="当 Kubernetes 创建 Pod 时发生了什么"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
             </div>
         </div>
     </div>
 
     <div class="post-info-more">
-        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/kubernetes%E6%8E%92%E9%9A%9C/">Kubernetes排障</a></section>
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/kubernetes/">Kubernetes</a></section>
         <section>
             <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
         </section>
     </div>
 
-    <div class="post-nav"><a href="/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1apiserver%E5%92%8Cetcd%E8%BF%9E%E6%8E%A5%E7%9A%84%E9%9A%8F%E6%9C%BA%E7%AB%AF%E5%8F%A3%E5%8D%A0%E7%94%A8%E5%86%B2%E7%AA%81%E9%97%AE%E9%A2%98/" class="prev" rel="prev" title="Kubernetes 记录一次 Apiserver 和 Etcd 连接的随机端口占用冲突问题"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Kubernetes 记录一次 Apiserver 和 Etcd 连接的随机端口占用冲突问题</a>
-            <a href="/%E5%BD%93-kubernetes-%E5%88%9B%E5%BB%BA-pod-%E6%97%B6%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88/" class="next" rel="next" title="当 Kubernetes 创建 Pod 时发生了什么">当 Kubernetes 创建 Pod 时发生了什么<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+    <div class="post-nav"><a href="/kubernetes-%E7%BD%91%E7%BB%9C%E6%8E%92%E9%94%99/" class="prev" rel="prev" title="Kubernetes 网络排障"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Kubernetes 网络排障</a>
+            <a href="/k8s_v1.20.x%E5%88%9B%E5%BB%BApvc%E6%8A%A5%E9%94%99/" class="next" rel="next" title="Kubernetes v1.20创建PVC报错">Kubernetes v1.20创建PVC报错<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
 </div>
 </article></div>
             </main><footer class="footer">

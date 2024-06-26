@@ -55,6 +55,14 @@
     <description><![CDATA[故障描述 PVC 显示创建不成功：kubectl get pvc -n efk 显示 Pending，这是由于版本太高导致的。k8sv1.20 以上版本默认禁止使用 selfLi]]></description>
 </item>
 <item>
+    <title>当 Kubernetes 创建 Pod 时发生了什么</title>
+    <link>http://localhost:1313/%E5%BD%93-kubernetes-%E5%88%9B%E5%BB%BA-pod-%E6%97%B6%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88/</link>
+    <pubDate>Sun, 26 Mar 2023 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/%E5%BD%93-kubernetes-%E5%88%9B%E5%BB%BA-pod-%E6%97%B6%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88/</guid>
+    <description><![CDATA[当Kubernetes创建Pod时发生了什么-全景图 https://github.com/jamiehannaford/what-happens-when-k8s/tree/master/zh-cn]]></description>
+</item>
+<item>
     <title>Kubernetes 网络排障</title>
     <link>http://localhost:1313/kubernetes-%E7%BD%91%E7%BB%9C%E6%8E%92%E9%94%99/</link>
     <pubDate>Wed, 28 Sep 2022 12:06:37 &#43;0800</pubDate>
@@ -77,14 +85,6 @@
     <author>lushuan</author>
     <guid>http://localhost:1313/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E6%95%85%E9%9A%9C%E5%88%86%E6%9E%90/</guid>
     <description><![CDATA[问题现象 生产环境无法访问，这里主要是梳理遇到问题应该有的一个排查思路 问题排查 登录节点查看namespace 下各pod状态 1 kubectl get pod -o wide -n prod 发现]]></description>
-</item>
-<item>
-    <title>Kubernetes 通过 nfs 动态创建 pv 异常</title>
-    <link>http://localhost:1313/kubernetes%E9%80%9A%E8%BF%87nfs%E5%8A%A8%E6%80%81%E5%88%9B%E5%BB%BApv%E5%BC%82%E5%B8%B8/</link>
-    <pubDate>Wed, 18 May 2022 12:06:37 &#43;0800</pubDate>
-    <author>lushuan</author>
-    <guid>http://localhost:1313/kubernetes%E9%80%9A%E8%BF%87nfs%E5%8A%A8%E6%80%81%E5%88%9B%E5%BB%BApv%E5%BC%82%E5%B8%B8/</guid>
-    <description><![CDATA[背景 statefulset 通过nfs 动态创建pv，发现无法创建成功 报错日志 1 Warning FailedMount 2m50s (x6 over 6m4s) kubelet Unable to attach or mount volumes: unmounted volumes=[data], unattached volumes=[kube-api-access-8p8wf data]: error processing PVC kube-logging/data-es-cluster-0: PVC is not bound 通过报错日志可以看的出来pvc 无]]></description>
 </item>
 </channel>
 </rss>

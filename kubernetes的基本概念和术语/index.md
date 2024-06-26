@@ -1,10 +1,9 @@
 # Kubernetes的基本概念和术语
 
 #  资源对象概述
-Kubernetes中的基本概念和术语大多是围绕资源对象（Resource
-Object）来说的，而资源对象在总体上可分为以下两类。
+Kubernetes中的基本概念和术语大多是围绕资源对象（Resource Object）来说的，而资源对象在总体上可分为以下两类。
 
-- 某种资源的对象，例如节点（Node）、Pod、服务（Service）、存储卷（Volume）。
+- 某种资源的对象，例如节点（Node）、Pod、服务（Service）、存储卷（Volume）
 - 与资源对象相关的事物与动作，例如标签（Label）、注解（Annotation）、命名空间（Namespace）、部署（Deployment）、HPA、PVC。
 
 #   集群类
