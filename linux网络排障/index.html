@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>Linux 网络排障 - Less is more</title><meta name="Description" content="知识有两种，一种是你知道的，一种是你知道在哪里能找到的！ --塞缪尔·约翰逊"><meta property="og:url" content="http://localhost:1313/linux%E7%BD%91%E7%BB%9C%E6%8E%92%E9%9A%9C/">
+  <meta property="og:site_name" content="Less is more">
+  <meta property="og:title" content="Linux 网络排障">
+  <meta property="og:description" content="netstat netstat是一个常用的命令行网络工具，用于显示与网络连接、路由表和网络接口相关的信息。以下是一些常用的netstat命令： netstat -tunl">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2022-03-29T12:06:37+08:00">
+    <meta property="article:modified_time" content="2024-06-26T12:06:37+08:00">
+    <meta property="article:tag" content="Linux">
+    <meta property="og:image" content="http://localhost:1313/logo.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/logo.png">
+  <meta name="twitter:title" content="Linux 网络排障">
+  <meta name="twitter:description" content="netstat netstat是一个常用的命令行网络工具，用于显示与网络连接、路由表和网络接口相关的信息。以下是一些常用的netstat命令： netstat -tunl">
+      <meta name="twitter:site" content="@xxxx">
+<meta name="application-name" content="我的网站">
+<meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://localhost:1313/linux%E7%BD%91%E7%BB%9C%E6%8E%92%E9%9A%9C/" /><link rel="prev" href="http://localhost:1313/first_post/" /><link rel="next" href="http://localhost:1313/kubernetes%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Linux 网络排障",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost:1313\/linux%E7%BD%91%E7%BB%9C%E6%8E%92%E9%9A%9C\/"
+        },"genre": "posts","keywords": "linux","wordcount":  2124 ,
+        "url": "http:\/\/localhost:1313\/linux%E7%BD%91%E7%BB%9C%E6%8E%92%E9%9A%9C\/","datePublished": "2022-03-29T12:06:37+08:00","dateModified": "2024-06-26T12:06:37+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "lushuan"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Less is more">Less is more</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/" title="About"> 关于 </a><a class="menu-item" href="/friends/" title="friends"> 友链 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Less is more">Less is more</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="About">关于</a><a class="menu-item" href="/friends/" title="friends">友链</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Linux 网络排障</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/linux/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Linux</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2022-03-29">2022-03-29</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 2124 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 5 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="true">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#netstat">netstat</a></li>
+    <li><a href="#sar">sar</a>
+      <ul>
+        <li><a href="#example">Example</a></li>
+      </ul>
+    </li>
+    <li><a href="#telnet">telnet</a></li>
+    <li><a href="#ss">ss</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="netstat">netstat</h2>
+<p>netstat是一个常用的命令行网络工具，用于显示与网络连接、路由表和网络接口相关的信息。以下是一些常用的netstat命令：</p>
+<ol>
+<li><code>netstat -tunlp</code>：显示所有TCP和UDP端口的监听情况，以及对应的进程信息。</li>
+<li><code>netstat -tuln</code>：显示所有TCP端口的监听情况，包括本地地址、外部地址和状态。</li>
+<li><code>netstat -a</code>：显示所有活动的网络连接，包括监听和非监听状态。</li>
+<li><code>netstat -r</code>：显示路由表，包括目标地址、网关、子网掩码和接口。</li>
+<li><code>netstat -s</code>：显示网络统计信息，包括传输的数据包数量、错误数量和丢失数量等。</li>
+<li><code>netstat -i</code>：显示网络接口信息，包括接口名称、MAC地址、IP地址和状态等。</li>
+<li><code>netstat -c</code>：持续输出网络连接的信息，每隔一段时间刷新一次。</li>
+</ol>
+<h2 id="sar">sar</h2>
+<p>sar（System Activity Reporter）是一个性能监控工具，它可以提供系统资源使用情况的历史数据。以下是一些常用的sar命令和相应的使用场景：</p>
+<blockquote>
+<p><code>sar -u</code>：显示CPU使用情况。</p>
+</blockquote>
+<ul>
+<li>使用场景：了解系统CPU的平均负载、用户空间CPU使用率、系统空间CPU使用率，以及等待I/O的CPU使用率。</li>
+</ul>
+<blockquote>
+<p><code>sar -r</code>：显示内存使用情况。</p>
+</blockquote>
+<ul>
+<li>使用场景：查看主要的内存指标，如总内存、可用内存、内存利用率、缓存和缓冲区。</li>
+</ul>
+<blockquote>
+<p><code>sar -n DEV</code>：显示网络接口的数据传输情况。</p>
+</blockquote>
+<ul>
+<li>使用场景：监测网络流量、带宽使用情况，识别网络瓶颈。</li>
+</ul>
+<blockquote>
+<p><code>sar -q</code>：显示系统负载情况。</p>
+</blockquote>
+<ul>
+<li>使用场景：通过观察平均负载、运行队列长度和就绪进程数，了解系统性能和负载情况。</li>
+</ul>
+<blockquote>
+<p><code>sar -b</code>：显示系统的I/O使用情况。</p>
+</blockquote>
+<ul>
+<li>使用场景：监测磁盘IO的情况，包括块读写次数、块传输速率，查找磁盘性能问题。</li>
+</ul>
+<blockquote>
+<p><code>sar -W</code>：显示系统交换空间的使用情况。</p>
+</blockquote>
+<ul>
+<li>使用场景：了解交换空间的使用情况，识别系统内存不足导致的交换瓶颈。</li>
+</ul>
+<blockquote>
+<p><code>sar -d</code>：显示块设备的I/O统计信息。</p>
+</blockquote>
+<ul>
+<li>使用场景：查看块设备（硬盘）的读写操作、传输速率和请求队列长度。</li>
+</ul>
+<h3 id="example">Example</h3>
+<p>统计sockets连接新</p>
+<ol>
+<li>sar -n SOCK</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$  sar -n SOCK <span class="m">1</span> <span class="m">1</span>
+</span></span><span class="line"><span class="cl">Linux 4.4.115-1.el7.elrepo.x86_64 <span class="o">(</span>chm<span class="o">)</span>         2022年05月20日  _x86_64_        <span class="o">(</span><span class="m">12</span> CPU<span class="o">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">14时05分40秒    totsck    tcpsck    udpsck    rawsck   ip-frag    tcp-tw
+</span></span><span class="line"><span class="cl">14时05分41秒      <span class="m">7725</span>        <span class="m">76</span>         <span class="m">5</span>         <span class="m">0</span>         <span class="m">0</span>       <span class="m">642</span>
+</span></span><span class="line"><span class="cl">平均时间:      <span class="m">7725</span>        <span class="m">76</span>         <span class="m">5</span>         <span class="m">0</span>         <span class="m">0</span>       <span class="m">642</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>totsck 当前被使用的socket总数</li>
+<li>tcpsck 当前正在被使用的TCP的socket总数</li>
+<li>udpsck 当前正在被使用的UDP的socket总数</li>
+<li>rawsck 当前正在被使用于RAW的skcket总数</li>
+<li>if-frag 当前的IP分片的数目</li>
+<li>tcp-tw TCP套接字中处于TIME-WAIT状态的连接数量</li>
+</ul>
+<p>这些sar命令可用于监控系统资源的使用情况，帮助诊断性能问题和优化系统配置。您可以通过调整命令的参数来获取特定的监控数据，并结合其他工具和命令进行综合分析</p>
+<h2 id="telnet">telnet</h2>
+<p>telnet是一个用于远程登录和管理远程主机的网络协议和工具。以下是一些常用的telnet命令和相应的使用场景：</p>
+<blockquote>
+<p>1.telnet host：连接到指定的远程主机。</p>
+</blockquote>
+<ul>
+<li>使用场景：远程登录到其他计算机，进行命令行管理和操作。</li>
+</ul>
+<blockquote>
+<p>2.telnet host port：连接到指定主机的特定端口。</p>
+</blockquote>
+<ul>
+<li>使用场景：检查特定服务的可用性，如通过telnet测试SMTP服务器是否能够连接。</li>
+</ul>
+<blockquote>
+<p>3.Ctrl + ]：进入telnet控制台。</p>
+</blockquote>
+<ul>
+<li>使用场景：在telnet会话中，按下Ctrl + ]键后，可以进入控制台，执行一些附加功能，如终止会话、更改设置等。</li>
+</ul>
+<blockquote>
+<p>4.send string：发送字符串到远程主机。</p>
+</blockquote>
+<ul>
+<li>使用场景：在telnet会话中，可以使用send命令发送特定的字符串至远程主机，用于模拟用户输入等情景。</li>
+</ul>
+<blockquote>
+<p>5.display或toggle options：显示或切换选项状态。</p>
+</blockquote>
+<ul>
+<li>使用场景：在telnet会话中，可以使用这两个命令查看或切换当前会话的选项状态，例如回显、行编辑等。</li>
+</ul>
+<blockquote>
+<p>6.quit：退出当前telnet会话。</p>
+</blockquote>
+<ul>
+<li>使用场景：在完成telnet会话后，使用该命令退出并关闭连接。</li>
+</ul>
+<p>telnet命令可以用于远程登录和管理远程主机，但由于安全性较差，已逐渐被SSH等更安全的协议取代。在实际应用中，建议使用更加安全的远程连接方法，如SSH（Secure Shell）。</p>
+<h2 id="ss">ss</h2>
+<p>ss（Socket Statistics）是一个Linux系统中用于显示当前活动套接字（socket）信息的命令。它可以提供更详细和全面的套接字统计数据。以下是一些常用的ss命令和相应的使用场景：</p>
+<blockquote>
+<p>1.ss -t：显示TCP套接字信息。</p>
+</blockquote>
+<ul>
+<li>使用场景：查看当前系统上的TCP连接信息，包括本地地址和端口、远程地址和端口、连接状态等。</li>
+</ul>
+<blockquote>
+<p>2.ss -u：显示UDP套接字信息。</p>
+</blockquote>
+<ul>
+<li>使用场景：查看当前系统上的UDP连接信息，包括本地地址和端口、远程地址和端口等。</li>
+</ul>
+<blockquote>
+<p>3.ss -l：显示监听套接字信息。</p>
+</blockquote>
+<ul>
+<li>使用场景：查看当前系统上正在监听的套接字信息，包括监听的协议、本地地址和端口等。</li>
+</ul>
+<blockquote>
+<p>4.ss -p：显示套接字及其关联进程信息。</p>
+</blockquote>
+<ul>
+<li>使用场景：查看每个套接字对应的关联进程的详细信息，包括进程ID、用户、命令等。</li>
+</ul>
+<blockquote>
+<p>5.ss -n：以数字形式展示套接字信息。</p>
+</blockquote>
+<ul>
+<li>使用场景：显示IP地址和端口号时不进行反向解析，加快输出速度。</li>
+</ul>
+<blockquote>
+<p>6.ss -s：显示套接字统计摘要(包含IPv6)。</p>
+</blockquote>
+<ul>
+<li>使用场景：显示系统级别的套接字统计信息，包括打开的套接字数、活动连接数、侦听套接字数等。</li>
+</ul>
+<blockquote>
+<p>7.ss -o：显示定时器相关信息。</p>
+</blockquote>
+<ul>
+<li>使用场景：查看系统中的定时器事件相关信息，如计时器名称、超时时间、重复间隔等。</li>
+</ul>
+<p>这些ss命令可用于监控和诊断网络连接和套接字的状态，帮助定位网络问题并进行性能调优。在实际应用中，可以结合其他命令和工具（如grep、netstat等）进行更深入的分析和排查。</p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2024-06-26</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/linux%E7%BD%91%E7%BB%9C%E6%8E%92%E9%9A%9C/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://localhost:1313/linux%E7%BD%91%E7%BB%9C%E6%8E%92%E9%9A%9C/" data-title="Linux 网络排障" data-via="xxxx" data-hashtags="linux"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/linux%E7%BD%91%E7%BB%9C%E6%8E%92%E9%9A%9C/" data-hashtag="linux"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="http://localhost:1313/linux%E7%BD%91%E7%BB%9C%E6%8E%92%E9%9A%9C/" data-title="Linux 网络排障"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://localhost:1313/linux%E7%BD%91%E7%BB%9C%E6%8E%92%E9%9A%9C/" data-title="Linux 网络排障"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/linux%E7%BD%91%E7%BB%9C%E6%8E%92%E9%9A%9C/" data-title="Linux 网络排障"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/linux/">Linux</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/first_post/" class="prev" rel="prev" title="First_post"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>First_post</a>
+            <a href="/kubernetes%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/" class="next" rel="next" title="kubernetes常用命令整理">kubernetes常用命令整理<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">我是有底线的</div><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.126.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2024</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">lushuan</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

@@ -1,16 +1,40 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title>Kubernetes - 标签 - 西门带刀</title>
+        <title>Kubernetes - 标签 - Less is more</title>
         <link>http://localhost:1313/tags/kubernetes/</link>
-        <description>Kubernetes - 标签 - 西门带刀</description>
+        <description>Kubernetes - 标签 - Less is more</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
-            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Wed, 26 Jun 2024 12:06:37 &#43;0800</lastBuildDate><atom:link href="http://localhost:1313/tags/kubernetes/" rel="self" type="application/rss+xml" /><item>
-    <title>Kubernetes的基本概念和术语</title>
-    <link>http://localhost:1313/kubernetes%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E5%92%8C%E6%9C%AF%E8%AF%AD/</link>
-    <pubDate>Wed, 26 Jun 2024 12:06:37 &#43;0800</pubDate>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Wed, 26 Apr 2023 12:06:37 &#43;0800</lastBuildDate><atom:link href="http://localhost:1313/tags/kubernetes/" rel="self" type="application/rss+xml" /><item>
+    <title>k8s容器运行时 containerd 版本升级</title>
+    <link>http://localhost:1313/k8s%E5%AE%B9%E5%99%A8%E8%BF%90%E8%A1%8C%E6%97%B6containerd%E5%8D%87%E7%BA%A7/</link>
+    <pubDate>Wed, 26 Apr 2023 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>http://localhost:1313/kubernetes%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E5%92%8C%E6%9C%AF%E8%AF%AD/</guid>
-    <description><![CDATA[资源对象概述 Kubernetes中的基本概念和术语大多是围绕资源对象（Resource Object）来说的，而资源对象在总体上可分为以下两类]]></description>
+    <guid>http://localhost:1313/k8s%E5%AE%B9%E5%99%A8%E8%BF%90%E8%A1%8C%E6%97%B6containerd%E5%8D%87%E7%BA%A7/</guid>
+    <description><![CDATA[背景 k8s 容器运行时是docker和containerd结合使用，且生产环境是离线环境将需要的containerd和docker版本相关的rpm]]></description>
+</item>
+<item>
+    <title>kubelet目录满问题记录</title>
+    <link>http://localhost:1313/kubelet%E7%9B%AE%E5%BD%95%E6%BB%A1%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/</link>
+    <pubDate>Wed, 26 Apr 2023 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/kubelet%E7%9B%AE%E5%BD%95%E6%BB%A1%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/</guid>
+    <description><![CDATA[现象 k8s 某台主机的/var/lib/kubelet目录存储使用率超过80% 使用了40多G存储 分析 申请root权限 cd /var/lib/kubelet 执行du -h -d 1 发现 pod目]]></description>
+</item>
+<item>
+    <title>调整节点pod驱逐时间</title>
+    <link>http://localhost:1313/%E8%B0%83%E6%95%B4%E8%8A%82%E7%82%B9pod%E9%A9%B1%E9%80%90%E6%97%B6%E9%97%B4/</link>
+    <pubDate>Wed, 26 Apr 2023 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/%E8%B0%83%E6%95%B4%E8%8A%82%E7%82%B9pod%E9%A9%B1%E9%80%90%E6%97%B6%E9%97%B4/</guid>
+    <description><![CDATA[问题描述 在高可用的k8s集群中，当Node节点挂掉，kubelet无法提供工作的时候，pod将会自动调度到其他的节点上去，而调度到节点上的时]]></description>
+</item>
+<item>
+    <title>kube-dns切换为coredns实践</title>
+    <link>http://localhost:1313/kube-dns%E5%88%87%E6%8D%A2%E4%B8%BAcoredns%E5%AE%9E%E8%B7%B5/</link>
+    <pubDate>Sun, 26 Mar 2023 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/kube-dns%E5%88%87%E6%8D%A2%E4%B8%BAcoredns%E5%AE%9E%E8%B7%B5/</guid>
+    <description><![CDATA[kube-dns切换为coredns k8s版本及其dns适配版本 k8s版本 coredns版本 镜像 镜像yaml 1.17 1.6.7 coredns-1.6.7.tar.gz coredns-1.6.7.yaml 1.22 1.8.4 coredns-1.8.4.tar.gz coredns-1.8.4.yaml coredns/coredns:1.6.7/1.8.4 操作 根据版本选]]></description>
 </item>
 <item>
     <title>当 Kubernetes 创建 Pod 时发生了什么</title>
@@ -19,6 +43,22 @@
     <author>lushuan</author>
     <guid>http://localhost:1313/%E5%BD%93-kubernetes-%E5%88%9B%E5%BB%BA-pod-%E6%97%B6%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88/</guid>
     <description><![CDATA[当Kubernetes创建Pod时发生了什么-全景图 https://github.com/jamiehannaford/what-happens-when-k8s/tree/master/zh-cn]]></description>
+</item>
+<item>
+    <title>kubernetes常用命令整理</title>
+    <link>http://localhost:1313/kubernetes%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/</link>
+    <pubDate>Tue, 26 Apr 2022 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/kubernetes%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/</guid>
+    <description><![CDATA[使用 kubernetes 经常会用到命令行，这里对命令行进行分类整理 集群管理 kubectl cluster-info kubectl config kubectl version kubectl api-versions 查看当前集群支持的api版本 kubectl get node kubectl get pod kubectl get service kubectl cordon 命令：用于标记某个]]></description>
+</item>
+<item>
+    <title>Kubernetes的基本概念和术语</title>
+    <link>http://localhost:1313/kubernetes%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E5%92%8C%E6%9C%AF%E8%AF%AD/</link>
+    <pubDate>Sat, 26 Jun 2021 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/kubernetes%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E5%92%8C%E6%9C%AF%E8%AF%AD/</guid>
+    <description><![CDATA[资源对象概述 Kubernetes中的基本概念和术语大多是围绕资源对象（Resource Object）来说的，而资源对象在总体上可分为以下两类]]></description>
 </item>
 </channel>
 </rss>

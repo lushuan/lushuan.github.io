@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>Linux 系统性能问题定位 - Less is more</title><meta name="Description" content="知识有两种，一种是你知道的，一种是你知道在哪里能找到的！ --塞缪尔·约翰逊"><meta property="og:url" content="http://localhost:1313/linux%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/">
+  <meta property="og:site_name" content="Less is more">
+  <meta property="og:title" content="Linux 系统性能问题定位">
+  <meta property="og:description" content="监控系统资源和进程工具 top 命令 快捷键及使用场景 1：显示每个 CPU 核心的详细信息。当你需要查看系统中每个 CPU 核心的负载和使用情况时，可以按下 1 键。 E：">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2022-06-29T12:06:37+08:00">
+    <meta property="article:modified_time" content="2024-06-26T12:06:37+08:00">
+    <meta property="article:tag" content="Linux">
+    <meta property="og:image" content="http://localhost:1313/logo.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/logo.png">
+  <meta name="twitter:title" content="Linux 系统性能问题定位">
+  <meta name="twitter:description" content="监控系统资源和进程工具 top 命令 快捷键及使用场景 1：显示每个 CPU 核心的详细信息。当你需要查看系统中每个 CPU 核心的负载和使用情况时，可以按下 1 键。 E：">
+      <meta name="twitter:site" content="@xxxx">
+<meta name="application-name" content="我的网站">
+<meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://localhost:1313/linux%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/" /><link rel="prev" href="http://localhost:1313/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1apiserver%E5%92%8Cetcd%E8%BF%9E%E6%8E%A5%E7%9A%84%E9%9A%8F%E6%9C%BA%E7%AB%AF%E5%8F%A3%E5%8D%A0%E7%94%A8%E5%86%B2%E7%AA%81%E9%97%AE%E9%A2%98/" /><link rel="next" href="http://localhost:1313/kubernetes-%E7%BD%91%E7%BB%9C%E6%8E%92%E9%94%99/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Linux 系统性能问题定位",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost:1313\/linux%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D\/"
+        },"genre": "posts","keywords": "linux","wordcount":  2675 ,
+        "url": "http:\/\/localhost:1313\/linux%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D\/","datePublished": "2022-06-29T12:06:37+08:00","dateModified": "2024-06-26T12:06:37+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "lushuan"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Less is more">Less is more</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/" title="About"> 关于 </a><a class="menu-item" href="/friends/" title="friends"> 友链 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Less is more">Less is more</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="About">关于</a><a class="menu-item" href="/friends/" title="friends">友链</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Linux 系统性能问题定位</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/linux/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Linux</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2022-06-29">2022-06-29</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 2675 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 6 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="true">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#内存">内存</a></li>
+    <li><a href="#io">IO</a>
+      <ul>
+        <li><a href="#如何判断磁盘-io-性能达到瓶颈">如何判断磁盘 io 性能达到瓶颈？</a></li>
+        <li><a href="#查看磁盘io占用较高的几个进程">查看磁盘io占用较高的几个进程</a></li>
+      </ul>
+    </li>
+    <li><a href="#监控进程使用情况">监控进程使用情况</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#手动清理缓存buffercache">手动清理缓存buffer/cache</a>
+      <ul>
+        <li><a href="#查看僵尸进程并kill掉">查看僵尸进程并kill掉</a></li>
+      </ul>
+    </li>
+    <li><a href="#查看进程占用的的物理内存大小指令">查看进程占用的的物理内存大小指令</a></li>
+    <li><a href="#查看tcp连接数">查看TCP连接数</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h1 id="监控系统资源和进程工具">监控系统资源和进程工具</h1>
+<blockquote>
+<p>top 命令</p>
+</blockquote>
+<p>快捷键及使用场景</p>
+<ul>
+<li>1：显示每个 CPU 核心的详细信息。当你需要查看系统中每个 CPU 核心的负载和使用情况时，可以按下 1 键。</li>
+<li>E：切换累计模式（Cumulative Mode）。在累计模式下，CPU 使用率和内存占用等指标会显示所有进程的累计值而不是单个进程的值。</li>
+<li>M：按内存使用排序。按下 M 键后，top 命令会按照内存使用量的大小对进程进行排序，并显示最高的内存使用进程。</li>
+<li>P：按 CPU 使用排序。按下 P 键后，top 命令会按照 CPU 使用率的大小对进程进行排序，并显示最高的 CPU 使用进程。</li>
+</ul>
+<h2 id="内存">内存</h2>
+<p>内存相关名词释义</p>
+<p>1）Working Set
+Size(WSS)是指一个app保持正常运行所须的内存。比如一个应用在初始阶段申请了100G主存，在实际正常运行时每秒只需要50M，那么这里的50M就是一个WSS<br>
+2）RES：resident memory usage。常驻内存<br>
+3）RSS Resident Set Size 实际使用物理内存，（包含共享库占用的内存）<br>
+4）CACHE，是一种特殊的内存，因为主内存速度不够快，用少量的特别快的但特别昂贵的内存来做缓存加速,就是cache。简单来说，buffer是即将要被写入磁盘的，而cache是被从磁盘中读出来的。<br>
+5）SWAP 交换区间，内存不够用使用磁盘充当内存</p>
+<ul>
+<li>查看占用内存较高的10个进程</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">ps -aux <span class="p">|</span> sort -k4nr <span class="p">|</span> head
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>查看进程占用的内存大小</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># 通过端口获取进程号</span>
+</span></span><span class="line"><span class="cl">netstat -anp<span class="p">|</span>grep <span class="m">9100</span>
+</span></span><span class="line"><span class="cl">tcp6       <span class="m">0</span>      <span class="m">0</span> :::9100                 :::*                    LISTEN      5505/node_exporter
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 通过进程id获取进程占用内存大小</span>
+</span></span><span class="line"><span class="cl">cat /proc/5505/status<span class="p">|</span>grep VmRSS
+</span></span><span class="line"><span class="cl">VmRSS:     <span class="m">31500</span> kB
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>注意：VmRSS对应的值就是物理内存占用</p>
+<h2 id="io">IO</h2>
+<ul>
+<li>查看磁盘io及传递状态</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">iostat -x <span class="m">1</span> <span class="m">3</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="如何判断磁盘-io-性能达到瓶颈">如何判断磁盘 io 性能达到瓶颈？</h3>
+<p>iostat 是一个用于监控系统磁盘IO使用情况的工具，可以显示每个磁盘的IO操作、IO延迟和数据吞吐量等信息。当磁盘IO达到瓶颈时，可以通过 iostat 来判断。</p>
+<p>有以下几个指标可以帮助你判断磁盘IO是否达到瓶颈：</p>
+<ul>
+<li>
+<p>%util：这是磁盘IO利用率的百分比，表示磁盘正在处理IO请求所占用的时间比例。当 %util 高于 80% 或 90% 时，磁盘IO可能已经达到瓶颈状态。</p>
+</li>
+<li>
+<p>await：这是平均每个IO请求在队列中等待被处理的时间，表示系统平均IO响应时间。当 await 较高(通常大于 10ms)时，说明磁盘IO负载过重，也可能意味着磁盘IO已达到瓶颈。</p>
+</li>
+<li>
+<p>svctm：这是平均每个IO请求的服务时间，表示磁盘处理IO请求的平均时间。当 svctm 较高时，系统处理IO请求的速度较慢，可能代表磁盘IO已经达到瓶颈状态。</p>
+</li>
+</ul>
+<p>总之，当磁盘IO利用率高、IO等待时间长或服务时间长时，磁盘IO可能已达到瓶颈状态。通常还需要综合考虑诸如系统性能需求、磁盘类型和配置等因素，才能确定是否对系统进行优化或升级。</p>
+<h3 id="查看磁盘io占用较高的几个进程">查看磁盘io占用较高的几个进程</h3>
+<p>可以使用 iotop 命令来查看磁盘IO占用较高的几个进程</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ iotop -oP
+</span></span><span class="line"><span class="cl">Total DISK READ :     577.97 K/s <span class="p">|</span> Total DISK WRITE :     115.06 K/s
+</span></span><span class="line"><span class="cl">Actual DISK READ:      64.22 K/s <span class="p">|</span> Actual DISK WRITE:    1934.59 K/s
+</span></span><span class="line"><span class="cl">   PID  PRIO  USER     DISK READ  DISK WRITE  SWAPIN     IO&gt;    COMMAND                                                                                                                          
+</span></span><span class="line"><span class="cl">   <span class="m">574</span> be/4 root      577.97 K/s    0.00 B/s  0.00 %  8.68 % <span class="o">[</span>xfsaild/dm-0<span class="o">]</span>
+</span></span><span class="line"><span class="cl"> <span class="m">73282</span> be/4 root        0.00 B/s   45.49 K/s  0.00 %  0.47 % influxd
+</span></span><span class="line"><span class="cl"> <span class="m">53910</span> be/4 root        0.00 B/s    0.00 B/s  0.00 %  0.02 % <span class="o">[</span>kworker/7:0<span class="o">]</span>
+</span></span><span class="line"><span class="cl"> <span class="m">55873</span> be/4 systemd-    0.00 B/s    2.68 K/s  0.00 %  0.02 % mysqld
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="监控进程使用情况">监控进程使用情况</h2>
+<p>pidstat 是一个用于监控进程资源使用情况的工具，可以提供有关 CPU、内存、磁盘IO、网络和上下文切换等方面的统计信息。以下是 pidstat 常用命令及其使用场景：</p>
+<blockquote>
+<p>1.查看特定进程的资源使用情况：</p>
+</blockquote>
+<ul>
+<li>pidstat -p <pid><br>
+该命令可用于监控指定 PID 的进程的资源使用情况，包括 CPU 占用率、内存使用量、上下文切换次数、磁盘IO等。</li>
+</ul>
+<blockquote>
+<p>2.实时监控整个系统中进程的资源使用情况：</p>
+</blockquote>
+<ul>
+<li>pidstat -r<br>
+该命令可实时显示所有进程的内存使用情况，包括虚拟内存大小、物理内存大小、共享内存大小等。</li>
+</ul>
+<blockquote>
+<p>3.监控进程的CPU使用情况：</p>
+</blockquote>
+<ul>
+<li>pidstat -u <interval> <times><br>
+通过设置 <interval> 和 <times> 参数，该命令可定期显示进程的 CPU 使用情况，包括用户空间和内核空间的 CPU 使用时间、CPU 使用百分比等。</li>
+</ul>
+<p>pidstat 命令常用于性能分析和资源监控，可以帮助定位和解决系统性能问题。具体使用场景包括但不限于：
+查找 CPU 密集型进程、监测内存泄漏、检测磁盘IO瓶颈、分析网络传输情况等。</p>
+<h1 id="最佳实践">最佳实践</h1>
+<h2 id="手动清理缓存buffercache">手动清理缓存buffer/cache</h2>
+<p>1.清理pagecache(页面缓存)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="nb">echo</span> <span class="m">1</span> &gt; /proc/sys/vm/drop_caches <span class="c1">#或者 sysctl -w vm.drop_caches=1</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>2.清理目录缓存</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="nb">echo</span> <span class="m">2</span> &gt; /proc/sys/vm/drop_caches <span class="c1">#或者 sysctl -w vm.drop_caches=2</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>3.清理pagecache、dentries和inodes</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="nb">echo</span> <span class="m">3</span> &gt; /proc/sys/vm/drop_caches <span class="c1">#或者 sysctl -w vm.drop_caches=3</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>上面三种方式都是临时释放缓存的方法，想要永久释放缓存，需要在/etc/sysctl.conf文件中配置： vm.drop_caches=1/2/3,然后sysctl -p生效即可</p>
+<p>温馨提示：<br>
+上面操作在大多数情况下都不会对系统造成伤害，只会有助于释放不用的内存</p>
+<h3 id="查看僵尸进程并kill掉">查看僵尸进程并kill掉</h3>
+<p>查看</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">ps -ef <span class="p">|</span> grep defunct
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>kill</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="nb">kill</span> -9 父进程号
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在linux系统中，进程有如下几种状态，它们随时可能处于以上状态中的一种：</p>
+<ul>
+<li>D = 不可中断的休眠</li>
+<li>I = 空闲</li>
+<li>R = 运行中</li>
+<li>S = 休眠</li>
+<li>T = 被调度信号终止</li>
+<li>t = 被调试器终止</li>
+<li>Z = 僵尸状态</li>
+</ul>
+<p>我们可以在命令终端中通过top命令来查看系统进程和它的当前状态。</p>
+<h2 id="查看进程占用的的物理内存大小指令">查看进程占用的的物理内存大小指令</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">cat /proc/<span class="sb">`</span>ps -ef<span class="p">|</span>grep grafana<span class="p">|</span>grep -v grep<span class="p">|</span>awk <span class="s1">&#39;{print $2}&#39;</span><span class="sb">`</span>/status <span class="p">|</span>grep VmRSS
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>指令分解</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># 通过关键词xxx确认进程id，进程关键词如grafana</span>
+</span></span><span class="line"><span class="cl">$ ps -ef<span class="p">|</span>grep grafana<span class="p">|</span>grep -v grep<span class="p">|</span>awk <span class="s1">&#39;{print $2}&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="m">118581</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 通过进程标识查看服务器物理内存占用</span>
+</span></span><span class="line"><span class="cl">$ cat /proc/118581/status <span class="p">|</span>grep VmRSS
+</span></span><span class="line"><span class="cl">VmRSS:    <span class="m">100788</span> kB
+</span></span><span class="line"><span class="cl"><span class="c1"># 动态查看进程资源占用</span>
+</span></span><span class="line"><span class="cl">top -p <span class="m">118581</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="查看tcp连接数">查看TCP连接数</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">netstat -n <span class="p">|</span> awk <span class="s1">&#39;/^tcp/ {++state[$NF]} END {for(key in state) print key,&#34;\t&#34;,state[key]}&#39;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="总结">总结</h1>
+<p>Linux 服务器性能资源排查思路
+在排查 Linux 服务器性能问题时，可以按照以下思路进行操作：</p>
+<p>1.监测系统资源使用情况：</p>
+<ul>
+<li>使用命令 top 或 htop 实时监视 CPU、内存和交换空间的使用情况。</li>
+<li>使用命令 df 查看磁盘空间使用情况。</li>
+<li>使用命令 free 查看内存使用情况。</li>
+<li>使用命令 iostat 查看磁盘IO使用情况。</li>
+<li>使用命令 sar 查看系统整体的资源利用率。</li>
+</ul>
+<p>2.检查进程和服务：</p>
+<ul>
+<li>使用命令 ps 或 top 查看正在运行的进程和它们的资源占用情况。</li>
+<li>使用命令 systemctl status 检查服务的状态。</li>
+</ul>
+<p>3.定位高负载进程：</p>
+<ul>
+<li>使用命令 top 或 htop 查看 CPU 使用率最高的进程，并观察其 PID 和资源消耗情况。</li>
+<li>使用命令 pidstat 监测指定 PID 的进程的资源使用情况。</li>
+</ul>
+<p>4.分析日志信息：</p>
+<ul>
+<li>查看系统日志（如 /var/log/messages）以了解系统运行期间发生的错误或异常情况。</li>
+<li>查看应用程序日志，特别是与性能相关的日志，以寻找可能的瓶颈或错误。</li>
+</ul>
+<p>5.检查网络连接和流量：</p>
+<ul>
+<li>使用命令 netstat 或 ss 查看网络连接状态。</li>
+<li>使用命令 iftop 或 nethogs 实时监测网络流量和使用情况。</li>
+</ul>
+<p>6.进行性能调优：</p>
+<ul>
+<li>调整系统内核参数，如文件句柄数、内存分配等，以提高性能。</li>
+<li>优化关键应用程序的配置，如数据库、Web 服务器等。</li>
+</ul>
+<p>7.使用性能分析工具：</p>
+<ul>
+<li>使用工具如 perf、strace、tcpdump 等进行更深入的性能分析和故障排查。</li>
+</ul>
+<p>这些步骤可以帮助你定位服务器的性能问题，并找出潜在的瓶颈或异常。根据具体的问题，你可能需要进一步深入研究和分析，以找到解决方案。同时，及时备份数据是必要的，以免在调优过程中发生数据丢失或其他意外。</p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2024-06-26</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/linux%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://localhost:1313/linux%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/" data-title="Linux 系统性能问题定位" data-via="xxxx" data-hashtags="linux"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/linux%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/" data-hashtag="linux"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="http://localhost:1313/linux%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/" data-title="Linux 系统性能问题定位"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://localhost:1313/linux%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/" data-title="Linux 系统性能问题定位"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/linux%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/" data-title="Linux 系统性能问题定位"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/linux/">Linux</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1apiserver%E5%92%8Cetcd%E8%BF%9E%E6%8E%A5%E7%9A%84%E9%9A%8F%E6%9C%BA%E7%AB%AF%E5%8F%A3%E5%8D%A0%E7%94%A8%E5%86%B2%E7%AA%81%E9%97%AE%E9%A2%98/" class="prev" rel="prev" title="Kubernetes 记录一次 Apiserver 和 Etcd 连接的随机端口占用冲突问题"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Kubernetes 记录一次 Apiserver 和 Etcd 连接的随机端口占用冲突问题</a>
+            <a href="/kubernetes-%E7%BD%91%E7%BB%9C%E6%8E%92%E9%94%99/" class="next" rel="next" title="Kubernetes 网络排障">Kubernetes 网络排障<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">我是有底线的</div><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.126.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2024</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">lushuan</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

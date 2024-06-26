@@ -1,8 +1,8 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title>Kubernetes排障 - 标签 - 西门带刀</title>
+        <title>Kubernetes排障 - 标签 - Less is more</title>
         <link>http://localhost:1313/tags/kubernetes%E6%8E%92%E9%9A%9C/</link>
-        <description>Kubernetes排障 - 标签 - 西门带刀</description>
+        <description>Kubernetes排障 - 标签 - Less is more</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
             <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Sat, 27 May 2023 12:06:37 &#43;0800</lastBuildDate><atom:link href="http://localhost:1313/tags/kubernetes%E6%8E%92%E9%9A%9C/" rel="self" type="application/rss+xml" /><item>
     <title>K8s删除Namesapce一直处于Terminating状态处理</title>

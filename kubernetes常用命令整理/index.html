@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>kubernetes常用命令整理 - Less is more</title><meta name="Description" content="知识有两种，一种是你知道的，一种是你知道在哪里能找到的！ --塞缪尔·约翰逊"><meta property="og:url" content="http://localhost:1313/kubernetes%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/">
+  <meta property="og:site_name" content="Less is more">
+  <meta property="og:title" content="kubernetes常用命令整理">
+  <meta property="og:description" content="使用 kubernetes 经常会用到命令行，这里对命令行进行分类整理 集群管理 kubectl cluster-info kubectl config kubectl version kubectl api-versions 查看当前集群支持的api版本 kubectl get node kubectl get pod kubectl get service kubectl cordon 命令：用于标记某个">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2022-04-26T12:06:37+08:00">
+    <meta property="article:modified_time" content="2024-06-26T12:06:37+08:00">
+    <meta property="article:tag" content="Kubernetes">
+    <meta property="og:image" content="http://localhost:1313/logo.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/logo.png">
+  <meta name="twitter:title" content="kubernetes常用命令整理">
+  <meta name="twitter:description" content="使用 kubernetes 经常会用到命令行，这里对命令行进行分类整理 集群管理 kubectl cluster-info kubectl config kubectl version kubectl api-versions 查看当前集群支持的api版本 kubectl get node kubectl get pod kubectl get service kubectl cordon 命令：用于标记某个">
+      <meta name="twitter:site" content="@xxxx">
+<meta name="application-name" content="我的网站">
+<meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://localhost:1313/kubernetes%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/" /><link rel="prev" href="http://localhost:1313/linux%E7%BD%91%E7%BB%9C%E6%8E%92%E9%9A%9C/" /><link rel="next" href="http://localhost:1313/kubernetes%E9%80%9A%E8%BF%87nfs%E5%8A%A8%E6%80%81%E5%88%9B%E5%BB%BApv%E5%BC%82%E5%B8%B8/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "kubernetes常用命令整理",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost:1313\/kubernetes%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86\/"
+        },"genre": "posts","keywords": "Kubernetes","wordcount":  2302 ,
+        "url": "http:\/\/localhost:1313\/kubernetes%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86\/","datePublished": "2022-04-26T12:06:37+08:00","dateModified": "2024-06-26T12:06:37+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "lushuan"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Less is more">Less is more</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/" title="About"> 关于 </a><a class="menu-item" href="/friends/" title="friends"> 友链 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Less is more">Less is more</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="About">关于</a><a class="menu-item" href="/friends/" title="friends">友链</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">kubernetes常用命令整理</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/kubernetes/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Kubernetes</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2022-04-26">2022-04-26</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 2302 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 5 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="true">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#命令说明">命令说明</a>
+      <ul>
+        <li><a href="#1-kubectl-expose-和-kubectl-port-forwad-的区别">1. kubectl expose 和 kubectl port-forwad 的区别</a></li>
+        <li><a href="#2-kubectl-apply-和-kubectl-switch-的区别">2. kubectl apply 和 kubectl switch 的区别</a></li>
+        <li><a href="#3-kubectl-scale-和-kubectl-autoscale的区别">3. kubectl scale 和 kubectl autoscale的区别</a></li>
+        <li><a href="#4-kubectl-exec和kubectl-attach-的区别">4. kubectl exec和kubectl attach 的区别</a></li>
+        <li><a href="#5-kubectl-patch和kubectl-replace的区别">5. kubectl patch和kubectl replace的区别</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p>使用 kubernetes 经常会用到命令行，这里对命令行进行分类整理</p>
+<ul>
+<li>集群管理
+<ul>
+<li>kubectl cluster-info</li>
+<li>kubectl config</li>
+<li>kubectl version</li>
+<li>kubectl api-versions 查看当前集群支持的api版本</li>
+<li>kubectl get node</li>
+<li>kubectl get pod</li>
+<li>kubectl get service</li>
+<li>kubectl cordon 命令：用于标记某个节点不可调度</li>
+<li>kubectl uncordon 命令：用于标签节点可以调度</li>
+<li>kubectl drain 命令： 用于在维护期间排除节点。</li>
+<li>kubectl taint 命令：用于给某个Node节点设置污点</li>
+</ul>
+</li>
+<li>Pod 管理
+<ul>
+<li>kubectl create pod</li>
+<li>kubectl get pod</li>
+<li>kubectl get pod pod_name &ndash;show-labels</li>
+<li>kubectl describe pod</li>
+<li>kubectl logs</li>
+<li>kubectl exec</li>
+<li>kubectl delete pod</li>
+</ul>
+</li>
+<li>资源监测
+<ul>
+<li>kubectl top node</li>
+<li>kubectl top pods</li>
+<li>kubectl get quota</li>
+<li>kubectl describe</li>
+</ul>
+</li>
+<li>Service管理
+<ul>
+<li>kubectl create service</li>
+<li>kubectl get service</li>
+<li>kubectl expose</li>
+<li>kubectl describe service</li>
+<li>kubectl delete service</li>
+<li>kubectl port-forwad</li>
+</ul>
+</li>
+<li>配置和加密
+<ul>
+<li>kubectl create configmap</li>
+<li>kubectl get configmap</li>
+<li>kubectl create secret</li>
+<li>kubectl get secret</li>
+<li>kubectl describe configmap</li>
+<li>kubectl describe secret</li>
+</ul>
+</li>
+<li>Deployment管理
+<ul>
+<li>kubectl create deployment</li>
+<li>kubectl get deployment</li>
+<li>kubectl scale deployment
+<ul>
+<li>sudo kubectl scale deployment deploy-name &ndash;replicas=0 不删除应用暂停服务</li>
+</ul>
+</li>
+<li>kubectl autoscale deployment</li>
+<li>kubectl rollout status</li>
+<li>kubectl rollout history</li>
+<li>kubectl delete deployment</li>
+</ul>
+</li>
+<li>名字空间管理
+<ul>
+<li>kubectl create namespace</li>
+<li>kubectl get namespace</li>
+<li>kubectl describe namespace</li>
+<li>kubectl delete namespace</li>
+<li>kubectl apply -n <namespace></li>
+<li>kubectl switch -n <namespace></li>
+</ul>
+</li>
+<li>kubeadm管理
+<ul>
+<li>kubeadm init 启动引导一个 Kubernetes 主节点</li>
+<li>kubeadm join 启动引导一个 Kubernetes 工作节点并且将其加入到集群</li>
+<li>kubeadm upgrade 更新 Kubernetes 集群到新版本</li>
+<li>kubeadm config 如果你使用 kubeadm v1.7.x 或者更低版本，你需要对你的集群做一些配置以便使用 kubeadm upgrade 命令</li>
+<li>kubeadm token 使用 kubeadm join 来管理令牌</li>
+<li>kubeadm reset 还原之前使用 kubeadm init 或者 kubeadm join 对节点所作改变</li>
+<li>kubeadm version 打印出 kubeadm 版本</li>
+<li>kubeadm alpha 预览一组可用的新功能以便从社区搜集反馈</li>
+<li>kubeadm token create &ndash;print-join-command 创建node加入口令</li>
+</ul>
+</li>
+</ul>
+<h2 id="命令说明">命令说明</h2>
+<h3 id="1-kubectl-expose-和-kubectl-port-forwad-的区别">1. kubectl expose 和 kubectl port-forwad 的区别</h3>
+<p>kubectl expose 和 kubectl port-forward 是两个不同的命令，它们在 Kubernetes 中有不同的作用和用法。</p>
+<p>kubectl expose 命令用于创建一个新的 Service 对象来暴露 Deployment、ReplicationController 或 ReplicaSet 等其他资源。它会为指定的资源创建一个新的 ClusterIP 类型的 Service，在集群内部通过 Service IP 和端口号来访问暴露的资源。这个 Service 对象可以是临时的，也可以是永久的，它根据指定的参数设置来控制其行为。</p>
+<p>kubectl port-forward 命令用于在本地机器和 Kubernetes 集群之间建立一个临时的协议转发，将本地的端口与 Kubernetes Pod 或 Service 的端口进行绑定。这样可以直接通过本地机器上的端口来访问 Kubernetes 集群中的服务或应用。该命令通常用于开发和调试，比如在本地机器上直接访问运行在集群中的应用程序或服务的日志。</p>
+<p>总结来说，kubectl expose 用于创建一个新的 Service 对象来暴露 Kubernetes 资源，而 kubectl port-forward 则用于建立本地与集群之间的临时端口转发，方便本地机器访问集群中的服务或应用程序。</p>
+<h3 id="2-kubectl-apply-和-kubectl-switch-的区别">2. kubectl apply 和 kubectl switch 的区别</h3>
+<p>kubectl apply 用于在 Kubernetes 集群上部署或更新资源对象，可以通过文件或目录进行声明。它会读取文件中的资源定义，并在集群中创建或更新相应的资源对象。kubectl switch 是一个非官方的插件，用于切换当前上下文的集群。Kubernetes 集群允许存在多个上下文，每个上下文对应一个集群。</p>
+<p>kubectl switch 可以方便地在多个集群之间切换，目的是为了方便用户在不同的集群之间进行操作。因此，kubectl apply 用于部署和更新资源对象，而 kubectl switch 用于切换当前操作的集群。它们是两个不同的命令，用途和功能不同。</p>
+<h3 id="3-kubectl-scale-和-kubectl-autoscale的区别">3. kubectl scale 和 kubectl autoscale的区别</h3>
+<p>kubectl scale和kubectl autoscale是用于扩容或缩容Kubernetes Deployment或ReplicaSet的命令，但它们有一些区别。</p>
+<p>kubectl scale命令允许通过手动指定副本数量来更新Deployment或ReplicaSet的副本数量。例如，可以使用以下命令将副本数量设置为3：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">kubectl scale deployment/my-deployment --replicas<span class="o">=</span><span class="m">3</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>kubectl autoscale命令则是根据指定的CPU使用率来自动扩容或缩容Deployment。它会创建一个HorizontalPodAutoscaler(HPA)对象，该对象会根据CPU的使用情况动态地增加或减少Pod的副本数量以满足指定的CPU目标使用率。例如，可以使用以下命令将Pod的副本数量自动调整为至少2个，当CPU使用率超过50%时：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">kubectl autoscale deployment/my-deployment --min<span class="o">=</span><span class="m">2</span> --max<span class="o">=</span><span class="m">10</span> --cpu-percent<span class="o">=</span><span class="m">50</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>总结起来，kubectl scale用于手动指定副本数量来更新Deployment或ReplicaSet的副本数量，而kubectl autoscale用于根据CPU使用率自动扩容或缩容Pod的副本数量。</p>
+<h3 id="4-kubectl-exec和kubectl-attach-的区别">4. kubectl exec和kubectl attach 的区别</h3>
+<p>kubectl exec和kubectl attach是用于与正在运行的Pod进行交互的命令，但它们在使用方式和功能上有一些区别。</p>
+<p>kubectl exec命令用于在正在运行的Pod中执行命令。它可以连接到正在运行的容器，并在容器中执行指定的命令。例如，可以使用以下命令在名为my-pod的Pod中执行echo命令：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">kubectl <span class="nb">exec</span> -it my-pod -- <span class="nb">echo</span> <span class="s2">&#34;Hello, World!&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>kubectl attach命令用于将本地终端连接到正在运行的Pod中的某个容器的标准输入、输出和错误流。它可以与容器建立交互式会话。例如，可以使用以下命令将本地终端连接到名为my-pod的Pod中的第一个容器：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">kubectl attach -it my-pod
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>总结起来，kubectl attach命令类似于kubectl exec，但它附加到容器中运行的主进程，而不是运行额外的进程。</p>
+<h3 id="5-kubectl-patch和kubectl-replace的区别">5. kubectl patch和kubectl replace的区别</h3>
+<p>kubectl patch和kubectl replace是用于部分更新和替换更新Kubernetes资源的命令，但它们在更新方式和行为上有一些区别。</p>
+<p>kubectl patch命令用于部分更新Kubernetes资源的特定字段。它可以通过提供一个JSON或YAML文件、一个JSON或YAML字符串，或者使用特定的操作类型（如add、remove、replace等）来更新资源的字段。例如，可以使用以下命令将名为my-deployment的Deployment资源的labels字段添加一个新的标签：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">kubectl patch deployment/my-deployment -p <span class="s1">&#39;{&#34;spec&#34;:{&#34;template&#34;:{&#34;metadata&#34;:{&#34;labels&#34;:{&#34;new-label&#34;:&#34;value&#34;}}}}}&#39;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>kubectl replace命令用于替换更新整个Kubernetes资源。它会基于提供的配置文件完全替换现有资源的内容。例如，可以使用以下命令将名为my-deployment的Deployment资源替换为一个新的配置文件：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">kubectl replace -f new-deployment.yaml
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>总结起来，kubectl patch用于部分更新Kubernetes资源的特定字段，而kubectl replace用于完全替换更新整个Kubernetes资源。</p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2024-06-26</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/kubernetes%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://localhost:1313/kubernetes%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/" data-title="kubernetes常用命令整理" data-via="xxxx" data-hashtags="Kubernetes"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/kubernetes%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/" data-hashtag="Kubernetes"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="http://localhost:1313/kubernetes%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/" data-title="kubernetes常用命令整理"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://localhost:1313/kubernetes%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/" data-title="kubernetes常用命令整理"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/kubernetes%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/" data-title="kubernetes常用命令整理"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/kubernetes/">Kubernetes</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/linux%E7%BD%91%E7%BB%9C%E6%8E%92%E9%9A%9C/" class="prev" rel="prev" title="Linux 网络排障"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Linux 网络排障</a>
+            <a href="/kubernetes%E9%80%9A%E8%BF%87nfs%E5%8A%A8%E6%80%81%E5%88%9B%E5%BB%BApv%E5%BC%82%E5%B8%B8/" class="next" rel="next" title="Kubernetes 通过 nfs 动态创建 pv 异常">Kubernetes 通过 nfs 动态创建 pv 异常<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">我是有底线的</div><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.126.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2024</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">lushuan</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
