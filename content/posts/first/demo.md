@@ -3,7 +3,7 @@ title: "Demo 图像和 shortcode"
 subtitle: "hugo 图像和 shortcode 使用"
 date: 2024-06-26T10:54:03+08:00
 lastmod: 2024-06-26T10:54:03+08:00
-draft: false
+draft: true
 toc:
   enable: true
 weight: false
