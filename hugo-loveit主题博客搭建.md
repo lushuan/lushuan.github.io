@@ -34,7 +34,7 @@ hugo -D   #编译静态网站文件
 
 2. 写文档
 ```yaml
-hugo new posts/first/test.md
+hugo new posts/first/demo.md
 ```
 
 3. 本地启动，编译预览
