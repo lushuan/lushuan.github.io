@@ -1,7 +1,7 @@
 ---
 title: "Kubernetes的基本概念和术语"
 subtitle: ""
-date: 2024-06-26T12:06:37+08:00
+date: 2021-06-26T12:06:37+08:00
 lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:

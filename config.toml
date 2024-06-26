@@ -4,7 +4,7 @@ baseURL = "https://lushuan.gihub.io/"
 theme = "LoveIt"
 
 # 网站标题
-title = "西门带刀"
+title = "Less is more"
 
 # 网站语言, 仅在这里 CN 大写 ["en", "zh-CN", "fr", "pl", ...]
 languageCode = "zh-CN"
@@ -36,7 +36,7 @@ defaultContentLanguage = "zh-cn"
 [languages]
   [languages.zh-cn]
     weight = 2
-    title = "西门带刀"
+    title = "Less is more"
     languageCode = "zh-CN"
     languageName = "简体中文"
     hasCJKLanguage = true
@@ -145,7 +145,7 @@ defaultContentLanguage = "zh-cn"
       # LOGO 的 URL
       logo = ""
       # 标题名称
-      name = "西门带刀"
+      name = "Less is more"
       # 你可以在名称 (允许 HTML 格式) 之前添加其他信息, 例如图标
       pre = ""
       # 你可以在名称 (允许 HTML 格式) 之后添加其他信息, 例如图标
