@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>Helm 生产实践记录 - Less is more</title><meta name="Description" content="知识有两种，一种是你知道的，一种是你知道在哪里能找到的！ --塞缪尔·约翰逊"><meta property="og:url" content="http://localhost:1313/helm%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5%E8%AE%B0%E5%BD%95/">
+  <meta property="og:site_name" content="Less is more">
+  <meta property="og:title" content="Helm 生产实践记录">
+  <meta property="og:description" content="记录一下helm 在生产中的实践 Helm 可以帮助我们管理 Kubernetes 应用程序 - Helm Charts 可以定义、安装和升级复杂的 Kubernetes 应用程序，Charts 包很容易创建、版本管理、分">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2022-07-21T12:06:37+08:00">
+    <meta property="article:modified_time" content="2024-06-26T12:06:37+08:00">
+    <meta property="article:tag" content="Helm">
+    <meta property="og:image" content="http://localhost:1313/logo.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/logo.png">
+  <meta name="twitter:title" content="Helm 生产实践记录">
+  <meta name="twitter:description" content="记录一下helm 在生产中的实践 Helm 可以帮助我们管理 Kubernetes 应用程序 - Helm Charts 可以定义、安装和升级复杂的 Kubernetes 应用程序，Charts 包很容易创建、版本管理、分">
+      <meta name="twitter:site" content="@xxxx">
+<meta name="application-name" content="我的网站">
+<meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://localhost:1313/helm%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5%E8%AE%B0%E5%BD%95/" /><link rel="prev" href="http://localhost:1313/linux%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/" /><link rel="next" href="http://localhost:1313/kubernetes%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Helm 生产实践记录",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost:1313\/helm%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5%E8%AE%B0%E5%BD%95\/"
+        },"genre": "posts","keywords": "Helm","wordcount":  1773 ,
+        "url": "http:\/\/localhost:1313\/helm%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5%E8%AE%B0%E5%BD%95\/","datePublished": "2022-07-21T12:06:37+08:00","dateModified": "2024-06-26T12:06:37+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "lushuan"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Less is more">Less is more</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/" title="About"> 关于 </a><a class="menu-item" href="/friends/" title="friends"> 友链 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Less is more">Less is more</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="About">关于</a><a class="menu-item" href="/friends/" title="friends">友链</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Helm 生产实践记录</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/helm/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Helm</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2022-07-21">2022-07-21</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 1773 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 4 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="true">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#安装">安装</a></li>
+    <li><a href="#示例">示例</a></li>
+    <li><a href="#定制">定制</a></li>
+    <li><a href="#更多安装方式">更多安装方式</a></li>
+    <li><a href="#升级和回滚">升级和回滚</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p>记录一下helm 在生产中的实践</p>
+<p>Helm 可以帮助我们管理 Kubernetes 应用程序 - Helm Charts 可以定义、安装和升级复杂的 Kubernetes 应用程序，Charts 包很容易创建、版本管理、分享和分布。Helm 对于 Kubernetes 来说就相当于 yum 对于 Centos 来说，如果没有 yum 的话，我们在 Centos 下面要安装一些应用程序是极度麻烦的，同样的，对于越来越复杂的 Kubernetes 应用程序来说，如果单纯依靠我们去手动维护应用程序的 YAML 资源清单文件来说，成本也是巨大的。</p>
+<h2 id="安装">安装</h2>
+<p>由于 Helm V2 版本必须在 Kubernetes 集群中安装一个 Tiller 服务进行通信，这样大大降低了其安全性和可用性，所以在 V3 版本中移除了服务端，采用了通用的 Kubernetes CRD 资源来进行管理，这样就只需要连接上 Kubernetes 即可，而且 V3 版本已经发布了稳定版</p>
+<p>这里使用的是helm v3版本</p>
+<h2 id="示例">示例</h2>
+<p>Helm 其实就是读取的 kubeconfig 文件来访问集群的。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># 查看版本</span>
+</span></span><span class="line"><span class="cl">$ helm version
+</span></span><span class="line"><span class="cl">version.BuildInfo<span class="o">{</span>Version:<span class="s2">&#34;v3.8.1&#34;</span>, GitCommit:<span class="s2">&#34;5cb9af4b1b271d11d7a97a71df3ac337dd94ad37&#34;</span>, GitTreeState:<span class="s2">&#34;clean&#34;</span>, GoVersion:<span class="s2">&#34;go1.17.5&#34;</span><span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 添加一个 chart 仓库</span>
+</span></span><span class="line"><span class="cl">$ helm repo add stable http://mirror.azure.cn/kubernetes/charts/
+</span></span><span class="line"><span class="cl"><span class="s2">&#34;stable&#34;</span> has been added to your repositories
+</span></span><span class="line"><span class="cl">$ helm repo list
+</span></span><span class="line"><span class="cl">NAME    URL
+</span></span><span class="line"><span class="cl">stable  http://mirror.azure.cn/kubernetes/charts/
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 用 search 命令来搜索可以安装的 chart 包，已经集成了将近300个可安装的chart包</span>
+</span></span><span class="line"><span class="cl">zoms@crms-10-10-192-220<span class="o">[</span>/tmp<span class="o">]</span>$ helm search repo stable<span class="p">|</span>more
+</span></span><span class="line"><span class="cl">NAME                                    CHART VERSION   APP VERSION             DESCRIPTION
+</span></span><span class="line"><span class="cl">stable/acs-engine-autoscaler            2.2.2           2.1.1                   DEPRECATED Scales worker nodes within agent pools
+</span></span><span class="line"><span class="cl">stable/aerospike                        0.3.5           v4.5.0.5                DEPRECATED A Helm chart <span class="k">for</span> Aerospike in Kubern...
+</span></span><span class="line"><span class="cl">stable/airflow                          7.13.3          1.10.12                 DEPRECATED - please use: https://github.com/air...
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 安装之前先进行更新</span>
+</span></span><span class="line"><span class="cl">$ helm repo update
+</span></span><span class="line"><span class="cl">Hang tight <span class="k">while</span> we grab the latest from your chart repositories...
+</span></span><span class="line"><span class="cl">...Successfully got an update from the <span class="s2">&#34;stable&#34;</span> chart repository
+</span></span><span class="line"><span class="cl">Update Complete. ⎈Happy Helming!⎈
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 安装一个mysql 应用</span>
+</span></span><span class="line"><span class="cl">helm install stable/mysql --generate-name
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 了解 MySQL 这个 chart 包的一些特性</span>
+</span></span><span class="line"><span class="cl">helm show chart stable/mysql
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 了解 MySQL 这个 chart 包更多的特性</span>
+</span></span><span class="line"><span class="cl">helm show all stable/mysql
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 查看已安装的release</span>
+</span></span><span class="line"><span class="cl">helm ls
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 删除release</span>
+</span></span><span class="line"><span class="cl">helm uninstall mysql-1575619811
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 删除release 时保留历史记录，方便取消删除 release（使用 helm rollback 命令）</span>
+</span></span><span class="line"><span class="cl">helm uninstall mysql-1575619811 --keep-history
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="定制">定制</h2>
+<p>helm show values 命令来查看一个 chart 包的所有可配置的参数选项</p>
+<p>查看本地chart包可配置的参数选项</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ helm show values ./nms-grafana/ -n zcm9
+</span></span><span class="line"><span class="cl"><span class="c1"># Default values for nms-grafana.</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># This is a YAML-formatted file.</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Declare variables to be passed into your templates</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">fullnameOverride: nms-grafana
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">replicaCount: <span class="m">1</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">restartPolicy: Always
+</span></span><span class="line"><span class="cl">....
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>查看仓库chart包的所有可配置的参数选项,安装之前先看下镜像源是否可先pull下来，以及镜像的版本号</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ helm show values stable/mysql
+</span></span><span class="line"><span class="cl"><span class="c1">## mysql image version</span>
+</span></span><span class="line"><span class="cl"><span class="c1">## ref: https://hub.docker.com/r/library/mysql/tags/</span>
+</span></span><span class="line"><span class="cl"><span class="c1">##</span>
+</span></span><span class="line"><span class="cl">image: <span class="s2">&#34;mysql&#34;</span>
+</span></span><span class="line"><span class="cl">imageTag: <span class="s2">&#34;5.7.30&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">strategy:
+</span></span><span class="line"><span class="cl">  type: Recreate
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">busybox:
+</span></span><span class="line"><span class="cl">  image: <span class="s2">&#34;busybox&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>上面我们看到的所有参数都是可以用自己的数据来覆盖的，可以在安装的时候通过 YAML 格式的文件来传递这些参数</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ cat config.yaml
+</span></span><span class="line"><span class="cl">mysqlUser:
+</span></span><span class="line"><span class="cl">  user0
+</span></span><span class="line"><span class="cl">mysqlPassword: user0pwd
+</span></span><span class="line"><span class="cl">mysqlDatabase: user0db
+</span></span><span class="line"><span class="cl">persistence:
+</span></span><span class="line"><span class="cl">  enabled: <span class="nb">false</span>
+</span></span><span class="line"><span class="cl">$ helm install -f config.yaml mysql stable/mysql
+</span></span><span class="line"><span class="cl">NAME: mysql
+</span></span><span class="line"><span class="cl">LAST DEPLOYED: Fri Dec  <span class="m">6</span> 17:46:56 <span class="m">2019</span>
+</span></span><span class="line"><span class="cl">NAMESPACE: default
+</span></span><span class="line"><span class="cl">STATUS: deployed
+</span></span><span class="line"><span class="cl">REVISION: <span class="m">1</span>
+</span></span><span class="line"><span class="cl">NOTES:
+</span></span><span class="line"><span class="cl">MySQL can be accessed via port <span class="m">3306</span> on the following DNS name from within your cluster:
+</span></span><span class="line"><span class="cl">mysql.default.svc.cluster.local
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>release 安装成功后查看对应的Pod信息</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ kubectl get pod -l <span class="nv">release</span><span class="o">=</span>mysql
+</span></span><span class="line"><span class="cl">NAME                    READY   STATUS            RESTARTS   AGE
+</span></span><span class="line"><span class="cl">mysql-ddd798f48-gnrzd   0/1     PodInitializing   <span class="m">0</span>          119s
+</span></span><span class="line"><span class="cl">$ kubectl describe pod  mysql-ddd798f48-gnrzd
+</span></span><span class="line"><span class="cl">......
+</span></span><span class="line"><span class="cl">Environment:
+</span></span><span class="line"><span class="cl">      MYSQL_ROOT_PASSWORD:  &lt;<span class="nb">set</span> to the key <span class="s1">&#39;mysql-root-password&#39;</span> in secret <span class="s1">&#39;mysql&#39;</span>&gt;  Optional: <span class="nb">false</span>
+</span></span><span class="line"><span class="cl">      MYSQL_PASSWORD:       &lt;<span class="nb">set</span> to the key <span class="s1">&#39;mysql-password&#39;</span> in secret <span class="s1">&#39;mysql&#39;</span>&gt;       Optional: <span class="nb">false</span>
+</span></span><span class="line"><span class="cl">      MYSQL_USER:           user0
+</span></span><span class="line"><span class="cl">      MYSQL_DATABASE:       user0db
+</span></span><span class="line"><span class="cl">......
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以看到环境变量 MYSQL_USER=user0，MYSQL_DATABASE=user0db 的值和我们上面配置的值是一致的</p>
+<p>在安装过程中，有两种方法可以传递配置数据：</p>
+<ul>
+<li>&ndash;values（或者 -f）：指定一个 YAML 文件来覆盖 values 值，可以指定多个值，最后边的文件优先</li>
+<li>&ndash;set：在命令行上指定覆盖的配置</li>
+</ul>
+<h2 id="更多安装方式">更多安装方式</h2>
+<p>helm install 命令可以从多个源进行安装：</p>
+<ul>
+<li>chart 仓库（类似于上面我们提到的）</li>
+<li>本地 chart 压缩包（helm install foo-0.1.1.tgz）</li>
+<li>本地解压缩的 chart 目录（helm install foo path/to/foo）</li>
+<li>在线的 URL（helm install fool <a href="https://example.com/charts/foo-1.2.3.tgz" target="_blank" rel="noopener noreffer ">https://example.com/charts/foo-1.2.3.tgz</a>）</li>
+</ul>
+<h2 id="升级和回滚">升级和回滚</h2>
+<p>当新版本的 chart 包发布的时候，或者当你要更改 release 的配置的时候，你可以使用 helm upgrade 命令来操作。升级需要一个现有的 release，并根据提供的信息对其进行升级。因为 Kubernetes charts 可能很大而且很复杂，Helm 会尝试以最小的侵入性进行升级，它只会更新自上一版本以来发生的变化：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ helm upgrade -f config.yaml mysql stable/mysql
+</span></span><span class="line"><span class="cl">Release <span class="s2">&#34;mysql&#34;</span> has been upgraded. Happy Helming!
+</span></span><span class="line"><span class="cl">NAME: mysql
+</span></span><span class="line"><span class="cl">LAST DEPLOYED: Fri Dec  <span class="m">6</span> 21:06:11 <span class="m">2019</span>
+</span></span><span class="line"><span class="cl">NAMESPACE: default
+</span></span><span class="line"><span class="cl">STATUS: deployed
+</span></span><span class="line"><span class="cl">REVISION: <span class="m">2</span>
+</span></span><span class="line"><span class="cl">...
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>查看升级后的新设置是否生效</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ helm get values mysql
+</span></span><span class="line"><span class="cl">USER-SUPPLIED VALUES:
+</span></span><span class="line"><span class="cl">mysqlDatabase: user0db
+</span></span><span class="line"><span class="cl">mysqlPassword: user0pwd
+</span></span><span class="line"><span class="cl">mysqlRootPassword: passw0rd
+</span></span><span class="line"><span class="cl">mysqlUser: user0
+</span></span><span class="line"><span class="cl">persistence:
+</span></span><span class="line"><span class="cl">  enabled: <span class="nb">false</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>另外如生产基本上是只替换镜像tag</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ sudo helm get values nms-grafana -n zcm9
+</span></span><span class="line"><span class="cl">USER-SUPPLIED VALUES:
+</span></span><span class="line"><span class="cl">global:
+</span></span><span class="line"><span class="cl">  nodeSelector:
+</span></span><span class="line"><span class="cl">    aik: zcm9
+</span></span><span class="line"><span class="cl">  repository: 10.10.192.220:52800
+</span></span><span class="line"><span class="cl">nms-activemq:
+</span></span><span class="line"><span class="cl">  image:
+</span></span><span class="line"><span class="cl">    tag: C_20220628200611
+</span></span><span class="line"><span class="cl">nms-grafana:
+</span></span><span class="line"><span class="cl">  image:
+</span></span><span class="line"><span class="cl">    tag: C_20220726192751-v9.0.1
+</span></span><span class="line"><span class="cl">...
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>查看当前release 当前版本信息以及查看某个release 的历史</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ sudo helm -n zcm9 ls
+</span></span><span class="line"><span class="cl">NAME                    NAMESPACE       REVISION        UPDATED                                 STATUS          CHART                           APP VERSION
+</span></span><span class="line"><span class="cl">minio                   zcm9            <span class="m">1</span>               2022-08-11 19:27:49.792207699 +0800 CST failed          minio-10.0.4                    2022.1.8
+</span></span><span class="line"><span class="cl">nms-activemq            zcm9            <span class="m">1</span>               2022-11-09 13:31:42.996290693 +0800 CST deployed        nms-activemq-0.1.0              9.0.44
+</span></span><span class="line"><span class="cl">nms-grafana             zcm9            <span class="m">29</span>              2023-05-04 20:34:46.578214434 +0800 CST deployed        nms-grafana-0.1.0               aik
+</span></span><span class="line"><span class="cl">...
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">$ sudo helm -n zcm9  <span class="nb">history</span> nms-grafana
+</span></span><span class="line"><span class="cl">REVISION        UPDATED                         STATUS          CHART                   APP VERSION     DESCRIPTION
+</span></span><span class="line"><span class="cl"><span class="m">20</span>              Thu May  <span class="m">4</span> 19:52:14 <span class="m">2023</span>        superseded      nms-grafana-0.1.0       aik             Upgrade <span class="nb">complete</span>
+</span></span><span class="line"><span class="cl"><span class="m">21</span>              Thu May  <span class="m">4</span> 19:53:14 <span class="m">2023</span>        superseded      nms-grafana-0.1.0       aik             Upgrade <span class="nb">complete</span>
+</span></span><span class="line"><span class="cl"><span class="m">22</span>              Thu May  <span class="m">4</span> 19:58:59 <span class="m">2023</span>        superseded      nms-grafana-0.1.0       aik             Upgrade <span class="nb">complete</span>
+</span></span><span class="line"><span class="cl">...
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>回滚</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># 上面可知本地安装的应用nms-grafana 迭代至了版本29,如果要回滚至指定版本可以通过一下方式</span>
+</span></span><span class="line"><span class="cl">$ helm -n zcm9 rollback nms-grafana  <span class="m">21</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2024-06-26</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/helm%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5%E8%AE%B0%E5%BD%95/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://localhost:1313/helm%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5%E8%AE%B0%E5%BD%95/" data-title="Helm 生产实践记录" data-via="xxxx" data-hashtags="Helm"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/helm%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5%E8%AE%B0%E5%BD%95/" data-hashtag="Helm"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="http://localhost:1313/helm%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5%E8%AE%B0%E5%BD%95/" data-title="Helm 生产实践记录"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://localhost:1313/helm%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5%E8%AE%B0%E5%BD%95/" data-title="Helm 生产实践记录"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/helm%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5%E8%AE%B0%E5%BD%95/" data-title="Helm 生产实践记录"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/helm/">Helm</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/linux%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/" class="prev" rel="prev" title="Linux 系统性能问题定位"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Linux 系统性能问题定位</a>
+            <a href="/kubernetes%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/" class="next" rel="next" title="kubernetes常用命令整理">kubernetes常用命令整理<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">我是有底线的</div><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.126.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2024</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">lushuan</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>shell 分类 - Less is more</title><meta name="Description" content="知识有两种，一种是你知道的，一种是你知道在哪里能找到的！ --塞缪尔·约翰逊"><meta property="og:url" content="http://localhost:1313/ch0_shell%E5%88%86%E7%B1%BB/">
+  <meta property="og:site_name" content="Less is more">
+  <meta property="og:title" content="shell 分类">
+  <meta property="og:description" content="在大部份的 UNIX 系统，三种著名且广被支持的 shell 是 Bourne shell（AT&amp;T shell，在 Linux 下是 BASH）、C shell（Berkeley she">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2020-04-28T12:06:37+08:00">
+    <meta property="article:modified_time" content="2024-06-26T12:06:37+08:00">
+    <meta property="article:tag" content="Shell">
+    <meta property="og:image" content="http://localhost:1313/logo.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/logo.png">
+  <meta name="twitter:title" content="shell 分类">
+  <meta name="twitter:description" content="在大部份的 UNIX 系统，三种著名且广被支持的 shell 是 Bourne shell（AT&amp;T shell，在 Linux 下是 BASH）、C shell（Berkeley she">
+      <meta name="twitter:site" content="@xxxx">
+<meta name="application-name" content="我的网站">
+<meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://localhost:1313/ch0_shell%E5%88%86%E7%B1%BB/" /><link rel="prev" href="http://localhost:1313/ch1_%E5%85%A5%E5%8F%82%E5%92%8C%E9%BB%98%E8%AE%A4%E5%8F%98%E9%87%8F/" /><link rel="next" href="http://localhost:1313/ansible%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "shell 分类",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost:1313\/ch0_shell%E5%88%86%E7%B1%BB\/"
+        },"genre": "posts","keywords": "Shell","wordcount":  1540 ,
+        "url": "http:\/\/localhost:1313\/ch0_shell%E5%88%86%E7%B1%BB\/","datePublished": "2020-04-28T12:06:37+08:00","dateModified": "2024-06-26T12:06:37+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "lushuan"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Less is more">Less is more</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/" title="About"> 关于 </a><a class="menu-item" href="/friends/" title="friends"> 友链 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Less is more">Less is more</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="About">关于</a><a class="menu-item" href="/friends/" title="friends">友链</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">shell 分类</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/shell/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Shell</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2020-04-28">2020-04-28</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 1540 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 4 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="true">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#bash">bash</a></li>
+    <li><a href="#csh">csh</a></li>
+    <li><a href="#ksh">ksh</a></li>
+    <li><a href="#tcsh">tcsh</a></li>
+    <li><a href="#ash">ash</a></li>
+    <li><a href="#shell分类总结">Shell分类总结</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p>在大部份的 UNIX 系统，三种著名且广被支持的 shell 是 Bourne shell（AT&amp;T shell，在 Linux 下是 BASH）、C shell（Berkeley shell，在 Linux 下是 TCSH）和 Korn shell（Bourne shell 的超集）。</p>
+<p>这三种 shell 在交谈（interactive）模式下的表现相当类似，但作为命令文件语言时，在语法和执行效率上就有些不同了。</p>
+<h2 id="bash">bash</h2>
+<p>Bourne shell 是标准的 UNIX shell，以前常被用来做为管理系统之用。大部份的系统管理命令文件，例如 rc start、stop 与 shutdown 都是 Bourne shell 的命令档，且在单一使用者模式（single user mode）下以 root 签入时它常被系统管理者使用。</p>
+<p>Bourne shell 是由 AT&amp;T 发展的，以简洁、快速著名。 Bourne shell 提示符号的默认值是 $。</p>
+<h2 id="csh">csh</h2>
+<p>C shell 是柏克莱大学（Berkeley）所开发的，且加入了一些新特性，如命令列历程（history）、别名（alias）、内建算术、档名完成（filename completion）、和工作控制（job control）。</p>
+<p>对于常在交谈模式下执行 shell 的使用者而言，他们较喜爱使用 C shell；但对于系统管理者而言，则较偏好以 Bourne shell 来做命令档，因为 Bourne shell 命令档比 C shell 命令档来的简单及快速。C shell 提示符号的默认值是 %。</p>
+<h2 id="ksh">ksh</h2>
+<p>Korn shell 是 Bourne shell 的超集（superset），由 AT&amp;T 的 David Korn 所开发。它增加了一些特色，比 C shell 更为先进。Korn shell 的特色包括了可编辑的历程、别名、函式、正规表达式万用字符（regular expression wildcard）、内建算术、工作控制（job control）、共作处理（coprocessing）、和特殊的除错功能。Bourne shell 几乎和 Korn shell 完全向上兼容（upward compatible），所以在 Bourne shell 下开发的程序仍能在 Korn shell 上执行。Korn shell 提示符号的默认值也是 $。</p>
+<p>在 Linux 系统使用的 Korn shell 叫做 pdksh，它是指 Public Domain Korn Shell。除了执行效率稍差外，Korn shell 在许多方面都比 Bourne shell 为佳；但是，若将 Korn shell 与 C shell 相比就很困难，因为二者在许多方面都各有所长，就效率和容易使用上看，Korn shell 是优于 C shell，相信许多使用者对于 C Shell 的执行效率都有负面的印象。</p>
+<p>在 shell 的语法方面，Korn shell 是比较接近一般程序语言，而且它具有子程序的功能及提供较多的资料型态。至于 Bourne shell，它所拥有的资料型态是三种 shell 中最少的，仅提供字符串变量和布尔型态。在整体考量下 Korn shell 是三者中表现最佳者，其次为 C shell，最后才是 Bourne shell，但是在实际使用中仍有其它应列入考虑的因素，如速度是最重要的选择时，很可能应该采用 Bourne shell，因它是最基本的 shell，执行的速度最快。</p>
+<h2 id="tcsh">tcsh</h2>
+<p>tcsh 是近几年崛起的一个免费软件（Linux 下的 C shell 其实就是使用 tcsh）执行，它虽然不是 UNIX 的标准配备，但是从许多地方您都可以下载到它。如果您是 C shell 的拥护者，笔者建议不妨试试 tcsh，因为您至少可以将它当作是 C shell 来使用。如果您愿意花点时间学习，您还可以享受许多它新增的优越功能，例如：</p>
+<ul>
+<li>tcsh 提供了一个命令列（command line）编辑程序。</li>
+<li>提供了命令列补全功能。</li>
+<li>提供了拼字更正功能。它能够自动检测并且更正在命令列拼错的命令或是单字。</li>
+<li>危险命令侦测并提醒的功能，避免您一个不小心执行了rm* 这种杀伤力极大的命令。</li>
+<li>提供常用命令的快捷方式（shortcut）。</li>
+</ul>
+<h2 id="ash">ash</h2>
+<p>一个简单的轻量级的 Shell，占用资源少，适合运行于低内存环境，但是与下面讲到的 bash shell 完全兼容</p>
+<h2 id="shell分类总结">Shell分类总结</h2>
+<p>在大部份的 UNIX 系统，三种著名且广被支持的 shell 是 Bourne shell（AT&amp;T shell，在 Linux 下是 BASH）、C shell（Berkeley shell，在 Linux 下是 TCSH）和 Korn shell（Bourne shell 的超集）。</p>
+<p>这三种 shell 在交谈（interactive）模式下的表现相当类似，但作为命令文件语言时，在语法和执行效率上就有些不同了。</p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2024-06-26</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/ch0_shell%E5%88%86%E7%B1%BB/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://localhost:1313/ch0_shell%E5%88%86%E7%B1%BB/" data-title="shell 分类" data-via="xxxx" data-hashtags="Shell"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/ch0_shell%E5%88%86%E7%B1%BB/" data-hashtag="Shell"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="http://localhost:1313/ch0_shell%E5%88%86%E7%B1%BB/" data-title="shell 分类"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://localhost:1313/ch0_shell%E5%88%86%E7%B1%BB/" data-title="shell 分类"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/ch0_shell%E5%88%86%E7%B1%BB/" data-title="shell 分类"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/shell/">Shell</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/ch1_%E5%85%A5%E5%8F%82%E5%92%8C%E9%BB%98%E8%AE%A4%E5%8F%98%E9%87%8F/" class="prev" rel="prev" title="shell 入参和默认变量"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>shell 入参和默认变量</a>
+            <a href="/ansible%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/" class="next" rel="next" title="Ansible 知识图谱">Ansible 知识图谱<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">我是有底线的</div><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.126.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2024</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">lushuan</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

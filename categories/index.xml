@@ -21,6 +21,14 @@
     <description><![CDATA[]]></description>
 </item>
 <item>
+    <title>Helm</title>
+    <link>http://localhost:1313/categories/helm/</link>
+    <pubDate>Mon, 17 Apr 2023 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/categories/helm/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
     <title>Linux</title>
     <link>http://localhost:1313/categories/linux/</link>
     <pubDate>Wed, 29 Jun 2022 12:06:37 &#43;0800</pubDate>
@@ -42,6 +50,30 @@
     <pubDate>Wed, 15 Sep 2021 19:49:09 &#43;0800</pubDate>
     <author>lushuan</author>
     <guid>http://localhost:1313/categories/hugo/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
+    <title>Git</title>
+    <link>http://localhost:1313/categories/git/</link>
+    <pubDate>Sat, 17 Apr 2021 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/categories/git/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
+    <title>Ansible</title>
+    <link>http://localhost:1313/categories/ansible/</link>
+    <pubDate>Sun, 17 May 2020 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/categories/ansible/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
+    <title>Shell</title>
+    <link>http://localhost:1313/categories/shell/</link>
+    <pubDate>Tue, 28 Apr 2020 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/categories/shell/</guid>
     <description><![CDATA[]]></description>
 </item>
 </channel>

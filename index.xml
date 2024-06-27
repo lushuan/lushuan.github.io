@@ -4,7 +4,7 @@
         <link>http://localhost:1313/</link>
         <description>知识有两种，一种是你知道的，一种是你知道在哪里能找到的！ --塞缪尔·约翰逊</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
-            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Thu, 20 Jun 2024 12:06:37 &#43;0800</lastBuildDate>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Wed, 26 Jun 2024 10:54:03 &#43;0800</lastBuildDate>
             <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
         <item>
     <title>Ubuntu-server部署k8s1.28(containerd版本)集群</title>
@@ -63,6 +63,14 @@
     <description><![CDATA[故障描述 PVC 显示创建不成功：kubectl get pvc -n efk 显示 Pending，这是由于版本太高导致的。k8sv1.20 以上版本默认禁止使用 selfLi]]></description>
 </item>
 <item>
+    <title>Helm Charts 介绍</title>
+    <link>http://localhost:1313/helm_charts-%E4%BB%8B%E7%BB%8D/</link>
+    <pubDate>Mon, 17 Apr 2023 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/helm_charts-%E4%BB%8B%E7%BB%8D/</guid>
+    <description><![CDATA[Helm 使用一种名为 charts 的包格式，一个 chart 是描述一组相关的 Kubernetes 资源的文件集合，单个 chart 可能用于部署简单的应用，比如 memcached pod，或者复杂的应用，比如一个带有 HTTP]]></description>
+</item>
+<item>
     <title>k8s容器运行时 containerd 版本升级</title>
     <link>http://localhost:1313/k8s%E5%AE%B9%E5%99%A8%E8%BF%90%E8%A1%8C%E6%97%B6containerd%E5%8D%87%E7%BA%A7/</link>
     <pubDate>Mon, 17 Apr 2023 12:06:37 &#43;0800</pubDate>
@@ -77,14 +85,6 @@
     <author>lushuan</author>
     <guid>http://localhost:1313/kubelet%E7%9B%AE%E5%BD%95%E6%BB%A1%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/</guid>
     <description><![CDATA[现象 k8s 某台主机的/var/lib/kubelet目录存储使用率超过80% 使用了40多G存储 分析 申请root权限 cd /var/lib/kubelet 执行du -h -d 1 发现 pod目]]></description>
-</item>
-<item>
-    <title>kube-dns切换为coredns实践</title>
-    <link>http://localhost:1313/kube-dns%E5%88%87%E6%8D%A2%E4%B8%BAcoredns%E5%AE%9E%E8%B7%B5/</link>
-    <pubDate>Wed, 29 Mar 2023 12:06:37 &#43;0800</pubDate>
-    <author>lushuan</author>
-    <guid>http://localhost:1313/kube-dns%E5%88%87%E6%8D%A2%E4%B8%BAcoredns%E5%AE%9E%E8%B7%B5/</guid>
-    <description><![CDATA[kube-dns切换为coredns k8s版本及其dns适配版本 k8s版本 coredns版本 镜像 镜像yaml 1.17 1.6.7 coredns-1.6.7.tar.gz coredns-1.6.7.yaml 1.22 1.8.4 coredns-1.8.4.tar.gz coredns-1.8.4.yaml coredns/coredns:1.6.7/1.8.4 操作 根据版本选]]></description>
 </item>
 </channel>
 </rss>

@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>Helm charts 编写模板说明 - Less is more</title><meta name="Description" content="知识有两种，一种是你知道的，一种是你知道在哪里能找到的！ --塞缪尔·约翰逊"><meta property="og:url" content="http://localhost:1313/helm_charts%E7%BC%96%E5%86%99%E6%A8%A1%E6%9D%BF%E8%AF%B4%E6%98%8E/">
+  <meta property="og:site_name" content="Less is more">
+  <meta property="og:title" content="Helm charts 编写模板说明">
+  <meta property="og:description" content="预置条件 适用于Kubernetes v1.12.1及以上，Helm v3.4.2及以上。 以zcm-cmdb应用为例进行说明,zcm-cmdb为部">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2023-03-20T12:06:37+08:00">
+    <meta property="article:modified_time" content="2024-06-26T12:06:37+08:00">
+    <meta property="article:tag" content="Helm">
+    <meta property="og:image" content="http://localhost:1313/logo.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/logo.png">
+  <meta name="twitter:title" content="Helm charts 编写模板说明">
+  <meta name="twitter:description" content="预置条件 适用于Kubernetes v1.12.1及以上，Helm v3.4.2及以上。 以zcm-cmdb应用为例进行说明,zcm-cmdb为部">
+      <meta name="twitter:site" content="@xxxx">
+<meta name="application-name" content="我的网站">
+<meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://localhost:1313/helm_charts%E7%BC%96%E5%86%99%E6%A8%A1%E6%9D%BF%E8%AF%B4%E6%98%8E/" /><link rel="prev" href="http://localhost:1313/kubernetes-%E7%BD%91%E7%BB%9C%E6%8E%92%E9%94%99/" /><link rel="next" href="http://localhost:1313/%E5%BD%93-kubernetes-%E5%88%9B%E5%BB%BA-pod-%E6%97%B6%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Helm charts 编写模板说明",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost:1313\/helm_charts%E7%BC%96%E5%86%99%E6%A8%A1%E6%9D%BF%E8%AF%B4%E6%98%8E\/"
+        },"genre": "posts","keywords": "Helm","wordcount":  1225 ,
+        "url": "http:\/\/localhost:1313\/helm_charts%E7%BC%96%E5%86%99%E6%A8%A1%E6%9D%BF%E8%AF%B4%E6%98%8E\/","datePublished": "2023-03-20T12:06:37+08:00","dateModified": "2024-06-26T12:06:37+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "lushuan"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Less is more">Less is more</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/" title="About"> 关于 </a><a class="menu-item" href="/friends/" title="friends"> 友链 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Less is more">Less is more</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="About">关于</a><a class="menu-item" href="/friends/" title="friends">友链</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Helm charts 编写模板说明</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/helm/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Helm</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-03-20">2023-03-20</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 1225 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 3 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="true">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#预置条件">预置条件</a></li>
+    <li><a href="#目录结构">目录结构</a></li>
+    <li><a href="#配置资源">配置资源</a></li>
+    <li><a href="#部署测试">部署测试</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="预置条件">预置条件</h2>
+<p>适用于Kubernetes v1.12.1及以上，Helm v3.4.2及以上。</p>
+<p>以<code>zcm-cmdb</code>应用为例进行说明,<code>zcm-cmdb</code>为部署在k8s中的web 应用</p>
+<h2 id="目录结构">目录结构</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">zcm-cmdb  
+</span></span><span class="line"><span class="cl">├── Chart.yaml  
+</span></span><span class="line"><span class="cl">├── files  
+</span></span><span class="line"><span class="cl">│   └── application.properties  
+</span></span><span class="line"><span class="cl">├── templates  
+</span></span><span class="line"><span class="cl">│   ├── configmap.yaml  
+</span></span><span class="line"><span class="cl">│   ├── deployment.yaml  
+</span></span><span class="line"><span class="cl">│   ├── _helpers.tpl  
+</span></span><span class="line"><span class="cl">│   ├── ingress.yaml  
+</span></span><span class="line"><span class="cl">│   ├── NOTES.txt  
+</span></span><span class="line"><span class="cl">│   └── service.yaml  
+</span></span><span class="line"><span class="cl">└── values.yaml  
+</span></span><span class="line"><span class="cl">​  
+</span></span><span class="line"><span class="cl">2 directories, 9 files
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>目录及文件描述：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>名称</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D</td>
+<td>zcm-cmdb</td>
+<td>应用名称，根据实际业务应用进行命名。</td>
+</tr>
+<tr>
+<td>F</td>
+<td>Chart.yaml</td>
+<td>文件包含了该chart的描述。</td>
+</tr>
+<tr>
+<td>D</td>
+<td>files</td>
+<td>配置文件目录</td>
+</tr>
+<tr>
+<td>F</td>
+<td>application.properties</td>
+<td>配置文件</td>
+</tr>
+<tr>
+<td>D</td>
+<td>templates</td>
+<td>目录包括了模板文件。当Helm评估chart时，会通过模板渲染引擎将所有文件发送到templates/目录中。 然后收集模板的结果并发送给Kubernetes。</td>
+</tr>
+<tr>
+<td>F</td>
+<td>configmap.yaml</td>
+<td>configmap模板</td>
+</tr>
+<tr>
+<td>F</td>
+<td>deployment.yaml</td>
+<td>deployment模板</td>
+</tr>
+<tr>
+<td>F</td>
+<td>_helpers.tpl</td>
+<td>放置可以通过chart复用的模板辅助对象</td>
+</tr>
+<tr>
+<td>F</td>
+<td>ingress.yaml</td>
+<td>ingress模板。</td>
+</tr>
+<tr>
+<td>F</td>
+<td>NOTES.txt</td>
+<td>chart的&quot;帮助文本&quot;。会在用户执行helm install时展示。</td>
+</tr>
+<tr>
+<td>F</td>
+<td>service.yaml</td>
+<td>service模板。</td>
+</tr>
+<tr>
+<td>F</td>
+<td>values.yaml</td>
+<td>chart的默认值。会在用户执行helm install 或 helm upgrade时被覆盖。</td>
+</tr>
+</tbody>
+</table>
+<p>其中，类型：D，目录；F，文件。</p>
+<h2 id="配置资源">配置资源</h2>
+<p>一个完整的应用部署通常由应用名称、镜像名称及tag、环境变量、资源限额、端口监听、端口映射、目录/文件挂载、配置文件、网关规则等组成。通过helm将应用模板化，仅需要简单配置些许地方即可。</p>
+<ul>
+<li>
+<p>应用名称</p>
+<table>
+<thead>
+<tr>
+<th>文件名</th>
+<th>key</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Chart.yaml</td>
+<td>name</td>
+</tr>
+<tr>
+<td>values.yaml</td>
+<td>fullnameOverride</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>镜像名称及tag</p>
+<table>
+<thead>
+<tr>
+<th>文件名</th>
+<th>key</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>values.yaml</td>
+<td>image.repository</td>
+</tr>
+<tr>
+<td>values.yaml</td>
+<td>image.tag</td>
+</tr>
+</tbody>
+</table>
+<p>当前的模板默认是以镜像名称与应用名称保持一致为前提的，如镜像<code>10.45.80.1/iplatform/zcm-cmdb:C_20220214144619</code>的名称为<code>zcm-cmdb</code>与应用名称<code>zcm-cmdb</code>保持一致。假如实际的应用名与镜像名称不一致，请自行修改<code>_helpers.tpl</code>中的fullimage部分。</p>
+<p>修改前</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">{{- define &#34;zcm-tpl.fullimage&#34; -}}  
+</span></span><span class="line"><span class="cl">{{- .Values.global.repository }}/{{ .Values.image.repository }}:{{ index .Values .Chart.Name &#34;image&#34; &#34;tag&#34; | default .Chart.AppVersion }}  
+</span></span><span class="line"><span class="cl">{{- end }}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>修改后</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">{{- define &#34;zcm-tpl.fullimage&#34; -}}  
+</span></span><span class="line"><span class="cl">{{- .Values.global.repository }}/{{ .Values.image.repository }}:{{ index .Values &#34;name-template&#34; &#34;image&#34; &#34;tag&#34; | default .Chart.AppVersion }}  
+</span></span><span class="line"><span class="cl">{{- end }}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>其中，<code>name-template</code>为实际的镜像名称，该镜像信息配置在<code>$HELM_PATH/charts/values.yaml</code>中，如果该文件中没有匹配的信息，当在部署时会提示异常。</p>
+</li>
+<li>
+<p>环境变量</p>
+<table>
+<thead>
+<tr>
+<th>文件名</th>
+<th>key</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>values.yaml</td>
+<td>env.name</td>
+</tr>
+<tr>
+<td>values.yaml</td>
+<td>env.value</td>
+</tr>
+<tr>
+<td>values.yaml</td>
+<td>env.valueFrom.configMapKeyRef.name</td>
+</tr>
+<tr>
+<td>values.yaml</td>
+<td>env.valueFrom.configMapKeyRef.key</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>资源限额</p>
+<table>
+<thead>
+<tr>
+<th>文件名</th>
+<th>key</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>values.yaml</td>
+<td>resources.requests.cpu</td>
+</tr>
+<tr>
+<td>values.yaml</td>
+<td>resources.requests.memory</td>
+</tr>
+<tr>
+<td>values.yaml</td>
+<td>resources.limits.cpu</td>
+</tr>
+<tr>
+<td>values.yaml</td>
+<td>resources.limits.memory</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>端口监听</p>
+<table>
+<thead>
+<tr>
+<th>文件名</th>
+<th>key</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>values.yaml</td>
+<td>ports.containerPort</td>
+</tr>
+<tr>
+<td>values.yaml</td>
+<td>ports.protocol</td>
+</tr>
+<tr>
+<td>values.yaml</td>
+<td>ports.name</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>端口映射</p>
+<table>
+<thead>
+<tr>
+<th>文件名</th>
+<th>key</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>values.yaml</td>
+<td>service.ports.name</td>
+</tr>
+<tr>
+<td>values.yaml</td>
+<td>service.ports.port</td>
+</tr>
+<tr>
+<td>values.yaml</td>
+<td>service.ports.targetPort</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>目录/文件挂载</p>
+<table>
+<thead>
+<tr>
+<th>文件名</th>
+<th>key</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>values.yaml</td>
+<td>volumeMounts.name</td>
+</tr>
+<tr>
+<td>values.yaml</td>
+<td>volumeMounts.mountPath</td>
+</tr>
+<tr>
+<td>values.yaml</td>
+<td>volumeMounts.readOnly</td>
+</tr>
+<tr>
+<td>values.yaml</td>
+<td>volumeMounts.subPath</td>
+</tr>
+<tr>
+<td>values.yaml</td>
+<td>volumes.name</td>
+</tr>
+<tr>
+<td>values.yaml</td>
+<td>volumes.hostpath.path</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>配置文件</p>
+<table>
+<thead>
+<tr>
+<th>文件名</th>
+<th>key</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>values.yaml</td>
+<td>cm.name</td>
+</tr>
+<tr>
+<td>values.yaml</td>
+<td>cm.configmap.name</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>网关规则</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>文件名</th>
+<th>key</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>values.yaml</td>
+<td>ingress.annotations</td>
+</tr>
+<tr>
+<td>values.yaml</td>
+<td>ingress.tls</td>
+</tr>
+<tr>
+<td>values.yaml</td>
+<td>ingress.hosts.paths.path</td>
+</tr>
+<tr>
+<td>values.yaml</td>
+<td>ingress.hosts.paths.pathType</td>
+</tr>
+<tr>
+<td>values.yaml</td>
+<td>ingress.hosts.paths.port</td>
+</tr>
+</tbody>
+</table>
+<h2 id="部署测试">部署测试</h2>
+<p>将准备好的chart放到ZCM部署主机<code>$HELM_PATH/charts</code>目录下，镜像推送到对应环境的镜像仓库中，并在<code>$HELM_PATH/charts/values.yaml</code>中配置镜像信息，
+如镜像<code>10.45.80.1/iplatform/zcm-crms:T_20220411015401</code>，需配置对应的信息如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">zcm-crms:  
+</span></span><span class="line"><span class="cl">  image:  
+</span></span><span class="line"><span class="cl">    tag: T_20220411015401
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>执行部署操作</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">cd $HELM_PATH/charts  
+</span></span><span class="line"><span class="cl">helm install zcm-crms ./zcm-crms -f values.yaml -n backend
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>也可执行其他相关操作</p>
+<p>升级</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">helm upgrade zcm-crms ./zcm-crms -f values.yaml -n backend
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>卸载</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">helm uninstall zcm-crms -n backend
+</span></span></code></pre></td></tr></table>
+</div>
+</div></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2024-06-26</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/helm_charts%E7%BC%96%E5%86%99%E6%A8%A1%E6%9D%BF%E8%AF%B4%E6%98%8E/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://localhost:1313/helm_charts%E7%BC%96%E5%86%99%E6%A8%A1%E6%9D%BF%E8%AF%B4%E6%98%8E/" data-title="Helm charts 编写模板说明" data-via="xxxx" data-hashtags="Helm"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/helm_charts%E7%BC%96%E5%86%99%E6%A8%A1%E6%9D%BF%E8%AF%B4%E6%98%8E/" data-hashtag="Helm"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="http://localhost:1313/helm_charts%E7%BC%96%E5%86%99%E6%A8%A1%E6%9D%BF%E8%AF%B4%E6%98%8E/" data-title="Helm charts 编写模板说明"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://localhost:1313/helm_charts%E7%BC%96%E5%86%99%E6%A8%A1%E6%9D%BF%E8%AF%B4%E6%98%8E/" data-title="Helm charts 编写模板说明"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/helm_charts%E7%BC%96%E5%86%99%E6%A8%A1%E6%9D%BF%E8%AF%B4%E6%98%8E/" data-title="Helm charts 编写模板说明"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/helm/">Helm</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/kubernetes-%E7%BD%91%E7%BB%9C%E6%8E%92%E9%94%99/" class="prev" rel="prev" title="Kubernetes 网络排障"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Kubernetes 网络排障</a>
+            <a href="/%E5%BD%93-kubernetes-%E5%88%9B%E5%BB%BA-pod-%E6%97%B6%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88/" class="next" rel="next" title="当 Kubernetes 创建 Pod 时发生了什么">当 Kubernetes 创建 Pod 时发生了什么<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">我是有底线的</div><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.126.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2024</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">lushuan</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

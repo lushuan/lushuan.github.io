@@ -61,6 +61,14 @@
     <description><![CDATA[使用 kubernetes 经常会用到命令行，这里对命令行进行分类整理 集群管理 kubectl cluster-info kubectl config kubectl version kubectl api-versions 查看当前集群支持的api版本 kubectl get node kubectl get pod kubectl get service kubectl cordon 命令：用于标记某个]]></description>
 </item>
 <item>
+    <title>Kubernetes ConfigMap多文件挂载至同一个pod内目录实践</title>
+    <link>http://localhost:1313/kubernetes-configmap%E5%A4%9A%E6%96%87%E4%BB%B6%E6%8C%82%E8%BD%BD%E8%87%B3%E5%90%8C%E4%B8%80%E4%B8%AApod%E5%86%85%E7%9B%AE%E5%BD%95%E5%AE%9E%E8%B7%B5/</link>
+    <pubDate>Mon, 13 Jun 2022 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/kubernetes-configmap%E5%A4%9A%E6%96%87%E4%BB%B6%E6%8C%82%E8%BD%BD%E8%87%B3%E5%90%8C%E4%B8%80%E4%B8%AApod%E5%86%85%E7%9B%AE%E5%BD%95%E5%AE%9E%E8%B7%B5/</guid>
+    <description><![CDATA[理解ConfigMap 为了能够准确和深刻理解Kubernetes ConfigMap的功能和价值，我们需要从Docker说起。我们知道，Doc]]></description>
+</item>
+<item>
     <title>Pod调度</title>
     <link>http://localhost:1313/pod%E8%B0%83%E5%BA%A6/</link>
     <pubDate>Fri, 16 Jul 2021 12:06:37 &#43;0800</pubDate>
@@ -69,12 +77,12 @@
     <description><![CDATA[Pod调度 一般情况下我们部署的 Pod 是通过集群的自动调度策略来选择节点的，默认情况下调度器考虑的是资源足够，并且负载尽量平均，但是有的时候我们需]]></description>
 </item>
 <item>
-    <title>Kubernetes的基本概念和术语</title>
-    <link>http://localhost:1313/kubernetes%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E5%92%8C%E6%9C%AF%E8%AF%AD/</link>
+    <title>K8s默认Service和Headless Service的区别</title>
+    <link>http://localhost:1313/k8s%E9%BB%98%E8%AE%A4service%E5%92%8Cheadless-service%E7%9A%84%E5%8C%BA%E5%88%AB/</link>
     <pubDate>Sun, 13 Jun 2021 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>http://localhost:1313/kubernetes%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E5%92%8C%E6%9C%AF%E8%AF%AD/</guid>
-    <description><![CDATA[资源对象概述 Kubernetes中的基本概念和术语大多是围绕资源对象（Resource Object）来说的，而资源对象在总体上可分为以下两类]]></description>
+    <guid>http://localhost:1313/k8s%E9%BB%98%E8%AE%A4service%E5%92%8Cheadless-service%E7%9A%84%E5%8C%BA%E5%88%AB/</guid>
+    <description><![CDATA[K8s Service有四种类型 Service Headless Service NodePort Service LoadBalancer Service Service 如果不指定则为默认类型 Service Service是什么？ Service服务可以为一组具有相同功能的容器应用提]]></description>
 </item>
 </channel>
 </rss>

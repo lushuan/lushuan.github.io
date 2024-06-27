@@ -29,6 +29,14 @@
     <description><![CDATA[]]></description>
 </item>
 <item>
+    <title>Helm</title>
+    <link>http://localhost:1313/tags/helm/</link>
+    <pubDate>Mon, 17 Apr 2023 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/tags/helm/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
     <title>Linux</title>
     <link>http://localhost:1313/tags/linux/</link>
     <pubDate>Wed, 29 Jun 2022 12:06:37 &#43;0800</pubDate>
@@ -58,6 +66,22 @@
     <pubDate>Tue, 29 Jun 2021 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
     <guid>http://localhost:1313/tags/linux%E6%96%87%E6%9C%AC%E4%B8%89%E5%89%91%E5%AE%A2/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
+    <title>Git</title>
+    <link>http://localhost:1313/tags/git/</link>
+    <pubDate>Sat, 17 Apr 2021 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/tags/git/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
+    <title>Ansible</title>
+    <link>http://localhost:1313/tags/ansible/</link>
+    <pubDate>Sun, 17 May 2020 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/tags/ansible/</guid>
     <description><![CDATA[]]></description>
 </item>
 </channel>
