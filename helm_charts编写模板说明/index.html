@@ -7,7 +7,7 @@
         <title>Helm charts 编写模板说明 - Less is more</title><meta name="Description" content="知识有两种，一种是你知道的，一种是你知道在哪里能找到的！ --塞缪尔·约翰逊"><meta property="og:url" content="http://localhost:1313/helm_charts%E7%BC%96%E5%86%99%E6%A8%A1%E6%9D%BF%E8%AF%B4%E6%98%8E/">
   <meta property="og:site_name" content="Less is more">
   <meta property="og:title" content="Helm charts 编写模板说明">
-  <meta property="og:description" content="预置条件 适用于Kubernetes v1.12.1及以上，Helm v3.4.2及以上。 以zcm-cmdb应用为例进行说明,zcm-cmdb为部">
+  <meta property="og:description" content="预置条件 适用于Kubernetes v1.12.1及以上，Helm v3.4.2及以上。 以test-cmdb应用为例进行说明,test-cmdb">
   <meta property="og:locale" content="zh_CN">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="http://localhost:1313/logo.png">
   <meta name="twitter:title" content="Helm charts 编写模板说明">
-  <meta name="twitter:description" content="预置条件 适用于Kubernetes v1.12.1及以上，Helm v3.4.2及以上。 以zcm-cmdb应用为例进行说明,zcm-cmdb为部">
+  <meta name="twitter:description" content="预置条件 适用于Kubernetes v1.12.1及以上，Helm v3.4.2及以上。 以test-cmdb应用为例进行说明,test-cmdb">
       <meta name="twitter:site" content="@xxxx">
 <meta name="application-name" content="我的网站">
 <meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
@@ -35,7 +35,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "http:\/\/localhost:1313\/helm_charts%E7%BC%96%E5%86%99%E6%A8%A1%E6%9D%BF%E8%AF%B4%E6%98%8E\/"
-        },"genre": "posts","keywords": "Helm","wordcount":  1225 ,
+        },"genre": "posts","keywords": "Helm","wordcount":  1230 ,
         "url": "http:\/\/localhost:1313\/helm_charts%E7%BC%96%E5%86%99%E6%A8%A1%E6%9D%BF%E8%AF%B4%E6%98%8E\/","datePublished": "2023-03-20T12:06:37+08:00","dateModified": "2024-06-26T12:06:37+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -109,7 +109,7 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Helm charts 编写模板说明</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/helm/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Helm</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-03-20">2023-03-20</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 1225 字&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-03-20">2023-03-20</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 1230 字&nbsp;
                 <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 3 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  data-kept="true">
                 <div class="details-summary toc-title">
@@ -126,7 +126,7 @@
 </nav></div>
             </div><div class="content" id="content"><h2 id="预置条件">预置条件</h2>
 <p>适用于Kubernetes v1.12.1及以上，Helm v3.4.2及以上。</p>
-<p>以<code>zcm-cmdb</code>应用为例进行说明,<code>zcm-cmdb</code>为部署在k8s中的web 应用</p>
+<p>以<code>test-cmdb</code>应用为例进行说明,<code>test-cmdb</code>为部署在k8s中的web 应用</p>
 <h2 id="目录结构">目录结构</h2>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -146,7 +146,7 @@
 </span><span class="lnt">14
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">zcm-cmdb  
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">test-cmdb  
 </span></span><span class="line"><span class="cl">├── Chart.yaml  
 </span></span><span class="line"><span class="cl">├── files  
 </span></span><span class="line"><span class="cl">│   └── application.properties  
@@ -174,7 +174,7 @@
 <tbody>
 <tr>
 <td>D</td>
-<td>zcm-cmdb</td>
+<td>test-cmdb</td>
 <td>应用名称，根据实际业务应用进行命名。</td>
 </tr>
 <tr>
@@ -279,7 +279,7 @@
 </tr>
 </tbody>
 </table>
-<p>当前的模板默认是以镜像名称与应用名称保持一致为前提的，如镜像<code>10.45.80.1/iplatform/zcm-cmdb:C_20220214144619</code>的名称为<code>zcm-cmdb</code>与应用名称<code>zcm-cmdb</code>保持一致。假如实际的应用名与镜像名称不一致，请自行修改<code>_helpers.tpl</code>中的fullimage部分。</p>
+<p>当前的模板默认是以镜像名称与应用名称保持一致为前提的，如镜像<code>10.45.80.1/iplatform/test-cmdb:C_20220214144619</code>的名称为<code>test-cmdb</code>与应用名称<code>test-cmdb</code>保持一致。假如实际的应用名与镜像名称不一致，请自行修改<code>_helpers.tpl</code>中的fullimage部分。</p>
 <p>修改前</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">

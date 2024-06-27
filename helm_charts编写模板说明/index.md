@@ -4,11 +4,11 @@
 
 适用于Kubernetes v1.12.1及以上，Helm v3.4.2及以上。
 
-以`zcm-cmdb`应用为例进行说明,`zcm-cmdb`为部署在k8s中的web 应用
+以`test-cmdb`应用为例进行说明,`test-cmdb`为部署在k8s中的web 应用
 
 ## 目录结构
 ```
-zcm-cmdb  
+test-cmdb  
 ├── Chart.yaml  
 ├── files  
 │   └── application.properties  
@@ -27,7 +27,7 @@ zcm-cmdb
 
 | 类型 | 名称 | 描述 |
 | ---- | ---- | ---- |
-| D | zcm-cmdb | 应用名称，根据实际业务应用进行命名。 |
+| D | test-cmdb | 应用名称，根据实际业务应用进行命名。 |
 | F | Chart.yaml | 文件包含了该chart的描述。 |
 | D | files | 配置文件目录 |
 | F | application.properties | 配置文件 |
@@ -60,7 +60,7 @@ zcm-cmdb
     | values.yaml | image.repository |
     | values.yaml | image.tag |
     
-    当前的模板默认是以镜像名称与应用名称保持一致为前提的，如镜像`10.45.80.1/iplatform/zcm-cmdb:C_20220214144619`的名称为`zcm-cmdb`与应用名称`zcm-cmdb`保持一致。假如实际的应用名与镜像名称不一致，请自行修改`_helpers.tpl`中的fullimage部分。
+    当前的模板默认是以镜像名称与应用名称保持一致为前提的，如镜像`10.45.80.1/iplatform/test-cmdb:C_20220214144619`的名称为`test-cmdb`与应用名称`test-cmdb`保持一致。假如实际的应用名与镜像名称不一致，请自行修改`_helpers.tpl`中的fullimage部分。
     
     修改前
     ```

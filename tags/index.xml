@@ -37,6 +37,14 @@
     <description><![CDATA[]]></description>
 </item>
 <item>
+    <title>Learning Method</title>
+    <link>http://localhost:1313/tags/learning-method/</link>
+    <pubDate>Wed, 29 Jun 2022 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/tags/learning-method/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
     <title>Linux</title>
     <link>http://localhost:1313/tags/linux/</link>
     <pubDate>Wed, 29 Jun 2022 12:06:37 &#43;0800</pubDate>
@@ -74,14 +82,6 @@
     <pubDate>Sat, 17 Apr 2021 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
     <guid>http://localhost:1313/tags/git/</guid>
-    <description><![CDATA[]]></description>
-</item>
-<item>
-    <title>Ansible</title>
-    <link>http://localhost:1313/tags/ansible/</link>
-    <pubDate>Sun, 17 May 2020 12:06:37 &#43;0800</pubDate>
-    <author>lushuan</author>
-    <guid>http://localhost:1313/tags/ansible/</guid>
     <description><![CDATA[]]></description>
 </item>
 </channel>

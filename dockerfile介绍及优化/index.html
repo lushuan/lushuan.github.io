@@ -35,7 +35,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "http:\/\/localhost:1313\/dockerfile%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BC%98%E5%8C%96\/"
-        },"genre": "posts","keywords": "docker","wordcount":  799 ,
+        },"genre": "posts","keywords": "docker","wordcount":  1147 ,
         "url": "http:\/\/localhost:1313\/dockerfile%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BC%98%E5%8C%96\/","datePublished": "2023-06-26T16:25:58+08:00","dateModified": "2024-06-26T16:25:58+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -109,8 +109,8 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Dockerfile介绍及优化</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/docker/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Docker</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-06-26">2023-06-26</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 799 字&nbsp;
-                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 2 分钟&nbsp;</div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-06-26">2023-06-26</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 1147 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 3 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  data-kept="true">
                 <div class="details-summary toc-title">
                     <span>目录</span>
@@ -120,6 +120,7 @@
   <ul>
     <li><a href="#dockerfile-命令">Dockerfile 命令</a></li>
     <li><a href="#dockerfile-小建议">Dockerfile 小建议</a></li>
+    <li><a href="#规约">规约</a></li>
     <li><a href="#示例">示例</a>
       <ul>
         <li><a href="#nginx">nginx</a></li>
@@ -233,6 +234,16 @@
 <p>小结：（FROM）选择合适的基础镜像(alpine版本最好)，(RUN)在安装更新时勿忘删除缓存和安装包，
 多个命令聚合在一起减少构建时的层数，用不到的软件不要安装，(ADD和COPY)选COPY,（LABEL）添加镜像元数据，
 (MAINTAINER)让我知道是谁维护我，(ENV)设置默认的环境变量，（EXPOSE）说一下暴露的映射端口</p>
+<h2 id="规约">规约</h2>
+<ol>
+<li>各团队尽量使用统一的基础镜像。我们建立并维护公司统一的基础镜像列表，请参见: java应用使用的基础镜像</li>
+<li>减少Dockerfile的行数，使用&amp;&amp;连接多个命令，因为每一行命令都会生成一个层</li>
+<li>将增加文件和清理文件的动作放到一行里面，比如yum install和yum clean all，如果分为两行，第二条清理动作就无法真正删除文件</li>
+<li>只复制需要的文件，如果整个目录复制，一定要仔细检查目录下是否有隐藏文件、临时文件等不需要的内容</li>
+<li>容器镜像自身有压缩机制，因此把文件压缩成压缩文件然后打入容器，容器启动时解压的方法并不会有什么效果</li>
+<li>避免向生产镜像打入一些不必要的工具，比如有的团队打入了sshd，不应该使用这种方案，增加安全风险</li>
+<li>尽量精简安装的内容，比如只安装工具的运行时，无须带上帮助文档、源码、样例等等</li>
+</ol>
 <h2 id="示例">示例</h2>
 <h3 id="nginx">nginx</h3>
 <div class="highlight"><div class="chroma">
