@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>lvm 逻辑卷组管理 - Less is more</title><meta name="Description" content="知识有两种，一种是你知道的，一种是你知道在哪里能找到的！ --塞缪尔·约翰逊"><meta property="og:url" content="http://localhost:1313/lvm%E9%80%BB%E8%BE%91%E5%8D%B7%E7%BB%84%E7%AE%A1%E7%90%86/">
+  <meta property="og:site_name" content="Less is more">
+  <meta property="og:title" content="lvm 逻辑卷组管理">
+  <meta property="og:description" content="背景 部署 k8s 时需要对磁盘进行分区划分，正常是集成是直接给创建好的，现场在沟通过程中只提供了一块磁盘。 本篇文章记录一下磁盘分区划分的原理和步骤，">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2021-03-18T12:06:37+08:00">
+    <meta property="article:modified_time" content="2022-06-26T12:06:37+08:00">
+    <meta property="article:tag" content="Linux">
+    <meta property="og:image" content="http://localhost:1313/logo.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/logo.png">
+  <meta name="twitter:title" content="lvm 逻辑卷组管理">
+  <meta name="twitter:description" content="背景 部署 k8s 时需要对磁盘进行分区划分，正常是集成是直接给创建好的，现场在沟通过程中只提供了一块磁盘。 本篇文章记录一下磁盘分区划分的原理和步骤，">
+      <meta name="twitter:site" content="@xxxx">
+<meta name="application-name" content="我的网站">
+<meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://localhost:1313/lvm%E9%80%BB%E8%BE%91%E5%8D%B7%E7%BB%84%E7%AE%A1%E7%90%86/" /><link rel="prev" href="http://localhost:1313/xargs%E5%8E%9F%E7%90%86%E5%8F%8A%E4%BD%BF%E7%94%A8/" /><link rel="next" href="http://localhost:1313/fdisk%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86%E8%AF%A6%E8%A7%A3/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "lvm 逻辑卷组管理",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost:1313\/lvm%E9%80%BB%E8%BE%91%E5%8D%B7%E7%BB%84%E7%AE%A1%E7%90%86\/"
+        },"genre": "posts","keywords": "linux","wordcount":  2462 ,
+        "url": "http:\/\/localhost:1313\/lvm%E9%80%BB%E8%BE%91%E5%8D%B7%E7%BB%84%E7%AE%A1%E7%90%86\/","datePublished": "2021-03-18T12:06:37+08:00","dateModified": "2022-06-26T12:06:37+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "lushuan"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Less is more">Less is more</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/" title="About"> 关于 </a><a class="menu-item" href="/friends/" title="friends"> 友链 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Less is more">Less is more</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="About">关于</a><a class="menu-item" href="/friends/" title="friends">友链</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">lvm 逻辑卷组管理</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/linux/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Linux</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2021-03-18">2021-03-18</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 2462 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 5 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="true">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#背景">背景</a></li>
+    <li><a href="#lvm-介绍">lvm 介绍</a></li>
+    <li><a href="#三个概念">三个概念</a>
+      <ul>
+        <li><a href="#pvphysical-volume-物理卷">PV(Physical Volume) 物理卷</a></li>
+        <li><a href="#vgvolume-group-卷组">VG(Volume Group) 卷组</a></li>
+        <li><a href="#lvlogical-volume-逻辑卷">LV(Logical Volume) 逻辑卷</a></li>
+      </ul>
+    </li>
+    <li><a href="#三者关系">三者关系</a></li>
+    <li><a href="#lvm特点">lvm特点</a></li>
+    <li><a href="#工作原理">工作原理</a></li>
+    <li><a href="#讲个故事">讲个故事</a></li>
+    <li><a href="#操作">操作</a>
+      <ul>
+        <li><a href="#分区操作">分区操作</a></li>
+      </ul>
+    </li>
+    <li><a href="#相关操作命令">相关操作命令</a>
+      <ul>
+        <li><a href="#创建逻辑卷">创建逻辑卷</a></li>
+        <li><a href="#指定逻辑卷大小">指定逻辑卷大小</a></li>
+      </ul>
+    </li>
+    <li><a href="#创建文件系统">创建文件系统</a>
+      <ul>
+        <li><a href="#目录挂载">目录挂载</a></li>
+        <li><a href="#修改lvm">修改LVM</a></li>
+      </ul>
+    </li>
+    <li><a href="#lvm-命令汇总">LVM 命令汇总</a></li>
+    <li><a href="#小结">小结</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="背景">背景</h2>
+<p>部署 k8s 时需要对磁盘进行分区划分，正常是集成是直接给创建好的，现场在沟通过程中只提供了一块磁盘。
+本篇文章记录一下磁盘分区划分的原理和步骤，尽量选择大白话。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/linux/lvm-1.jpg"
+        data-srcset="/images/linux/lvm-1.jpg, /images/linux/lvm-1.jpg 1.5x, /images/linux/lvm-1.jpg 2x"
+        data-sizes="auto"
+        alt="/images/linux/lvm-1.jpg"
+        title="lvm-1" /></p>
+<h2 id="lvm-介绍">lvm 介绍</h2>
+<p>LVM——全称Logical Volume Manager，可以将多个硬盘和硬盘分区做成一个逻辑卷，并把这个逻辑卷作为一个整体来统一管理，动态对分区进行扩缩空间大小，提高磁盘管理灵活性。</p>
+<p>在安装CentOS 7的过程中选择自动分区时，默认就是以LVM的方案安装的系统。</p>
+<p>但是/boot分区必须独立出来，不能基于LVM创建。</p>
+<h2 id="三个概念">三个概念</h2>
+<h3 id="pvphysical-volume-物理卷">PV(Physical Volume) 物理卷</h3>
+<blockquote>
+<p>物理卷，Physical Volume，是LVM机制的基本存储设备，通常对应一个普通分区或是整个硬盘。<br>
+创建物理卷时，会在分区或磁盘头部创建一个用于记录LVM属性的保留区块，并把存储空间分割成默认大小为4MB的基本单元（Physical Extend，PE），从而构成物理卷。<br>
+普通分区先转换分区类型为8e；整块硬盘，可以将所有的空间划分为一个主分区再做调整</p>
+</blockquote>
+<h3 id="vgvolume-group-卷组">VG(Volume Group) 卷组</h3>
+<p>卷组，Volume Group，是由一个或多个物理卷组成的一个整体。可以动态添加、移除物理卷，创建时可以指定PE大小</p>
+<h3 id="lvlogical-volume-逻辑卷">LV(Logical Volume) 逻辑卷</h3>
+<p>逻辑卷，Logical Volume，建立在卷组之上，与物理卷没有直接关系。格式化后，即可挂载使用。</p>
+<h2 id="三者关系">三者关系</h2>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/linux/lvm.png"
+        data-srcset="/images/linux/lvm.png, /images/linux/lvm.png 1.5x, /images/linux/lvm.png 2x"
+        data-sizes="auto"
+        alt="/images/linux/lvm.png"
+        title="lvm" /></p>
+<h2 id="lvm特点">lvm特点</h2>
+<p>LVM最大的特点就是可以对磁盘进行动态管理。因为逻辑卷的大小是可以动态调整的，而且不会丢失现有的数据。我们如果新增加了硬盘，其也不会改变现有上层的逻辑卷。作为一个动态磁盘管理机制，逻辑卷技术大大提高了磁盘管理的灵活性！</p>
+<h2 id="工作原理">工作原理</h2>
+<ol>
+<li>物理磁盘被格式化为PV，空间被划分为一个个的PE</li>
+<li>不同的PV加入到同一个VG中，不同PV的PE全部进入到了VG的PE池内</li>
+<li>LV基于PE创建，大小为PE的整数倍，组成LV的PE可能来自不同的物理磁盘</li>
+<li>LV现在就直接可以格式化后挂载使用了</li>
+<li>LV的扩充缩减实际上就是增加或减少组成该LV的PE数量，其过程不会丢失原始数据</li>
+</ol>
+<h2 id="讲个故事">讲个故事</h2>
+<p>上面工作原理可以做一个类比，集成提供的挂载磁盘可以理解为一堆小麦，pv的作用是将这一堆小麦打磨成面粉，
+不管挂载多少个磁盘pv都可以做成面粉，一堆一堆的面粉(pv格式化的各个磁盘)可以加入到一个VG中，
+这个VG可以理解为一个供销社将所有的面粉进行了纳管，当然也可以不同的面粉划分给不同的供销社,
+意思就是四块磁盘A、B、C、D 通过打面机pv做成了四份面粉，A、C份面粉卖给了大脚供销社VG-DJ,C、D两份面粉卖给了小脚供销社
+VG-XJ,现在亚洲舞王尼古拉斯赵四想要吃馒头，就选择了去大脚供销社去购买面粉，打算购买50斤面粉。这50斤面粉供销提供的lv,
+lv 一小份的面粉是来自于vg供销社而不是pv 面粉制造机器。下面会给出示例从小麦生产到赵四购买面粉。</p>
+<h2 id="操作">操作</h2>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/linux/lvm-2.jpg"
+        data-srcset="/images/linux/lvm-2.jpg, /images/linux/lvm-2.jpg 1.5x, /images/linux/lvm-2.jpg 2x"
+        data-sizes="auto"
+        alt="/images/linux/lvm-2.jpg"
+        title="lvm-2" /></p>
+<h3 id="分区操作">分区操作</h3>
+<p>1、 查看磁盘</p>
+<p>通过<code>fdisk -l</code>可以看出集成提供了一块600多G的磁盘 <code>/dev/xvdc</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ fdisk -l
+</span></span><span class="line"><span class="cl">....
+</span></span><span class="line"><span class="cl">Disk /dev/xvdc: 644.2 GB, <span class="m">644245094400</span> bytes, <span class="m">1258291200</span> sectors
+</span></span><span class="line"><span class="cl"><span class="nv">Units</span> <span class="o">=</span> sectors of <span class="m">1</span> * <span class="nv">512</span> <span class="o">=</span> <span class="m">512</span> bytes
+</span></span><span class="line"><span class="cl">Sector size <span class="o">(</span>logical/physical<span class="o">)</span>: <span class="m">512</span> bytes / <span class="m">512</span> bytes
+</span></span><span class="line"><span class="cl">I/O size <span class="o">(</span>minimum/optimal<span class="o">)</span>: <span class="m">512</span> bytes / <span class="m">512</span> bytes
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>2、 创建物理卷</p>
+<p>pv 将小麦加工成面粉，原理是物理磁盘被格式化为PV，空间被划分为一个个的PE</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ pvcreate /dev/xvdc
+</span></span><span class="line"><span class="cl">  Physical volume <span class="s2">&#34;/dev/xvdc&#34;</span> successfully created
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>3、 创建逻辑卷组</p>
+<p>将面粉运输至大脚供销社vgdata,vgdata 是自定义的逻辑卷组名</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ vgcreate vgdata /dev/xvdc
+</span></span><span class="line"><span class="cl">  Volume group <span class="s2">&#34;vgdata&#34;</span> successfully created
+</span></span><span class="line"><span class="cl">$ vgs
+</span></span><span class="line"><span class="cl">  VG     <span class="c1">#PV #LV #SN Attr   VSize    VFree   </span>
+</span></span><span class="line"><span class="cl">  centos   <span class="m">1</span>   <span class="m">3</span>   <span class="m">0</span> wz--n-  &lt;99.00g       <span class="m">0</span> 
+</span></span><span class="line"><span class="cl">  datavg   <span class="m">1</span>   <span class="m">1</span>   <span class="m">0</span> wz--n- &lt;400.00g    4.00m
+</span></span><span class="line"><span class="cl">  vgdata   <span class="m">1</span>   <span class="m">0</span>   <span class="m">0</span> wz--n- &lt;600.00g &lt;600.00g
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>4、创建逻辑卷</p>
+<p>可以看的出来逻辑卷的创建是来自于逻辑卷组vg,后面的扩容也是从逻辑卷组进行扩容，这个步骤可以比喻为赵四去大脚超市
+购买了35斤的面粉</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="l">mkdir -p /var/lib/kubelet</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">lvcreate -n lvkubelet -L +35G vgdata</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">mkfs.xfs /dev/vgdata/lvkubelet</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">echo &#34;/dev/mapper/vgdata-lvkubelet /var/lib/kubelet xfs defaults 0 0&#34; &gt;&gt; /etc/fstab</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">mount -a</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>查看逻辑卷是否挂载成功</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ df -h<span class="p">|</span>grep kubelet
+</span></span><span class="line"><span class="cl">/dev/mapper/vgdata-lvkubelet    35G   35M   35G   1% /var/lib/kubelet
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="相关操作命令">相关操作命令</h2>
+<h3 id="创建逻辑卷">创建逻辑卷</h3>
+<p>Linux 系统使用逻辑卷来模拟物理分区，并在其中保存文件系统。</p>
+<table>
+<thead>
+<tr>
+<th>选 项</th>
+<th>长选项名</th>
+<th>描 述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-c</td>
+<td>&ndash;chunksize</td>
+<td>指定快照逻辑卷的单位大小</td>
+</tr>
+<tr>
+<td>-C</td>
+<td>&ndash;contiguous</td>
+<td>设置或重置连续分配策略</td>
+</tr>
+<tr>
+<td>-i</td>
+<td>&ndash;stripes</td>
+<td>指定条带数</td>
+</tr>
+<tr>
+<td>-I</td>
+<td>&ndash;stripesize</td>
+<td>指定每个条带的大小</td>
+</tr>
+<tr>
+<td>-l</td>
+<td>&ndash;extents</td>
+<td>指定分配给新逻辑卷的逻辑区段数，或者要用的逻辑区段的百分比</td>
+</tr>
+<tr>
+<td>-L</td>
+<td>&ndash;size</td>
+<td>指定分配给新逻辑卷的硬盘大小</td>
+</tr>
+<tr>
+<td>-M</td>
+<td>&ndash;persistent</td>
+<td>让次设备号一直有效</td>
+</tr>
+<tr>
+<td>-n</td>
+<td>&ndash;name</td>
+<td>指定新逻辑卷的名称</td>
+</tr>
+<tr>
+<td>-p</td>
+<td>&ndash;permission</td>
+<td>为逻辑卷设置读/写权限</td>
+</tr>
+<tr>
+<td>-r</td>
+<td>&ndash;readahead</td>
+<td>设置预读扇区数</td>
+</tr>
+<tr>
+<td>-R</td>
+<td>&ndash;regionsize</td>
+<td>指定将镜像分成多大的区</td>
+</tr>
+<tr>
+<td>-s</td>
+<td>snapshot</td>
+<td>创建快照逻辑卷</td>
+</tr>
+<tr>
+<td>-Z</td>
+<td>&ndash;zero</td>
+<td>将新逻辑卷的前1 KB数据设置为零</td>
+</tr>
+<tr>
+<td>-m</td>
+<td>&ndash;mirrors</td>
+<td>创建逻辑卷镜像</td>
+</tr>
+<tr>
+<td>空</td>
+<td>&ndash;minor</td>
+<td>指定设备的次设备号</td>
+</tr>
+</tbody>
+</table>
+<p>参数很多，其实常用的就几个</p>
+<h3 id="指定逻辑卷大小">指定逻辑卷大小</h3>
+<p>如逻辑卷组 Vol1</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">lvcreate -n lvtest -L +32G Vol1
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="创建文件系统">创建文件系统</h2>
+<p>此时只有逻辑卷没有文件系统，需要给逻辑卷指定文件系统</p>
+<p>这里的文件系统指定的是ext4，公司生产环境中使用的是 xfs 文件系统如<code>mkfs.xfs /dev/vgdata/lvkubelet</code>，以下示例使用的是ext4文件系统，不同文件系统的差别请自行了解，这里不做说明</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">sudo mkfs.ext4 /dev/Vol1/lvtest 
+</span></span><span class="line"><span class="cl">mke2fs 1.41.12 <span class="o">(</span>17-May-2010<span class="o">)</span> 
+</span></span><span class="line"><span class="cl">Filesystem <span class="nv">label</span><span class="o">=</span> 
+</span></span><span class="line"><span class="cl">OS type: Linux 
+</span></span><span class="line"><span class="cl">Block <span class="nv">size</span><span class="o">=</span><span class="m">4096</span> <span class="o">(</span><span class="nv">log</span><span class="o">=</span>2<span class="o">)</span> 
+</span></span><span class="line"><span class="cl">Fragment <span class="nv">size</span><span class="o">=</span><span class="m">4096</span> <span class="o">(</span><span class="nv">log</span><span class="o">=</span>2<span class="o">)</span> 
+</span></span><span class="line"><span class="cl"><span class="nv">Stride</span><span class="o">=</span><span class="m">0</span> blocks, Stripe <span class="nv">width</span><span class="o">=</span><span class="m">0</span> blocks 
+</span></span><span class="line"><span class="cl"><span class="m">131376</span> inodes, <span class="m">525312</span> blocks 
+</span></span><span class="line"><span class="cl"><span class="m">26265</span> blocks <span class="o">(</span>5.00%<span class="o">)</span> reserved <span class="k">for</span> the super user 
+</span></span><span class="line"><span class="cl">First data <span class="nv">block</span><span class="o">=</span><span class="m">0</span> 
+</span></span><span class="line"><span class="cl">Maximum filesystem <span class="nv">blocks</span><span class="o">=</span><span class="m">541065216</span> 
+</span></span><span class="line"><span class="cl"><span class="m">17</span> block groups 
+</span></span><span class="line"><span class="cl"><span class="m">32768</span> blocks per group, <span class="m">32768</span> fragments per group 
+</span></span><span class="line"><span class="cl"><span class="m">7728</span> inodes per group 
+</span></span><span class="line"><span class="cl">Superblock backups stored on blocks: 
+</span></span><span class="line"><span class="cl"> 32768, 98304, 163840, 229376, <span class="m">294912</span> 
+</span></span><span class="line"><span class="cl">Writing inode tables: <span class="k">done</span> 
+</span></span><span class="line"><span class="cl">Creating journal <span class="o">(</span><span class="m">16384</span> blocks<span class="o">)</span>: <span class="k">done</span> 
+</span></span><span class="line"><span class="cl">Writing superblocks and filesystem accounting information: <span class="k">done</span> 
+</span></span><span class="line"><span class="cl">This filesystem will be automatically checked every <span class="m">28</span> mounts or 
+</span></span><span class="line"><span class="cl"><span class="m">180</span> days, whichever comes first.Use tune2fs -c or -i to override.
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="目录挂载">目录挂载</h3>
+<p>在创建了文件系统后需要将该逻辑卷挂载到指定的虚拟目录下，就跟他是物理分区一样</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">sudo mount /dev/Vol1/lvtest /mnt/my_partition
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>命令解释是将逻辑卷挂载到指定虚拟目录上</p>
+<p>设置挂载永久生效，否则机器重启后会丢失掉</p>
+<p>注意修改名称</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="nb">echo</span> <span class="s2">&#34;/dev/mapper/</span><span class="nv">$vgname</span><span class="s2">-lvdocker /var/lib/docker xfs defaults 0 0&#34;</span> &gt;&gt; /etc/fstab
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="修改lvm">修改LVM</h3>
+<table>
+<thead>
+<tr>
+<th>命 令</th>
+<th>功 能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vgchange</td>
+<td>激活和禁用卷组</td>
+</tr>
+<tr>
+<td>vgremove</td>
+<td>删除卷组</td>
+</tr>
+<tr>
+<td>vgextend</td>
+<td>将物理卷加到卷组中</td>
+</tr>
+<tr>
+<td>vgreduce</td>
+<td>从卷组中删除物理卷</td>
+</tr>
+<tr>
+<td>lvextend</td>
+<td>增加逻辑卷的大小</td>
+</tr>
+<tr>
+<td>lvreduce</td>
+<td>减小逻辑卷的大小</td>
+</tr>
+</tbody>
+</table>
+<p>通过以上命令可以完全控制你的LVM环境</p>
+<p>如扩容</p>
+<p>扩容前先取消挂载</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">umount /mnt/my_partition
+</span></span><span class="line"><span class="cl"><span class="c1"># 对/dev/Vol1/lvtest 增加1G</span>
+</span></span><span class="line"><span class="cl">lvextend -L +1G /dev/Vol1/lvtest -r
+</span></span><span class="line"><span class="cl"><span class="c1"># 重新挂载设备，并查看挂载状态</span>
+</span></span><span class="line"><span class="cl">mount -a
+</span></span><span class="line"><span class="cl">df -h
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="lvm-命令汇总">LVM 命令汇总</h2>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>pv命令</th>
+<th>vg命令</th>
+<th>lv命令</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>扫描</td>
+<td>pvscan</td>
+<td>vgscan</td>
+<td>lvscan</td>
+</tr>
+<tr>
+<td>Create创建</td>
+<td>pvcreate</td>
+<td>vgcreate</td>
+<td>lvcreate</td>
+</tr>
+<tr>
+<td>Display显示</td>
+<td>pvdisplay</td>
+<td>vgdisplay</td>
+<td>lvdisplay</td>
+</tr>
+<tr>
+<td>Remove移除</td>
+<td>pvremove</td>
+<td>vgremove</td>
+<td>lvremove</td>
+</tr>
+<tr>
+<td>Extend扩展</td>
+<td>-</td>
+<td>vgextend</td>
+<td>lvextend</td>
+</tr>
+<tr>
+<td>Reduce减少</td>
+<td>-</td>
+<td>vgreduce</td>
+<td>lvreduce</td>
+</tr>
+</tbody>
+</table>
+<p>关于收缩 LVM 逻辑卷，可以参考上面的命令lvreduce。这会涉及到数据安全性问题，谨慎使用</p>
+<h2 id="小结">小结</h2>
+<p>就是三步走，创建物理卷，创建卷组，创建逻辑卷，然后格式化并挂载使用。扩容的话，没有挂载使用，就正常扩，然后格式化挂载，已经挂载使用了，扩容后在线调整生效。</p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2022-06-26</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/lvm%E9%80%BB%E8%BE%91%E5%8D%B7%E7%BB%84%E7%AE%A1%E7%90%86/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://localhost:1313/lvm%E9%80%BB%E8%BE%91%E5%8D%B7%E7%BB%84%E7%AE%A1%E7%90%86/" data-title="lvm 逻辑卷组管理" data-via="xxxx" data-hashtags="linux"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/lvm%E9%80%BB%E8%BE%91%E5%8D%B7%E7%BB%84%E7%AE%A1%E7%90%86/" data-hashtag="linux"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="http://localhost:1313/lvm%E9%80%BB%E8%BE%91%E5%8D%B7%E7%BB%84%E7%AE%A1%E7%90%86/" data-title="lvm 逻辑卷组管理"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://localhost:1313/lvm%E9%80%BB%E8%BE%91%E5%8D%B7%E7%BB%84%E7%AE%A1%E7%90%86/" data-title="lvm 逻辑卷组管理"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/lvm%E9%80%BB%E8%BE%91%E5%8D%B7%E7%BB%84%E7%AE%A1%E7%90%86/" data-title="lvm 逻辑卷组管理"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/linux/">Linux</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/xargs%E5%8E%9F%E7%90%86%E5%8F%8A%E4%BD%BF%E7%94%A8/" class="prev" rel="prev" title="xargs原理及使用"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>xargs原理及使用</a>
+            <a href="/fdisk%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86%E8%AF%A6%E8%A7%A3/" class="next" rel="next" title="fdisk 磁盘管理详解">fdisk 磁盘管理详解<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">我是有底线的</div><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.126.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2024</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">lushuan</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

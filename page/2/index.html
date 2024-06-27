@@ -103,18 +103,23 @@
         alt="images/avatar.png"
         title="images/avatar.png" /></a></div><div class="home-subtitle"><div id="id-1" class="typeit"></div></div><div class="links"><a href="https://github.com/xxxx" title="GitHub" target="_blank" rel="noopener noreffer me"><i class="fab fa-github fa-fw" aria-hidden="true"></i></a><a href="https://twitter.com/xxxx" title="Twitter" target="_blank" rel="noopener noreffer me"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="https://www.instagram.com/xxxx" title="Instagram" target="_blank" rel="noopener noreffer me"><i class="fab fa-instagram fa-fw" aria-hidden="true"></i></a><a href="https://facebook.com/xxxx" title="facebook" target="_blank" rel="noopener noreffer me"><i class="fab fa-facebook fa-fw" aria-hidden="true"></i></a><a href="https://t.me/xxxx" title="Telegram" target="_blank" rel="noopener noreffer me"><i class="fab fa-telegram-plane fa-fw" aria-hidden="true"></i></a><a href="mailto:xxxx@xxxx.com" title="Email" rel="me"><i class="far fa-envelope fa-fw" aria-hidden="true"></i></a><a href="/index.xml" title="RSS" target="_blank" rel="noopener noreffer me"><i class="fas fa-rss fa-fw" aria-hidden="true"></i></a></div></div>
 <article class="single summary" itemscope itemtype="http://schema.org/Article"><h1 class="single-title" itemprop="name headline">
+        <a href="/k8s_v1.20.x%E5%88%9B%E5%BB%BApvc%E6%8A%A5%E9%94%99/">Kubernetes v1.20创建PVC报错</a>
+    </h1><div class="post-meta"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-publish">发布于 <time datetime="2023-05-23">2023-05-23</time></span>&nbsp;<span class="post-category">收录于 <a href="/categories/kubernetes/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Kubernetes</a></span></div><div class="content">故障描述 PVC 显示创建不成功：kubectl get pvc -n efk 显示 Pending，这是由于版本太高导致的。k8sv1.20 以上版本默认禁止使用 selfLi</div><div class="post-footer">
+        <a href="/k8s_v1.20.x%E5%88%9B%E5%BB%BApvc%E6%8A%A5%E9%94%99/">阅读全文</a><div class="post-tags">
+                <i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/kubernetes%E6%8E%92%E9%9A%9C/">Kubernetes排障</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h1 class="single-title" itemprop="name headline">
+        <a href="/k8s%E5%AE%B9%E5%99%A8%E8%BF%90%E8%A1%8C%E6%97%B6containerd%E5%8D%87%E7%BA%A7/">k8s容器运行时 containerd 版本升级</a>
+    </h1><div class="post-meta"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-publish">发布于 <time datetime="2023-04-17">2023-04-17</time></span>&nbsp;<span class="post-category">收录于 <a href="/categories/kubernetes/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Kubernetes</a></span></div><div class="content">背景 k8s 容器运行时是docker和containerd结合使用，且生产环境是离线环境将需要的containerd和docker版本相关的rpm</div><div class="post-footer">
+        <a href="/k8s%E5%AE%B9%E5%99%A8%E8%BF%90%E8%A1%8C%E6%97%B6containerd%E5%8D%87%E7%BA%A7/">阅读全文</a><div class="post-tags">
+                <i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/kubernetes/">Kubernetes</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h1 class="single-title" itemprop="name headline">
         <a href="/kubelet%E7%9B%AE%E5%BD%95%E6%BB%A1%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/">kubelet目录满问题记录</a>
-    </h1><div class="post-meta"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-publish">发布于 <time datetime="2023-04-26">2023-04-26</time></span>&nbsp;<span class="post-category">收录于 <a href="/categories/kubernetes/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Kubernetes</a></span></div><div class="content">现象 k8s 某台主机的/var/lib/kubelet目录存储使用率超过80% 使用了40多G存储 分析 申请root权限 cd /var/lib/kubelet 执行du -h -d 1 发现 pod目</div><div class="post-footer">
+    </h1><div class="post-meta"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-publish">发布于 <time datetime="2023-04-04">2023-04-04</time></span>&nbsp;<span class="post-category">收录于 <a href="/categories/kubernetes/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Kubernetes</a></span></div><div class="content">现象 k8s 某台主机的/var/lib/kubelet目录存储使用率超过80% 使用了40多G存储 分析 申请root权限 cd /var/lib/kubelet 执行du -h -d 1 发现 pod目</div><div class="post-footer">
         <a href="/kubelet%E7%9B%AE%E5%BD%95%E6%BB%A1%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/">阅读全文</a><div class="post-tags">
                 <i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/kubernetes/">Kubernetes</a></div></div>
 </article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h1 class="single-title" itemprop="name headline">
-        <a href="/%E8%B0%83%E6%95%B4%E8%8A%82%E7%82%B9pod%E9%A9%B1%E9%80%90%E6%97%B6%E9%97%B4/">调整节点pod驱逐时间</a>
-    </h1><div class="post-meta"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-publish">发布于 <time datetime="2023-04-26">2023-04-26</time></span>&nbsp;<span class="post-category">收录于 <a href="/categories/kubernetes/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Kubernetes</a></span></div><div class="content">问题描述 在高可用的k8s集群中，当Node节点挂掉，kubelet无法提供工作的时候，pod将会自动调度到其他的节点上去，而调度到节点上的时</div><div class="post-footer">
-        <a href="/%E8%B0%83%E6%95%B4%E8%8A%82%E7%82%B9pod%E9%A9%B1%E9%80%90%E6%97%B6%E9%97%B4/">阅读全文</a><div class="post-tags">
-                <i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/kubernetes/">Kubernetes</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h1 class="single-title" itemprop="name headline">
         <a href="/kube-dns%E5%88%87%E6%8D%A2%E4%B8%BAcoredns%E5%AE%9E%E8%B7%B5/">kube-dns切换为coredns实践</a>
-    </h1><div class="post-meta"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-publish">发布于 <time datetime="2023-03-26">2023-03-26</time></span>&nbsp;<span class="post-category">收录于 <a href="/categories/kubernetes/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Kubernetes</a></span></div><div class="content">kube-dns切换为coredns k8s版本及其dns适配版本 k8s版本 coredns版本 镜像 镜像yaml 1.17 1.6.7 coredns-1.6.7.tar.gz coredns-1.6.7.yaml 1.22 1.8.4 coredns-1.8.4.tar.gz coredns-1.8.4.yaml coredns/coredns:1.6.7/1.8.4 操作 根据版本选</div><div class="post-footer">
+    </h1><div class="post-meta"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-publish">发布于 <time datetime="2023-03-29">2023-03-29</time></span>&nbsp;<span class="post-category">收录于 <a href="/categories/kubernetes/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Kubernetes</a></span></div><div class="content">kube-dns切换为coredns k8s版本及其dns适配版本 k8s版本 coredns版本 镜像 镜像yaml 1.17 1.6.7 coredns-1.6.7.tar.gz coredns-1.6.7.yaml 1.22 1.8.4 coredns-1.8.4.tar.gz coredns-1.8.4.yaml coredns/coredns:1.6.7/1.8.4 操作 根据版本选</div><div class="post-footer">
         <a href="/kube-dns%E5%88%87%E6%8D%A2%E4%B8%BAcoredns%E5%AE%9E%E8%B7%B5/">阅读全文</a><div class="post-tags">
                 <i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/kubernetes/">Kubernetes</a></div></div>
 </article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h1 class="single-title" itemprop="name headline">
@@ -127,11 +132,6 @@
     </h1><div class="post-meta"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-publish">发布于 <time datetime="2022-09-28">2022-09-28</time></span>&nbsp;<span class="post-category">收录于 <a href="/categories/kubernetes/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Kubernetes</a></span></div><div class="content">记录一下kuberntes 遇到的问题场景及排查方向 DNS 解析异常 5 秒延时 如果DNS查询经常延时5秒才返回，通常是遇到内核 conntrack 冲突导致的丢包 解析超时</div><div class="post-footer">
         <a href="/kubernetes-%E7%BD%91%E7%BB%9C%E6%8E%92%E9%94%99/">阅读全文</a><div class="post-tags">
                 <i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/kubernetes%E6%8E%92%E9%9A%9C/">Kubernetes排障</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h1 class="single-title" itemprop="name headline">
-        <a href="/linux%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/">Linux 系统性能问题定位</a>
-    </h1><div class="post-meta"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-publish">发布于 <time datetime="2022-06-29">2022-06-29</time></span>&nbsp;<span class="post-category">收录于 <a href="/categories/linux/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Linux</a></span></div><div class="content">监控系统资源和进程工具 top 命令 快捷键及使用场景 1：显示每个 CPU 核心的详细信息。当你需要查看系统中每个 CPU 核心的负载和使用情况时，可以按下 1 键。 E：</div><div class="post-footer">
-        <a href="/linux%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/">阅读全文</a><div class="post-tags">
-                <i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/linux/">Linux</a></div></div>
 </article><ul class="pagination"><li class="page-item ">
                     <span class="page-link">
                         <a href="/">1</a>
@@ -149,8 +149,10 @@
                         <a href="/page/4/">4</a>
                     </span>
                 </li><li class="page-item ">
+                    <span class="page-link" aria-hidden="true">&hellip;</span>
+                </li><li class="page-item ">
                     <span class="page-link">
-                        <a href="/page/5/">5</a>
+                        <a href="/page/6/">6</a>
                     </span>
                 </li></ul></div></div>
             </main><footer class="footer">

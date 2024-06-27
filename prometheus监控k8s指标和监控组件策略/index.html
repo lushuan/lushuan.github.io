@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>Prometheus 监控k8s 组件指标梳理 - Less is more</title><meta name="Description" content="知识有两种，一种是你知道的，一种是你知道在哪里能找到的！ --塞缪尔·约翰逊"><meta property="og:url" content="http://localhost:1313/prometheus%E7%9B%91%E6%8E%A7k8s%E6%8C%87%E6%A0%87%E5%92%8C%E7%9B%91%E6%8E%A7%E7%BB%84%E4%BB%B6%E7%AD%96%E7%95%A5/">
+  <meta property="og:site_name" content="Less is more">
+  <meta property="og:title" content="Prometheus 监控k8s 组件指标梳理">
+  <meta property="og:description" content="监控策略 目标 服务发现模式 监控方法 数据源 从集群各节点kubelet组件中获取节点kubelet的基本运行状态的监控指标 node 白盒监控 kubelet 从集群各节点">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2022-06-29T12:06:37+08:00">
+    <meta property="article:modified_time" content="2024-06-26T12:06:37+08:00">
+    <meta property="article:tag" content="Prometheus">
+    <meta property="og:image" content="http://localhost:1313/logo.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/logo.png">
+  <meta name="twitter:title" content="Prometheus 监控k8s 组件指标梳理">
+  <meta name="twitter:description" content="监控策略 目标 服务发现模式 监控方法 数据源 从集群各节点kubelet组件中获取节点kubelet的基本运行状态的监控指标 node 白盒监控 kubelet 从集群各节点">
+      <meta name="twitter:site" content="@xxxx">
+<meta name="application-name" content="我的网站">
+<meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://localhost:1313/prometheus%E7%9B%91%E6%8E%A7k8s%E6%8C%87%E6%A0%87%E5%92%8C%E7%9B%91%E6%8E%A7%E7%BB%84%E4%BB%B6%E7%AD%96%E7%95%A5/" /><link rel="prev" href="http://localhost:1313/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1apiserver%E5%92%8Cetcd%E8%BF%9E%E6%8E%A5%E7%9A%84%E9%9A%8F%E6%9C%BA%E7%AB%AF%E5%8F%A3%E5%8D%A0%E7%94%A8%E5%86%B2%E7%AA%81%E9%97%AE%E9%A2%98/" /><link rel="next" href="http://localhost:1313/linux%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Prometheus 监控k8s 组件指标梳理",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost:1313\/prometheus%E7%9B%91%E6%8E%A7k8s%E6%8C%87%E6%A0%87%E5%92%8C%E7%9B%91%E6%8E%A7%E7%BB%84%E4%BB%B6%E7%AD%96%E7%95%A5\/"
+        },"genre": "posts","keywords": "prometheus","wordcount":  4315 ,
+        "url": "http:\/\/localhost:1313\/prometheus%E7%9B%91%E6%8E%A7k8s%E6%8C%87%E6%A0%87%E5%92%8C%E7%9B%91%E6%8E%A7%E7%BB%84%E4%BB%B6%E7%AD%96%E7%95%A5\/","datePublished": "2022-06-29T12:06:37+08:00","dateModified": "2024-06-26T12:06:37+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "lushuan"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Less is more">Less is more</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/" title="About"> 关于 </a><a class="menu-item" href="/friends/" title="friends"> 友链 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Less is more">Less is more</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="About">关于</a><a class="menu-item" href="/friends/" title="friends">友链</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Prometheus 监控k8s 组件指标梳理</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/prometheus/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Prometheus</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2022-06-29">2022-06-29</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 4315 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 9 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="true">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#监控策略">监控策略</a></li>
+    <li><a href="#k8s-插件采集指标说明">k8s 插件采集指标说明</a>
+      <ul>
+        <li><a href="#cadvisor-指标说明">Cadvisor 指标说明</a></li>
+        <li><a href="#kube-apiserver-metrics-指标说明">kube-apiserver metrics 指标说明</a></li>
+        <li><a href="#etcd-metrics-指标说明">etcd metrics 指标说明</a></li>
+        <li><a href="#kube-scheduler-指标说明">kube-scheduler 指标说明</a></li>
+        <li><a href="#coredns-指标说明">coredns 指标说明</a></li>
+        <li><a href="#kube-stats-metrics-指标说明">kube-stats-metrics 指标说明</a></li>
+        <li><a href="#node-metrics-指标说明">node metrics 指标说明</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="监控策略">监控策略</h2>
+<table>
+<thead>
+<tr>
+<th>目标</th>
+<th>服务发现模式</th>
+<th>监控方法</th>
+<th>数据源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>从集群各节点kubelet组件中获取节点kubelet的基本运行状态的监控指标</td>
+<td>node</td>
+<td>白盒监控</td>
+<td>kubelet</td>
+</tr>
+<tr>
+<td>从集群各节点kubelet内置的cAdvisor中获取，节点中运行的容器的监控指标</td>
+<td>node</td>
+<td>白盒监控</td>
+<td>kubelet</td>
+</tr>
+<tr>
+<td>从部署到各个节点的Node Exporter中采集主机资源相关的运行资源</td>
+<td>node</td>
+<td>白盒监控</td>
+<td>node exporter</td>
+</tr>
+<tr>
+<td>对于内置了Promthues支持的应用，需要从Pod实例中采集其自定义监控指标</td>
+<td>pod</td>
+<td>白盒监控</td>
+<td>custom pod</td>
+</tr>
+<tr>
+<td>获取API Server组件的访问地址，并从中获取Kubernetes集群相关的运行监控指标</td>
+<td>endpoints</td>
+<td>白盒监控</td>
+<td>api server</td>
+</tr>
+<tr>
+<td>获取集群中Service的访问地址，并通过Blackbox Exporter获取网络探测指标</td>
+<td>service</td>
+<td>黑盒监控</td>
+<td>blackbox exporter</td>
+</tr>
+<tr>
+<td>获取集群中Ingress的访问信息，并通过Blackbox Exporter获取网络探测指标</td>
+<td>ingress</td>
+<td>黑盒监控</td>
+<td>blackbox exporter</td>
+</tr>
+</tbody>
+</table>
+<h2 id="k8s-插件采集指标说明">k8s 插件采集指标说明</h2>
+<p>包含夜莺指标做横向对比参考</p>
+<h3 id="cadvisor-指标说明">Cadvisor 指标说明</h3>
+<p><code>cpu 指标</code></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">指标名</th>
+<th style="text-align:left">含义</th>
+<th style="text-align:left">prometheus metrics或计算方式</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">cpu.util</td>
+<td style="text-align:left">容器cpu使用占其申请的百分比</td>
+<td style="text-align:left">sum (rate (container_cpu_usage_seconds_total[1m])) by( container) /( sum (container_spec_cpu_quota) by(container) /100000) * 100</td>
+<td style="text-align:left">0-100的范围</td>
+</tr>
+<tr>
+<td style="text-align:left">cpu.idle</td>
+<td style="text-align:left">容器cpu空闲占其申请的百分比</td>
+<td style="text-align:left">100 - cpu.util</td>
+<td style="text-align:left">0-100的范围</td>
+</tr>
+<tr>
+<td style="text-align:left">cpu.user</td>
+<td style="text-align:left">容器cpu用户态使用占其申请的百分比</td>
+<td style="text-align:left">sum (rate (container_cpu_user_seconds_total[1m])) by( container) /( sum (container_spec_cpu_quota) by(container) /100000) * 100</td>
+<td style="text-align:left">0-100的范围</td>
+</tr>
+<tr>
+<td style="text-align:left">cpu.sys</td>
+<td style="text-align:left">容器cpu内核态使用占其申请的百分比</td>
+<td style="text-align:left">sum (rate (container_cpu_sys_seconds_total[1m])) by( container) /( sum (container_spec_cpu_quota) by(container) /100000) * 100</td>
+<td style="text-align:left">0-100的范围</td>
+</tr>
+<tr>
+<td style="text-align:left">cpu.cores.occupy</td>
+<td style="text-align:left">容器cpu使用占用机器几个核</td>
+<td style="text-align:left">rate(container_cpu_usage_seconds_total[1m])</td>
+<td style="text-align:left">0到机器核数上限,结果为1就是占用1个核</td>
+</tr>
+<tr>
+<td style="text-align:left">cpu.spec.quota</td>
+<td style="text-align:left">容器的CPU配额</td>
+<td style="text-align:left">container_spec_cpu_quota</td>
+<td style="text-align:left">为容器指定的CPU个数*100000</td>
+</tr>
+<tr>
+<td style="text-align:left">cpu.throttled.util</td>
+<td style="text-align:left">容器CPU执行周期受到限制的百分比</td>
+<td style="text-align:left">未录入</td>
+<td style="text-align:left">0-100的范围</td>
+</tr>
+<tr>
+<td style="text-align:left">cpu.periods</td>
+<td style="text-align:left">容器生命周期中度过的cpu周期总数</td>
+<td style="text-align:left">counter型无需计算</td>
+<td style="text-align:left">使用rate/increase 查看</td>
+</tr>
+<tr>
+<td style="text-align:left">cpu.throttled.periods</td>
+<td style="text-align:left">容器生命周期中度过的受限的cpu周期总数</td>
+<td style="text-align:left">counter型无需计算</td>
+<td style="text-align:left">使用rate/increase 查看</td>
+</tr>
+<tr>
+<td style="text-align:left">cpu.throttled.time</td>
+<td style="text-align:left">容器被节流的总时间 )</td>
+<td style="text-align:left">counter型无需计算</td>
+<td style="text-align:left">单位(纳秒</td>
+</tr>
+</tbody>
+</table>
+<p><code>mem 指标</code></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">夜莺指标名</th>
+<th style="text-align:left">含义</th>
+<th style="text-align:left">prometheus metrics或计算方式</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">mem.bytes.total</td>
+<td style="text-align:left">容器的内存限制</td>
+<td style="text-align:left">无需计算</td>
+<td style="text-align:left">单位byte 对应pod yaml中resources.limits.memory</td>
+</tr>
+<tr>
+<td style="text-align:left">mem.bytes.used</td>
+<td style="text-align:left">当前内存使用情况，包括所有内存，无论何时访问</td>
+<td style="text-align:left">container_memory_rss + container_memory_cache + kernel memory</td>
+<td style="text-align:left">单位byte</td>
+</tr>
+<tr>
+<td style="text-align:left">mem.bytes.used.percent</td>
+<td style="text-align:left">容器内存使用率</td>
+<td style="text-align:left">container_memory_usage_bytes/container_spec_memory_limit_bytes *100</td>
+<td style="text-align:left">范围0-100</td>
+</tr>
+<tr>
+<td style="text-align:left">mem.bytes.workingset</td>
+<td style="text-align:left">容器真实使用的内存量，也是limit限制时的 oom 判断依据</td>
+<td style="text-align:left">container_memory_max_usage_bytes &gt; container_memory_usage_bytes &gt;= container_memory_working_set_bytes &gt; container_memory_rss</td>
+<td style="text-align:left">单位byte</td>
+</tr>
+<tr>
+<td style="text-align:left">mem.bytes.workingset.percent</td>
+<td style="text-align:left">容器真实使用的内存量百分比</td>
+<td style="text-align:left">container_memory_working_set_bytes/container_spec_memory_limit_bytes *100</td>
+<td style="text-align:left">范围0-100</td>
+</tr>
+<tr>
+<td style="text-align:left">mem.bytes.cached</td>
+<td style="text-align:left">容器cache内存量</td>
+<td style="text-align:left">container_memory_cache</td>
+<td style="text-align:left">单位byte</td>
+</tr>
+<tr>
+<td style="text-align:left">mem.bytes.rss</td>
+<td style="text-align:left">容器rss内存量</td>
+<td style="text-align:left">container_memory_rss</td>
+<td style="text-align:left">单位byte</td>
+</tr>
+<tr>
+<td style="text-align:left">mem.bytes.swap</td>
+<td style="text-align:left">容器cache内存量</td>
+<td style="text-align:left">container_memory_swap</td>
+<td style="text-align:left">单位byte</td>
+</tr>
+</tbody>
+</table>
+<p><code>filesystem &amp;&amp; disk.io 指标</code></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">夜莺指标名</th>
+<th style="text-align:left">含义</th>
+<th style="text-align:left">prometheus metrics或计算方式</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">disk.bytes.total</td>
+<td style="text-align:left">容器可以使用的文件系统总量</td>
+<td style="text-align:left">container_fs_limit_bytes</td>
+<td style="text-align:left">(单位：字节)</td>
+</tr>
+<tr>
+<td style="text-align:left">disk.bytes.used</td>
+<td style="text-align:left">容器已经使用的文件系统总量</td>
+<td style="text-align:left">container_fs_usage_bytes</td>
+<td style="text-align:left">(单位：字节)</td>
+</tr>
+<tr>
+<td style="text-align:left">disk.bytes.used.percent</td>
+<td style="text-align:left">容器文件系统使用百分比</td>
+<td style="text-align:left">container_fs_usage_bytes/container_fs_limit_bytes *100</td>
+<td style="text-align:left">范围0-100</td>
+</tr>
+<tr>
+<td style="text-align:left">disk.io.read.bytes</td>
+<td style="text-align:left">容器io.read qps</td>
+<td style="text-align:left">rate(container_fs_reads_bytes_total)[1m]</td>
+<td style="text-align:left">(单位：bps)</td>
+</tr>
+<tr>
+<td style="text-align:left">disk.io.write.bytes</td>
+<td style="text-align:left">容器io.write qps</td>
+<td style="text-align:left">rate(container_fs_write_bytes_total)[1m]</td>
+<td style="text-align:left">(单位：bps)</td>
+</tr>
+</tbody>
+</table>
+<p><code>network 指标</code></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">夜莺指标名</th>
+<th style="text-align:left">含义</th>
+<th style="text-align:left">prometheus metrics或计算方式</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">net.in.bytes</td>
+<td style="text-align:left">容器网络接收数据总数</td>
+<td style="text-align:left">rate(container_network_receive_bytes_total)[1m]</td>
+<td style="text-align:left">(单位：bytes/s)</td>
+</tr>
+<tr>
+<td style="text-align:left">net.out.bytes</td>
+<td style="text-align:left">容器网络积传输数据总数）</td>
+<td style="text-align:left">rate(container_network_transmit_bytes_total)[1m]</td>
+<td style="text-align:left">(单位：bytes/s)</td>
+</tr>
+<tr>
+<td style="text-align:left">net.in.pps</td>
+<td style="text-align:left">容器网络接收数据包pps</td>
+<td style="text-align:left">rate(container_network_receive_packets_total)[1m]</td>
+<td style="text-align:left">(单位：p/s)</td>
+</tr>
+<tr>
+<td style="text-align:left">net.out.pps</td>
+<td style="text-align:left">容器网络发送数据包pps</td>
+<td style="text-align:left">rate(container_network_transmit_packets_total)[1m]</td>
+<td style="text-align:left">(单位：p/s)</td>
+</tr>
+<tr>
+<td style="text-align:left">net.in.errs</td>
+<td style="text-align:left">容器网络接收数据错误数</td>
+<td style="text-align:left">rate(container_network_receive_errors_total)[1m]</td>
+<td style="text-align:left">(单位：bytes/s)</td>
+</tr>
+<tr>
+<td style="text-align:left">net.out.errs</td>
+<td style="text-align:left">容器网络发送数据错误数</td>
+<td style="text-align:left">rate(container_network_transmit_errors_total)[1m]</td>
+<td style="text-align:left">(单位：bytes/s)</td>
+</tr>
+<tr>
+<td style="text-align:left">net.in.dropped</td>
+<td style="text-align:left">容器网络接收数据包drop pps</td>
+<td style="text-align:left">rate(container_network_receive_packets_dropped_total)[1m]</td>
+<td style="text-align:left">(单位：p/s)</td>
+</tr>
+<tr>
+<td style="text-align:left">net.out.dropped</td>
+<td style="text-align:left">容器网络发送数据包drop pps</td>
+<td style="text-align:left">rate(container_network_transmit_packets_dropped_total)[1m]</td>
+<td style="text-align:left">(单位：p/s)</td>
+</tr>
+<tr>
+<td style="text-align:left">container_network_{tcp,udp}_usage_total 默认不采集是因为 &ndash;disable_metrics=tcp, udp ,因为开启cpu压力大</td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+</tr>
+</tbody>
+</table>
+<p><code>system 指标</code></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">夜莺指标名</th>
+<th style="text-align:left">含义</th>
+<th style="text-align:left">prometheus metrics或计算方式</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">sys.ps.process.count</td>
+<td style="text-align:left">容器中running进程个数</td>
+<td style="text-align:left">container_processes</td>
+<td style="text-align:left">(单位：个)</td>
+</tr>
+<tr>
+<td style="text-align:left">sys.ps.thread.count</td>
+<td style="text-align:left">容器中进程running线程个数</td>
+<td style="text-align:left">container_threads</td>
+<td style="text-align:left">(单位：个)</td>
+</tr>
+<tr>
+<td style="text-align:left">sys.fd.count.used</td>
+<td style="text-align:left">容器中打开文件描述符个数</td>
+<td style="text-align:left">container_file_descriptors</td>
+<td style="text-align:left">(单位：个)</td>
+</tr>
+<tr>
+<td style="text-align:left">sys.fd.soft.ulimits</td>
+<td style="text-align:left">容器中root process Soft ulimit</td>
+<td style="text-align:left">container_ulimits_soft</td>
+<td style="text-align:left">(单位：个)</td>
+</tr>
+<tr>
+<td style="text-align:left">sys.socket.count.used</td>
+<td style="text-align:left">容器中打开套接字个数</td>
+<td style="text-align:left">container_sockets</td>
+<td style="text-align:left">(单位：个)</td>
+</tr>
+<tr>
+<td style="text-align:left">sys.task.state</td>
+<td style="text-align:left">容器中task 状态分布</td>
+<td style="text-align:left">container_tasks_state</td>
+<td style="text-align:left">(单位：个)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="kube-apiserver-metrics-指标说明">kube-apiserver metrics 指标说明</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">指标名</th>
+<th style="text-align:center">类型</th>
+<th style="text-align:center">含义</th>
+<th style="text-align:center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">apiserver_request_total</td>
+<td style="text-align:center">counter</td>
+<td style="text-align:center">对APIServer不同请求的计数。</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">apiserver_request_duration_seconds_sum</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">统计APIServer客户端对APIServer的访问时延。对APIServer不同请求的时延分布。</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">apiserver_request_duration_seconds_count</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">请求延迟记录数</td>
+<td style="text-align:center">计算平均延迟:<code>apiserver_request_duration_seconds_sum</code>/<code>apiserver_request_duration_seconds_count</code></td>
+</tr>
+<tr>
+<td style="text-align:center">apiserver_admission_controller_admission_duration_seconds_bucket</td>
+<td style="text-align:center">Gauge</td>
+<td style="text-align:center">准入控制器（Admission Controller）的处理延时。标签包括准入控制器名字、操作（CREATE、UPDATE、CONNECT等）、API资源、操作类型（validate或admit）和请求是否被拒绝（true或false）。</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">apiserver_admission_webhook_admission_duration_seconds_bucket</td>
+<td style="text-align:center">Gauge</td>
+<td style="text-align:center">准入Webhook（Admission Webhook）的处理延时。标签包括准入控制器名字、操作（CREATE、UPDATE、CONNECT等）、API资源、操作类型（validate或admit）和请求是否被拒绝（true或false）。</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">apiserver_admission_webhook_admission_duration_seconds_count</td>
+<td style="text-align:center">Counter</td>
+<td style="text-align:center">准入Webhook（Admission Webhook）的处理请求统计。标签包括准入控制器名字、操作（CREATE、UPDATE、CONNECT等）、API资源、操作类型（validate或admit）和请求是否被拒绝（true或false）。</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">apiserver_response_sizes_sum</td>
+<td style="text-align:center">counter</td>
+<td style="text-align:center">请求响应大小记录和</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">apiserver_response_sizes_count</td>
+<td style="text-align:center">counter</td>
+<td style="text-align:center">请求响应大小记录数</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">authentication_attempts</td>
+<td style="text-align:center">counter</td>
+<td style="text-align:center">认证尝试数</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">authentication_duration_seconds_sum</td>
+<td style="text-align:center">counter</td>
+<td style="text-align:center">认证耗时记录和</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">authentication_duration_seconds_count</td>
+<td style="text-align:center">counter</td>
+<td style="text-align:center">认证耗时记录数</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">apiserver_tls_handshake_errors_total</td>
+<td style="text-align:center">counter</td>
+<td style="text-align:center">tls握手失败计数</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">apiserver_client_certificate_expiration_seconds_sum</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">证书过期时间总数</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">apiserver_client_certificate_expiration_seconds_count</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">证书过期时间记录个数</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">apiserver_client_certificate_expiration_seconds_bucket</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">证书过期时间分布</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">apiserver_current_inflight_requests</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">APIServer当前处理的请求数。包括ReadOnly和Mutating两种</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">apiserver_current_inqueue_requests</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">是一个表向量， 记录最近排队请求数量的高水位线</td>
+<td style="text-align:center"><a href="https://link.segmentfault.com/?enc=ddkdbN8V09qjT6ExKNHObQ%3D%3D.XxjHTjyhClA01FEr3RrstvUkqWEhABp9yRahO%2FJ6p%2BmJLvjhHiGTcsQpyByt9gQ6jMa1g7p8WJGvNRMyPlDTCTshRDXGOr5Egl6RT5Ctrwg%3D" target="_blank" rel="noopener noreffer ">apiserver请求限流</a></td>
+</tr>
+<tr>
+<td style="text-align:center">apiserver_flowcontrol_current_executing_requests</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">记录包含执行中（不在队列中等待）请求的瞬时数量</td>
+<td style="text-align:center">APF api的QOS APIPriorityAndFairness</td>
+</tr>
+<tr>
+<td style="text-align:center">apiserver_flowcontrol_current_inqueue_requests</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">记录包含排队中的（未执行）请求的瞬时数量</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">workqueue_adds_total</td>
+<td style="text-align:center">counter</td>
+<td style="text-align:center">wq 入队数</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">workqueue_retries_total</td>
+<td style="text-align:center">counter</td>
+<td style="text-align:center">wq retry数</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">workqueue_longest_running_processor_seconds</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">wq中最长运行时间</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">workqueue_queue_duration_seconds_sum</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">wq中等待延迟记录和</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">workqueue_queue_duration_seconds_count</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">wq中等待延迟记录数</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">workqueue_work_duration_seconds_sum</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">wq中处理延迟记录和</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">workqueue_work_duration_seconds_count</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">wq中处理延迟记录数</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">up</td>
+<td style="text-align:center">Gauge</td>
+<td style="text-align:center">服务可用性，1 表示服务可用，0 表示服务不可用</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>关键指标</strong>：</p>
+<blockquote>
+<p>$interval 表示间隔时间，例如 5m
+$quantile 0 ≤ 值 ≤ 1，用于计算当前样本数据值的分布情况，当值为 0.5 时，即表示找到当前样本数据中的中位数</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>PromQL</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>API QPS</td>
+<td>sum (irate(apiserver_request_total[$interval]))</td>
+<td>APIServer总QPS</td>
+</tr>
+<tr>
+<td>读请求成功率</td>
+<td>sum(irate(apiserver_request_total{code=~&ldquo;20.*&quot;,verb=~&ldquo;GET|LIST&rdquo;}[$interval]))/sum(irate(apiserver_request_total{verb=~&ldquo;GET|LIST&rdquo;}[$interval]))</td>
+<td>APIServer读请求成功率。</td>
+</tr>
+<tr>
+<td>写请求成功率</td>
+<td>sum(irate(apiserver_request_total{code=~&ldquo;20.*&quot;,verb!~&ldquo;GET|LIST|WATCH|CONNECT&rdquo;}[$interval]))/sum(irate(apiserver_request_total{verb!~&ldquo;GET|LIST|WATCH|CONNECT&rdquo;}[$interval]))</td>
+<td>APIServer写请求成功率。</td>
+</tr>
+<tr>
+<td>在处理读请求数量</td>
+<td>sum(apiserver_current_inflight_requests{request_kind=&ldquo;readOnly&rdquo;})</td>
+<td>所有 APIServer 当前在处理读请求数量; 不加 sum() 显示每个 apiserver 在处理的读请求数量</td>
+</tr>
+<tr>
+<td>在处理写请求数量</td>
+<td>sum(apiserver_current_inflight_requests{request_kind=&ldquo;mutating&rdquo;})</td>
+<td>APIServer当前在处理写请求数量（老版本 k8s requestKind）</td>
+</tr>
+<tr>
+<td>GET读请求时延</td>
+<td>histogram_quantile($quantile, sum(irate(apiserver_request_duration_seconds_bucket{verb=&ldquo;GET&rdquo;,resource!=&rdquo;&quot;,subresource!~&ldquo;log|proxy&rdquo;}[$interval])) by (pod, verb, resource, subresource, scope, le))</td>
+<td>展示GET请求的响应时间，维度包括APIServer Pod、Verb(GET)、Resources（例如Configmaps、Pods、Leases等）、Scope（范围例如Namespace级别、Cluster级别）。</td>
+</tr>
+<tr>
+<td>LIST读请求时延</td>
+<td>histogram_quantile($quantile, sum(irate(apiserver_request_duration_seconds_bucket{verb=&ldquo;LIST&rdquo;}[$interval])) by (pod_name, verb, resource, scope, le))</td>
+<td>展示LIST请求的响应时间，维度包括APIServer Pod、Verb(GET)、Resources（例如Configmaps、Pods、Leases等）、Scope（范围例如Namespace级别、Cluster级别）。</td>
+</tr>
+<tr>
+<td>写请求时延</td>
+<td>histogram_quantile($quantile, sum(irate(apiserver_request_duration_seconds_bucket{verb!~&ldquo;GET|WATCH|LIST|CONNECT&rdquo;}[$interval])) by (cluster, pod_name, verb, resource, scope, le))</td>
+<td>展示Mutating请求的响应时间，维度包括APIServer Pod、Verb(GET)、Resources（例如Configmaps、Pods、Leases等）、Scope（范围例如Namespace级别、Cluster级别）。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="etcd-metrics-指标说明">etcd metrics 指标说明</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">指标名</th>
+<th style="text-align:center">类型</th>
+<th style="text-align:center">含义</th>
+<th style="text-align:center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">etcd_db_total_size_in_bytes</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">db物理文件大小</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">etcd_object_counts</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">etcd对象按种类计数</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">etcd_request_duration_seconds_sum</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">etcd请求延迟记录和</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">etcd_request_duration_seconds_count</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">etcd请求延迟记录数</td>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<h3 id="kube-scheduler-指标说明">kube-scheduler 指标说明</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">指标名</th>
+<th style="text-align:center">类型</th>
+<th style="text-align:center">含义</th>
+<th style="text-align:center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">scheduler_e2e_scheduling_duration_seconds_sum</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">端到端调度延迟记录和</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">scheduler_e2e_scheduling_duration_seconds_count</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">端到端调度延迟记录数</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">scheduler_pod_scheduling_duration_seconds_sum</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">调度延迟记录和</td>
+<td style="text-align:center">分析次数</td>
+</tr>
+<tr>
+<td style="text-align:center">scheduler_pod_scheduling_duration_seconds_count</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">调度延迟记录数</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">scheduler_pending_pods</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">调度队列pending pod数</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">scheduler_queue_incoming_pods_total</td>
+<td style="text-align:center">counter</td>
+<td style="text-align:center">进入调度队列pod数</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">scheduler_scheduling_algorithm_duration_seconds_sum</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">调度算法延迟记录和</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">scheduler_scheduling_algorithm_duration_seconds_count</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">调度算法延迟记录数</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">scheduler_pod_scheduling_attempts_sum</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">成功调度一个pod 的尝试次数记录和</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">scheduler_pod_scheduling_attempts_count</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">成功调度一个pod 的尝试次数记录数</td>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<h3 id="coredns-指标说明">coredns 指标说明</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">指标名</th>
+<th style="text-align:center">类型</th>
+<th style="text-align:center">含义</th>
+<th style="text-align:center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">coredns_dns_requests_total</td>
+<td style="text-align:center">counter</td>
+<td style="text-align:center">解析请求数</td>
+<td style="text-align:center">A记录，AAAA记录，other记录</td>
+</tr>
+<tr>
+<td style="text-align:center">coredns_dns_responses_total</td>
+<td style="text-align:center">counter</td>
+<td style="text-align:center">解析响应数</td>
+<td style="text-align:center">NOERROR，NXDOMAIN，REFUSED</td>
+</tr>
+<tr>
+<td style="text-align:center">coredns_cache_entries</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">缓存记录数</td>
+<td style="text-align:center">成功或失败</td>
+</tr>
+<tr>
+<td style="text-align:center">coredns_cache_hits_total</td>
+<td style="text-align:center">counter</td>
+<td style="text-align:center">缓存命中数</td>
+<td style="text-align:center">成功或失败</td>
+</tr>
+<tr>
+<td style="text-align:center">coredns_cache_misses_total</td>
+<td style="text-align:center">counter</td>
+<td style="text-align:center">缓存未命中数</td>
+<td style="text-align:center">成功或失败</td>
+</tr>
+<tr>
+<td style="text-align:center">coredns_dns_request_duration_seconds_sum</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">解析延迟记录和</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">coredns_dns_request_duration_seconds_count</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">解析延迟记录数</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">coredns_dns_response_size_bytes_sum</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">解析响应大小记录和</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">coredns_dns_response_size_bytes_count</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">解析响应大小记录数</td>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<h3 id="kube-stats-metrics-指标说明">kube-stats-metrics 指标说明</h3>
+<p><code>pod metrics</code></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">指标名</th>
+<th style="text-align:center">类型</th>
+<th style="text-align:center">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">kube_pod_status_phase</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">pod状态统计:Pending，Succeeded，Failed，Running，Unknown</td>
+</tr>
+<tr>
+<td style="text-align:center">kube_pod_container_status_waiting</td>
+<td style="text-align:center">counter</td>
+<td style="text-align:center">pod处于waiting状态，值为1代表waiting</td>
+</tr>
+<tr>
+<td style="text-align:center">kube_pod_container_status_waiting_reason</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">pod处于waiting状态原因：ContainerCreating，CrashLoopBackOff pod启动崩溃,再次启动然后再次崩溃，CreateContainerConfigError，ErrImagePull，ImagePullBackOff，CreateContainerError，InvalidImageName</td>
+</tr>
+<tr>
+<td style="text-align:center">kube_pod_container_status_terminated</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">pod处于terminated状态，值为1代表terminated</td>
+</tr>
+<tr>
+<td style="text-align:center">kube_pod_container_status_terminated_reason</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">pod处于terminated状态原因：OOMKilled，Completed，Error，ContainerCannotRun，DeadlineExceeded，Evicted</td>
+</tr>
+<tr>
+<td style="text-align:center">kube_pod_container_status_restarts_total</td>
+<td style="text-align:center">counter</td>
+<td style="text-align:center">pod中的容器重启次数</td>
+</tr>
+<tr>
+<td style="text-align:center">kube_pod_container_resource_requests_cpu_cores</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">pod容器cpu limit</td>
+</tr>
+<tr>
+<td style="text-align:center">kube_pod_container_resource_requests_memory_bytes</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">pod容器mem limit(单位:字节)</td>
+</tr>
+</tbody>
+</table>
+<p><code>deployment metrics</code></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">指标名</th>
+<th style="text-align:center">类型</th>
+<th style="text-align:center">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">kube_deployment_status_replicas</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">dep中的pod num</td>
+</tr>
+<tr>
+<td style="text-align:center">kube_deployment_status_replicas_available</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">dep中的 可用pod num</td>
+</tr>
+<tr>
+<td style="text-align:center">kube_deployment_status_replicas_unavailable</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">dep中的 不可用pod num</td>
+</tr>
+</tbody>
+</table>
+<p><code>daemonSet metrics</code></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">指标名</th>
+<th style="text-align:center">类型</th>
+<th style="text-align:center">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">kube_daemonset_status_number_available</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">ds 可用数</td>
+</tr>
+<tr>
+<td style="text-align:center">kube_daemonset_status_number_unavailable</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">ds 不可用数</td>
+</tr>
+<tr>
+<td style="text-align:center">kube_daemonset_status_number_ready</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">ds ready数</td>
+</tr>
+<tr>
+<td style="text-align:center">kube_daemonset_status_number_misscheduled</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">未经过调度运行ds的节点数</td>
+</tr>
+<tr>
+<td style="text-align:center">kube_daemonset_status_current_number_scheduled</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">ds目前运行节点数</td>
+</tr>
+<tr>
+<td style="text-align:center">kube_daemonset_status_desired_number_scheduled</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">应该运行ds的节点数</td>
+</tr>
+</tbody>
+</table>
+<p><code>daemonSet metrics</code></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">指标名</th>
+<th style="text-align:center">类型</th>
+<th style="text-align:center">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">kube_statefulset_status_replicas</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">ss副本总数</td>
+</tr>
+<tr>
+<td style="text-align:center">kube_statefulset_status_replicas_current</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">ss当前副本数</td>
+</tr>
+<tr>
+<td style="text-align:center">kube_statefulset_status_replicas_updated</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">ss已更新副本数</td>
+</tr>
+<tr>
+<td style="text-align:center">kube_statefulset_replicas</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">ss目标副本数</td>
+</tr>
+</tbody>
+</table>
+<p><code>Job metrics</code></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">指标名</th>
+<th style="text-align:center">类型</th>
+<th style="text-align:center">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">kube_job_status_active</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">job running pod数</td>
+</tr>
+<tr>
+<td style="text-align:center">kube_job_status_succeeded</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">job 成功 pod数</td>
+</tr>
+<tr>
+<td style="text-align:center">kube_job_status_failed</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">job 失败 pod数</td>
+</tr>
+<tr>
+<td style="text-align:center">kube_job_complete</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">job 是否完成</td>
+</tr>
+<tr>
+<td style="text-align:center">kube_job_failed</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">job 是否失败</td>
+</tr>
+</tbody>
+</table>
+<p><code>CronJob metrics</code></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">指标名</th>
+<th style="text-align:center">类型</th>
+<th style="text-align:center">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">kube_cronjob_status_active</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">job running pod数</td>
+</tr>
+<tr>
+<td style="text-align:center">kube_cronjob_spec_suspend</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">=1代表 job 被挂起</td>
+</tr>
+<tr>
+<td style="text-align:center">kube_cronjob_next_schedule_time</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">job 下次调度时间</td>
+</tr>
+<tr>
+<td style="text-align:center">kube_cronjob_status_last_schedule_time</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">job 下次调度时间</td>
+</tr>
+</tbody>
+</table>
+<p><code>PersistentVolume metrics</code></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">指标名</th>
+<th style="text-align:center">类型</th>
+<th style="text-align:center">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">kube_persistentvolume_capacity_bytes</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">pv申请大小</td>
+</tr>
+<tr>
+<td style="text-align:center">kube_persistentvolume_status_phase</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">pv状态:Pending，Available，Bound，Released，Failed</td>
+</tr>
+</tbody>
+</table>
+<p><code>PersistentVolumeClaim metrics</code></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">指标名</th>
+<th style="text-align:center">类型</th>
+<th style="text-align:center">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">kube_persistentvolumeclaim_resource_requests_storage_bytes</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">pvc request大小</td>
+</tr>
+<tr>
+<td style="text-align:center">kube_persistentvolumeclaim_status_phase</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">pvc状态:Lost，Bound，Pending</td>
+</tr>
+</tbody>
+</table>
+<h3 id="node-metrics-指标说明">node metrics 指标说明</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">指标名</th>
+<th style="text-align:center">类型</th>
+<th style="text-align:center">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">kube_node_status_condition</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">condition:NetworkUnavailable，MemoryPressure，DiskPressure，PIDPressure，Ready</td>
+</tr>
+<tr>
+<td style="text-align:center">kube_node_status_allocatable_cpu_cores</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">节点可以分配cpu核数</td>
+</tr>
+<tr>
+<td style="text-align:center">kube_node_status_allocatable_memory_bytes</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">节点可以分配内存总量(单位：字节)</td>
+</tr>
+<tr>
+<td style="text-align:center">kube_node_spec_taint</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">节点污点情况</td>
+</tr>
+<tr>
+<td style="text-align:center">kube_node_status_capacity_memory_bytes</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">节点内存总量(单位：字节)</td>
+</tr>
+<tr>
+<td style="text-align:center">kube_node_status_capacity_cpu_cores</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">节点cpu核数</td>
+</tr>
+<tr>
+<td style="text-align:center">kube_node_status_capacity_pods</td>
+<td style="text-align:center">gauge</td>
+<td style="text-align:center">节点可运行的pod总数</td>
+</tr>
+</tbody>
+</table>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2024-06-26</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/prometheus%E7%9B%91%E6%8E%A7k8s%E6%8C%87%E6%A0%87%E5%92%8C%E7%9B%91%E6%8E%A7%E7%BB%84%E4%BB%B6%E7%AD%96%E7%95%A5/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://localhost:1313/prometheus%E7%9B%91%E6%8E%A7k8s%E6%8C%87%E6%A0%87%E5%92%8C%E7%9B%91%E6%8E%A7%E7%BB%84%E4%BB%B6%E7%AD%96%E7%95%A5/" data-title="Prometheus 监控k8s 组件指标梳理" data-via="xxxx" data-hashtags="prometheus"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/prometheus%E7%9B%91%E6%8E%A7k8s%E6%8C%87%E6%A0%87%E5%92%8C%E7%9B%91%E6%8E%A7%E7%BB%84%E4%BB%B6%E7%AD%96%E7%95%A5/" data-hashtag="prometheus"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="http://localhost:1313/prometheus%E7%9B%91%E6%8E%A7k8s%E6%8C%87%E6%A0%87%E5%92%8C%E7%9B%91%E6%8E%A7%E7%BB%84%E4%BB%B6%E7%AD%96%E7%95%A5/" data-title="Prometheus 监控k8s 组件指标梳理"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://localhost:1313/prometheus%E7%9B%91%E6%8E%A7k8s%E6%8C%87%E6%A0%87%E5%92%8C%E7%9B%91%E6%8E%A7%E7%BB%84%E4%BB%B6%E7%AD%96%E7%95%A5/" data-title="Prometheus 监控k8s 组件指标梳理"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/prometheus%E7%9B%91%E6%8E%A7k8s%E6%8C%87%E6%A0%87%E5%92%8C%E7%9B%91%E6%8E%A7%E7%BB%84%E4%BB%B6%E7%AD%96%E7%95%A5/" data-title="Prometheus 监控k8s 组件指标梳理"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/prometheus/">Prometheus</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1apiserver%E5%92%8Cetcd%E8%BF%9E%E6%8E%A5%E7%9A%84%E9%9A%8F%E6%9C%BA%E7%AB%AF%E5%8F%A3%E5%8D%A0%E7%94%A8%E5%86%B2%E7%AA%81%E9%97%AE%E9%A2%98/" class="prev" rel="prev" title="Kubernetes 记录一次 Apiserver 和 Etcd 连接的随机端口占用冲突问题"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Kubernetes 记录一次 Apiserver 和 Etcd 连接的随机端口占用冲突问题</a>
+            <a href="/linux%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/" class="next" rel="next" title="Linux 系统性能问题定位">Linux 系统性能问题定位<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">我是有底线的</div><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.126.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2024</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">lushuan</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

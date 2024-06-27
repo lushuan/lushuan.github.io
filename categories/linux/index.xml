@@ -44,5 +44,37 @@
     <guid>http://localhost:1313/grep/</guid>
     <description><![CDATA[为什么使用Linux grep命令? Grep是一个非常有用的命令行工具，可以用来在文件中查找指定的文本模式。通过使用grep命令，你可以快速定]]></description>
 </item>
+<item>
+    <title>fdisk 磁盘管理详解</title>
+    <link>http://localhost:1313/fdisk%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86%E8%AF%A6%E8%A7%A3/</link>
+    <pubDate>Thu, 29 Apr 2021 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/fdisk%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86%E8%AF%A6%E8%A7%A3/</guid>
+    <description><![CDATA[打算给一台服务器做逻辑卷分区，发现磁盘未做分区，且磁盘空间余量较大，本篇记录一下 fdisk 磁盘分区划分的过程 事情的起因 通过pvcreate 创建逻辑卷]]></description>
+</item>
+<item>
+    <title>lvm 逻辑卷组管理</title>
+    <link>http://localhost:1313/lvm%E9%80%BB%E8%BE%91%E5%8D%B7%E7%BB%84%E7%AE%A1%E7%90%86/</link>
+    <pubDate>Thu, 18 Mar 2021 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/lvm%E9%80%BB%E8%BE%91%E5%8D%B7%E7%BB%84%E7%AE%A1%E7%90%86/</guid>
+    <description><![CDATA[背景 部署 k8s 时需要对磁盘进行分区划分，正常是集成是直接给创建好的，现场在沟通过程中只提供了一块磁盘。 本篇文章记录一下磁盘分区划分的原理和步骤，]]></description>
+</item>
+<item>
+    <title>xargs原理及使用</title>
+    <link>http://localhost:1313/xargs%E5%8E%9F%E7%90%86%E5%8F%8A%E4%BD%BF%E7%94%A8/</link>
+    <pubDate>Sun, 28 Feb 2021 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/xargs%E5%8E%9F%E7%90%86%E5%8F%8A%E4%BD%BF%E7%94%A8/</guid>
+    <description><![CDATA[简介 之所以能用到这个命令，是由于很多 linux 命令不支持用管道传递参数，xargs 可以理解为参数转换器，例如 1 2 3 4 #错误指令 find /sbin -perm +700 | ls -l #正确指]]></description>
+</item>
+<item>
+    <title>Linux 时间校正</title>
+    <link>http://localhost:1313/linux%E6%97%B6%E9%97%B4%E6%A0%A1%E6%AD%A3/</link>
+    <pubDate>Sat, 29 Jun 2019 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/linux%E6%97%B6%E9%97%B4%E6%A0%A1%E6%AD%A3/</guid>
+    <description><![CDATA[Linux服务器运行久时，系统时间就会存在一定的误差，一般情况下可以使用date命令进行时间设置，但在做数据库集群分片等操作时对多台机器的时]]></description>
+</item>
 </channel>
 </rss>

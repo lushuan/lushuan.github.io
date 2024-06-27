@@ -1,0 +1,16 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Prometheus - 标签 - Less is more</title>
+        <link>http://localhost:1313/tags/prometheus/</link>
+        <description>Prometheus - 标签 - Less is more</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Wed, 29 Jun 2022 12:06:37 &#43;0800</lastBuildDate><atom:link href="http://localhost:1313/tags/prometheus/" rel="self" type="application/rss+xml" /><item>
+    <title>Prometheus 监控k8s 组件指标梳理</title>
+    <link>http://localhost:1313/prometheus%E7%9B%91%E6%8E%A7k8s%E6%8C%87%E6%A0%87%E5%92%8C%E7%9B%91%E6%8E%A7%E7%BB%84%E4%BB%B6%E7%AD%96%E7%95%A5/</link>
+    <pubDate>Wed, 29 Jun 2022 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/prometheus%E7%9B%91%E6%8E%A7k8s%E6%8C%87%E6%A0%87%E5%92%8C%E7%9B%91%E6%8E%A7%E7%BB%84%E4%BB%B6%E7%AD%96%E7%95%A5/</guid>
+    <description><![CDATA[监控策略 目标 服务发现模式 监控方法 数据源 从集群各节点kubelet组件中获取节点kubelet的基本运行状态的监控指标 node 白盒监控 kubelet 从集群各节点]]></description>
+</item>
+</channel>
+</rss>

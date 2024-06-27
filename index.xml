@@ -4,9 +4,25 @@
         <link>http://localhost:1313/</link>
         <description>知识有两种，一种是你知道的，一种是你知道在哪里能找到的！ --塞缪尔·约翰逊</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
-            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Wed, 26 Jun 2024 10:54:03 &#43;0800</lastBuildDate>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Thu, 20 Jun 2024 12:06:37 &#43;0800</lastBuildDate>
             <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
         <item>
+    <title>Ubuntu-server部署k8s1.28(containerd版本)集群</title>
+    <link>http://localhost:1313/ubuntu-server%E9%83%A8%E7%BD%B2k8s1.28containerd%E7%89%88%E6%9C%AC%E9%9B%86%E7%BE%A4/</link>
+    <pubDate>Thu, 20 Jun 2024 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/ubuntu-server%E9%83%A8%E7%BD%B2k8s1.28containerd%E7%89%88%E6%9C%AC%E9%9B%86%E7%BE%A4/</guid>
+    <description><![CDATA[整体流程 部署准备 k8s 集群容器运行时 Containerd 准备 k8s 集群部署 k8s 集群软件 apt 源准备 k8s 集群软件安装 k8s 集群初始化 k8s 集群worker 节点加入 k8s 集群网络插件 Calico 准备 部]]></description>
+</item>
+<item>
+    <title>调整节点pod驱逐时间</title>
+    <link>http://localhost:1313/%E8%B0%83%E6%95%B4%E8%8A%82%E7%82%B9pod%E9%A9%B1%E9%80%90%E6%97%B6%E9%97%B4/</link>
+    <pubDate>Sat, 09 Sep 2023 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/%E8%B0%83%E6%95%B4%E8%8A%82%E7%82%B9pod%E9%A9%B1%E9%80%90%E6%97%B6%E9%97%B4/</guid>
+    <description><![CDATA[问题描述 在高可用的k8s集群中，当Node节点挂掉，kubelet无法提供工作的时候，pod将会自动调度到其他的节点上去，而调度到节点上的时]]></description>
+</item>
+<item>
     <title>CGroups与Namespaces</title>
     <link>http://localhost:1313/cgroups%E4%B8%8Enamespaces/</link>
     <pubDate>Mon, 26 Jun 2023 16:25:58 &#43;0800</pubDate>
@@ -41,7 +57,7 @@
 <item>
     <title>Kubernetes v1.20创建PVC报错</title>
     <link>http://localhost:1313/k8s_v1.20.x%E5%88%9B%E5%BB%BApvc%E6%8A%A5%E9%94%99/</link>
-    <pubDate>Fri, 26 May 2023 12:06:37 &#43;0800</pubDate>
+    <pubDate>Tue, 23 May 2023 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
     <guid>http://localhost:1313/k8s_v1.20.x%E5%88%9B%E5%BB%BApvc%E6%8A%A5%E9%94%99/</guid>
     <description><![CDATA[故障描述 PVC 显示创建不成功：kubectl get pvc -n efk 显示 Pending，这是由于版本太高导致的。k8sv1.20 以上版本默认禁止使用 selfLi]]></description>
@@ -49,7 +65,7 @@
 <item>
     <title>k8s容器运行时 containerd 版本升级</title>
     <link>http://localhost:1313/k8s%E5%AE%B9%E5%99%A8%E8%BF%90%E8%A1%8C%E6%97%B6containerd%E5%8D%87%E7%BA%A7/</link>
-    <pubDate>Wed, 26 Apr 2023 12:06:37 &#43;0800</pubDate>
+    <pubDate>Mon, 17 Apr 2023 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
     <guid>http://localhost:1313/k8s%E5%AE%B9%E5%99%A8%E8%BF%90%E8%A1%8C%E6%97%B6containerd%E5%8D%87%E7%BA%A7/</guid>
     <description><![CDATA[背景 k8s 容器运行时是docker和containerd结合使用，且生产环境是离线环境将需要的containerd和docker版本相关的rpm]]></description>
@@ -57,34 +73,18 @@
 <item>
     <title>kubelet目录满问题记录</title>
     <link>http://localhost:1313/kubelet%E7%9B%AE%E5%BD%95%E6%BB%A1%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/</link>
-    <pubDate>Wed, 26 Apr 2023 12:06:37 &#43;0800</pubDate>
+    <pubDate>Tue, 04 Apr 2023 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
     <guid>http://localhost:1313/kubelet%E7%9B%AE%E5%BD%95%E6%BB%A1%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/</guid>
     <description><![CDATA[现象 k8s 某台主机的/var/lib/kubelet目录存储使用率超过80% 使用了40多G存储 分析 申请root权限 cd /var/lib/kubelet 执行du -h -d 1 发现 pod目]]></description>
 </item>
 <item>
-    <title>调整节点pod驱逐时间</title>
-    <link>http://localhost:1313/%E8%B0%83%E6%95%B4%E8%8A%82%E7%82%B9pod%E9%A9%B1%E9%80%90%E6%97%B6%E9%97%B4/</link>
-    <pubDate>Wed, 26 Apr 2023 12:06:37 &#43;0800</pubDate>
-    <author>lushuan</author>
-    <guid>http://localhost:1313/%E8%B0%83%E6%95%B4%E8%8A%82%E7%82%B9pod%E9%A9%B1%E9%80%90%E6%97%B6%E9%97%B4/</guid>
-    <description><![CDATA[问题描述 在高可用的k8s集群中，当Node节点挂掉，kubelet无法提供工作的时候，pod将会自动调度到其他的节点上去，而调度到节点上的时]]></description>
-</item>
-<item>
     <title>kube-dns切换为coredns实践</title>
     <link>http://localhost:1313/kube-dns%E5%88%87%E6%8D%A2%E4%B8%BAcoredns%E5%AE%9E%E8%B7%B5/</link>
-    <pubDate>Sun, 26 Mar 2023 12:06:37 &#43;0800</pubDate>
+    <pubDate>Wed, 29 Mar 2023 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
     <guid>http://localhost:1313/kube-dns%E5%88%87%E6%8D%A2%E4%B8%BAcoredns%E5%AE%9E%E8%B7%B5/</guid>
     <description><![CDATA[kube-dns切换为coredns k8s版本及其dns适配版本 k8s版本 coredns版本 镜像 镜像yaml 1.17 1.6.7 coredns-1.6.7.tar.gz coredns-1.6.7.yaml 1.22 1.8.4 coredns-1.8.4.tar.gz coredns-1.8.4.yaml coredns/coredns:1.6.7/1.8.4 操作 根据版本选]]></description>
-</item>
-<item>
-    <title>当 Kubernetes 创建 Pod 时发生了什么</title>
-    <link>http://localhost:1313/%E5%BD%93-kubernetes-%E5%88%9B%E5%BB%BA-pod-%E6%97%B6%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88/</link>
-    <pubDate>Sun, 26 Mar 2023 12:06:37 &#43;0800</pubDate>
-    <author>lushuan</author>
-    <guid>http://localhost:1313/%E5%BD%93-kubernetes-%E5%88%9B%E5%BB%BA-pod-%E6%97%B6%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88/</guid>
-    <description><![CDATA[当Kubernetes创建Pod时发生了什么-全景图 https://github.com/jamiehannaford/what-happens-when-k8s/tree/master/zh-cn]]></description>
 </item>
 </channel>
 </rss>

@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>fdisk 磁盘管理详解 - Less is more</title><meta name="Description" content="知识有两种，一种是你知道的，一种是你知道在哪里能找到的！ --塞缪尔·约翰逊"><meta property="og:url" content="http://localhost:1313/fdisk%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86%E8%AF%A6%E8%A7%A3/">
+  <meta property="og:site_name" content="Less is more">
+  <meta property="og:title" content="fdisk 磁盘管理详解">
+  <meta property="og:description" content="打算给一台服务器做逻辑卷分区，发现磁盘未做分区，且磁盘空间余量较大，本篇记录一下 fdisk 磁盘分区划分的过程 事情的起因 通过pvcreate 创建逻辑卷">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2021-04-29T12:06:37+08:00">
+    <meta property="article:modified_time" content="2024-06-26T12:06:37+08:00">
+    <meta property="article:tag" content="Linux">
+    <meta property="og:image" content="http://localhost:1313/logo.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/logo.png">
+  <meta name="twitter:title" content="fdisk 磁盘管理详解">
+  <meta name="twitter:description" content="打算给一台服务器做逻辑卷分区，发现磁盘未做分区，且磁盘空间余量较大，本篇记录一下 fdisk 磁盘分区划分的过程 事情的起因 通过pvcreate 创建逻辑卷">
+      <meta name="twitter:site" content="@xxxx">
+<meta name="application-name" content="我的网站">
+<meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://localhost:1313/fdisk%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86%E8%AF%A6%E8%A7%A3/" /><link rel="prev" href="http://localhost:1313/lvm%E9%80%BB%E8%BE%91%E5%8D%B7%E7%BB%84%E7%AE%A1%E7%90%86/" /><link rel="next" href="http://localhost:1313/kubeadm%E5%AE%89%E8%A3%85k8s%E9%9B%86%E7%BE%A4%E6%8A%A5%E9%94%99%E6%8F%90%E7%A4%BAkubelet%E6%9C%AA%E8%BF%90%E8%A1%8C/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "fdisk 磁盘管理详解",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost:1313\/fdisk%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86%E8%AF%A6%E8%A7%A3\/"
+        },"genre": "posts","keywords": "linux","wordcount":  2024 ,
+        "url": "http:\/\/localhost:1313\/fdisk%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86%E8%AF%A6%E8%A7%A3\/","datePublished": "2021-04-29T12:06:37+08:00","dateModified": "2024-06-26T12:06:37+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "lushuan"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Less is more">Less is more</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/" title="About"> 关于 </a><a class="menu-item" href="/friends/" title="friends"> 友链 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Less is more">Less is more</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="About">关于</a><a class="menu-item" href="/friends/" title="friends">友链</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">fdisk 磁盘管理详解</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/linux/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Linux</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2021-04-29">2021-04-29</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 2024 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 5 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="true">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#事情的起因">事情的起因</a></li>
+    <li><a href="#划分磁盘分区">划分磁盘分区</a>
+      <ul>
+        <li><a href="#首先了解什么是-fdisk-命令">首先了解什么是 fdisk 命令</a></li>
+        <li><a href="#查看分区">查看分区</a></li>
+      </ul>
+    </li>
+    <li><a href="#创建扩展分区">创建扩展分区</a>
+      <ul>
+        <li><a href="#指定分区文件系统并生效分区">指定分区文件系统并生效分区</a></li>
+        <li><a href="#设置开机挂载">设置开机挂载</a></li>
+        <li><a href="#扩展一fdisk-新增主分区和扩展分区的主要区别">扩展一：fdisk 新增主分区和扩展分区的主要区别</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p>打算给一台服务器做逻辑卷分区，发现磁盘未做分区，且磁盘空间余量较大，本篇记录一下 fdisk 磁盘分区划分的过程</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/linux/fdisk-1.jpg"
+        data-srcset="/images/linux/fdisk-1.jpg, /images/linux/fdisk-1.jpg 1.5x, /images/linux/fdisk-1.jpg 2x"
+        data-sizes="auto"
+        alt="/images/linux/fdisk-1.jpg"
+        title="fdisk-1" /></p>
+<h2 id="事情的起因">事情的起因</h2>
+<p>通过<code>pvcreate</code> 创建逻辑卷组提示报错
+报错信息</p>
+<div class="details admonition warning open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-exclamation-triangle fa-fw" aria-hidden="true"></i>警告<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content">Can&rsquo;t open /dev/sda1 exclusively. Mounted filesystem?</div>
+        </div>
+    </div>
+<p>通过 <code>fdisk -l</code> 查看该分区为boot 分区无法创建逻辑卷。fdisk -l 可以用来查看磁盘的所有分区</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ fdisk -l
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Disk /dev/sda: 1000.2 GB, <span class="m">1000171331584</span> bytes, <span class="m">1953459632</span> sectors
+</span></span><span class="line"><span class="cl"><span class="nv">Units</span> <span class="o">=</span> sectors of <span class="m">1</span> * <span class="nv">512</span> <span class="o">=</span> <span class="m">512</span> bytes
+</span></span><span class="line"><span class="cl">Sector size <span class="o">(</span>logical/physical<span class="o">)</span>: <span class="m">512</span> bytes / <span class="m">512</span> bytes
+</span></span><span class="line"><span class="cl">I/O size <span class="o">(</span>minimum/optimal<span class="o">)</span>: <span class="m">262144</span> bytes / <span class="m">262144</span> bytes
+</span></span><span class="line"><span class="cl">Disk label type: dos
+</span></span><span class="line"><span class="cl">Disk identifier: 0x0003eb01
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">   Device Boot      Start         End      Blocks   Id  System
+</span></span><span class="line"><span class="cl">/dev/sda1   *        <span class="m">2048</span>     <span class="m">2099199</span>     <span class="m">1048576</span>   <span class="m">83</span>  Linux
+</span></span><span class="line"><span class="cl">/dev/sda2         <span class="m">2099200</span>   <span class="m">276834303</span>   <span class="m">137367552</span>   8e  Linux LVM
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>从上面的信息可以了解到磁盘<code>/dev/sda</code>划分了两个分区，且扇区大小为512字节，boot 分区大小为(2099199-2048)*512/1024/1024=1G,
+且通过<code>pvdisplay</code>查看该<code>/dev/sda2 </code> 分区为131G，已经全部用完。总的磁盘有1000.2 GB 可用，抛出boot /dev/sda1分区和/dev/sda2 的
+131GB空间，还剩800多GB的磁盘空间未使用。闲言少叙，开始通过fdisk划分新的磁盘分区<code>/dev/sda3</code></p>
+<p>主分区和扩展分区</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/linux/fdisk-2.jpg"
+        data-srcset="/images/linux/fdisk-2.jpg, /images/linux/fdisk-2.jpg 1.5x, /images/linux/fdisk-2.jpg 2x"
+        data-sizes="auto"
+        alt="/images/linux/fdisk-2.jpg"
+        title="fdisk-2" /></p>
+<h2 id="划分磁盘分区">划分磁盘分区</h2>
+<h3 id="首先了解什么是-fdisk-命令">首先了解什么是 fdisk 命令</h3>
+<p>fdisk 的意思是 固定磁盘(Fixed Disk) 或 格式化磁盘(Format Disk)，它是命令行下允许用户对分区进行查看、创建、调整大小、删除、移动和复制的工具。它支持 MBR、Sun、SGI、BSD 分区表，但是它不支持 GUID 分区表（GPT）。它不是为操作大分区设计的。</p>
+<p>fdisk 允许我们在每块硬盘上创建最多四个主分区。它们中的其中一个可以作为扩展分区，并下设多个逻辑分区。1-4 扇区作为主分区被保留，逻辑分区从扇区 5 开始。</p>
+<h3 id="查看分区">查看分区</h3>
+<p>fdisk 查看特定分区</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">fdisk -l /dev/sda
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>fdisk</code>交互指令说明</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>说明</th>
+<th>是否常用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>a</td>
+<td>设置可引导标记</td>
+<td>否</td>
+</tr>
+<tr>
+<td>b</td>
+<td>编辑bsd磁盘标签</td>
+<td>否</td>
+</tr>
+<tr>
+<td>c</td>
+<td>设置DOS操作系统兼容标记</td>
+<td>否</td>
+</tr>
+<tr>
+<td>d</td>
+<td>删除一个分区 注：这是删除一个分区的动作</td>
+<td>是</td>
+</tr>
+<tr>
+<td>l</td>
+<td>显示已知的分区类型。82 为Linux swap分区，83为Linux分区 <br>  注：l是列出分区类型，以供我们设置相应分区的类型；</td>
+<td>是</td>
+</tr>
+<tr>
+<td>m</td>
+<td>m 是列出帮助信息</td>
+<td>是</td>
+</tr>
+<tr>
+<td>n</td>
+<td>添加一个分区</td>
+<td>是</td>
+</tr>
+<tr>
+<td>o</td>
+<td>建立空白DOS分区表</td>
+<td>否</td>
+</tr>
+<tr>
+<td>p</td>
+<td>p列出分区表</td>
+<td>是</td>
+</tr>
+<tr>
+<td>q</td>
+<td>不保存退出</td>
+<td>是</td>
+</tr>
+<tr>
+<td>s</td>
+<td>新建空白SUN磁盘标签</td>
+<td>否</td>
+</tr>
+<tr>
+<td>t</td>
+<td>改变一个分区的系统ID</td>
+<td>是</td>
+</tr>
+<tr>
+<td>u</td>
+<td>改变显示记录单位</td>
+<td>否</td>
+</tr>
+<tr>
+<td>v</td>
+<td>验证分区表</td>
+<td>否</td>
+</tr>
+<tr>
+<td>w</td>
+<td>把分区表写入硬盘并退出</td>
+<td>是</td>
+</tr>
+<tr>
+<td>x</td>
+<td>扩展应用，专家功能</td>
+<td>否</td>
+</tr>
+<tr>
+<td>关注一下常用命令即可</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="创建扩展分区">创建扩展分区</h2>
+<p>列出当前操作硬盘的分区情况，用 p</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ fdisk /dev/sda
+</span></span><span class="line"><span class="cl">Welcome to fdisk <span class="o">(</span>util-linux 2.23.2<span class="o">)</span>.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Changes will remain in memory only, <span class="k">until</span> you decide to write them.
+</span></span><span class="line"><span class="cl">Be careful before using the write command.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Command <span class="o">(</span>m <span class="k">for</span> <span class="nb">help</span><span class="o">)</span>: n
+</span></span><span class="line"><span class="cl">Partition type:
+</span></span><span class="line"><span class="cl">   p   primary <span class="o">(</span><span class="m">2</span> primary, <span class="m">0</span> extended, <span class="m">2</span> free<span class="o">)</span>
+</span></span><span class="line"><span class="cl">   e   extended
+</span></span><span class="line"><span class="cl">Select <span class="o">(</span>default e<span class="o">)</span>: p
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>新建磁盘分区，用 n,在创建的时候会提示选择是使用主分区还是逻辑分区，见扩展一。
+直接下一步会提示创建分区的大小，指定分区大小时直接默认起始扇区后，在last Sector size 处直接+400GB，最后
+选择 <code>w</code>进行保存，这个不要忘记。这个时候分区已经分配好了，但是还不能使用，因为没有对该分区进行格式化操作，指定分区文件系统。</p>
+<h3 id="指定分区文件系统并生效分区">指定分区文件系统并生效分区</h3>
+<p>选择不同文件系统的性能也不通，选择合适的文件系统对分区进行格式，在格式化文件系统前先更新分区表。重新扫描分区表需要借助<code>partprobe</code>命令。</p>
+<p><code>partprobe</code>命令是用于重新扫描系统上的分区表，以便内核能够识别新创建或修改的分区。当您在不重启系统的情况下对磁盘进行了分区或调整分区大小时，可以使用partprobe命令通知内核更新分区信息。</p>
+<p><code>partprobe</code>命令会读取分区表并向内核发送信号，让内核重新加载分区信息。这样，系统就能够识别到最新的分区信息，并使其可用于挂载和访问。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ partprobe
+</span></span><span class="line"><span class="cl">$ cat /proc/partitions
+</span></span><span class="line"><span class="cl">major minor  <span class="c1">#blocks  name</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">   <span class="m">8</span>        <span class="m">0</span>  <span class="m">976729816</span> sda
+</span></span><span class="line"><span class="cl">   <span class="m">8</span>        <span class="m">1</span>    <span class="m">1048576</span> sda1
+</span></span><span class="line"><span class="cl">   <span class="m">8</span>        <span class="m">2</span>  <span class="m">137367552</span> sda2
+</span></span><span class="line"><span class="cl">   <span class="m">8</span>        <span class="m">3</span>  <span class="m">412102655</span> sda3
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">[</span>root@CENTOS7 temp<span class="o">]</span><span class="c1">#  mkfs.ext3 /dev/sda3</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>注意：<code>partprobe</code>命令需要root权限才能执行。在执行partprobe之后，您可以使用相应的命令（例如<code>fdisk</code>或<code>lsblk</code>）来检查分区是否已成功更新。</p>
+<p>格式化完分区表后那么到此就完成了，我的目标是完成硬盘分区来创建物理卷。后续可以参考<a href="LVM%e9%80%bb%e8%be%91%e5%8d%b7%e7%bb%84%e7%ae%a1%e7%90%86.md" rel="">逻辑卷组管理文章</a>
+如：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">pvcreate /dev/sda3
+</span></span><span class="line"><span class="cl">vgcreate vgdata /dev/sda3
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="设置开机挂载">设置开机挂载</h3>
+<p>设置开机挂载需同步至 /etc/fstab 文件中</p>
+<p>示例</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">mkdir -p /var/lib/kubelet 
+</span></span><span class="line"><span class="cl">lvcreate -n lvkubelet -L +35G vgdata
+</span></span><span class="line"><span class="cl">mkfs.xfs /dev/vgdata/lvkubelet
+</span></span><span class="line"><span class="cl"><span class="nb">echo</span> <span class="s2">&#34;/dev/mapper/vgdata-lvkubelet /var/lib/kubelet xfs defaults 0 0&#34;</span> &gt;&gt; /etc/fstab
+</span></span><span class="line"><span class="cl">mount -a
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="扩展一fdisk-新增主分区和扩展分区的主要区别">扩展一：fdisk 新增主分区和扩展分区的主要区别</h3>
+<ol>
+<li>
+<p>主分区(Primary Partition)是硬盘上的基本分区,每个硬盘最多可以创建4个主分区。</p>
+</li>
+<li>
+<p>扩展分区(Extended Partition)是一种特殊的主分区,它不能直接存储数据,仅可用于扩展更多的逻辑分区。每个硬盘只能创建1个扩展分区。</p>
+</li>
+<li>
+<p>主分区可以直接存储数据,而扩展分区内需要再创建逻辑分区(Logical Partition)才能存储数据。</p>
+</li>
+<li>
+<p>主分区对文件系统格式化的支持更广泛,可支持各种文件系统。扩展分区和逻辑分区仅支持部分文件系统。</p>
+</li>
+<li>
+<p>主分区的访问效率稍高一些。扩展分区和逻辑分区的访问会稍微低一些。</p>
+</li>
+<li>
+<p>如果没有空间限制,建议使用主分区。如果磁盘空间不足,可以使用扩展分区额外增加更多分区。</p>
+</li>
+</ol>
+<p>所以总的来说,主分区更基础和通用,扩展分区可以提供更多额外的分区数。选择时需要根据实际磁盘空间及使用需求来决定。</p>
+<p>小结：有主选主，主分区更基础和通用</p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2024-06-26</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/fdisk%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86%E8%AF%A6%E8%A7%A3/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://localhost:1313/fdisk%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86%E8%AF%A6%E8%A7%A3/" data-title="fdisk 磁盘管理详解" data-via="xxxx" data-hashtags="linux"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/fdisk%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86%E8%AF%A6%E8%A7%A3/" data-hashtag="linux"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="http://localhost:1313/fdisk%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86%E8%AF%A6%E8%A7%A3/" data-title="fdisk 磁盘管理详解"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://localhost:1313/fdisk%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86%E8%AF%A6%E8%A7%A3/" data-title="fdisk 磁盘管理详解"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/fdisk%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86%E8%AF%A6%E8%A7%A3/" data-title="fdisk 磁盘管理详解"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/linux/">Linux</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/lvm%E9%80%BB%E8%BE%91%E5%8D%B7%E7%BB%84%E7%AE%A1%E7%90%86/" class="prev" rel="prev" title="lvm 逻辑卷组管理"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>lvm 逻辑卷组管理</a>
+            <a href="/kubeadm%E5%AE%89%E8%A3%85k8s%E9%9B%86%E7%BE%A4%E6%8A%A5%E9%94%99%E6%8F%90%E7%A4%BAkubelet%E6%9C%AA%E8%BF%90%E8%A1%8C/" class="next" rel="next" title="Kubeadm 安装k8s集群报错提示 kubelet 未运行">Kubeadm 安装k8s集群报错提示 kubelet 未运行<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">我是有底线的</div><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.126.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2024</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">lushuan</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
