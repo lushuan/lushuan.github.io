@@ -1,7 +1,7 @@
 ---
 title: "Kubernetes v1.20创建PVC报错"
 subtitle: ""
-date: 2023-05-26T12:06:37+08:00
+date: 2023-05-23T12:06:37+08:00
 lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:

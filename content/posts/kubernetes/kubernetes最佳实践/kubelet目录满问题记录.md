@@ -1,7 +1,7 @@
 ---
 title: "kubelet目录满问题记录"
 subtitle: ""
-date: 2023-04-26T12:06:37+08:00
+date: 2023-04-04T12:06:37+08:00
 lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:

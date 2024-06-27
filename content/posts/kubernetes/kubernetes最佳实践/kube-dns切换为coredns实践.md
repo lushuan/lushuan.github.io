@@ -1,7 +1,7 @@
 ---
 title: "kube-dns切换为coredns实践"
 subtitle: ""
-date: 2023-03-26T12:06:37+08:00
+date: 2023-03-29T12:06:37+08:00
 lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:

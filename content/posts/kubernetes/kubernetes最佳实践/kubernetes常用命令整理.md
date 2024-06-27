@@ -1,7 +1,7 @@
 ---
 title: "kubernetes常用命令整理"
 subtitle: ""
-date: 2022-04-26T12:06:37+08:00
+date: 2022-08-20T12:06:37+08:00
 lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
