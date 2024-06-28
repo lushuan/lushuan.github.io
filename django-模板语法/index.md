@@ -352,56 +352,9 @@ template/index.html，代码：
             <td>标题</td>
             <td>价格</td>
         </tr>
-        {# 多行编辑，alt+鼠标键，alt不要松开，左键点击要编辑的每一行 #}
-{#        {% for book in book_list1 %}#}
-{#            <tr>#}
-{#                <td>{{ book.id }}</td>#}
-{#                <td>{{ book.name }}</td>#}
-{#                <td>{{ book.price }}</td>#}
-{#            </tr>#}
-{#        {% endfor %}#}
-
-{# 建议不要直接使用for循环一维字典，此处使用仅仅展示for嵌套for而已 #}
-{#        {% for book in book_list1 %}#}
-{#            <tr>#}
-{#                {% for field,value in book.items %}#}
-{#                <td>{{ field }} == {{ value }}</td>#}
-{#                {% endfor %}#}
-{#            </tr>#}
-{#        {% endfor %}#}
-
-{#        {% for book in book_list1 %}#}
-{#            <tr>#}
-{#                <td>{{ book.id }}</td>#}
-{#                <td>{{ book.name }}</td>#}
-{#                {% if book.price > 200 %}#}
-{#                    <td bgcolor="#ff7f50">{{ book.price }}</td>#}
-{#                {% else %}#}
-{#                    <td>{{ book.price }}</td>#}
-{#                {% endif %}#}
-{#            </tr>#}
-{#        {% endfor %}#}
-
-        {# 逆向循环数据 #}
-{#        {% for book in book_list1 reversed %}#}
-{#            <tr>#}
-{#                <td>{{ book.id }}</td>#}
-{#                <td>{{ book.name }}</td>#}
-{#                {% if book.price > 200 %}#}
-{#                    <td bgcolor="#ff7f50">{{ book.price }}</td>#}
-{#                {% else %}#}
-{#                    <td>{{ book.price }}</td>#}
-{#                {% endif %}#}
-{#            </tr>#}
-{#        {% endfor %}#}
 
         {% for book in book_list1 %}
             <tr>
-{#                <td>{{ forloop.counter }}</td>#}
-{#                <td>{{ forloop.counter0 }}</td>#}
-{#                <td>{{ forloop.revcounter }}</td>#}
-{#                <td>{{ forloop.revcounter0 }}</td>#}
-{#                <td>{{ forloop.first }}</td>#}
                 <td>{{ forloop.last }}</td>
                 <td>{{ book.id }}</td>
                 <td>{{ book.name }}</td>
