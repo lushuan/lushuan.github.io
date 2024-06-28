@@ -2,8 +2,8 @@
     xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
     xmlns:xhtml="http://www.w3.org/1999/xhtml"
     ><url>
-            <loc>http://localhost:1313/</loc><lastmod>2024-06-27T17:21:27&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
-            <loc>http://localhost:1313/posts/</loc><lastmod>2024-06-27T17:21:27&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
+            <loc>http://localhost:1313/</loc><lastmod>2024-06-28T18:14:24&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
+            <loc>http://localhost:1313/posts/</loc><lastmod>2024-06-28T18:14:24&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
             <loc>http://localhost:1313/categories/</loc><lastmod>2024-06-26T22:54:06&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
             <loc>http://localhost:1313/tags/kubernetes/</loc><lastmod>2024-06-26T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
             <loc>http://localhost:1313/categories/kubernetes/</loc><lastmod>2024-06-26T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
@@ -50,7 +50,7 @@
             <loc>http://localhost:1313/first_post/</loc><lastmod>2024-06-26T22:54:06&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
             <loc>http://localhost:1313/tags/hugo/</loc><lastmod>2024-06-26T22:54:06&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
             <loc>http://localhost:1313/categories/hugo/</loc><lastmod>2024-06-26T22:54:06&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
-            <loc>http://localhost:1313/about/</loc><lastmod>2024-06-27T17:21:27&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
+            <loc>http://localhost:1313/about/</loc><lastmod>2024-06-28T18:14:24&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
             <loc>http://localhost:1313/kubernetes-pod%E6%8E%92%E9%9A%9C%E6%8C%87%E5%8D%97/</loc><lastmod>2024-06-26T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
             <loc>http://localhost:1313/pod%E8%B0%83%E5%BA%A6/</loc><lastmod>2024-06-26T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
             <loc>http://localhost:1313/tags/linux%E6%96%87%E6%9C%AC%E4%B8%89%E5%89%91%E5%AE%A2/</loc><lastmod>2024-06-26T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>

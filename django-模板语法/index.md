@@ -137,11 +137,7 @@ DTL模板文件是一种带有特殊语法的HTML文件，这个HTML文件可以
 {{val}}
 {{val|filter_name:参数}}
 ```
-2. 标签
-```
-{% tag_name %}
-
-```
+2. 标签 tag_name
 3. 嵌套和继承
 #### 变量渲染之深度查询
 ```Python
