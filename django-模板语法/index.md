@@ -276,7 +276,7 @@ def index(request):
 
 
 ```
-模板 templates/index2.html 代码: 需要在首行添加`{% load my_filters %}`
+模板 templates/index2.html 代码: 
 ```html
 ...
 <!DOCTYPE html>
