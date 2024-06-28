@@ -3,7 +3,7 @@ title: "Django 模板语法"
 subtitle: "基于Django v3.2"
 date: 2022-05-20T12:06:37+08:00
 lastmod: 2024-06-26T12:06:37+08:00
-draft: false
+draft: true
 toc:
   enable: true
 weight: false
@@ -407,17 +407,17 @@ urlpatterns = [
 
 传统的模板分离技术,依靠{% include “模板文件名”%}实现,这种方式,虽然达到了页面代码复用的效果,但是由此也会带来大量的碎片化模板,导致维护模板的成本上升.因此, Django框架中除了提供这种模板分离技术以外,还并行的提供了 模板继承给开发者.
 
-{{< admonition info >}}
+```
 {% include "模板文件名"%}  # 模板嵌入
 
 {% extends "base.html" %} # 模板继承 
-{{< /admonition >}}
+```
 
 继承父模板的公共内容
 
-{{< admonition info >}}
+```
 {% extends “base.html” %}
-{{< /admonition >}}
+```
 
 视图, myapp.views.py代码:
 ```Python
@@ -426,9 +426,9 @@ def index(request):
     return render(request,"myapp/index.html",locals())
 ```
 子模板, templates/index.html
-{{< admonition info >}}
+```
 {% extends "base.html" %}
-{{< /admonition >}}
+```
 
 父模板, templates/base.html
 ```html
