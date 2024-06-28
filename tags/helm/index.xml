@@ -18,7 +18,7 @@
     <pubDate>Mon, 20 Mar 2023 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
     <guid>http://localhost:1313/helm_charts%E7%BC%96%E5%86%99%E6%A8%A1%E6%9D%BF%E8%AF%B4%E6%98%8E/</guid>
-    <description><![CDATA[预置条件 适用于Kubernetes v1.12.1及以上，Helm v3.4.2及以上。 以zcm-cmdb应用为例进行说明,zcm-cmdb为部]]></description>
+    <description><![CDATA[预置条件 适用于Kubernetes v1.12.1及以上，Helm v3.4.2及以上。 以test-cmdb应用为例进行说明,test-cmdb]]></description>
 </item>
 <item>
     <title>Helm 生产实践记录</title>
