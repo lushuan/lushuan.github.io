@@ -3,7 +3,7 @@ title: "Django 模板语法"
 subtitle: "基于Django v3.2"
 date: 2022-05-20T12:06:37+08:00
 lastmod: 2024-06-26T12:06:37+08:00
-draft: true
+draft: false
 toc:
   enable: true
 weight: false
@@ -288,7 +288,7 @@ def index(request):
 ```
 模板 templates/index2.html 代码: 
 ```html
-...
+{% load my_filters %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
