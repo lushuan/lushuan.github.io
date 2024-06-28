@@ -274,9 +274,11 @@ def index(request):
     return render(request,"index2.html",locals())
 
 
-# templates/index2.html,代码:
 
-{% load my_filters %}
+```
+模板 templates/index2.html 代码: 需要在首行添加`{% load my_filters %}`
+```html
+...
 <!DOCTYPE html>
 <html lang="en">
 <head>
