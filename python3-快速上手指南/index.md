@@ -8,8 +8,11 @@ Python 是一个高层次的结合了解释性、编译性、互动性和面向�
 Python 的设计具有很强的可读性，相比其他语言经常使用英文关键字，其他语言的一些标点符号，它具有比其他语言更有特色语法结构。
 
 Python 是一种解释型语言： 这意味着开发过程中没有了编译这个环节。类似于PHP和Perl语言。
+
 Python 是交互式语言： 这意味着，您可以在一个Python提示符，直接互动执行写你的程序。
+
 Python 是面向对象语言: 这意味着Python支持面向对象的风格或代码封装在对象的编程技术。
+
 Python 是初学者的语言：Python 对初级程序员而言，是一种伟大的语言，它支持广泛的应用程序开发，从简单的文字处理到 WWW 浏览器再到游戏。
 {{< /admonition >}}
 
@@ -75,6 +78,7 @@ Python文档下载地址：https://www.python.org/doc/
     ```
 ###  通过配置编辑器（如 VS Code、PyCharm 等）
 通过配置编辑器如Pycharm 创建虚拟环境是一种更方便的方式，原理还是通过命令行，通过界面化操作会直观一些
+
 ![virtualenv](/images/python/pycharm-1.png)
 
 ## 基础语法
@@ -122,7 +126,9 @@ for iterating_var in sequence:
    statements(s)
 ```
 流程图
+
 ![loop-over-python-list-animation](/images/python/python_for_loop.jpg)
+
 实例
 ```Python
 #!/usr/bin/python
@@ -137,6 +143,7 @@ for fruit in fruits:        # 第二个实例
  
 print("Good bye!")
 ```
+
 通过序列索引迭代
 ```Python
 #!/usr/bin/python
@@ -204,10 +211,13 @@ else:
 try的工作原理是，当开始一个try语句后，python就在当前程序的上下文中作标记，这样当异常出现时就可以回到这里，try子句先执行，接下来会发生什么依赖于执行时是否出现异常。
 
 如果当try后的语句执行时发生异常，python就跳回到try并执行第一个匹配该异常的except子句，异常处理完毕，控制流就通过整个try语句（除非在处理异常时又引发新的异常）。
+
 如果在try后的语句里发生了异常，却没有匹配的except子句，异常将被递交到上层的try，或者到程序的最上层（这样将结束程序，并打印缺省的出错信息）。
+
 如果在try子句执行时没有发生异常，python将执行else语句后的语句（如果有else的话），然后控制流通过整个try语句。
 
 实例
+
 下面是简单的例子，它打开一个文件，在该文件中的内容写入内容，且并未发生异常：
 
 ```Python
@@ -255,19 +265,22 @@ finally:
 $ python test.py 
 Error: 没有找到文件或读取文件失败
 ```
-
-
-
 ## 数据结构
 ### 列表（List）
 列表式什么?
+
 `列表由一系列按特定顺序排列的元素组成`
 
 Python有6个序列的内置类型，但最常见的是列表和元组。
+
 序列都可以进行的操作包括索引，切片，加，乘，检查成员。
+
 此外，Python已经内置确定序列的长度以及确定最大和最小的元素的方法。
+
 列表是最常用的Python数据类型，它可以作为一个方括号内的逗号分隔值出现。
+
 列表的数据项不需要具有相同的类型
+
 创建一个列表，只要把逗号分隔的不同的数据项使用方括号括起来即可。如下所示：
 ```Python
 list1 = ['physics', 'chemistry', 1997, 2000]
@@ -326,7 +339,9 @@ Python包含以下方法:
 
 ### 元组（Tuple）
 Python的元组与列表类似，不同之处在于元组的元素不能修改。
+
 元组使用小括号，列表使用方括号。
+
 元组创建很简单，只需要在括号中添加元素，并使用逗号隔开即可。
 
 示例
@@ -528,7 +543,7 @@ class Employee:
 ```
 #### 创建类的实例对象
 实例化类其他编程语言中一般用关键字 new，但是在 Python 中并没有这个关键字，类的实例化类似函数调用方式。
-以下使用类的名称 Employee 来实例化，并通过 __init__ 方法接收参数。
+以下使用类的名称 Employee 来实例化，并通过 `__init__` 方法接收参数。
 ```Python
 "创建 Employee 类的第一个对象"
 emp1 = Employee("Zara", 2000)
@@ -635,6 +650,7 @@ file object = open(file_name [, access_mode][, buffering])
 
 
 下图很好的总结了这几种模式：
+
 ![file-accessmode](/images/python/file-accessmode.png)
 
 |    模式    |  r   |  r+  |  w   |  w+  |  a   |  a+  |

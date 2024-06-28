@@ -129,15 +129,14 @@ test-cmdb
     | values.yaml | cm.configmap.name |
     
 * 网关规则
-    
 
-| 文件名 | key |
-| ---- | ---- |
-| values.yaml | ingress.annotations |
-| values.yaml | ingress.tls |
-| values.yaml | ingress.hosts.paths.path |
-| values.yaml | ingress.hosts.paths.pathType |
-| values.yaml | ingress.hosts.paths.port |
+    | 文件名 | key |
+    | ---- | ---- |
+    | values.yaml | ingress.annotations |
+    | values.yaml | ingress.tls |
+    | values.yaml | ingress.hosts.paths.path |
+    | values.yaml | ingress.hosts.paths.pathType |
+    | values.yaml | ingress.hosts.paths.port |
 
 ## 部署测试
 

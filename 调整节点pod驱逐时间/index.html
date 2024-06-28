@@ -7,7 +7,7 @@
         <title>调整节点pod驱逐时间 - Less is more</title><meta name="Description" content="知识有两种，一种是你知道的，一种是你知道在哪里能找到的！ --塞缪尔·约翰逊"><meta property="og:url" content="http://localhost:1313/%E8%B0%83%E6%95%B4%E8%8A%82%E7%82%B9pod%E9%A9%B1%E9%80%90%E6%97%B6%E9%97%B4/">
   <meta property="og:site_name" content="Less is more">
   <meta property="og:title" content="调整节点pod驱逐时间">
-  <meta property="og:description" content="问题描述 在高可用的k8s集群中，当Node节点挂掉，kubelet无法提供工作的时候，pod将会自动调度到其他的节点上去，而调度到节点上的时">
+  <meta property="og:description" content="问题描述 问题 在高可用的k8s集群中，当Node节点挂掉，kubelet无法提供工作的时候，pod将会自动调度到其他的节点上去， 而调度到节点上">
   <meta property="og:locale" content="zh_CN">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="http://localhost:1313/logo.png">
   <meta name="twitter:title" content="调整节点pod驱逐时间">
-  <meta name="twitter:description" content="问题描述 在高可用的k8s集群中，当Node节点挂掉，kubelet无法提供工作的时候，pod将会自动调度到其他的节点上去，而调度到节点上的时">
+  <meta name="twitter:description" content="问题描述 问题 在高可用的k8s集群中，当Node节点挂掉，kubelet无法提供工作的时候，pod将会自动调度到其他的节点上去， 而调度到节点上">
       <meta name="twitter:site" content="@xxxx">
 <meta name="application-name" content="我的网站">
 <meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
@@ -35,7 +35,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "http:\/\/localhost:1313\/%E8%B0%83%E6%95%B4%E8%8A%82%E7%82%B9pod%E9%A9%B1%E9%80%90%E6%97%B6%E9%97%B4\/"
-        },"genre": "posts","keywords": "Kubernetes","wordcount":  817 ,
+        },"genre": "posts","keywords": "Kubernetes","wordcount":  813 ,
         "url": "http:\/\/localhost:1313\/%E8%B0%83%E6%95%B4%E8%8A%82%E7%82%B9pod%E9%A9%B1%E9%80%90%E6%97%B6%E9%97%B4\/","datePublished": "2023-09-09T12:06:37+08:00","dateModified": "2024-06-26T12:06:37+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -109,7 +109,7 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">调整节点pod驱逐时间</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/kubernetes/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Kubernetes</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-09-09">2023-09-09</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 817 字&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-09-09">2023-09-09</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 813 字&nbsp;
                 <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 2 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  data-kept="true">
                 <div class="details-summary toc-title">
@@ -123,13 +123,24 @@
   </ul>
 </nav></div>
             </div><div class="content" id="content"><h2 id="问题描述">问题描述</h2>
-<p>在高可用的k8s集群中，当Node节点挂掉，kubelet无法提供工作的时候，pod将会自动调度到其他的节点上去，而调度到节点上的时间需要我们慎重考量，因为它决定了生产的稳定性、可靠性，更快的迁移可以减少我们业务的影响性，但是有可能会对集群造成一定的压力，从而造成集群崩溃。</p>
+<div class="details admonition question open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-question-circle fa-fw" aria-hidden="true"></i>问题<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content">在高可用的k8s集群中，当Node节点挂掉，kubelet无法提供工作的时候，pod将会自动调度到其他的节点上去，
+而调度到节点上的时间需要我们慎重考量，因为它决定了生产的稳定性、可靠性，更快的迁移可以减少我们业务的影响性，
+但是有可能会对集群造成一定的压力，从而造成集群崩溃。</div>
+        </div>
+    </div>
 <h2 id="kubelet-状态更新的基本流程">Kubelet 状态更新的基本流程</h2>
-<p>1.kubelet 自身会定期更新状态到 apiserver，通过参数&ndash;node-status-update-frequency指定上报频率，默认是 10s 上报一次。</p>
-<p>2.kube-controller-manager 会每隔&ndash;node-monitor-period时间去检查 kubelet 的状态，默认是 5s。</p>
-<p>3.当 node 失联一段时间后，kubernetes 判定 node 为 notready 状态，这段时长通过&ndash;node-monitor-grace-period参数配置，默认 40s。</p>
-<p>4.当 node 失联一段时间后，kubernetes 判定 node 为 unhealthy 状态，这段时长通过&ndash;node-startup-grace-period参数配置，默认 1m0s。</p>
-<p>5.当 node 失联一段时间后，kubernetes 开始删除原 node 上的 pod，这段时长是通过&ndash;pod-eviction-timeout参数配置，默认 5m0s。</p>
+<ol>
+<li>kubelet 自身会定期更新状态到 apiserver，通过参数&ndash;node-status-update-frequency指定上报频率，默认是 10s 上报一次。</li>
+<li>kube-controller-manager 会每隔&ndash;node-monitor-period时间去检查 kubelet 的状态，默认是 5s。</li>
+<li>当 node 失联一段时间后，kubernetes 判定 node 为 notready 状态，这段时长通过&ndash;node-monitor-grace-period参数配置，默认 40s。</li>
+<li>当 node 失联一段时间后，kubernetes 判定 node 为 unhealthy 状态，这段时长通过&ndash;node-startup-grace-period参数配置，默认 1m0s。</li>
+<li>当 node 失联一段时间后，kubernetes 开始删除原 node 上的 pod，这段时长是通过&ndash;pod-eviction-timeout参数配置，默认 5m0s。</li>
+</ol>
 <p>kube-controller-manager 和 kubelet 是异步工作的，这意味着延迟可能包括任何的网络延迟、apiserver 的延迟、etcd 延迟，一个节点上的负载引起的延迟等等。因此，如果&ndash;node-status-update-frequency设置为5s，那么实际上 etcd 中的数据变化会需要 6-7s，甚至更长时间。</p>
 <p>如果业务生产认为默认的驱逐时间不能满足业务的及时性，可以手动修改驱逐时间。</p>
 <p>在master节点操作：</p>

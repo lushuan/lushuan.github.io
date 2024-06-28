@@ -7,7 +7,7 @@
         <title>CGroups与Namespaces - Less is more</title><meta name="Description" content="知识有两种，一种是你知道的，一种是你知道在哪里能找到的！ --塞缪尔·约翰逊"><meta property="og:url" content="http://localhost:1313/cgroups%E4%B8%8Enamespaces/">
   <meta property="og:site_name" content="Less is more">
   <meta property="og:title" content="CGroups与Namespaces">
-  <meta property="og:description" content="CGroups与Namespaces 了解下容器背后的两大核心技术：CGroups 和 Namespace。 CGroups 概述 CGroups 全称为 Linux Control Group，其作用是">
+  <meta property="og:description" content="CGroups与Namespaces 摘要 了解下容器背后的两大核心技术：CGroups 和 Namespace。 CGroups 概述 CGroups 全称为 Linux Control Group，其作">
   <meta property="og:locale" content="zh_CN">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="http://localhost:1313/logo.png">
   <meta name="twitter:title" content="CGroups与Namespaces">
-  <meta name="twitter:description" content="CGroups与Namespaces 了解下容器背后的两大核心技术：CGroups 和 Namespace。 CGroups 概述 CGroups 全称为 Linux Control Group，其作用是">
+  <meta name="twitter:description" content="CGroups与Namespaces 摘要 了解下容器背后的两大核心技术：CGroups 和 Namespace。 CGroups 概述 CGroups 全称为 Linux Control Group，其作">
       <meta name="twitter:site" content="@xxxx">
 <meta name="application-name" content="我的网站">
 <meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
@@ -35,7 +35,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "http:\/\/localhost:1313\/cgroups%E4%B8%8Enamespaces\/"
-        },"genre": "posts","keywords": "docker","wordcount":  4645 ,
+        },"genre": "posts","keywords": "docker","wordcount":  4630 ,
         "url": "http:\/\/localhost:1313\/cgroups%E4%B8%8Enamespaces\/","datePublished": "2023-06-26T16:25:58+08:00","dateModified": "2024-06-26T16:25:58+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -109,7 +109,7 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">CGroups与Namespaces</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/docker/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Docker</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-06-26">2023-06-26</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 4645 字&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-06-26">2023-06-26</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 4630 字&nbsp;
                 <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 10 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  data-kept="true">
                 <div class="details-summary toc-title">
@@ -126,7 +126,14 @@
   </ul>
 </nav></div>
             </div><div class="content" id="content"><h1 id="cgroups与namespaces">CGroups与Namespaces</h1>
-<p>了解下容器背后的两大核心技术：CGroups 和 Namespace。</p>
+<div class="details admonition abstract open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-list-ul fa-fw" aria-hidden="true"></i>摘要<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content">了解下容器背后的两大核心技术：CGroups 和 Namespace。</div>
+        </div>
+    </div>
 <h2 id="cgroups-概述">CGroups 概述</h2>
 <p>CGroups 全称为 Linux Control Group，其作用是限制一组进程使用的资源（CPU、内存等）上限，CGroups 也是 Containerd 容器技术的核心实现原理之一，首先我们需要先了解几个 CGroups 的基本概念：</p>
 <ul>
@@ -410,8 +417,8 @@
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">➜  ~ mkdir -p /sys/fs/cgroup/cpu/ydzs.test
-</span></span><span class="line"><span class="cl">➜  ~ ls /sys/fs/cgroup/cpu/ydzs.test/
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ mkdir -p /sys/fs/cgroup/cpu/ydzs.test
+</span></span><span class="line"><span class="cl">$ ls /sys/fs/cgroup/cpu/ydzs.test/
 </span></span><span class="line"><span class="cl">cgroup.clone_children  cpuacct.stat          cpu.cfs_period_us  cpu.rt_runtime_us  notify_on_release
 </span></span><span class="line"><span class="cl">cgroup.event_control   cpuacct.usage         cpu.cfs_quota_us   cpu.shares         tasks
 </span></span><span class="line"><span class="cl">cgroup.procs           cpuacct.usage_percpu  cpu.rt_period_us   cpu.stat
@@ -426,9 +433,9 @@
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">➜  ~ cat /sys/fs/cgroup/cpu/ydzs.test/cpu.cfs_period_us
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ cat /sys/fs/cgroup/cpu/ydzs.test/cpu.cfs_period_us
 </span></span><span class="line"><span class="cl"><span class="m">100000</span>
-</span></span><span class="line"><span class="cl">➜  ~ cat /sys/fs/cgroup/cpu/ydzs.test/cpu.cfs_quota_us
+</span></span><span class="line"><span class="cl">$ cat /sys/fs/cgroup/cpu/ydzs.test/cpu.cfs_quota_us
 </span></span><span class="line"><span class="cl">-1
 </span></span></code></pre></td></tr></table>
 </div>
@@ -452,7 +459,7 @@
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">➜  ~ python cgroup.py &amp;
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ python cgroup.py &amp;
 </span></span><span class="line"><span class="cl">[1] 2113
 </span></span></code></pre></td></tr></table>
 </div>
@@ -464,8 +471,8 @@
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">➜  ~ <span class="nb">echo</span> <span class="m">2113</span> &gt; /sys/fs/cgroup/cpu/ydzs.test/tasks
-</span></span><span class="line"><span class="cl">➜  ~ <span class="nb">echo</span> <span class="m">10000</span> &gt; /sys/fs/cgroup/cpu/ydzs.test/cpu.cfs_quota_us
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ <span class="nb">echo</span> <span class="m">2113</span> &gt; /sys/fs/cgroup/cpu/ydzs.test/tasks
+</span></span><span class="line"><span class="cl">$ <span class="nb">echo</span> <span class="m">10000</span> &gt; /sys/fs/cgroup/cpu/ydzs.test/cpu.cfs_quota_us
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>设置完过后上面我们的测试进程 CPU 就会被限制在 10% 左右了，再次使用 top 命令查看该进程可以验证。</p>
@@ -478,9 +485,9 @@
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">➜  ~ yum install libcgroup libcgroup-tools
-</span></span><span class="line"><span class="cl">➜  ~ cgdelete cpu:ydzs.test
-</span></span><span class="line"><span class="cl">➜  ~ ls /sys/fs/cgroup/cpu/ydzs.test
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ yum install libcgroup libcgroup-tools
+</span></span><span class="line"><span class="cl">$ cgdelete cpu:ydzs.test
+</span></span><span class="line"><span class="cl">$ ls /sys/fs/cgroup/cpu/ydzs.test
 </span></span><span class="line"><span class="cl">ls: cannot access /sys/fs/cgroup/cpu/ydzs.test: No such file or directory
 </span></span></code></pre></td></tr></table>
 </div>
@@ -495,9 +502,9 @@
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">➜  ~ nerdctl run -d -m 50m --name nginx nginx:alpine
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ nerdctl run -d -m 50m --name nginx nginx:alpine
 </span></span><span class="line"><span class="cl">8690c7dba4ffe03d63983555c594e2784c146b5f9939de1195a9626339c9129c
-</span></span><span class="line"><span class="cl">➜  ~ nerdctl ps
+</span></span><span class="line"><span class="cl">$ nerdctl ps
 </span></span><span class="line"><span class="cl">CONTAINER ID    IMAGE                             COMMAND                   CREATED           STATUS    PORTS    NAMES
 </span></span><span class="line"><span class="cl">8690c7dba4ff    docker.io/library/nginx:alpine    &#34;/docker-entrypoint.…&#34;    53 seconds ago    Up                 nginx
 </span></span></code></pre></td></tr></table>
@@ -514,7 +521,7 @@
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">➜  ~ ll /sys/fs/cgroup/memory/default/
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ ll /sys/fs/cgroup/memory/default/
 </span></span><span class="line"><span class="cl">total 0
 </span></span><span class="line"><span class="cl">drwxr-xr-x 2 root root 0 Oct 21 15:01 8690c7dba4ffe03d63983555c594e2784c146b5f9939de1195a9626339c9129c
 </span></span><span class="line"><span class="cl">-rw-r--r-- 1 root root 0 Oct 21 15:01 cgroup.clone_children
@@ -536,7 +543,7 @@
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">➜  ~ ll /sys/fs/cgroup/memory/default/8690c7dba4ffe03d63983555c594e2784c146b5f9939de1195a9626339c9129c
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ ll /sys/fs/cgroup/memory/default/8690c7dba4ffe03d63983555c594e2784c146b5f9939de1195a9626339c9129c
 </span></span><span class="line"><span class="cl">total 0
 </span></span><span class="line"><span class="cl">-rw-r--r-- 1 root root 0 Oct 21 15:01 cgroup.clone_children
 </span></span><span class="line"><span class="cl">--w--w--w- 1 root root 0 Oct 21 15:01 cgroup.event_control
@@ -553,7 +560,7 @@
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">➜  ~ cat /sys/fs/cgroup/memory/default/8690c7dba4ffe03d63983555c594e2784c146b5f9939de1195a9626339c9129c/memory.limit_in_bytes
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ cat /sys/fs/cgroup/memory/default/8690c7dba4ffe03d63983555c594e2784c146b5f9939de1195a9626339c9129c/memory.limit_in_bytes
 </span></span><span class="line"><span class="cl">52428800
 </span></span></code></pre></td></tr></table>
 </div>
@@ -568,7 +575,7 @@
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">➜  ~ cat /sys/fs/cgroup/memory/default/8690c7dba4ffe03d63983555c594e2784c146b5f9939de1195a9626339c9129c/tasks
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ cat /sys/fs/cgroup/memory/default/8690c7dba4ffe03d63983555c594e2784c146b5f9939de1195a9626339c9129c/tasks
 </span></span><span class="line"><span class="cl">2686
 </span></span><span class="line"><span class="cl">2815
 </span></span><span class="line"><span class="cl">2816
@@ -588,7 +595,7 @@
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">➜  ~ ps -ef | grep 2686
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ ps -ef | grep 2686
 </span></span><span class="line"><span class="cl">root       2686   2656  0 15:01 ?        00:00:00 nginx: master process nginx -g daemon off;
 </span></span><span class="line"><span class="cl">101        2815   2686  0 15:01 ?        00:00:00 nginx: worker process
 </span></span><span class="line"><span class="cl">101        2816   2686  0 15:01 ?        00:00:00 nginx: worker process

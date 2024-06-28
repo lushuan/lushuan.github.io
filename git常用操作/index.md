@@ -1,17 +1,17 @@
 # Git 常用操作
 
 ## 创建版本库
-```
+```Bash
 $ git clone <url>   # 克隆远程仓库
 $ git init          # 初始化本地仓库
 ```
 ## Git 全局设置
-```
+```Bash
 git config --global user.name "lu.shua"
 git config --global user.email "lu.shuan@iwhalecloud.com"
 ```
 ## 修改和提交
-```
+```Bash
 $ git status        # 查看状态
 $ git diff          # 查看变更内容
 $ git add .         # 跟踪所有改动过的文件
@@ -23,14 +23,14 @@ $ git commit -m "commit message" # 修改所有更新过的文件
 $ git commit --amend # 修改最后一次提交
 ```
 ## 查看提交历史
-```
+```Bash
 $ git log           # 查看提交历史
 $ git log -p <file> # 查看指定文件的提交历史
 $ git blame <file>  # 以列表的方式查看指定文件的提交历史
 ```
 
 ## 撤销操作
-```js
+```Bash
 # 恢复暂存区的指定文件到工作区
 $ git checkout [file]
 
@@ -50,7 +50,7 @@ $ git reset [commit]
 $ git reset --hard [commit]
 ```
 ## 分支与标签
-```
+```Bash
 $ git branch        # 显示所有本地分支
 $ git checkout <branch/tag> # 切换到指定分支活标签
 $ git branch <new-branch>   # 创建新分支
@@ -60,12 +60,12 @@ $ git tag <tagname>         # 基于最新提交创建标签
 $ git tag -d <tagname>      # 删除标签
 ```
 ## 合并与衍合
-```
+```Bash
 $ git merge <branch>        # 合并指定分支到当前分支
 $ git rebase <branch>       # 衍合指定分支到当前分支
 ```
 ## 远程操作
-```
+```Bash
 $ git remote -v             # 查看远程版本库信息
 $ git remove show <remote>  # 查看指定远程版本库信息
 $ git remote add <remote> <url> # 添加远程版本库
@@ -77,7 +77,7 @@ $ git push --tags           # 上传所有标签
 ```
 
 ## 创建一个新仓库
-```
+```Bash
 git clone git@gitlab.iwhalecloud.com:monitor/nms-arm.git
 cd nms-arm
 touch README.md
@@ -87,7 +87,7 @@ git push -u origin master
 ```
 ## 推送现有文件夹至remote repository
 
-```
+```Bash
 cd existing_folder
 git init
 git remote add origin git@gitlab.iwhalecloud.com:monitor/nms-arm.git
@@ -100,7 +100,7 @@ git push -u origin master
 
 ## github 创建仓库引导命令
 create a new repository on the command line
-```
+```Bash
 echo "# blog" >> README.md
 git init
 git add README.md
@@ -111,7 +111,7 @@ git push -u origin main
 ```
 
 push an existing repository from the command line
-```
+```Bash
 git remote add origin https://github.com/username/blog.git
 git branch -M main
 git push -u origin main

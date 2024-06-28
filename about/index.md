@@ -23,16 +23,16 @@ unrewarded genius is almost a proverb. Education will not; the world is full of 
 熟练使用Docker、K8s，有生产k8s集群的构建、运维、优化、排错经验，熟悉各种开源中间件的部署和优化，有运维自动化、监控系统
 相关开发经验。
 
-- 个人信息：卢栓
+- 个人信息：lushuan
 - 拿手菜：清蒸鲈鱼、酸辣土豆丝、西红柿炒蛋、炒花蛤、香辣小炒肉
 - 兴趣爱好：篮球、音乐、阅读、掼蛋
-- 微信交流：`shuanlu0614`
 - 邮箱：`lushuan2071@126.com`
+- 我的微信
 
 <img src="/images/ewm.jpg" width="20%" align="center" />
 
 
-工具链:
+技术栈:
 - Kubernetes
 - Prometheus
 - InfluxDB

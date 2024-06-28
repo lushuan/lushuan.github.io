@@ -1,7 +1,9 @@
 # CGroups与Namespaces
 
 # CGroups与Namespaces
+{{< admonition abstract >}}
 了解下容器背后的两大核心技术：CGroups 和 Namespace。
+{{< /admonition >}}
 
 ## CGroups 概述
 CGroups 全称为 Linux Control Group，其作用是限制一组进程使用的资源（CPU、内存等）上限，CGroups 也是 Containerd 容器技术的核心实现原理之一，首先我们需要先了解几个 CGroups 的基本概念：
@@ -159,17 +161,17 @@ memory.force_empty     memory.kmem.tcp.failcnt         memory.limit_in_bytes    
 ## CGroup 测试
 接下来我们来尝试手动设置下 cgroup，以 CPU 这个子系统为例进行说明，首先我们在 /sys/fs/cgroup/cpu 目录下面创建一个名为 ydzs.test 的目录：
 ```shell
-➜  ~ mkdir -p /sys/fs/cgroup/cpu/ydzs.test
-➜  ~ ls /sys/fs/cgroup/cpu/ydzs.test/
+$ mkdir -p /sys/fs/cgroup/cpu/ydzs.test
+$ ls /sys/fs/cgroup/cpu/ydzs.test/
 cgroup.clone_children  cpuacct.stat          cpu.cfs_period_us  cpu.rt_runtime_us  notify_on_release
 cgroup.event_control   cpuacct.usage         cpu.cfs_quota_us   cpu.shares         tasks
 cgroup.procs           cpuacct.usage_percpu  cpu.rt_period_us   cpu.stat
 ```
 我们可以看到目录创建完成后，下面就会已经自动创建 cgroup 的相关文件，这里我们重点关注 cpu.cfs_period_us 和 cpu.cfs_quota_us 这两个文件，前面一个是用来配置 CPU 时间周期长度的，默认为 100000us，后者用来设置在此时间周期长度内所能使用的 CPU 时间数，默认值为-1，表示不受时间限制。
 ```shell
-➜  ~ cat /sys/fs/cgroup/cpu/ydzs.test/cpu.cfs_period_us
+$ cat /sys/fs/cgroup/cpu/ydzs.test/cpu.cfs_period_us
 100000
-➜  ~ cat /sys/fs/cgroup/cpu/ydzs.test/cpu.cfs_quota_us
+$ cat /sys/fs/cgroup/cpu/ydzs.test/cpu.cfs_quota_us
 -1
 ```
 现在我们写一个简单的 Python 脚本来消耗 CPU：
@@ -180,38 +182,38 @@ while True:
 ```
 直接执行这个死循环脚本即可：
 ``` 
-➜  ~ python cgroup.py &
+$ python cgroup.py &
 [1] 2113
 ```
 使用 top 命令可以看到进程号 2113 的 CPU 使用率达到了 100%
 
 现在我们将这个进程 ID 写入到 /sys/fs/cgroup/cpu/ydzs.test/tasks 文件下面去，然后设置 /sys/fs/cgroup/cpu/ydzs.test/cpu.cfs_quota_us 为 10000us，因为 cpu.cfs_period_us 默认值为 100000us，所以这表示我们要限制 CPU 使用率为 10%：
 ```shell
-➜  ~ echo 2113 > /sys/fs/cgroup/cpu/ydzs.test/tasks
-➜  ~ echo 10000 > /sys/fs/cgroup/cpu/ydzs.test/cpu.cfs_quota_us
+$ echo 2113 > /sys/fs/cgroup/cpu/ydzs.test/tasks
+$ echo 10000 > /sys/fs/cgroup/cpu/ydzs.test/cpu.cfs_quota_us
 ```
 设置完过后上面我们的测试进程 CPU 就会被限制在 10% 左右了，再次使用 top 命令查看该进程可以验证。
 
 如果要限制内存等其他资源的话，同样去对应的子系统下面设置资源，并将进程 ID 加入 tasks 中即可。如果要删除这个 cgroup，直接删除文件夹是不行的，需要使用 libcgroup 工具：
 ```shell
-➜  ~ yum install libcgroup libcgroup-tools
-➜  ~ cgdelete cpu:ydzs.test
-➜  ~ ls /sys/fs/cgroup/cpu/ydzs.test
+$ yum install libcgroup libcgroup-tools
+$ cgdelete cpu:ydzs.test
+$ ls /sys/fs/cgroup/cpu/ydzs.test
 ls: cannot access /sys/fs/cgroup/cpu/ydzs.test: No such file or directory
 ```
 
 ## 在容器中使用 CGroups
 上面我们测试了一个普通应用如何配置 cgroup，接下来我们在 Containerd 的容器中来使用 cgroup，比如使用 nerdctl 启动一个 nginx 容器，并限制其使用内存为 50M:
 ```
-➜  ~ nerdctl run -d -m 50m --name nginx nginx:alpine
+$ nerdctl run -d -m 50m --name nginx nginx:alpine
 8690c7dba4ffe03d63983555c594e2784c146b5f9939de1195a9626339c9129c
-➜  ~ nerdctl ps
+$ nerdctl ps
 CONTAINER ID    IMAGE                             COMMAND                   CREATED           STATUS    PORTS    NAMES
 8690c7dba4ff    docker.io/library/nginx:alpine    "/docker-entrypoint.…"    53 seconds ago    Up                 nginx
 ```
 在使用 nerdctl run 启动容器的时候可以使用 -m 或 --memory 参数来限制内存，启动完成后该容器的 cgroup 会出现在 名为 default 的目录下面，比如查看内存子系统的目录：
 ```
-➜  ~ ll /sys/fs/cgroup/memory/default/
+$ ll /sys/fs/cgroup/memory/default/
 total 0
 drwxr-xr-x 2 root root 0 Oct 21 15:01 8690c7dba4ffe03d63983555c594e2784c146b5f9939de1195a9626339c9129c
 -rw-r--r-- 1 root root 0 Oct 21 15:01 cgroup.clone_children
@@ -221,7 +223,7 @@ drwxr-xr-x 2 root root 0 Oct 21 15:01 8690c7dba4ffe03d63983555c594e2784c146b5f99
 ```
 上面我们启动的 nginx 容器 ID 的目录会出现在 /sys/fs/cgroup/memory/default/ 下面，该文件夹下面有很多和内存相关的 cgroup 配置文件，要进行相关的配置就需要在该目录下对应的文件中去操作：
 ```
-➜  ~ ll /sys/fs/cgroup/memory/default/8690c7dba4ffe03d63983555c594e2784c146b5f9939de1195a9626339c9129c
+$ ll /sys/fs/cgroup/memory/default/8690c7dba4ffe03d63983555c594e2784c146b5f9939de1195a9626339c9129c
 total 0
 -rw-r--r-- 1 root root 0 Oct 21 15:01 cgroup.clone_children
 --w--w--w- 1 root root 0 Oct 21 15:01 cgroup.event_control
@@ -232,12 +234,12 @@ total 0
 ```
 我们这里需要关心的是 memory.limit_in_bytes 文件，该文件就是用来设置内存大小的，正常应该是 50M 的内存限制：
 ```
-➜  ~ cat /sys/fs/cgroup/memory/default/8690c7dba4ffe03d63983555c594e2784c146b5f9939de1195a9626339c9129c/memory.limit_in_bytes
+$ cat /sys/fs/cgroup/memory/default/8690c7dba4ffe03d63983555c594e2784c146b5f9939de1195a9626339c9129c/memory.limit_in_bytes
 52428800
 ```
 同样我们的 nginx 容器进程 ID 也会出现在上面的 tasks 文件中：
 ```
-➜  ~ cat /sys/fs/cgroup/memory/default/8690c7dba4ffe03d63983555c594e2784c146b5f9939de1195a9626339c9129c/tasks
+$ cat /sys/fs/cgroup/memory/default/8690c7dba4ffe03d63983555c594e2784c146b5f9939de1195a9626339c9129c/tasks
 2686
 2815
 2816
@@ -246,7 +248,7 @@ total 0
 ```
 我们可以通过如下命令过滤该进程号，可以看出第一行的 2686 就是 nginx 进程在主机上的进程 ID，下面几个是这个进程下的线程：
 ```
-➜  ~ ps -ef | grep 2686
+$ ps -ef | grep 2686
 root       2686   2656  0 15:01 ?        00:00:00 nginx: master process nginx -g daemon off;
 101        2815   2686  0 15:01 ?        00:00:00 nginx: worker process
 101        2816   2686  0 15:01 ?        00:00:00 nginx: worker process

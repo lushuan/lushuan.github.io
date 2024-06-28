@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>Django 模板语法 - Less is more</title><meta name="Description" content="知识有两种，一种是你知道的，一种是你知道在哪里能找到的！ --塞缪尔·约翰逊"><meta property="og:url" content="http://localhost:1313/django-%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95/">
+  <meta property="og:site_name" content="Less is more">
+  <meta property="og:title" content="Django 模板语法">
+  <meta property="og:description" content="Django 模板语法 模板引擎是一种可以让开发者把服务端数据填充到html网页中完成渲染效果的技术。它实现了把前端代码和服务端代码分离的作用，让项目中的">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2022-05-20T12:06:37+08:00">
+    <meta property="article:modified_time" content="2024-06-26T12:06:37+08:00">
+    <meta property="article:tag" content="Django">
+    <meta property="og:image" content="http://localhost:1313/logo.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/logo.png">
+  <meta name="twitter:title" content="Django 模板语法">
+  <meta name="twitter:description" content="Django 模板语法 模板引擎是一种可以让开发者把服务端数据填充到html网页中完成渲染效果的技术。它实现了把前端代码和服务端代码分离的作用，让项目中的">
+      <meta name="twitter:site" content="@xxxx">
+<meta name="application-name" content="我的网站">
+<meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://localhost:1313/django-%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95/" /><link rel="prev" href="http://localhost:1313/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1apiserver%E5%92%8Cetcd%E8%BF%9E%E6%8E%A5%E7%9A%84%E9%9A%8F%E6%9C%BA%E7%AB%AF%E5%8F%A3%E5%8D%A0%E7%94%A8%E5%86%B2%E7%AA%81%E9%97%AE%E9%A2%98/" /><link rel="next" href="http://localhost:1313/kubernetes-configmap%E5%A4%9A%E6%96%87%E4%BB%B6%E6%8C%82%E8%BD%BD%E8%87%B3%E5%90%8C%E4%B8%80%E4%B8%AApod%E5%86%85%E7%9B%AE%E5%BD%95%E5%AE%9E%E8%B7%B5/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Django 模板语法",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost:1313\/django-%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95\/"
+        },"genre": "posts","keywords": "Django","wordcount":  5534 ,
+        "url": "http:\/\/localhost:1313\/django-%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95\/","datePublished": "2022-05-20T12:06:37+08:00","dateModified": "2024-06-26T12:06:37+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "lushuan"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Less is more">Less is more</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/" title="About"> 关于 </a><a class="menu-item" href="/friends/" title="friends"> 友链 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Less is more">Less is more</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="About">关于</a><a class="menu-item" href="/friends/" title="friends">友链</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Django 模板语法</h1><h2 class="single-subtitle">基于Django v3.2</h2><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/django/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Django</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2022-05-20">2022-05-20</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 5534 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 12 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="true">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#django-模板语法">Django 模板语法</a>
+      <ul>
+        <li><a href="#简单案例">简单案例</a></li>
+        <li><a href="#render函数内部本质">render函数内部本质</a></li>
+        <li><a href="#模板语法">模板语法</a>
+          <ul>
+            <li><a href="#变量渲染之深度查询">变量渲染之深度查询</a></li>
+            <li><a href="#变量渲染之内置过滤器">变量渲染之内置过滤器</a></li>
+            <li><a href="#自定义过滤器">自定义过滤器</a></li>
+            <li><a href="#标签">标签</a>
+              <ul>
+                <li><a href="#if">if</a></li>
+                <li><a href="#for">for</a></li>
+              </ul>
+            </li>
+            <li><a href="#模板嵌套继承">模板嵌套继承</a></li>
+          </ul>
+        </li>
+        <li><a href="#静态文件">静态文件</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="django-模板语法">Django 模板语法</h2>
+<p>模板引擎是一种可以让开发者把服务端数据填充到html网页中完成渲染效果的技术。它实现了把前端代码和服务端代码分离的作用，让项目中的业务逻辑代码和数据表现代码分离，让前端开发者和服务端开发者可以更好的完成协同开发。</p>
+<div class="details admonition info open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-info-circle fa-fw" aria-hidden="true"></i>信息<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content"><p>静态网页：页面上的数据都是写死的，万年不变</p>
+<p>动态网页：页面上的数据是从后端动态获取的（比如后端获取当前时间；后端获取数据库数据然后传递给前端页面）</p>
+</div>
+        </div>
+    </div>
+<p>Django框架中内置了web开发领域非常出名的一个DjangoTemplate模板引擎（DTL）。<a href="https://docs.djangoproject.com/zh-hans/3.2/topics/templates/" target="_blank" rel="noopener noreffer ">DTL官方文档</a></p>
+<p>要在django框架中使用模板引擎把视图中的数据更好的展示给客户端，需要完成3个步骤：</p>
+<div class="details admonition info open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-info-circle fa-fw" aria-hidden="true"></i>信息<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content"><ol>
+<li>在项目配置文件中指定保存模板文件的模板目录。一般模板目录都是设置在项目根目录或者主应用目录下。</li>
+<li>在视图中基于django提供的渲染函数绑定模板文件和需要展示的数据变量</li>
+<li>在模板目录下创建对应的模板文件，并根据模板引擎内置的模板语法，填写输出视图传递过来的数据。</li>
+</ol>
+</div>
+        </div>
+    </div>
+<p>配置模板目录：在当前项目根目录下创建了模板目录templates. 然后在settings.py, 模板相关配置，找到TEMPLATES配置项，填写DIRS设置模板目录。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-Python" data-lang="Python"><span class="line"><span class="cl"><span class="c1"># 模板引擎配置</span>
+</span></span><span class="line"><span class="cl"><span class="n">TEMPLATES</span> <span class="o">=</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="s1">&#39;BACKEND&#39;</span><span class="p">:</span> <span class="s1">&#39;django.template.backends.django.DjangoTemplates&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s1">&#39;DIRS&#39;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">            <span class="n">BASE_DIR</span> <span class="o">/</span> <span class="s2">&#34;templates&#34;</span><span class="p">,</span>  <span class="c1"># 路径拼接</span>
+</span></span><span class="line"><span class="cl">        <span class="p">],</span>
+</span></span><span class="line"><span class="cl">        <span class="s1">&#39;APP_DIRS&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s1">&#39;OPTIONS&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;context_processors&#39;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">                <span class="s1">&#39;django.template.context_processors.debug&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="s1">&#39;django.template.context_processors.request&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="s1">&#39;django.contrib.auth.context_processors.auth&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="s1">&#39;django.contrib.messages.context_processors.messages&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="p">],</span>
+</span></span><span class="line"><span class="cl">        <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="p">},</span>
+</span></span><span class="line"><span class="cl"><span class="p">]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="简单案例">简单案例</h3>
+<p>为了方便接下里的演示内容，我这里创建创建一个新的子应用myapp</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">python manage.py startapp myapp
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>settings.py，注册子应用，代码：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-Python" data-lang="Python"><span class="line"><span class="cl"><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;django.contrib.admin&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;django.contrib.auth&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;django.contrib.contenttypes&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;django.contrib.sessions&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;django.contrib.messages&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;django.contrib.staticfiles&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;myapp&#39;</span><span class="p">,</span>   <span class="c1"># 开发者创建的子应用，这填写就是子应用的导包路径</span>
+</span></span><span class="line"><span class="cl"><span class="p">]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>总路由加载子应用路由,urls.py，代码：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-Python" data-lang="Python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">admin</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">path</span><span class="p">,</span><span class="n">include</span>
+</span></span><span class="line"><span class="cl"><span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;admin/&#39;</span><span class="p">,</span> <span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">urls</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># path(&#34;路由前缀/&#34;, include(&#34;子应用目录名.路由模块&#34;))</span>
+</span></span><span class="line"><span class="cl">    <span class="n">path</span><span class="p">(</span><span class="s2">&#34;users/&#34;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s2">&#34;users.urls&#34;</span><span class="p">)),</span>
+</span></span><span class="line"><span class="cl">    <span class="n">path</span><span class="p">(</span><span class="s2">&#34;tem/&#34;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s2">&#34;myapp.urls&#34;</span><span class="p">)),</span>
+</span></span><span class="line"><span class="cl"><span class="p">]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在子应用目录下创建urls.py子路由文件，代码如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-Python" data-lang="Python"><span class="line"><span class="cl"><span class="s2">&#34;&#34;&#34;子应用路由&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">path</span><span class="p">,</span> <span class="n">re_path</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">views</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="n">path</span><span class="p">(</span><span class="s2">&#34;index&#34;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">index</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl"><span class="p">]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>myapp.views.index，代码：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-Python" data-lang="Python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 要显示到客户端的数据</span>
+</span></span><span class="line"><span class="cl">    <span class="n">name</span> <span class="o">=</span> <span class="s2">&#34;hello DTL!&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># return render(request, &#34;模板文件路径&#34;,context={字典格式：要在客户端中展示的数据})</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&#34;index.html&#34;</span><span class="p">,</span><span class="n">context</span><span class="o">=</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="p">:</span><span class="n">name</span><span class="p">})</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="render函数内部本质">render函数内部本质</h3>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/python/django-template-render.png"
+        data-srcset="/images/python/django-template-render.png, /images/python/django-template-render.png 1.5x, /images/python/django-template-render.png 2x"
+        data-sizes="auto"
+        alt="/images/python/django-template-render.png"
+        title="django-template-render" /></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-Python" data-lang="Python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">django.template.loader</span> <span class="kn">import</span> <span class="n">get_template</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">django.http.response</span> <span class="kn">import</span> <span class="n">HttpResponse</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">name</span> <span class="o">=</span> <span class="s2">&#34;hello world!&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 1. 初始化模板,读取模板内容,实例化模板对象</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># get_template会从项目配置中找到模板目录，我们需要填写的参数就是补全模板文件的路径</span>
+</span></span><span class="line"><span class="cl">    <span class="n">template</span> <span class="o">=</span> <span class="n">get_template</span><span class="p">(</span><span class="s2">&#34;myapp/index.html&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 2. 识别context内容, 和模板内容里面的标记[标签]替换,针对复杂的内容,进行正则的替换</span>
+</span></span><span class="line"><span class="cl">    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="n">name</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">content</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span> <span class="c1"># render中完成了变量替换成变量值的过程，这个过程使用了正则。</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 3. 通过response响应对象,把替换了数据的模板内容返回给客户端</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 上面代码的简写,直接使用 django.shortcuts.render</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># return render(request, &#34;index.html&#34;,context={&#34;name&#34;:name})</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># return render(request,&#34;index.html&#34;, locals())</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># data = {}</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># data[&#34;name&#34;] = &#34;xiaoming&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># data[&#34;message&#34;] = &#34;你好！&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># return render(request,&#34;index.html&#34;, data)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol>
+<li>
+<p>DTL模板文件与普通html文件的区别在哪里？
+DTL模板文件是一种带有特殊语法的HTML文件，这个HTML文件可以被Django编译，可以传递参数进去，实现数据动态化。在编译完成后，生成一个普通的HTML文件，然后发送给客户端。</p>
+</li>
+<li>
+<p>开发中，我们一般把开发中的文件分2种，分别是静态文件和动态文件。
+<div class="details admonition tip open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-lightbulb fa-fw" aria-hidden="true"></i>技巧<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content"><ul>
+<li>
+<p>静态文件，数据保存在当前文件，不需要经过任何处理就可以展示出去。普通html文件，图片，视频，音频等这一类文件叫静态文件。</p>
+</li>
+<li>
+<p>动态文件，数据并不在当前文件，而是要经过服务端或其他程序进行编译转换才可以展示出去。 编译转换的过程往往就是使用正则或其他技术把文件内部具有特殊格式的变量转换成真实数据。 动态文件，一般数据会保存在第三方存储设备，如数据库中。django的模板文件，就属于动态文件。</p>
+</li>
+</ul>
+</div>
+        </div>
+    </div></p>
+</li>
+</ol>
+<h3 id="模板语法">模板语法</h3>
+<ol>
+<li>变量渲染（深度查询、过滤器）</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">{{val}}
+</span></span><span class="line"><span class="cl">{{val|filter_name:参数}}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="2">
+<li>标签</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">{% tag_name %}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="3">
+<li>嵌套和继承</li>
+</ol>
+<h4 id="变量渲染之深度查询">变量渲染之深度查询</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-Python" data-lang="Python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">name</span> <span class="o">=</span> <span class="s2">&#34;root&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">age</span> <span class="o">=</span> <span class="mi">13</span>
+</span></span><span class="line"><span class="cl">    <span class="n">sex</span> <span class="o">=</span> <span class="kc">True</span>
+</span></span><span class="line"><span class="cl">    <span class="n">lve</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&#34;swimming&#34;</span><span class="p">,</span> <span class="s2">&#34;shopping&#34;</span><span class="p">,</span> <span class="s2">&#34;coding&#34;</span><span class="p">,</span> <span class="s2">&#34;game&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="n">bookinfo</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&#34;price&#34;</span><span class="p">:</span> <span class="mf">9.90</span><span class="p">,</span> <span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;Django 3天入门到挣扎&#34;</span><span class="p">,</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">book_list</span> <span class="o">=</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s2">&#34;price&#34;</span><span class="p">:</span> <span class="mf">9.90</span><span class="p">,</span> <span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;Django 3天入门到挣扎&#34;</span><span class="p">,</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span> <span class="s2">&#34;price&#34;</span><span class="p">:</span> <span class="mf">19.90</span><span class="p">,</span> <span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;Django 7天入门到垂死挣扎&#34;</span><span class="p">,</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;index.html&#39;</span><span class="p">,</span> <span class="nb">locals</span><span class="p">())</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>模板代码，templates/index.html：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span> <span class="na">lang</span><span class="o">=</span><span class="s">&#34;en&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">&#34;UTF-8&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>Title<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>name={{ name }}<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>{{ age }}<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>{{ sex }}<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>列表成员<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>{{ lve }}<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>{{ lve.0 }}<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>{{ lve | last }}<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>字典成员<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>id={{ bookinfo.id }}<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>price={{ bookinfo.price }}<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>name={{ bookinfo.name }}<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>复杂列表<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>{{ book_list.0.name }}<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>{{ book_list.1.name }}<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="变量渲染之内置过滤器">变量渲染之内置过滤器</h4>
+<p>语法：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">{{obj|过滤器名称:过滤器参数}}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>内置过滤器</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">过滤器</th>
+<th style="text-align:left">用法</th>
+<th style="text-align:left">代码</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">last</td>
+<td style="text-align:left">获取列表/元组的最后一个成员</td>
+<td style="text-align:left">{{liast | last}}</td>
+</tr>
+<tr>
+<td style="text-align:left">first</td>
+<td style="text-align:left">获取列表/元组的第一个成员</td>
+<td style="text-align:left">{{list|first}}</td>
+</tr>
+<tr>
+<td style="text-align:left">length</td>
+<td style="text-align:left">获取数据的长度</td>
+<td style="text-align:left">{{list | length}}</td>
+</tr>
+<tr>
+<td style="text-align:left">defualt</td>
+<td style="text-align:left">当变量没有值的情况下, 系统输出默认值,</td>
+<td style="text-align:left">{{str|default=“默认值”}}</td>
+</tr>
+<tr>
+<td style="text-align:left">safe</td>
+<td style="text-align:left">让系统不要对内容中的html代码进行实体转义</td>
+<td style="text-align:left">{{htmlcontent| safe}}</td>
+</tr>
+<tr>
+<td style="text-align:left">upper</td>
+<td style="text-align:left">字母转换成大写</td>
+<td style="text-align:left">{{str | upper}}</td>
+</tr>
+<tr>
+<td style="text-align:left">lower</td>
+<td style="text-align:left">字母转换成小写</td>
+<td style="text-align:left">{{str | lower}}</td>
+</tr>
+<tr>
+<td style="text-align:left">title</td>
+<td style="text-align:left">每个单词首字母转换成大写</td>
+<td style="text-align:left">{{str | title}}</td>
+</tr>
+<tr>
+<td style="text-align:left">date</td>
+<td style="text-align:left">日期时间格式转换</td>
+<td style="text-align:left">`{{ value</td>
+</tr>
+<tr>
+<td style="text-align:left">cut</td>
+<td style="text-align:left">从内容中截取掉同样字符的内容</td>
+<td style="text-align:left">{{content | cut:“hello”}}</td>
+</tr>
+<tr>
+<td style="text-align:left">list</td>
+<td style="text-align:left">把内容转换成列表格式</td>
+<td style="text-align:left">{{content | list}}</td>
+</tr>
+<tr>
+<td style="text-align:left">add</td>
+<td style="text-align:left">加法</td>
+<td style="text-align:left">{{num| add}}</td>
+</tr>
+<tr>
+<td style="text-align:left">filesizeformat</td>
+<td style="text-align:left">把文件大小的数值转换成单位表示</td>
+<td style="text-align:left">{{filesize | filesizeformat}}</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>join</code></td>
+<td style="text-align:left">按指定字符拼接内容</td>
+<td style="text-align:left">{{list| join(&quot;-&quot;)}}</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>random</code></td>
+<td style="text-align:left">随机提取某个成员</td>
+<td style="text-align:left">{list | random}}</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>slice</code></td>
+<td style="text-align:left">按切片提取成员</td>
+<td style="text-align:left">{{list | slice:&quot;:-2&quot;}}</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>truncatechars</code></td>
+<td style="text-align:left">按字符长度截取内容</td>
+<td style="text-align:left">{{content | truncatechars:30}}</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>truncatewords</code></td>
+<td style="text-align:left">按单词长度截取内容</td>
+<td style="text-align:left">同上</td>
+</tr>
+</tbody>
+</table>
+<p>过滤器的使用</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-Python" data-lang="Python"><span class="line"><span class="cl"><span class="n">视图代码</span> <span class="n">myapp</span><span class="o">.</span><span class="n">views</span><span class="o">.</span><span class="n">py</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;过滤器 filters&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">content</span> <span class="o">=</span> <span class="s2">&#34;Django template&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># content1 = &#39;&lt;script&gt;alert(1);&lt;/script&gt;&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+</span></span><span class="line"><span class="cl">    <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">content2</span><span class="o">=</span> <span class="s2">&#34;hello wrold!&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&#34;myapp/index.html&#34;</span><span class="p">,</span><span class="nb">locals</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 模板代码,myapp/templates/index.html:</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">    <span class="p">{{</span> <span class="n">content</span> <span class="o">|</span> <span class="n">safe</span> <span class="p">}}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{{</span> <span class="n">content1</span> <span class="o">|</span> <span class="n">safe</span> <span class="p">}}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="p">{</span><span class="c1"># 过滤器本质就是函数,但是模板语法不支持小括号调用,所以需要使用:号分割参数 #}</span>
+</span></span><span class="line"><span class="cl">    <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">{{</span> <span class="n">now</span> <span class="o">|</span> <span class="n">date</span><span class="p">:</span><span class="s2">&#34;Y-m-d H:i:s&#34;</span> <span class="p">}}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">{{</span> <span class="n">conten1</span> <span class="o">|</span> <span class="n">default</span><span class="p">:</span><span class="s2">&#34;默认值&#34;</span> <span class="p">}}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span><span class="c1"># 一个数据可以连续调用多个过滤器 #}</span>
+</span></span><span class="line"><span class="cl">    <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">{{</span> <span class="n">content2</span> <span class="o">|</span> <span class="n">truncatechars</span><span class="p">:</span><span class="mi">6</span> <span class="o">|</span> <span class="n">upper</span> <span class="p">}}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="自定义过滤器">自定义过滤器</h4>
+<p>虽然官方已经提供了许多内置的过滤器给开发者,但是很明显,还是会有存在不足的时候。例如:希望输出用户的手机号码时, 13912345678 —-» 139*****678，这时我们就需要自定义过滤器。要声明自定义过滤器并且能在模板中正常使用,需要完成2个前置的工作:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="c1"># 1. 当前使用和声明过滤器的子应用必须在setting.py配置文件中的INSTALLED_APPS中注册了!!!</span>
+</span></span><span class="line"><span class="cl"><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;django.contrib.admin&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;django.contrib.auth&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;django.contrib.contenttypes&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;django.contrib.sessions&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;django.contrib.messages&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;django.contrib.staticfiles&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;myapp&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 2. 自定义过滤器函数必须被 template.register进行装饰使用.</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#    而且过滤器函数所在的模块必须在templatetags包里面保存</span>
+</span></span><span class="line"><span class="cl">   
+</span></span><span class="line"><span class="cl"><span class="c1"># 在myapp子应用下创建templatetags包[必须包含__init__.py], 在包目录下创建任意py文件</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># myapp.templatetags.my_filters.py代码:</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">from</span> <span class="n">django</span> <span class="n">import</span> <span class="n">template</span>
+</span></span><span class="line"><span class="cl"><span class="n">register</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">Library</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 自定义过滤器</span>
+</span></span><span class="line"><span class="cl"><span class="err">@</span><span class="n">register</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s2">&#34;mobile&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">mobile</span><span class="p">(</span><span class="n">content</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">content</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span><span class="o">+</span><span class="s2">&#34;*****&#34;</span><span class="o">+</span><span class="n">content</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 3. 在需要使用的模板文件中顶部使用load标签加载过滤器文件my_filters.py并调用自定义过滤器</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># myapp.views.py,代码:</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;自定义过滤器 filters&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="n">moblie_number</span> <span class="o">=</span> <span class="s2">&#34;13312345678&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&#34;index2.html&#34;</span><span class="p">,</span><span class="n">locals</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># templates/index2.html,代码:</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">{</span><span class="o">%</span> <span class="nb">load</span> <span class="n">my_filters</span> <span class="o">%</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;!</span><span class="n">DOCTYPE</span> <span class="n">html</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">html</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&#34;en&#34;</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">head</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">&lt;</span><span class="n">meta</span> <span class="n">charset</span><span class="o">=</span><span class="s2">&#34;UTF-8&#34;</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">&lt;</span><span class="n">title</span><span class="o">&gt;</span><span class="n">Title</span><span class="o">&lt;/</span><span class="n">title</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;/</span><span class="n">head</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">body</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{{</span> <span class="n">moblie_number</span><span class="o">|</span> <span class="n">mobile</span> <span class="p">}}</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;/</span><span class="n">body</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;/</span><span class="n">html</span><span class="o">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="标签">标签</h4>
+<h5 id="if">if</h5>
+<p>视图代码,myapp.views.py:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-Python" data-lang="Python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">name</span> <span class="o">=</span> <span class="s2">&#34;xiaoming&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">age</span> <span class="o">=</span> <span class="mi">19</span>
+</span></span><span class="line"><span class="cl">    <span class="n">sex</span> <span class="o">=</span> <span class="kc">True</span>
+</span></span><span class="line"><span class="cl">    <span class="n">lve</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&#34;swimming&#34;</span><span class="p">,</span> <span class="s2">&#34;shopping&#34;</span><span class="p">,</span> <span class="s2">&#34;coding&#34;</span><span class="p">,</span> <span class="s2">&#34;game&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="n">user_lve</span> <span class="o">=</span> <span class="s2">&#34;sleep&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">bookinfo</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&#34;price&#34;</span><span class="p">:</span> <span class="mf">9.90</span><span class="p">,</span> <span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;python3天入门到挣扎&#34;</span><span class="p">,</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">book_list</span> <span class="o">=</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s2">&#34;price&#34;</span><span class="p">:</span> <span class="mf">9.90</span><span class="p">,</span> <span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;python3天入门到挣扎&#34;</span><span class="p">,</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span> <span class="s2">&#34;price&#34;</span><span class="p">:</span> <span class="mf">19.90</span><span class="p">,</span> <span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;python7天入门到垂死挣扎&#34;</span><span class="p">,</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;index.html&#39;</span><span class="p">,</span> <span class="nb">locals</span><span class="p">())</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>模板代码,templates/index.html，代码：</p>
+<p>路由代码：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-Python" data-lang="Python"><span class="line"><span class="cl"><span class="s2">&#34;&#34;&#34;子应用路由&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">path</span><span class="p">,</span> <span class="n">re_path</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">views</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># ....</span>
+</span></span><span class="line"><span class="cl">    <span class="n">path</span><span class="p">(</span><span class="s2">&#34;index&#34;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">index</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl"><span class="p">]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h5 id="for">for</h5>
+<p>视图代码, myapp.views.py:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-Python" data-lang="Python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">index7</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">book_list1</span> <span class="o">=</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span> <span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;python基础入门&#34;</span><span class="p">,</span> <span class="s2">&#34;price&#34;</span><span class="p">:</span> <span class="mf">130.00</span><span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="p">:</span> <span class="mi">17</span><span class="p">,</span> <span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;Go基础入门&#34;</span><span class="p">,</span> <span class="s2">&#34;price&#34;</span><span class="p">:</span> <span class="mf">230.00</span><span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="p">:</span> <span class="mi">23</span><span class="p">,</span> <span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;PHP基础入门&#34;</span><span class="p">,</span> <span class="s2">&#34;price&#34;</span><span class="p">:</span> <span class="mf">330.00</span><span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="p">:</span> <span class="mi">44</span><span class="p">,</span> <span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;Java基础入门&#34;</span><span class="p">,</span> <span class="s2">&#34;price&#34;</span><span class="p">:</span> <span class="mf">730.00</span><span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="p">:</span> <span class="mi">51</span><span class="p">,</span> <span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;C++基础入门&#34;</span><span class="p">,</span> <span class="s2">&#34;price&#34;</span><span class="p">:</span> <span class="mf">300.00</span><span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="p">:</span> <span class="mi">56</span><span class="p">,</span> <span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;C#基础入门&#34;</span><span class="p">,</span> <span class="s2">&#34;price&#34;</span><span class="p">:</span> <span class="mf">100.00</span><span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="p">:</span> <span class="mi">57</span><span class="p">,</span> <span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;前端基础入门&#34;</span><span class="p">,</span> <span class="s2">&#34;price&#34;</span><span class="p">:</span> <span class="mf">380.00</span><span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;index.html&#39;</span><span class="p">,</span> <span class="nb">locals</span><span class="p">())</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>template/index.html，代码：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span> <span class="na">lang</span><span class="o">=</span><span class="s">&#34;en&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">&#34;UTF-8&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>Title<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">table</span> <span class="na">width</span><span class="o">=</span><span class="s">&#34;800&#34;</span> <span class="na">align</span><span class="o">=</span><span class="s">&#34;center&#34;</span> <span class="na">border</span><span class="o">=</span><span class="s">&#34;1&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">tr</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>序号<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>id<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>标题<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>价格<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;/</span><span class="nt">tr</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        {# 多行编辑，alt+鼠标键，alt不要松开，左键点击要编辑的每一行 #}
+</span></span><span class="line"><span class="cl">{#        {% for book in book_list1 %}#}
+</span></span><span class="line"><span class="cl">{#            <span class="p">&lt;</span><span class="nt">tr</span><span class="p">&gt;</span>#}
+</span></span><span class="line"><span class="cl">{#                <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ book.id }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>#}
+</span></span><span class="line"><span class="cl">{#                <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ book.name }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>#}
+</span></span><span class="line"><span class="cl">{#                <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ book.price }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>#}
+</span></span><span class="line"><span class="cl">{#            <span class="p">&lt;/</span><span class="nt">tr</span><span class="p">&gt;</span>#}
+</span></span><span class="line"><span class="cl">{#        {% endfor %}#}
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">{# 建议不要直接使用for循环一维字典，此处使用仅仅展示for嵌套for而已 #}
+</span></span><span class="line"><span class="cl">{#        {% for book in book_list1 %}#}
+</span></span><span class="line"><span class="cl">{#            <span class="p">&lt;</span><span class="nt">tr</span><span class="p">&gt;</span>#}
+</span></span><span class="line"><span class="cl">{#                {% for field,value in book.items %}#}
+</span></span><span class="line"><span class="cl">{#                <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ field }} == {{ value }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>#}
+</span></span><span class="line"><span class="cl">{#                {% endfor %}#}
+</span></span><span class="line"><span class="cl">{#            <span class="p">&lt;/</span><span class="nt">tr</span><span class="p">&gt;</span>#}
+</span></span><span class="line"><span class="cl">{#        {% endfor %}#}
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">{#        {% for book in book_list1 %}#}
+</span></span><span class="line"><span class="cl">{#            <span class="p">&lt;</span><span class="nt">tr</span><span class="p">&gt;</span>#}
+</span></span><span class="line"><span class="cl">{#                <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ book.id }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>#}
+</span></span><span class="line"><span class="cl">{#                <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ book.name }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>#}
+</span></span><span class="line"><span class="cl">{#                {% if book.price &gt; 200 %}#}
+</span></span><span class="line"><span class="cl">{#                    <span class="p">&lt;</span><span class="nt">td</span> <span class="na">bgcolor</span><span class="o">=</span><span class="s">&#34;#ff7f50&#34;</span><span class="p">&gt;</span>{{ book.price }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>#}
+</span></span><span class="line"><span class="cl">{#                {% else %}#}
+</span></span><span class="line"><span class="cl">{#                    <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ book.price }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>#}
+</span></span><span class="line"><span class="cl">{#                {% endif %}#}
+</span></span><span class="line"><span class="cl">{#            <span class="p">&lt;/</span><span class="nt">tr</span><span class="p">&gt;</span>#}
+</span></span><span class="line"><span class="cl">{#        {% endfor %}#}
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        {# 逆向循环数据 #}
+</span></span><span class="line"><span class="cl">{#        {% for book in book_list1 reversed %}#}
+</span></span><span class="line"><span class="cl">{#            <span class="p">&lt;</span><span class="nt">tr</span><span class="p">&gt;</span>#}
+</span></span><span class="line"><span class="cl">{#                <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ book.id }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>#}
+</span></span><span class="line"><span class="cl">{#                <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ book.name }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>#}
+</span></span><span class="line"><span class="cl">{#                {% if book.price &gt; 200 %}#}
+</span></span><span class="line"><span class="cl">{#                    <span class="p">&lt;</span><span class="nt">td</span> <span class="na">bgcolor</span><span class="o">=</span><span class="s">&#34;#ff7f50&#34;</span><span class="p">&gt;</span>{{ book.price }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>#}
+</span></span><span class="line"><span class="cl">{#                {% else %}#}
+</span></span><span class="line"><span class="cl">{#                    <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ book.price }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>#}
+</span></span><span class="line"><span class="cl">{#                {% endif %}#}
+</span></span><span class="line"><span class="cl">{#            <span class="p">&lt;/</span><span class="nt">tr</span><span class="p">&gt;</span>#}
+</span></span><span class="line"><span class="cl">{#        {% endfor %}#}
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        {% for book in book_list1 %}
+</span></span><span class="line"><span class="cl">            <span class="p">&lt;</span><span class="nt">tr</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">{#                <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ forloop.counter }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>#}
+</span></span><span class="line"><span class="cl">{#                <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ forloop.counter0 }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>#}
+</span></span><span class="line"><span class="cl">{#                <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ forloop.revcounter }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>#}
+</span></span><span class="line"><span class="cl">{#                <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ forloop.revcounter0 }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>#}
+</span></span><span class="line"><span class="cl">{#                <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ forloop.first }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>#}
+</span></span><span class="line"><span class="cl">                <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ forloop.last }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">                <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ book.id }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">                <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ book.name }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">                {% if book.price &gt; 200 %}
+</span></span><span class="line"><span class="cl">                    <span class="p">&lt;</span><span class="nt">td</span> <span class="na">bgcolor</span><span class="o">=</span><span class="s">&#34;#ff7f50&#34;</span><span class="p">&gt;</span>{{ book.price }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">                {% else %}
+</span></span><span class="line"><span class="cl">                    <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ book.price }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">                {% endif %}
+</span></span><span class="line"><span class="cl">            <span class="p">&lt;/</span><span class="nt">tr</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        {% endfor %}
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">table</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>路由代码：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-Python" data-lang="Python"><span class="line"><span class="cl"><span class="s2">&#34;&#34;&#34;子应用路由&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">path</span><span class="p">,</span> <span class="n">re_path</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">views</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># ....</span>
+</span></span><span class="line"><span class="cl">    <span class="n">path</span><span class="p">(</span><span class="s2">&#34;index&#34;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">index</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl"><span class="p">]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>循环中, 模板引擎提供的forloop对象,用于给开发者获取循环次数或者判断循环过程的.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">属性</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">forloop.counter</td>
+<td style="text-align:left">显示循环的次数,从1开始</td>
+</tr>
+<tr>
+<td style="text-align:left">forloop.counter0</td>
+<td style="text-align:left">显示循环的次数,从0开始</td>
+</tr>
+<tr>
+<td style="text-align:left">forloop.revcounter0</td>
+<td style="text-align:left">倒数显示循环的次数,从0开始</td>
+</tr>
+<tr>
+<td style="text-align:left">forloop.revcounter</td>
+<td style="text-align:left">倒数显示循环的次数,从1开始</td>
+</tr>
+<tr>
+<td style="text-align:left">forloop.first</td>
+<td style="text-align:left">判断如果本次是循环的第一次,则结果为True</td>
+</tr>
+<tr>
+<td style="text-align:left">forloop.last</td>
+<td style="text-align:left">判断如果本次是循环的最后一次,则结果为True</td>
+</tr>
+<tr>
+<td style="text-align:left">forloop.parentloop</td>
+<td style="text-align:left">在嵌套循环中，指向当前循环的上级循环</td>
+</tr>
+</tbody>
+</table>
+<h4 id="模板嵌套继承">模板嵌套继承</h4>
+<p>传统的模板分离技术,依靠{% include “模板文件名”%}实现,这种方式,虽然达到了页面代码复用的效果,但是由此也会带来大量的碎片化模板,导致维护模板的成本上升.因此, Django框架中除了提供这种模板分离技术以外,还并行的提供了 模板继承给开发者.</p>
+<div class="details admonition info open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-info-circle fa-fw" aria-hidden="true"></i>信息<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content"><p>{% include &ldquo;模板文件名&rdquo;%}  # 模板嵌入</p>
+<p>{% extends &ldquo;base.html&rdquo; %} # 模板继承</p>
+</div>
+        </div>
+    </div>
+<p>继承父模板的公共内容</p>
+<div class="details admonition info open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-info-circle fa-fw" aria-hidden="true"></i>信息<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content">{% extends “base.html” %}</div>
+        </div>
+    </div>
+<p>视图, myapp.views.py代码:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-Python" data-lang="Python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;模板继承&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&#34;myapp/index.html&#34;</span><span class="p">,</span><span class="nb">locals</span><span class="p">())</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>子模板, templates/index.html
+<div class="details admonition info open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-info-circle fa-fw" aria-hidden="true"></i>信息<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content">{% extends &ldquo;base.html&rdquo; %}</div>
+        </div>
+    </div></p>
+<p>父模板, templates/base.html</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span> <span class="na">lang</span><span class="o">=</span><span class="s">&#34;en&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">&#34;UTF-8&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>Title<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>base.html的头部<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>base.html的内容<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>base.html的脚部<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>个性展示不同于父模板的内容
+<div class="details admonition info open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-info-circle fa-fw" aria-hidden="true"></i>信息<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content"><p>{%block %} 独立内容 {%endblock%}</p>
+<p>{{block.super}}</p>
+</div>
+        </div>
+    </div></p>
+<p>视图myapp.views.py, 代码:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-Python" data-lang="Python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">home</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;模板继承&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&#34;myapp/index6.html&#34;</span><span class="p">,</span> <span class="nb">locals</span><span class="p">())</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>路由 myapp.urls.py,代码:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-Python" data-lang="Python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">path</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">views</span>
+</span></span><span class="line"><span class="cl"><span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="n">path</span><span class="p">(</span><span class="s2">&#34;&#34;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">index</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">    <span class="n">path</span><span class="p">(</span><span class="s2">&#34;home/&#34;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">home</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl"><span class="p">]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>子模板index6.html,代码:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl">{% extends &#34;base.html&#34; %}
+</span></span><span class="line"><span class="cl">{% block title %}index3的标题{% endblock  %}
+</span></span><span class="line"><span class="cl">{% block content %}
+</span></span><span class="line"><span class="cl">    {{ block.super }} {# 父级模板同名block标签的内容 #}
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>index3.html的独立内容<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    {{ block.super }}
+</span></span><span class="line"><span class="cl">{% endblock %}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>父模板base.html,代码:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span> <span class="na">lang</span><span class="o">=</span><span class="s">&#34;en&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">&#34;UTF-8&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>{% block title %}{% endblock  %}<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>base.html的头部<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    {% block content %}
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>base.html的内容<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    {% endblock %}
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>base.html的脚部<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="details admonition tip open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-lightbulb fa-fw" aria-hidden="true"></i>技巧<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content"><ul>
+<li>如果你在模版中使用 {% extends %} 标签，它必须是模版中的第一个标签。其他的任何情况下，模版继承都将无法工作。</li>
+<li>在base模版中设置越多的 {% block %} 标签越好。请记住，子模版不必定义全部父模版中的blocks，所以，你可以在大多数blocks中填充合理的默认内容，然后，只定义你需要的那一个。多一点钩子总比少一点好。</li>
+<li>为了更好的可读性，你也可以给你的 {% endblock %} 标签一个 名字 。例如：{<code>% block content</code>%<code>}</code>&hellip;<code>{</code>% endblock content<code>%</code>},在大型模版中，这个方法帮你清楚的看到哪一个　 {% block %} 标签被关闭了。</li>
+<li>不能在一个模版中定义多个相同名字的 block 标签。</li>
+</ul>
+</div>
+        </div>
+    </div>
+<h3 id="静态文件">静态文件</h3>
+<p>开发中在开启了debug模式时，django可以通过配置，允许用户通过对应的url地址访问django的静态文件。</p>
+<p>setting.py，代码：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-Python" data-lang="Python"><span class="line"><span class="cl"><span class="n">STATIC_ROOT</span> <span class="o">=</span> <span class="n">BASE_DIR</span> <span class="o">/</span> <span class="s1">&#39;static&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">STATIC_URL</span> <span class="o">=</span> <span class="s1">&#39;/static/&#39;</span>   <span class="c1"># django模板中，可以引用{{STATIC_URL}}变量避免把路径写死。</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>总路由，urls.py，代码：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">from django.views.static import serve as serve_static
+</span></span><span class="line"><span class="cl">urlpatterns = [
+</span></span><span class="line"><span class="cl">    path(&#39;admin/&#39;, admin.site.urls), 
+</span></span><span class="line"><span class="cl">    # 对外提供访问静态文件的路由，serve_static 是django提供静态访问支持的映射类。依靠它，客户端才能访问到django的静态文件。
+</span></span><span class="line"><span class="cl">    path(r&#39;static/&lt;path:path&gt;&#39;, serve_static, {&#39;document_root&#39;: settings.STATIC_ROOT},),
+</span></span><span class="line"><span class="cl">]
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="details admonition note open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-pencil-alt fa-fw" aria-hidden="true"></i>注意<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content">项目上线以后，关闭debug模式时，django默认是不提供静态文件的访问支持，项目部署的时候，我们会通过收集静态文件使用nginx这种web服务器来提供静态文件的访问支持。</div>
+        </div>
+    </div>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2024-06-26</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/django-%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://localhost:1313/django-%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95/" data-title="Django 模板语法" data-via="xxxx" data-hashtags="Django"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/django-%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95/" data-hashtag="Django"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="http://localhost:1313/django-%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95/" data-title="Django 模板语法"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://localhost:1313/django-%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95/" data-title="Django 模板语法"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/django-%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95/" data-title="Django 模板语法"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/django/">Django</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1apiserver%E5%92%8Cetcd%E8%BF%9E%E6%8E%A5%E7%9A%84%E9%9A%8F%E6%9C%BA%E7%AB%AF%E5%8F%A3%E5%8D%A0%E7%94%A8%E5%86%B2%E7%AA%81%E9%97%AE%E9%A2%98/" class="prev" rel="prev" title="Kubernetes 记录一次 Apiserver 和 Etcd 连接的随机端口占用冲突问题"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Kubernetes 记录一次 Apiserver 和 Etcd 连接的随机端口占用冲突问题</a>
+            <a href="/kubernetes-configmap%E5%A4%9A%E6%96%87%E4%BB%B6%E6%8C%82%E8%BD%BD%E8%87%B3%E5%90%8C%E4%B8%80%E4%B8%AApod%E5%86%85%E7%9B%AE%E5%BD%95%E5%AE%9E%E8%B7%B5/" class="next" rel="next" title="Kubernetes ConfigMap多文件挂载至同一个pod内目录实践">Kubernetes ConfigMap多文件挂载至同一个pod内目录实践<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">我是有底线的</div><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.126.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2024</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">lushuan</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

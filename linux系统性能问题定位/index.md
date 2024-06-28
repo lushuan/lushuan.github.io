@@ -34,7 +34,10 @@ tcp6       0      0 :::9100                 :::*                    LISTEN      
 cat /proc/5505/status|grep VmRSS
 VmRSS:     31500 kB
 ```
+{{< admonition tip >}}
 注意：VmRSS对应的值就是物理内存占用
+{{< /admonition >}}
+
 
 ## IO
 - 查看磁盘io及传递状态

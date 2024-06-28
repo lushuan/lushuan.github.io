@@ -10,7 +10,7 @@
     <pubDate>Mon, 26 Jun 2023 16:25:58 &#43;0800</pubDate>
     <author>lushuan</author>
     <guid>http://localhost:1313/cgroups%E4%B8%8Enamespaces/</guid>
-    <description><![CDATA[CGroups与Namespaces 了解下容器背后的两大核心技术：CGroups 和 Namespace。 CGroups 概述 CGroups 全称为 Linux Control Group，其作用是]]></description>
+    <description><![CDATA[CGroups与Namespaces 摘要 了解下容器背后的两大核心技术：CGroups 和 Namespace。 CGroups 概述 CGroups 全称为 Linux Control Group，其作]]></description>
 </item>
 <item>
     <title>Dockerfile介绍及优化</title>

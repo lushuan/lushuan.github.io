@@ -18,7 +18,7 @@
     <pubDate>Tue, 23 May 2023 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
     <guid>http://localhost:1313/k8s_v1.20.x%E5%88%9B%E5%BB%BApvc%E6%8A%A5%E9%94%99/</guid>
-    <description><![CDATA[故障描述 PVC 显示创建不成功：kubectl get pvc -n efk 显示 Pending，这是由于版本太高导致的。k8sv1.20 以上版本默认禁止使用 selfLi]]></description>
+    <description><![CDATA[故障描述 警告 PVC 显示创建不成功：kubectl get pvc -n efk 显示 Pending，这是由于版本太高导致的。k8sv1.20 以上版本默认禁止使用 self]]></description>
 </item>
 <item>
     <title>Kubernetes 网络排障</title>
@@ -66,7 +66,7 @@
     <pubDate>Fri, 28 May 2021 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
     <guid>http://localhost:1313/kubeadm%E5%AE%89%E8%A3%85k8s%E9%9B%86%E7%BE%A4%E6%8A%A5%E9%94%99%E6%8F%90%E7%A4%BAkubelet%E6%9C%AA%E8%BF%90%E8%A1%8C/</guid>
-    <description><![CDATA[背景 通过 kubeadm 安装k8s集群报错 操作系统环境信息 1 2 3 4 5 6 7 8 9 10 11 12 13 $ cat /etc/os-release NAME=&#34;Ubuntu&#34; VERSION=&#34;18.04.5 LTS (Bionic Beaver)&#34; ID=ubuntu ID_LIKE=debian PRETTY_NAME=&#34;Ubuntu 18.04.5 LTS&#34; VERSION_ID=&#34;18.04&#34; HOME_URL=&#34;https://www.ubuntu.com/&#34; SUPPORT_URL=&#34;https://help.ubuntu.com/&#34; BUG_REPORT_URL=&#34;https://bugs.launchpad.net/ubuntu/&#34; PRIVACY_POLICY_URL=&#34;https://www.ubuntu.com/legal/terms-and-policies/privacy-policy&#34; VERSION_CODENAME=bionic UBUNTU_CODENAME=bionic kubeadm init 安装报错信息 1 2 3 4 5 6 7]]></description>
+    <description><![CDATA[背景 通过 kubeadm 安装k8s v1.20 集群报错 操作系统环境信息 1 2 3 4 5 6 7 8 9 10 11 12 13 $ cat /etc/os-release NAME=&#34;Ubuntu&#34; VERSION=&#34;18.04.5 LTS (Bionic Beaver)&#34; ID=ubuntu ID_LIKE=debian PRETTY_NAME=&#34;Ubuntu 18.04.5 LTS&#34; VERSION_ID=&#34;18.04&#34; HOME_URL=&#34;https://www.ubuntu.com/&#34; SUPPORT_URL=&#34;https://help.ubuntu.com/&#34; BUG_REPORT_URL=&#34;https://bugs.launchpad.net/ubuntu/&#34; PRIVACY_POLICY_URL=&#34;https://www.ubuntu.com/legal/terms-and-policies/privacy-policy&#34; VERSION_CODENAME=bionic UBUNTU_CODENAME=bionic kubeadm init 安装报错信息 1 2 3 4 5 6]]></description>
 </item>
 </channel>
 </rss>

@@ -7,7 +7,7 @@
         <title>Kubeadm 安装k8s集群报错提示 kubelet 未运行 - Less is more</title><meta name="Description" content="知识有两种，一种是你知道的，一种是你知道在哪里能找到的！ --塞缪尔·约翰逊"><meta property="og:url" content="http://localhost:1313/kubeadm%E5%AE%89%E8%A3%85k8s%E9%9B%86%E7%BE%A4%E6%8A%A5%E9%94%99%E6%8F%90%E7%A4%BAkubelet%E6%9C%AA%E8%BF%90%E8%A1%8C/">
   <meta property="og:site_name" content="Less is more">
   <meta property="og:title" content="Kubeadm 安装k8s集群报错提示 kubelet 未运行">
-  <meta property="og:description" content="背景 通过 kubeadm 安装k8s集群报错 操作系统环境信息 1 2 3 4 5 6 7 8 9 10 11 12 13 $ cat /etc/os-release NAME=&#34;Ubuntu&#34; VERSION=&#34;18.04.5 LTS (Bionic Beaver)&#34; ID=ubuntu ID_LIKE=debian PRETTY_NAME=&#34;Ubuntu 18.04.5 LTS&#34; VERSION_ID=&#34;18.04&#34; HOME_URL=&#34;https://www.ubuntu.com/&#34; SUPPORT_URL=&#34;https://help.ubuntu.com/&#34; BUG_REPORT_URL=&#34;https://bugs.launchpad.net/ubuntu/&#34; PRIVACY_POLICY_URL=&#34;https://www.ubuntu.com/legal/terms-and-policies/privacy-policy&#34; VERSION_CODENAME=bionic UBUNTU_CODENAME=bionic kubeadm init 安装报错信息 1 2 3 4 5 6 7">
+  <meta property="og:description" content="背景 通过 kubeadm 安装k8s v1.20 集群报错 操作系统环境信息 1 2 3 4 5 6 7 8 9 10 11 12 13 $ cat /etc/os-release NAME=&#34;Ubuntu&#34; VERSION=&#34;18.04.5 LTS (Bionic Beaver)&#34; ID=ubuntu ID_LIKE=debian PRETTY_NAME=&#34;Ubuntu 18.04.5 LTS&#34; VERSION_ID=&#34;18.04&#34; HOME_URL=&#34;https://www.ubuntu.com/&#34; SUPPORT_URL=&#34;https://help.ubuntu.com/&#34; BUG_REPORT_URL=&#34;https://bugs.launchpad.net/ubuntu/&#34; PRIVACY_POLICY_URL=&#34;https://www.ubuntu.com/legal/terms-and-policies/privacy-policy&#34; VERSION_CODENAME=bionic UBUNTU_CODENAME=bionic kubeadm init 安装报错信息 1 2 3 4 5 6">
   <meta property="og:locale" content="zh_CN">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -19,12 +19,12 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="http://localhost:1313/logo.png">
   <meta name="twitter:title" content="Kubeadm 安装k8s集群报错提示 kubelet 未运行">
-  <meta name="twitter:description" content="背景 通过 kubeadm 安装k8s集群报错 操作系统环境信息 1 2 3 4 5 6 7 8 9 10 11 12 13 $ cat /etc/os-release NAME=&#34;Ubuntu&#34; VERSION=&#34;18.04.5 LTS (Bionic Beaver)&#34; ID=ubuntu ID_LIKE=debian PRETTY_NAME=&#34;Ubuntu 18.04.5 LTS&#34; VERSION_ID=&#34;18.04&#34; HOME_URL=&#34;https://www.ubuntu.com/&#34; SUPPORT_URL=&#34;https://help.ubuntu.com/&#34; BUG_REPORT_URL=&#34;https://bugs.launchpad.net/ubuntu/&#34; PRIVACY_POLICY_URL=&#34;https://www.ubuntu.com/legal/terms-and-policies/privacy-policy&#34; VERSION_CODENAME=bionic UBUNTU_CODENAME=bionic kubeadm init 安装报错信息 1 2 3 4 5 6 7">
+  <meta name="twitter:description" content="背景 通过 kubeadm 安装k8s v1.20 集群报错 操作系统环境信息 1 2 3 4 5 6 7 8 9 10 11 12 13 $ cat /etc/os-release NAME=&#34;Ubuntu&#34; VERSION=&#34;18.04.5 LTS (Bionic Beaver)&#34; ID=ubuntu ID_LIKE=debian PRETTY_NAME=&#34;Ubuntu 18.04.5 LTS&#34; VERSION_ID=&#34;18.04&#34; HOME_URL=&#34;https://www.ubuntu.com/&#34; SUPPORT_URL=&#34;https://help.ubuntu.com/&#34; BUG_REPORT_URL=&#34;https://bugs.launchpad.net/ubuntu/&#34; PRIVACY_POLICY_URL=&#34;https://www.ubuntu.com/legal/terms-and-policies/privacy-policy&#34; VERSION_CODENAME=bionic UBUNTU_CODENAME=bionic kubeadm init 安装报错信息 1 2 3 4 5 6">
       <meta name="twitter:site" content="@xxxx">
 <meta name="application-name" content="我的网站">
 <meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://localhost:1313/kubeadm%E5%AE%89%E8%A3%85k8s%E9%9B%86%E7%BE%A4%E6%8A%A5%E9%94%99%E6%8F%90%E7%A4%BAkubelet%E6%9C%AA%E8%BF%90%E8%A1%8C/" /><link rel="prev" href="http://localhost:1313/fdisk%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86%E8%AF%A6%E8%A7%A3/" /><link rel="next" href="http://localhost:1313/kubernetes%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E5%92%8C%E6%9C%AF%E8%AF%AD/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://localhost:1313/kubeadm%E5%AE%89%E8%A3%85k8s%E9%9B%86%E7%BE%A4%E6%8A%A5%E9%94%99%E6%8F%90%E7%A4%BAkubelet%E6%9C%AA%E8%BF%90%E8%A1%8C/" /><link rel="prev" href="http://localhost:1313/fdisk%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86%E8%AF%A6%E8%A7%A3/" /><link rel="next" href="http://localhost:1313/influxdb-%E9%85%8D%E7%BD%AE%E9%89%B4%E6%9D%83/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
     {
@@ -35,7 +35,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "http:\/\/localhost:1313\/kubeadm%E5%AE%89%E8%A3%85k8s%E9%9B%86%E7%BE%A4%E6%8A%A5%E9%94%99%E6%8F%90%E7%A4%BAkubelet%E6%9C%AA%E8%BF%90%E8%A1%8C\/"
-        },"genre": "posts","keywords": "Kubernetes排障","wordcount":  562 ,
+        },"genre": "posts","keywords": "Kubernetes排障","wordcount":  563 ,
         "url": "http:\/\/localhost:1313\/kubeadm%E5%AE%89%E8%A3%85k8s%E9%9B%86%E7%BE%A4%E6%8A%A5%E9%94%99%E6%8F%90%E7%A4%BAkubelet%E6%9C%AA%E8%BF%90%E8%A1%8C\/","datePublished": "2021-05-28T12:06:37+08:00","dateModified": "2024-06-26T12:06:37+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -109,7 +109,7 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Kubeadm 安装k8s集群报错提示 kubelet 未运行</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/kubernetes/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Kubernetes</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2021-05-28">2021-05-28</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 562 字&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2021-05-28">2021-05-28</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 563 字&nbsp;
                 <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 2 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  data-kept="true">
                 <div class="details-summary toc-title">
@@ -130,7 +130,7 @@
   </ul>
 </nav></div>
             </div><div class="content" id="content"><h2 id="背景">背景</h2>
-<p>通过 kubeadm 安装k8s集群报错
+<p>通过 kubeadm 安装k8s v1.20 集群报错
 操作系统环境信息</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -149,7 +149,7 @@
 </span><span class="lnt">13
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ cat /etc/os-release 
+<pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl">$ cat /etc/os-release 
 </span></span><span class="line"><span class="cl"><span class="nv">NAME</span><span class="o">=</span><span class="s2">&#34;Ubuntu&#34;</span>
 </span></span><span class="line"><span class="cl"><span class="nv">VERSION</span><span class="o">=</span><span class="s2">&#34;18.04.5 LTS (Bionic Beaver)&#34;</span>
 </span></span><span class="line"><span class="cl"><span class="nv">ID</span><span class="o">=</span>ubuntu
@@ -191,28 +191,28 @@
 </span><span class="lnt">22
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="o">[</span>kubelet-check<span class="o">]</span> It seems like the kubelet isn<span class="s1">&#39;t running or healthy.
-</span></span></span><span class="line"><span class="cl"><span class="s1">[kubelet-check] The HTTP call equal to &#39;</span>curl -sSL http://localhost:10248/healthz<span class="s1">&#39; failed with error: Get &#34;http://localhost:10248/healthz&#34;: dial tcp 127.0.0.1:10248: connect: connection refused.
-</span></span></span><span class="line"><span class="cl"><span class="s1">[kubelet-check] The HTTP call equal to &#39;</span>curl -sSL http://localhost:10248/healthz<span class="s1">&#39; failed with error: Get &#34;http://localhost:10248/healthz&#34;: dial tcp 127.0.0.1:10248: connect: connection refused.
-</span></span></span><span class="line"><span class="cl"><span class="s1">
-</span></span></span><span class="line"><span class="cl"><span class="s1">        Unfortunately, an error has occurred:
-</span></span></span><span class="line"><span class="cl"><span class="s1">                timed out waiting for the condition
-</span></span></span><span class="line"><span class="cl"><span class="s1">
-</span></span></span><span class="line"><span class="cl"><span class="s1">        This error is likely caused by:
-</span></span></span><span class="line"><span class="cl"><span class="s1">                - The kubelet is not running
-</span></span></span><span class="line"><span class="cl"><span class="s1">                - The kubelet is unhealthy due to a misconfiguration of the node in some way (required cgroups disabled)
-</span></span></span><span class="line"><span class="cl"><span class="s1">
-</span></span></span><span class="line"><span class="cl"><span class="s1">        If you are on a systemd-powered system, you can try to troubleshoot the error with the following commands:
-</span></span></span><span class="line"><span class="cl"><span class="s1">                - &#39;</span>systemctl status kubelet<span class="s1">&#39;
-</span></span></span><span class="line"><span class="cl"><span class="s1">                - &#39;</span>journalctl -xeu kubelet<span class="s1">&#39;
-</span></span></span><span class="line"><span class="cl"><span class="s1">
-</span></span></span><span class="line"><span class="cl"><span class="s1">        Additionally, a control plane component may have crashed or exited when started by the container runtime.
-</span></span></span><span class="line"><span class="cl"><span class="s1">        To troubleshoot, list all containers using your preferred container runtimes CLI.
-</span></span></span><span class="line"><span class="cl"><span class="s1">
-</span></span></span><span class="line"><span class="cl"><span class="s1">        Here is one example how you may list all Kubernetes containers running in docker:
-</span></span></span><span class="line"><span class="cl"><span class="s1">                - &#39;</span>docker ps -a <span class="p">|</span> grep kube <span class="p">|</span> grep -v pause<span class="s1">&#39;
-</span></span></span><span class="line"><span class="cl"><span class="s1">                Once you have found the failing container, you can inspect its logs with:
-</span></span></span><span class="line"><span class="cl"><span class="s1">                - &#39;</span>docker logs CONTAINERID<span class="err">&#39;</span>
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">[kubelet-check] It seems like the kubelet isn&#39;t running or healthy.
+</span></span><span class="line"><span class="cl">[kubelet-check] The HTTP call equal to &#39;curl -sSL http://localhost:10248/healthz&#39; failed with error: Get &#34;http://localhost:10248/healthz&#34;: dial tcp 127.0.0.1:10248: connect: connection refused.
+</span></span><span class="line"><span class="cl">[kubelet-check] The HTTP call equal to &#39;curl -sSL http://localhost:10248/healthz&#39; failed with error: Get &#34;http://localhost:10248/healthz&#34;: dial tcp 127.0.0.1:10248: connect: connection refused.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        Unfortunately, an error has occurred:
+</span></span><span class="line"><span class="cl">                timed out waiting for the condition
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        This error is likely caused by:
+</span></span><span class="line"><span class="cl">                - The kubelet is not running
+</span></span><span class="line"><span class="cl">                - The kubelet is unhealthy due to a misconfiguration of the node in some way (required cgroups disabled)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        If you are on a systemd-powered system, you can try to troubleshoot the error with the following commands:
+</span></span><span class="line"><span class="cl">                - &#39;systemctl status kubelet&#39;
+</span></span><span class="line"><span class="cl">                - &#39;journalctl -xeu kubelet&#39;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        Additionally, a control plane component may have crashed or exited when started by the container runtime.
+</span></span><span class="line"><span class="cl">        To troubleshoot, list all containers using your preferred container runtimes CLI.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        Here is one example how you may list all Kubernetes containers running in docker:
+</span></span><span class="line"><span class="cl">                - &#39;docker ps -a | grep kube | grep -v pause&#39;
+</span></span><span class="line"><span class="cl">                Once you have found the failing container, you can inspect its logs with:
+</span></span><span class="line"><span class="cl">                - &#39;docker logs CONTAINERID&#39;
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="排查思路">排查思路</h2>
@@ -250,16 +250,16 @@
 </span><span class="lnt">10
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ cat /etc/docker/daemon.json 
-</span></span><span class="line"><span class="cl">{
-</span></span><span class="line"><span class="cl">  &#34;exec-opts&#34;: [
-</span></span><span class="line"><span class="cl">    &#34;native.cgroupdriver=systemd&#34;
-</span></span><span class="line"><span class="cl">  ],
-</span></span><span class="line"><span class="cl">  &#34;bip&#34;:&#34;172.12.0.1/24&#34;,
-</span></span><span class="line"><span class="cl">  &#34;registry-mirrors&#34;: [
-</span></span><span class="line"><span class="cl">    &#34;http://docker-registry-mirror.kodekloud.com&#34;
-</span></span><span class="line"><span class="cl">  ]
-</span></span><span class="line"><span class="cl">}
+<pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl">$ cat /etc/docker/daemon.json 
+</span></span><span class="line"><span class="cl"><span class="o">{</span>
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;exec-opts&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;native.cgroupdriver=systemd&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="o">]</span>,
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;bip&#34;</span>:<span class="s2">&#34;172.12.0.1/24&#34;</span>,
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;registry-mirrors&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;http://docker-registry-mirror.kodekloud.com&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="o">]</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>重启docker
@@ -272,12 +272,12 @@
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="o">$</span> <span class="n">cat</span> <span class="o">/</span><span class="k">var</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">kubelet</span><span class="o">/</span><span class="n">config</span><span class="o">.</span><span class="n">yaml</span> <span class="o">|</span><span class="n">grep</span> <span class="n">group</span>
-</span></span><span class="line"><span class="cl"><span class="n">cgroupDriver</span><span class="p">:</span> <span class="n">systemd</span>
+<pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl">$ cat /var/lib/kubelet/config.yaml <span class="p">|</span>grep group
+</span></span><span class="line"><span class="cl">cgroupDriver: systemd
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>重启kubelet （optional）
-<code>systemctl restart kubelet</code></p>
+</div><p>重启kubelet （optional）</p>
+<p><code>systemctl restart kubelet</code></p>
 <h2 id="参考">参考</h2>
 <ul>
 <li><a href="https://kubernetes.io/zh/docs/setup/production-environment/tools/kubeadm/install-kubeadm/#configure-cgroup-driver" target="_blank" rel="noopener noreffer ">配置cgroup驱动</a></li>
@@ -308,7 +308,7 @@
     </div>
 
     <div class="post-nav"><a href="/fdisk%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86%E8%AF%A6%E8%A7%A3/" class="prev" rel="prev" title="fdisk 磁盘管理详解"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>fdisk 磁盘管理详解</a>
-            <a href="/kubernetes%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E5%92%8C%E6%9C%AF%E8%AF%AD/" class="next" rel="next" title="Kubernetes的基本概念和术语">Kubernetes的基本概念和术语<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+            <a href="/influxdb-%E9%85%8D%E7%BD%AE%E9%89%B4%E6%9D%83/" class="next" rel="next" title="Influxdb 添加鉴权">Influxdb 添加鉴权<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
 </div>
 </article></div>
             </main><footer class="footer">

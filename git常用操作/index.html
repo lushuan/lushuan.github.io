@@ -138,8 +138,8 @@
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ git clone &lt;url&gt;   # 克隆远程仓库
-</span></span><span class="line"><span class="cl">$ git init          # 初始化本地仓库
+<pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl">$ git clone &lt;url&gt;   <span class="c1"># 克隆远程仓库</span>
+</span></span><span class="line"><span class="cl">$ git init          <span class="c1"># 初始化本地仓库</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="git-全局设置">Git 全局设置</h2>
@@ -149,8 +149,8 @@
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">git config --global user.name &#34;lu.shua&#34;
-</span></span><span class="line"><span class="cl">git config --global user.email &#34;lu.shuan@iwhalecloud.com&#34;
+<pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl">git config --global user.name <span class="s2">&#34;lu.shua&#34;</span>
+</span></span><span class="line"><span class="cl">git config --global user.email <span class="s2">&#34;lu.shuan@iwhalecloud.com&#34;</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="修改和提交">修改和提交</h2>
@@ -167,15 +167,15 @@
 </span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ git status        # 查看状态
-</span></span><span class="line"><span class="cl">$ git diff          # 查看变更内容
-</span></span><span class="line"><span class="cl">$ git add .         # 跟踪所有改动过的文件
-</span></span><span class="line"><span class="cl">$ git add &lt;file&gt;    # 跟踪指定的文件
+<pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl">$ git status        <span class="c1"># 查看状态</span>
+</span></span><span class="line"><span class="cl">$ git diff          <span class="c1"># 查看变更内容</span>
+</span></span><span class="line"><span class="cl">$ git add .         <span class="c1"># 跟踪所有改动过的文件</span>
+</span></span><span class="line"><span class="cl">$ git add &lt;file&gt;    <span class="c1"># 跟踪指定的文件</span>
 </span></span><span class="line"><span class="cl">$ git mv &lt;old&gt; &lt;new&gt;# 文件改名
-</span></span><span class="line"><span class="cl">$ git rm &lt;file&gt;     # 删除文件
-</span></span><span class="line"><span class="cl">$ git rm --cached &lt;file&gt; # 停止跟踪文件但不删除
-</span></span><span class="line"><span class="cl">$ git commit -m &#34;commit message&#34; # 修改所有更新过的文件
-</span></span><span class="line"><span class="cl">$ git commit --amend # 修改最后一次提交
+</span></span><span class="line"><span class="cl">$ git rm &lt;file&gt;     <span class="c1"># 删除文件</span>
+</span></span><span class="line"><span class="cl">$ git rm --cached &lt;file&gt; <span class="c1"># 停止跟踪文件但不删除</span>
+</span></span><span class="line"><span class="cl">$ git commit -m <span class="s2">&#34;commit message&#34;</span> <span class="c1"># 修改所有更新过的文件</span>
+</span></span><span class="line"><span class="cl">$ git commit --amend <span class="c1"># 修改最后一次提交</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="查看提交历史">查看提交历史</h2>
@@ -186,9 +186,9 @@
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ git log           # 查看提交历史
-</span></span><span class="line"><span class="cl">$ git log -p &lt;file&gt; # 查看指定文件的提交历史
-</span></span><span class="line"><span class="cl">$ git blame &lt;file&gt;  # 以列表的方式查看指定文件的提交历史
+<pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl">$ git log           <span class="c1"># 查看提交历史</span>
+</span></span><span class="line"><span class="cl">$ git log -p &lt;file&gt; <span class="c1"># 查看指定文件的提交历史</span>
+</span></span><span class="line"><span class="cl">$ git blame &lt;file&gt;  <span class="c1"># 以列表的方式查看指定文件的提交历史</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="撤销操作">撤销操作</h2>
@@ -213,23 +213,23 @@
 </span><span class="lnt">17
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="err">#</span> <span class="nx">恢复暂存区的指定文件到工作区</span>
-</span></span><span class="line"><span class="cl"><span class="nx">$</span> <span class="nx">git</span> <span class="nx">checkout</span> <span class="p">[</span><span class="nx">file</span><span class="p">]</span>
+<pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl"><span class="c1"># 恢复暂存区的指定文件到工作区</span>
+</span></span><span class="line"><span class="cl">$ git checkout <span class="o">[</span>file<span class="o">]</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="nx">恢复暂存区当前目录的所有文件到工作区</span>
-</span></span><span class="line"><span class="cl"><span class="nx">$</span> <span class="nx">git</span> <span class="nx">checkout</span> <span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 恢复暂存区当前目录的所有文件到工作区</span>
+</span></span><span class="line"><span class="cl">$ git checkout .
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="nx">恢复工作区到指定</span> <span class="nx">commit</span>
-</span></span><span class="line"><span class="cl"><span class="nx">$</span> <span class="nx">git</span> <span class="nx">checkout</span> <span class="p">[</span><span class="nx">commit</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 恢复工作区到指定 commit</span>
+</span></span><span class="line"><span class="cl">$ git checkout <span class="o">[</span>commit<span class="o">]</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="nx">重置暂存区的指定文件</span><span class="err">，</span><span class="nx">与上一次</span> <span class="nx">commit</span> <span class="nx">保持一致</span><span class="err">，</span><span class="nx">但工作区不变</span>
-</span></span><span class="line"><span class="cl"><span class="nx">$</span> <span class="nx">git</span> <span class="nx">reset</span> <span class="p">[</span><span class="nx">file</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 重置暂存区的指定文件，与上一次 commit 保持一致，但工作区不变</span>
+</span></span><span class="line"><span class="cl">$ git reset <span class="o">[</span>file<span class="o">]</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="nx">重置当前分支的指针为指定</span> <span class="nx">commit</span><span class="err">，</span><span class="nx">同时重置暂存区</span><span class="err">，</span><span class="nx">但工作区不变</span>
-</span></span><span class="line"><span class="cl"><span class="nx">$</span> <span class="nx">git</span> <span class="nx">reset</span> <span class="p">[</span><span class="nx">commit</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 重置当前分支的指针为指定 commit，同时重置暂存区，但工作区不变</span>
+</span></span><span class="line"><span class="cl">$ git reset <span class="o">[</span>commit<span class="o">]</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="nx">重置当前分支的HEAD为指定</span> <span class="nx">commit</span><span class="err">，</span><span class="nx">同时重置暂存区和工作区</span><span class="err">，</span><span class="nx">与指定</span> <span class="nx">commit</span> <span class="nx">一致</span>
-</span></span><span class="line"><span class="cl"><span class="nx">$</span> <span class="nx">git</span> <span class="nx">reset</span> <span class="o">--</span><span class="nx">hard</span> <span class="p">[</span><span class="nx">commit</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 重置当前分支的HEAD为指定 commit，同时重置暂存区和工作区，与指定 commit 一致</span>
+</span></span><span class="line"><span class="cl">$ git reset --hard <span class="o">[</span>commit<span class="o">]</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="分支与标签">分支与标签</h2>
@@ -244,13 +244,13 @@
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ git branch        # 显示所有本地分支
-</span></span><span class="line"><span class="cl">$ git checkout &lt;branch/tag&gt; # 切换到指定分支活标签
-</span></span><span class="line"><span class="cl">$ git branch &lt;new-branch&gt;   # 创建新分支
-</span></span><span class="line"><span class="cl">$ git branch -d &lt;branch&gt;    # 删除本地分支
-</span></span><span class="line"><span class="cl">$ git tag                   # 列出本地标签
-</span></span><span class="line"><span class="cl">$ git tag &lt;tagname&gt;         # 基于最新提交创建标签
-</span></span><span class="line"><span class="cl">$ git tag -d &lt;tagname&gt;      # 删除标签
+<pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl">$ git branch        <span class="c1"># 显示所有本地分支</span>
+</span></span><span class="line"><span class="cl">$ git checkout &lt;branch/tag&gt; <span class="c1"># 切换到指定分支活标签</span>
+</span></span><span class="line"><span class="cl">$ git branch &lt;new-branch&gt;   <span class="c1"># 创建新分支</span>
+</span></span><span class="line"><span class="cl">$ git branch -d &lt;branch&gt;    <span class="c1"># 删除本地分支</span>
+</span></span><span class="line"><span class="cl">$ git tag                   <span class="c1"># 列出本地标签</span>
+</span></span><span class="line"><span class="cl">$ git tag &lt;tagname&gt;         <span class="c1"># 基于最新提交创建标签</span>
+</span></span><span class="line"><span class="cl">$ git tag -d &lt;tagname&gt;      <span class="c1"># 删除标签</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="合并与衍合">合并与衍合</h2>
@@ -260,8 +260,8 @@
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ git merge &lt;branch&gt;        # 合并指定分支到当前分支
-</span></span><span class="line"><span class="cl">$ git rebase &lt;branch&gt;       # 衍合指定分支到当前分支
+<pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl">$ git merge &lt;branch&gt;        <span class="c1"># 合并指定分支到当前分支</span>
+</span></span><span class="line"><span class="cl">$ git rebase &lt;branch&gt;       <span class="c1"># 衍合指定分支到当前分支</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="远程操作">远程操作</h2>
@@ -277,14 +277,14 @@
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ git remote -v             # 查看远程版本库信息
-</span></span><span class="line"><span class="cl">$ git remove show &lt;remote&gt;  # 查看指定远程版本库信息
-</span></span><span class="line"><span class="cl">$ git remote add &lt;remote&gt; &lt;url&gt; # 添加远程版本库
-</span></span><span class="line"><span class="cl">$ git fetch &lt;remote&gt;        # 从远程库获取代码
+<pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl">$ git remote -v             <span class="c1"># 查看远程版本库信息</span>
+</span></span><span class="line"><span class="cl">$ git remove show &lt;remote&gt;  <span class="c1"># 查看指定远程版本库信息</span>
+</span></span><span class="line"><span class="cl">$ git remote add &lt;remote&gt; &lt;url&gt; <span class="c1"># 添加远程版本库</span>
+</span></span><span class="line"><span class="cl">$ git fetch &lt;remote&gt;        <span class="c1"># 从远程库获取代码</span>
 </span></span><span class="line"><span class="cl">$ git pull &lt;remote&gt; &lt;branch&gt;# 下载代码及快速合并
 </span></span><span class="line"><span class="cl">$ git push &lt;remote&gt; &lt;branch&gt;# 上传代码及快速合并
-</span></span><span class="line"><span class="cl">$ git push &lt;remote&gt; :&lt;branch/tag-name&gt;  # 删除远程分支活标签
-</span></span><span class="line"><span class="cl">$ git push --tags           # 上传所有标签
+</span></span><span class="line"><span class="cl">$ git push &lt;remote&gt; :&lt;branch/tag-name&gt;  <span class="c1"># 删除远程分支活标签</span>
+</span></span><span class="line"><span class="cl">$ git push --tags           <span class="c1"># 上传所有标签</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="创建一个新仓库">创建一个新仓库</h2>
@@ -298,11 +298,11 @@
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">git clone git@gitlab.iwhalecloud.com:monitor/nms-arm.git
-</span></span><span class="line"><span class="cl">cd nms-arm
+<pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl">git clone git@gitlab.iwhalecloud.com:monitor/nms-arm.git
+</span></span><span class="line"><span class="cl"><span class="nb">cd</span> nms-arm
 </span></span><span class="line"><span class="cl">touch README.md
 </span></span><span class="line"><span class="cl">git add README.md
-</span></span><span class="line"><span class="cl">git commit -m &#34;add README&#34;
+</span></span><span class="line"><span class="cl">git commit -m <span class="s2">&#34;add README&#34;</span>
 </span></span><span class="line"><span class="cl">git push -u origin master
 </span></span></code></pre></td></tr></table>
 </div>
@@ -317,11 +317,11 @@
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">cd existing_folder
+<pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl"><span class="nb">cd</span> existing_folder
 </span></span><span class="line"><span class="cl">git init
 </span></span><span class="line"><span class="cl">git remote add origin git@gitlab.iwhalecloud.com:monitor/nms-arm.git
 </span></span><span class="line"><span class="cl">git add .
-</span></span><span class="line"><span class="cl">git commit -m &#34;Initial commit&#34;
+</span></span><span class="line"><span class="cl">git commit -m <span class="s2">&#34;Initial commit&#34;</span>
 </span></span><span class="line"><span class="cl">git push -u origin master
 </span></span></code></pre></td></tr></table>
 </div>
@@ -338,10 +338,10 @@
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">echo &#34;# blog&#34; &gt;&gt; README.md
+<pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl"><span class="nb">echo</span> <span class="s2">&#34;# blog&#34;</span> &gt;&gt; README.md
 </span></span><span class="line"><span class="cl">git init
 </span></span><span class="line"><span class="cl">git add README.md
-</span></span><span class="line"><span class="cl">git commit -m &#34;first commit&#34;
+</span></span><span class="line"><span class="cl">git commit -m <span class="s2">&#34;first commit&#34;</span>
 </span></span><span class="line"><span class="cl">git branch -M main
 </span></span><span class="line"><span class="cl">git remote add origin https://github.com/username/blog.git
 </span></span><span class="line"><span class="cl">git push -u origin main
@@ -355,7 +355,7 @@
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">git remote add origin https://github.com/username/blog.git
+<pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl">git remote add origin https://github.com/username/blog.git
 </span></span><span class="line"><span class="cl">git branch -M main
 </span></span><span class="line"><span class="cl">git push -u origin main
 </span></span></code></pre></td></tr></table>

@@ -18,7 +18,7 @@
     <pubDate>Sat, 09 Sep 2023 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
     <guid>http://localhost:1313/%E8%B0%83%E6%95%B4%E8%8A%82%E7%82%B9pod%E9%A9%B1%E9%80%90%E6%97%B6%E9%97%B4/</guid>
-    <description><![CDATA[问题描述 在高可用的k8s集群中，当Node节点挂掉，kubelet无法提供工作的时候，pod将会自动调度到其他的节点上去，而调度到节点上的时]]></description>
+    <description><![CDATA[问题描述 问题 在高可用的k8s集群中，当Node节点挂掉，kubelet无法提供工作的时候，pod将会自动调度到其他的节点上去， 而调度到节点上]]></description>
 </item>
 <item>
     <title>k8s容器运行时 containerd 版本升级</title>

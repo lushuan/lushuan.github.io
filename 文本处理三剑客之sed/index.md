@@ -10,12 +10,12 @@
 
 ## 初体验
 在行首添加一行
-```yaml
-# sed '1i\AAA' aa.txt
+```shell
+sed '1i\AAA' aa.txt
 ```
 在行尾添加一行
-```yaml
-# sed '$a\AAA' aa.txt  
+```shell
+sed '$a\AAA' aa.txt  
 ```
 
 
@@ -32,8 +32,6 @@
 -r 支持使用扩展正则表达式
 -i.bak 备份文件并原处编辑
 ```
-script:   
-'地址命令'
 
 ### 地址定界
 ```
