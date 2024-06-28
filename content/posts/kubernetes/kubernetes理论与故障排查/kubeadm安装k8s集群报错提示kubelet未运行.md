@@ -12,9 +12,9 @@ tags: ["Kubernetes排障"]
 ---
 
 ## 背景
-通过 kubeadm 安装k8s集群报错
+通过 kubeadm 安装k8s v1.20 集群报错
 操作系统环境信息
-```shell
+```Bash
 $ cat /etc/os-release 
 NAME="Ubuntu"
 VERSION="18.04.5 LTS (Bionic Beaver)"
@@ -31,7 +31,7 @@ UBUNTU_CODENAME=bionic
 ```
 
 kubeadm init 安装报错信息
-```shell
+```
 [kubelet-check] It seems like the kubelet isn't running or healthy.
 [kubelet-check] The HTTP call equal to 'curl -sSL http://localhost:10248/healthz' failed with error: Get "http://localhost:10248/healthz": dial tcp 127.0.0.1:10248: connect: connection refused.
 [kubelet-check] The HTTP call equal to 'curl -sSL http://localhost:10248/healthz' failed with error: Get "http://localhost:10248/healthz": dial tcp 127.0.0.1:10248: connect: connection refused.
@@ -70,7 +70,7 @@ kubeadm init 安装报错信息
   ],
 ```
 修改后配置文件
-```
+```Bash
 $ cat /etc/docker/daemon.json 
 {
   "exec-opts": [
@@ -86,11 +86,12 @@ $ cat /etc/docker/daemon.json
 `systemctl restart docker`
 ### kublete 配置文件
 grep 截取一下,可以看得出来kubelet默认 cgoup 驱动为systemd
-```
+```Bash
 $ cat /var/lib/kubelet/config.yaml |grep group
 cgroupDriver: systemd
 ```
 重启kubelet （optional）
+
 `systemctl restart kubelet`
 
 
