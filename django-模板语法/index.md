@@ -400,17 +400,17 @@ urlpatterns = [
 
 传统的模板分离技术,依靠{% include “模板文件名”%}实现,这种方式,虽然达到了页面代码复用的效果,但是由此也会带来大量的碎片化模板,导致维护模板的成本上升.因此, Django框架中除了提供这种模板分离技术以外,还并行的提供了 模板继承给开发者.
 
-注意：以下四处 ext-ends 更改为 extends，这么写是为了规避编译异常
+注意：以下四处 {\% 更改为 {%，这么写是为了规避编译异常
 ```
 {% include "模板文件名"%}  # 模板嵌入
 
-{% ext-ends "base.html" %} # 模板继承 
+{\% extends "base.html" %} # 模板继承 
 ```
 
 继承父模板的公共内容
 
 ```
-{% ext-ends “base.html” %}
+{\% extends “base.html” %}
 ```
 
 视图, myapp.views.py代码:
@@ -421,7 +421,7 @@ def index(request):
 ```
 子模板, templates/index.html
 ```
-{% ext-ends "base.html" %}
+{\% extends "base.html" %}
 ```
 
 父模板, templates/base.html
@@ -463,7 +463,7 @@ urlpatterns = [
 ```
 子模板index6.html,代码:
 ```html
-{% ext-ends "base.html" %}
+{\% extends "base.html" %}
 {% block title %}index3的标题{% endblock  %}
 {% block content %}
     {{ block.super }} {# 父级模板同名block标签的内容 #}
