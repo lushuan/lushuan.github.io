@@ -279,9 +279,9 @@ def index(request):
 ```
 模板 templates/index2.html 代码: 
 
-注意：以下html 需要添加首行`{% load my_filters %}`
+注意：以下html 需要首行添加 load my_filters标签处理
 ```html
-# 首行处添加
+# 首行处
 <!DOCTYPE html>
 <html lang="en">
 <head>
