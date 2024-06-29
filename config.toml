@@ -132,7 +132,7 @@ defaultContentLanguage = "zh-cn"
   # 网站描述, 用于 RSS, SEO, Open Graph 和 Twitter Cards
   description = "知识有两种，一种是你知道的，一种是你知道在哪里能找到的！ --塞缪尔·约翰逊"
   # 网站图片, 用于 Open Graph 和 Twitter Cards
-  images = ["/logo.png"]
+  images = ["images/avatar.png"]
 
   # 页面头部导航栏配置
   [params.header]
@@ -198,7 +198,7 @@ defaultContentLanguage = "zh-cn"
     # 是否隐藏网站图标资源链接
     noFavicon = false
     # 更现代的 SVG 网站图标, 可替代旧的 .png 和 .ico 文件
-    svgFavicon = ""
+    svgFavicon = "images/avatar.png"
     # Android 浏览器主题色
     themeColor = "#ffffff"
     # Safari 图标颜色
