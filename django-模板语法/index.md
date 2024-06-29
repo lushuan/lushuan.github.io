@@ -281,7 +281,7 @@ def index(request):
 
 注意：以下一处 lo-ad 更改为 load，这么写是为了规避博客编译异常
 ```html
-{% load my_filters %}
+{% lo-ad my_filters %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
