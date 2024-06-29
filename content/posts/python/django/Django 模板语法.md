@@ -450,11 +450,10 @@ def index(request):
 </html>
 ```
 个性展示不同于父模板的内容
-{{< admonition info >}}
-{%block %} 独立内容 {%endblock%}
-
+```
+{% block %} 独立内容 {%endblock%}
 {{block.super}}
-{{< /admonition >}}
+```
 
 视图myapp.views.py, 代码:
 ```Python
