@@ -279,9 +279,9 @@ def index(request):
 ```
 模板 templates/index2.html 代码: 
 
-注意：以下一处 lo-ad 更改为 load，这么写是为了规避博客编译异常
+注意：以下html 需要添加首行`{% load my_filters %}`
 ```html
-{% lo-ad my_filters %}
+# 首行处添加
 <!DOCTYPE html>
 <html lang="en">
 <head>
