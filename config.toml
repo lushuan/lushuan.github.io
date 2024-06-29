@@ -439,11 +439,11 @@ defaultContentLanguage = "zh-cn"
       # Gitalk 评论系统设置
       [params.page.comment.gitalk]
         #
-        enable = false
-        owner = ""
-        repo = ""
-        clientId = ""
-        clientSecret = ""
+        enable = true
+        owner = "lushuan"
+        repo = "lushuan.github.io"
+        clientId = "Ov23liSh0yG2wy6B7XP1"
+        clientSecret = "b036bbfb40e3baabedceddaa7556c9972b97f52b"
       # Valine 评论系统设置
       [params.page.comment.valine]
         enable = false
