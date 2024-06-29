@@ -45,7 +45,7 @@ defaultContentLanguage = "zh-cn"
       identifier = "posts"
       pre = ""
       post = ""
-      name = "文章"
+      name = "归档"
       url = "/posts/"
       title = ""
     [[languages.zh-cn.menu.main]]
