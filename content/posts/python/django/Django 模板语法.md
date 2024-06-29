@@ -222,9 +222,9 @@ def index(request):
 | `truncatewords` | 按单词长度截取内容                       | 同上                            |
 
 过滤器的使用
-```Python
-视图代码 myapp.views.py;
 
+视图代码 myapp.views.py;
+```Python
 def index(request):
     """过滤器 filters"""
     content = "Django template"
@@ -233,21 +233,21 @@ def index(request):
     now = datetime.now()
     content2= "hello wrold!"
     return render(request,"myapp/index.html",locals())
+```
+模板代码,myapp/templates/index.html:
+```
+{{ content | safe }}
+{{ content1 | safe }}
 
-# 模板代码,myapp/templates/index.html:
- 
-    {{ content | safe }}
-    {{ content1 | safe }}
-
-    {# 过滤器本质就是函数,但是模板语法不支持小括号调用,所以需要使用:号分割参数 #}
-    <p>{{ now | date:"Y-m-d H:i:s" }}</p>
-    <p>{{ conten1 | default:"默认值" }}</p>
-    {# 一个数据可以连续调用多个过滤器 #}
-    <p>{{ content2 | truncatechars:6 | upper }}</p>
+{# 过滤器本质就是函数,但是模板语法不支持小括号调用,所以需要使用:号分割参数 #}
+<p>{{ now | date:"Y-m-d H:i:s" }}</p>
+<p>{{ conten1 | default:"默认值" }}</p>
+{# 一个数据可以连续调用多个过滤器 #}
+<p>{{ content2 | truncatechars:6 | upper }}</p>
 ```
 #### 自定义过滤器
 虽然官方已经提供了许多内置的过滤器给开发者,但是很明显,还是会有存在不足的时候。例如:希望输出用户的手机号码时, 13912345678 —-» 139*****678，这时我们就需要自定义过滤器。要声明自定义过滤器并且能在模板中正常使用,需要完成2个前置的工作:
-```
+```Python
 # 1. 当前使用和声明过滤器的子应用必须在setting.py配置文件中的INSTALLED_APPS中注册了!!!
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -260,6 +260,9 @@ INSTALLED_APPS = [
 ]
 
 
+```
+myapp.templatetags.my_filters.py代码:
+```Python
 # 2. 自定义过滤器函数必须被 template.register进行装饰使用.
 #    而且过滤器函数所在的模块必须在templatetags包里面保存
    
@@ -282,11 +285,11 @@ def index(request):
     
     moblie_number = "13312345678"
     return render(request,"index2.html",locals())
-
-
-
+    
 ```
 模板 templates/index2.html 代码: 
+
+注意：以下一处 lo-ad 更改为 load，这么写是为了规避博客编译异常
 ```html
 {% load my_filters %}
 <!DOCTYPE html>
@@ -407,16 +410,17 @@ urlpatterns = [
 
 传统的模板分离技术,依靠{% include “模板文件名”%}实现,这种方式,虽然达到了页面代码复用的效果,但是由此也会带来大量的碎片化模板,导致维护模板的成本上升.因此, Django框架中除了提供这种模板分离技术以外,还并行的提供了 模板继承给开发者.
 
+注意：以下四处 ext-ends 更改为 extends，这么写是为了规避编译异常
 ```
 {% include "模板文件名"%}  # 模板嵌入
 
-{% extends "base.html" %} # 模板继承 
+{% ext-ends "base.html" %} # 模板继承 
 ```
 
 继承父模板的公共内容
 
 ```
-{% extends “base.html” %}
+{% ext-ends “base.html” %}
 ```
 
 视图, myapp.views.py代码:
@@ -427,7 +431,7 @@ def index(request):
 ```
 子模板, templates/index.html
 ```
-{% extends "base.html" %}
+{% ext-ends "base.html" %}
 ```
 
 父模板, templates/base.html
@@ -469,7 +473,7 @@ urlpatterns = [
 ```
 子模板index6.html,代码:
 ```html
-{% extends "base.html" %}
+{% ext-ends "base.html" %}
 {% block title %}index3的标题{% endblock  %}
 {% block content %}
     {{ block.super }} {# 父级模板同名block标签的内容 #}
