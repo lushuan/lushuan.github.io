@@ -207,7 +207,6 @@ def index(request):
 | filesizeformat  | 把文件大小的数值转换成单位表示           | {{filesize \| filesizeformat}}  |
 | `join`          | 按指定字符拼接内容                       | {{list\| join("-")}}            |
 | `random`        | 随机提取某个成员                         | {list \| random}}               |
-| `slice`         | 按切片提取成员                           | {{list \| slice:":-2"}}         |
 | `truncatechars` | 按字符长度截取内容                       | {{content \| truncatechars:30}} |
 | `truncatewords` | 按单词长度截取内容                       | 同上                            |
 
