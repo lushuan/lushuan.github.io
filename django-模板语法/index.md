@@ -400,17 +400,17 @@ urlpatterns = [
 
 传统的模板分离技术,依靠{% include “模板文件名”%}实现,这种方式,虽然达到了页面代码复用的效果,但是由此也会带来大量的碎片化模板,导致维护模板的成本上升.因此, Django框架中除了提供这种模板分离技术以外,还并行的提供了 模板继承给开发者.
 
-注意：以下四处 {\% 更改为 {%，这么写是为了规避编译异常
+注意：以下五处 {\% 更改为 {%，这么写是为了规避编译异常
 ```
 {% include "模板文件名"%}  # 模板嵌入
 
-{\% extends "base.html" %} # 模板继承 
+{\% extends "base.html" \%} # 模板继承 
 ```
 
 继承父模板的公共内容
 
 ```
-{\% extends “base.html” %}
+{\% extends “base.html” \%}
 ```
 
 视图, myapp.views.py代码:
@@ -421,7 +421,7 @@ def index(request):
 ```
 子模板, templates/index.html
 ```
-{\% extends "base.html" %}
+{\% extends "base.html" \%}
 ```
 
 父模板, templates/base.html
@@ -463,7 +463,7 @@ urlpatterns = [
 ```
 子模板index6.html,代码:
 ```html
-{\% extends "base.html" %}
+{\% extends "base.html" \%}
 {% block title %}index3的标题{% endblock  %}
 {% block content %}
     {{ block.super }} {# 父级模板同名block标签的内容 #}
@@ -489,7 +489,7 @@ urlpatterns = [
 </html>
 ```
 {{< admonition tip >}}
-- 如果你在模版中使用 {% extends %} 标签，它必须是模版中的第一个标签。其他的任何情况下，模版继承都将无法工作。
+- 如果你在模版中使用 {\% extends \%} 标签，它必须是模版中的第一个标签。其他的任何情况下，模版继承都将无法工作。
 - 在base模版中设置越多的 {% block %} 标签越好。请记住，子模版不必定义全部父模版中的blocks，所以，你可以在大多数blocks中填充合理的默认内容，然后，只定义你需要的那一个。多一点钩子总比少一点好。
 - 为了更好的可读性，你也可以给你的 {% endblock %} 标签一个 名字 。例如：{``% block content``%``}``...``{``% endblock content``%``},在大型模版中，这个方法帮你清楚的看到哪一个　 {% block %} 标签被关闭了。
 - 不能在一个模版中定义多个相同名字的 block 标签。

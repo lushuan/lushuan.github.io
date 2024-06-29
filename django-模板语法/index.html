@@ -989,7 +989,7 @@ DTL模板文件是一种带有特殊语法的HTML文件，这个HTML文件可以
 </table>
 <h4 id="模板嵌套继承">模板嵌套继承</h4>
 <p>传统的模板分离技术,依靠{% include “模板文件名”%}实现,这种方式,虽然达到了页面代码复用的效果,但是由此也会带来大量的碎片化模板,导致维护模板的成本上升.因此, Django框架中除了提供这种模板分离技术以外,还并行的提供了 模板继承给开发者.</p>
-<p>注意：以下四处 {% 更改为 {%，这么写是为了规避编译异常</p>
+<p>注意：以下五处 {% 更改为 {%，这么写是为了规避编译异常</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -999,7 +999,7 @@ DTL模板文件是一种带有特殊语法的HTML文件，这个HTML文件可以
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="p">{</span><span class="o">%</span> <span class="n">include</span> <span class="s2">&#34;模板文件名&#34;</span><span class="o">%</span><span class="p">}</span>  <span class="c1"># 模板嵌入</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="p">{</span>\<span class="o">%</span> <span class="k">extends</span> <span class="s2">&#34;base.html&#34;</span> <span class="o">%</span><span class="p">}</span> <span class="c1"># 模板继承 </span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>\<span class="o">%</span> <span class="k">extends</span> <span class="s2">&#34;base.html&#34;</span> \<span class="o">%</span><span class="p">}</span> <span class="c1"># 模板继承 </span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>继承父模板的公共内容</p>
@@ -1008,7 +1008,7 @@ DTL模板文件是一种带有特殊语法的HTML文件，这个HTML文件可以
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="p">{</span>\<span class="o">%</span> <span class="k">extends</span> <span class="err">“</span><span class="n">base</span><span class="o">.</span><span class="n">html</span><span class="err">”</span> <span class="o">%</span><span class="p">}</span>
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="p">{</span>\<span class="o">%</span> <span class="k">extends</span> <span class="err">“</span><span class="n">base</span><span class="o">.</span><span class="n">html</span><span class="err">”</span> \<span class="o">%</span><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>视图, myapp.views.py代码:</p>
@@ -1030,7 +1030,7 @@ DTL模板文件是一种带有特殊语法的HTML文件，这个HTML文件可以
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="p">{</span>\<span class="o">%</span> <span class="k">extends</span> <span class="s2">&#34;base.html&#34;</span> <span class="o">%</span><span class="p">}</span>
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="p">{</span>\<span class="o">%</span> <span class="k">extends</span> <span class="s2">&#34;base.html&#34;</span> \<span class="o">%</span><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>父模板, templates/base.html</p>
@@ -1119,7 +1119,7 @@ DTL模板文件是一种带有特殊语法的HTML文件，这个HTML文件可以
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl">{\% extends &#34;base.html&#34; %}
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl">{\% extends &#34;base.html&#34; \%}
 </span></span><span class="line"><span class="cl">{% block title %}index3的标题{% endblock  %}
 </span></span><span class="line"><span class="cl">{% block content %}
 </span></span><span class="line"><span class="cl">    {{ block.super }} {# 父级模板同名block标签的内容 #}
