@@ -153,7 +153,7 @@ Disqus、Gitalk和Valine是三种常见的评论系统，它们在功能、特�
 9. [使用 Hugo 发布文章](https://tangzixiang.github.io/posts/2019/%E4%BD%BF%E7%94%A8-hugo-%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/)
 10. [将Hugo静态网站部署到Github Pages](https://simumis.com/posts/deploy-to-github/)
 11. [Hugo框架LoveIt博客主题配置](https://kissingfire123.github.io/2022/05/15_hugo%E6%A1%86%E6%9E%B6%E5%8D%9A%E5%AE%A2loveit%E4%B8%BB%E9%A2%98%E9%85%8D%E7%BD%AE%E8%BF%87%E7%A8%8B%E8%AE%B0%E5%BD%95/)
-
+12. [Hugo系列(3.0) - LoveIt主题美化与博客功能增强 · 第一章](https://lewky.cn/posts/hugo-3.html/)
 
 
 ## 总结
