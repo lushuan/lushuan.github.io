@@ -439,18 +439,20 @@ defaultContentLanguage = "zh-cn"
       # Gitalk 评论系统设置
       [params.page.comment.gitalk]
         #
-        enable = true
+        enable = false
         owner = "lushuan"
         admin = "lushuan"
         repo = "lushuan.github.io"
+        id= "location.pathname"
+        labels= "gitalk"
         clientId = "Ov23liSh0yG2wy6B7XP1"
         clientSecret = "b036bbfb40e3baabedceddaa7556c9972b97f52b"
       # Valine 评论系统设置
       [params.page.comment.valine]
-        enable = false
-        appId = ""
-        appKey = ""
-        placeholder = ""
+        enable = true
+        appId = "XQderBhsCffEN9pw26SOSQon-MdYXbMMI"
+        appKey = "zLUsSeN2SfcBdQbGTv9iFhFp"
+        placeholder = "期待您的评论..."
         avatar = "mp"
         meta= ""
         pageSize = 10
@@ -671,7 +673,7 @@ defaultContentLanguage = "zh-cn"
 [outputs]
   #
   home = ["HTML", "RSS", "JSON"]
-  page = ["HTML", "MarkDown"]
+  page = ["HTML"]               # ["HTML", "MarkDown"]
   section = ["HTML", "RSS"]
   taxonomy = ["HTML", "RSS"]
   taxonomyTerm = ["HTML"]
