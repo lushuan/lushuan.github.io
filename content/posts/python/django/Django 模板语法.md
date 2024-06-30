@@ -339,9 +339,7 @@ urlpatterns = [
 
 ```
 ```html
-{{< raw >}}
-{% extends "base.html" %}
-{{< /raw >}}
+{{< raw >}}{% extends "base.html" %}{{< /raw >}}
 {% block title %}index3的标题{% endblock  %}
 {% block content %}
     {{ block.super }} {# 父级模板同名block标签的内容 #}
