@@ -147,7 +147,11 @@ DTL模板文件是一种带有特殊语法的HTML文件，这个HTML文件可以
 {{val}}
 {{val|filter_name:参数}}
 ```
-2. 标签 tag_name
+2. 标签
+```
+{{< raw >}}{% tag_name %}{{< /raw >}}
+
+```
 3. 嵌套和继承
 #### 变量渲染之深度查询
 ```Python
@@ -217,13 +221,14 @@ def index(request):
 | filesizeformat  | 把文件大小的数值转换成单位表示           | {{filesize \| filesizeformat}}  |
 | `join`          | 按指定字符拼接内容                       | {{list\| join("-")}}            |
 | `random`        | 随机提取某个成员                         | {list \| random}}               |
+| `slice`         | 按切片提取成员                           | {{list \| slice:":-2"}}         |
 | `truncatechars` | 按字符长度截取内容                       | {{content \| truncatechars:30}} |
 | `truncatewords` | 按单词长度截取内容                       | 同上                            |
 
 过滤器的使用
-
-视图代码 myapp.views.py;
 ```Python
+视图代码 myapp.views.py;
+
 def index(request):
     """过滤器 filters"""
     content = "Django template"
@@ -232,21 +237,21 @@ def index(request):
     now = datetime.now()
     content2= "hello wrold!"
     return render(request,"myapp/index.html",locals())
-```
-模板代码,myapp/templates/index.html:
-```
-{{ content | safe }}
-{{ content1 | safe }}
 
-{# 过滤器本质就是函数,但是模板语法不支持小括号调用,所以需要使用:号分割参数 #}
-<p>{{ now | date:"Y-m-d H:i:s" }}</p>
-<p>{{ conten1 | default:"默认值" }}</p>
-{# 一个数据可以连续调用多个过滤器 #}
-<p>{{ content2 | truncatechars:6 | upper }}</p>
+# 模板代码,myapp/templates/index.html:
+ 
+    {{ content | safe }}
+    {{ content1 | safe }}
+
+    {# 过滤器本质就是函数,但是模板语法不支持小括号调用,所以需要使用:号分割参数 #}
+    <p>{{ now | date:"Y-m-d H:i:s" }}</p>
+    <p>{{ conten1 | default:"默认值" }}</p>
+    {# 一个数据可以连续调用多个过滤器 #}
+    <p>{{ content2 | truncatechars:6 | upper }}</p>
 ```
 #### 自定义过滤器
 虽然官方已经提供了许多内置的过滤器给开发者,但是很明显,还是会有存在不足的时候。例如:希望输出用户的手机号码时, 13912345678 —-» 139*****678，这时我们就需要自定义过滤器。要声明自定义过滤器并且能在模板中正常使用,需要完成2个前置的工作:
-```Python
+```
 # 1. 当前使用和声明过滤器的子应用必须在setting.py配置文件中的INSTALLED_APPS中注册了!!!
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -259,9 +264,6 @@ INSTALLED_APPS = [
 ]
 
 
-```
-myapp.templatetags.my_filters.py代码:
-```Python
 # 2. 自定义过滤器函数必须被 template.register进行装饰使用.
 #    而且过滤器函数所在的模块必须在templatetags包里面保存
    
@@ -284,13 +286,11 @@ def index(request):
     
     moblie_number = "13312345678"
     return render(request,"index2.html",locals())
-    
-```
-模板 templates/index2.html 代码: 
 
-注意：以下html 需要首行添加 load my_filters标签处理
-```html
-# 首行处
+
+# templates/index2.html,代码:
+
+{{< raw >}}{% load my_filters %}{{< /raw >}}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -333,11 +333,190 @@ urlpatterns = [
     path("index", views.index),
 ]
 ```
-
-
+##### for
+视图代码, myapp.views.py:
+```Python
+def index7(request):
+    book_list1 = [
+        {"id": 11, "name": "python基础入门", "price": 130.00},
+        {"id": 17, "name": "Go基础入门", "price": 230.00},
+        {"id": 23, "name": "PHP基础入门", "price": 330.00},
+        {"id": 44, "name": "Java基础入门", "price": 730.00},
+        {"id": 51, "name": "C++基础入门", "price": 300.00},
+        {"id": 56, "name": "C#基础入门", "price": 100.00},
+        {"id": 57, "name": "前端基础入门", "price": 380.00},
+    ]
+    return render(request, 'index.html', locals())
 ```
+template/index.html，代码：
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <table width="800" align="center" border="1">
+        <tr>
+            <td>序号</td>
+            <td>id</td>
+            <td>标题</td>
+            <td>价格</td>
+        </tr>
+        {# 多行编辑，alt+鼠标键，alt不要松开，左键点击要编辑的每一行 #}
+{#        {% for book in book_list1 %}#}
+{#            <tr>#}
+{#                <td>{{ book.id }}</td>#}
+{#                <td>{{ book.name }}</td>#}
+{#                <td>{{ book.price }}</td>#}
+{#            </tr>#}
+{#        {% endfor %}#}
 
+{# 建议不要直接使用for循环一维字典，此处使用仅仅展示for嵌套for而已 #}
+{#        {% for book in book_list1 %}#}
+{#            <tr>#}
+{#                {% for field,value in book.items %}#}
+{#                <td>{{ field }} == {{ value }}</td>#}
+{#                {% endfor %}#}
+{#            </tr>#}
+{#        {% endfor %}#}
+
+{#        {% for book in book_list1 %}#}
+{#            <tr>#}
+{#                <td>{{ book.id }}</td>#}
+{#                <td>{{ book.name }}</td>#}
+{#                {% if book.price > 200 %}#}
+{#                    <td bgcolor="#ff7f50">{{ book.price }}</td>#}
+{#                {% else %}#}
+{#                    <td>{{ book.price }}</td>#}
+{#                {% endif %}#}
+{#            </tr>#}
+{#        {% endfor %}#}
+
+        {# 逆向循环数据 #}
+{#        {% for book in book_list1 reversed %}#}
+{#            <tr>#}
+{#                <td>{{ book.id }}</td>#}
+{#                <td>{{ book.name }}</td>#}
+{#                {% if book.price > 200 %}#}
+{#                    <td bgcolor="#ff7f50">{{ book.price }}</td>#}
+{#                {% else %}#}
+{#                    <td>{{ book.price }}</td>#}
+{#                {% endif %}#}
+{#            </tr>#}
+{#        {% endfor %}#}
+
+        {% for book in book_list1 %}
+            <tr>
+{#                <td>{{ forloop.counter }}</td>#}
+{#                <td>{{ forloop.counter0 }}</td>#}
+{#                <td>{{ forloop.revcounter }}</td>#}
+{#                <td>{{ forloop.revcounter0 }}</td>#}
+{#                <td>{{ forloop.first }}</td>#}
+                <td>{{ forloop.last }}</td>
+                <td>{{ book.id }}</td>
+                <td>{{ book.name }}</td>
+                {% if book.price > 200 %}
+                    <td bgcolor="#ff7f50">{{ book.price }}</td>
+                {% else %}
+                    <td>{{ book.price }}</td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+
+    </table>
+</body>
+</html>
 ```
+路由代码：
+```Python
+"""子应用路由"""
+from django.urls import path, re_path
+from . import views
+
+urlpatterns = [
+    # ....
+    path("index", views.index),
+]
+```
+循环中, 模板引擎提供的forloop对象,用于给开发者获取循环次数或者判断循环过程的.
+
+| 属性                | 描述                                      |
+| :------------------ | :---------------------------------------- |
+| forloop.counter     | 显示循环的次数,从1开始                    |
+| forloop.counter0    | 显示循环的次数,从0开始                    |
+| forloop.revcounter0 | 倒数显示循环的次数,从0开始                |
+| forloop.revcounter  | 倒数显示循环的次数,从1开始                |
+| forloop.first       | 判断如果本次是循环的第一次,则结果为True   |
+| forloop.last        | 判断如果本次是循环的最后一次,则结果为True |
+| forloop.parentloop  | 在嵌套循环中，指向当前循环的上级循环      |
+
+#### 模板嵌套继承
+
+传统的模板分离技术,依靠{% include “模板文件名”%}实现,这种方式,虽然达到了页面代码复用的效果,但是由此也会带来大量的碎片化模板,导致维护模板的成本上升.因此, Django框架中除了提供这种模板分离技术以外,还并行的提供了 模板继承给开发者.
+
+{{< admonition info >}}
+{{< raw >}}{% include "模板文件名"%}{{< /raw >}}  # 模板嵌入
+
+{{< raw >}}{% extends "base.html" %}{{< /raw >}} # 模板继承 
+{{< /admonition >}}
+
+继承父模板的公共内容
+
+{{< admonition info >}}
+{{< raw >}}{% extends “base.html” %}{{< /raw >}}
+{{< /admonition >}}
+
+视图, myapp.views.py代码:
+```Python
+def index(request):
+    """模板继承"""
+    return render(request,"myapp/index.html",locals())
+```
+子模板, templates/index.html
+{{< admonition info >}}
+{{< raw >}} {% extends "base.html" %} {{< /raw >}}
+{{< /admonition >}}
+
+父模板, templates/base.html
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>base.html的头部</h1>
+    <h1>base.html的内容</h1>
+    <h1>base.html的脚部</h1>
+</body>
+</html>
+```
+个性展示不同于父模板的内容
+{{< admonition info >}}
+{%block %} 独立内容 {%endblock%}
+
+{{block.super}}
+{{< /admonition >}}
+
+视图myapp.views.py, 代码:
+```Python
+def home(request):
+    """模板继承"""
+    return render(request, "myapp/index6.html", locals())
+```
+路由 myapp.urls.py,代码:
+```Python
+from django.urls import path
+from . import views
+urlpatterns = [
+    path("", views.index),
+    path("home/", views.home),
+]
+```
+子模板index6.html,代码:
 ```html
 {{< raw >}}{% extends "base.html" %}{{< /raw >}}
 {% block title %}index3的标题{% endblock  %}
@@ -347,6 +526,47 @@ urlpatterns = [
     {{ block.super }}
 {% endblock %}
 ```
+父模板base.html,代码:
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock  %}</title>
+</head>
+<body>
+    <h1>base.html的头部</h1>
+    {% block content %}
+    <h1>base.html的内容</h1>
+    {% endblock %}
+    <h1>base.html的脚部</h1>
+</body>
+</html>
+```
+{{< admonition tip >}}
+- 如果你在模版中使用 {{< raw >}}{% extends %}{{< /raw >}} 标签，它必须是模版中的第一个标签。其他的任何情况下，模版继承都将无法工作。
+- 在base模版中设置越多的 {{< raw >}}{% block %}{{< /raw >}} 标签越好。请记住，子模版不必定义全部父模版中的blocks，所以，你可以在大多数blocks中填充合理的默认内容，然后，只定义你需要的那一个。多一点钩子总比少一点好。
+- 为了更好的可读性，你也可以给你的 {{< raw >}}{% endblock %}{{< /raw >}} 标签一个 名字 。例如：{{< raw >}}{% block content `}...{% endblock content %}{{< /raw >}},在大型模版中，这个方法帮你清楚的看到哪一个　 {{< raw >}}{% block %}{{< /raw >}} 标签被关闭了。
+- 不能在一个模版中定义多个相同名字的 block 标签。
+{{< /admonition >}}
 
-### 最后
-再重申一下模板处理的本质：渲染完成后，生成了字符串，再返回给浏览器。
+### 静态文件
+开发中在开启了debug模式时，django可以通过配置，允许用户通过对应的url地址访问django的静态文件。
+
+setting.py，代码：
+```Python
+STATIC_ROOT = BASE_DIR / 'static'
+STATIC_URL = '/static/'   # django模板中，可以引用{{STATIC_URL}}变量避免把路径写死。
+```
+总路由，urls.py，代码：
+```
+from django.views.static import serve as serve_static
+urlpatterns = [
+    path('admin/', admin.site.urls), 
+    # 对外提供访问静态文件的路由，serve_static 是django提供静态访问支持的映射类。依靠它，客户端才能访问到django的静态文件。
+    path(r'static/<path:path>', serve_static, {'document_root': settings.STATIC_ROOT},),
+]
+```
+{{< admonition >}}
+项目上线以后，关闭debug模式时，django默认是不提供静态文件的访问支持，项目部署的时候，我们会通过收集静态文件使用nginx这种web服务器来提供静态文件的访问支持。
+{{< /admonition >}}
