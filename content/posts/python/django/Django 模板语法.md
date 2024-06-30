@@ -339,7 +339,7 @@ urlpatterns = [
 {% block title %}index3的标题{% endblock  %}
 {% block content %}
     {{ block.super }} {# 父级模板同名block标签的内容 #}
-    <h1>index3.html的独立内容</h1>
+    `<h1>index3.html的独立内容</h1>`
     {{ block.super }}
 {% endblock %}
 {{< /raw >}}
