@@ -333,6 +333,17 @@ urlpatterns = [
     path("index", views.index),
 ]
 ```
+```html
+{{< raw >}}
+{% extends "base.html" %}
+{% block title %}index3的标题{% endblock  %}
+{% block content %}
+    {{ block.super }} {# 父级模板同名block标签的内容 #}
+    <h1>index3.html的独立内容</h1>
+    {{ block.super }}
+{% endblock %}
+{{< /raw >}}
+```
 
 ### 最后
 再重申一下模板处理的本质：渲染完成后，生成了字符串，再返回给浏览器。
