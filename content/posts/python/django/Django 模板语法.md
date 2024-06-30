@@ -333,7 +333,7 @@ urlpatterns = [
     path("index", views.index),
 ]
 ```
-```html
+```
 {{< raw >}}
 {% extends "base.html" %}
 {% block title %}index3的标题{% endblock  %}
