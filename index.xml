@@ -63,6 +63,14 @@
     <description><![CDATA[故障描述 警告 PVC 显示创建不成功：kubectl get pvc -n efk 显示 Pending，这是由于版本太高导致的。k8sv1.20 以上版本默认禁止使用 self]]></description>
 </item>
 <item>
+    <title>Jenkins 入门介绍</title>
+    <link>http://localhost:1313/jenkins-%E5%85%A5%E9%97%A8%E4%BB%8B%E7%BB%8D/</link>
+    <pubDate>Tue, 18 Apr 2023 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/jenkins-%E5%85%A5%E9%97%A8%E4%BB%8B%E7%BB%8D/</guid>
+    <description><![CDATA[在了解Jenkins 之前先了解一下CI&amp;CD cicd 介绍 持续集成(Continous Intergrations) 和持续部署(Continuous Deployment]]></description>
+</item>
+<item>
     <title>Helm Charts 介绍</title>
     <link>http://localhost:1313/helm_charts-%E4%BB%8B%E7%BB%8D/</link>
     <pubDate>Mon, 17 Apr 2023 12:06:37 &#43;0800</pubDate>
@@ -77,14 +85,6 @@
     <author>lushuan</author>
     <guid>http://localhost:1313/k8s%E5%AE%B9%E5%99%A8%E8%BF%90%E8%A1%8C%E6%97%B6containerd%E5%8D%87%E7%BA%A7/</guid>
     <description><![CDATA[背景 k8s 容器运行时是docker和containerd结合使用，且生产环境是离线环境将需要的containerd和docker版本相关的rpm]]></description>
-</item>
-<item>
-    <title>kubelet目录满问题记录</title>
-    <link>http://localhost:1313/kubelet%E7%9B%AE%E5%BD%95%E6%BB%A1%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/</link>
-    <pubDate>Tue, 04 Apr 2023 12:06:37 &#43;0800</pubDate>
-    <author>lushuan</author>
-    <guid>http://localhost:1313/kubelet%E7%9B%AE%E5%BD%95%E6%BB%A1%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/</guid>
-    <description><![CDATA[现象 k8s 某台主机的/var/lib/kubelet目录存储使用率超过80% 使用了40多G存储 分析 申请root权限 cd /var/lib/kubelet 执行du -h -d 1 发现 pod目]]></description>
 </item>
 </channel>
 </rss>

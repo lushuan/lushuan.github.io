@@ -29,6 +29,14 @@
     <description><![CDATA[]]></description>
 </item>
 <item>
+    <title>Jenkins</title>
+    <link>http://localhost:1313/tags/jenkins/</link>
+    <pubDate>Tue, 18 Apr 2023 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/tags/jenkins/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
     <title>Helm</title>
     <link>http://localhost:1313/tags/helm/</link>
     <pubDate>Mon, 17 Apr 2023 12:06:37 &#43;0800</pubDate>
@@ -74,14 +82,6 @@
     <pubDate>Wed, 15 Sep 2021 19:49:09 &#43;0800</pubDate>
     <author>lushuan</author>
     <guid>http://localhost:1313/tags/hugo/</guid>
-    <description><![CDATA[]]></description>
-</item>
-<item>
-    <title>Linux文本三剑客</title>
-    <link>http://localhost:1313/tags/linux%E6%96%87%E6%9C%AC%E4%B8%89%E5%89%91%E5%AE%A2/</link>
-    <pubDate>Tue, 29 Jun 2021 12:06:37 &#43;0800</pubDate>
-    <author>lushuan</author>
-    <guid>http://localhost:1313/tags/linux%E6%96%87%E6%9C%AC%E4%B8%89%E5%89%91%E5%AE%A2/</guid>
     <description><![CDATA[]]></description>
 </item>
 </channel>

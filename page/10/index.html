@@ -115,6 +115,21 @@
         alt="/images/avatar.png"
         title="/images/avatar.png" /></a></div><div class="home-subtitle"><div id="id-1" class="typeit"></div></div><div class="links"><a href="https://github.com/xxxx" title="GitHub" target="_blank" rel="noopener noreffer me"><i class="fab fa-github fa-fw" aria-hidden="true"></i></a><a href="https://twitter.com/xxxx" title="Twitter" target="_blank" rel="noopener noreffer me"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="https://www.instagram.com/xxxx" title="Instagram" target="_blank" rel="noopener noreffer me"><i class="fab fa-instagram fa-fw" aria-hidden="true"></i></a><a href="https://facebook.com/xxxx" title="facebook" target="_blank" rel="noopener noreffer me"><i class="fab fa-facebook fa-fw" aria-hidden="true"></i></a><a href="https://t.me/xxxx" title="Telegram" target="_blank" rel="noopener noreffer me"><i class="fab fa-telegram-plane fa-fw" aria-hidden="true"></i></a><a href="mailto:xxxx@xxxx.com" title="Email" rel="me"><i class="far fa-envelope fa-fw" aria-hidden="true"></i></a><a href="/index.xml" title="RSS" target="_blank" rel="noopener noreffer me"><i class="fas fa-rss fa-fw" aria-hidden="true"></i></a></div></div>
 <article class="single summary" itemscope itemtype="http://schema.org/Article"><h1 class="single-title" itemprop="name headline">
+        <a href="/ch8_%E6%B3%A8%E9%87%8A/">shell 注释</a>
+    </h1><div class="post-meta"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-publish">发布于 <time datetime="2020-04-21">2020-04-21</time></span>&nbsp;<span class="post-category">收录于 <a href="/categories/shell/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Shell</a></span></div><div class="content">shell通过#来注释一行内容，前面我们已经看到过了 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 #!/bin/bash # 这是一行注释 :&#39; 这是 多行 注释 &#39; ls :&lt;&lt;EOF 这也可以 达到 多行注释 的</div><div class="post-footer">
+        <a href="/ch8_%E6%B3%A8%E9%87%8A/">阅读全文</a><div class="post-tags">
+                <i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/shell/">Shell</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h1 class="single-title" itemprop="name headline">
+        <a href="/ch9_%E6%97%A5%E5%BF%97%E4%BF%9D%E5%AD%98/">shell 日志保存</a>
+    </h1><div class="post-meta"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-publish">发布于 <time datetime="2020-04-20">2020-04-20</time></span>&nbsp;<span class="post-category">收录于 <a href="/categories/shell/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Shell</a></span></div><div class="content">脚本执行后免不了要记录日志，最常用的方法就是重定向。以下面的脚本为例： 1 2 3 4 #!/bin/bash #test.sh lll #这个命令是没有的，因此会报错 date 方式一 将标准输出保存到文</div><div class="post-footer">
+        <a href="/ch9_%E6%97%A5%E5%BF%97%E4%BF%9D%E5%AD%98/">阅读全文</a><div class="post-tags">
+                <i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/shell/">Shell</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h1 class="single-title" itemprop="name headline">
+        <a href="/ch10_%E8%84%9A%E6%9C%AC%E6%89%A7%E8%A1%8C/">shell 脚本执行</a>
+    </h1><div class="post-meta"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-publish">发布于 <time datetime="2020-04-19">2020-04-19</time></span>&nbsp;<span class="post-category">收录于 <a href="/categories/shell/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Shell</a></span></div><div class="content">常见执行方式 1 ./test.sh 其它执行方式 1 2 3 4 sh test.sh #在子进程中执行 sh -x test.sh #会在终端打印执行到命令，适合调试 source test.sh #test.sh在父进程中执行 . test.sh #不需</div><div class="post-footer">
+        <a href="/ch10_%E8%84%9A%E6%9C%AC%E6%89%A7%E8%A1%8C/">阅读全文</a><div class="post-tags">
+                <i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/shell/">Shell</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h1 class="single-title" itemprop="name headline">
         <a href="/ch11_%E8%84%9A%E6%9C%AC%E9%80%80%E5%87%BA%E7%A0%81/">shell 脚本退出码</a>
     </h1><div class="post-meta"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-publish">发布于 <time datetime="2020-04-18">2020-04-18</time></span>&nbsp;<span class="post-category">收录于 <a href="/categories/shell/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Shell</a></span></div><div class="content">很多时候我们需要获取脚本的执行结果，即退出状态，通常0表示执行成功，而非0表示失败。为了获得退出码，我们需要使用exit 1 2 3 4 5 6 7 8 9 10</div><div class="post-footer">
         <a href="/ch11_%E8%84%9A%E6%9C%AC%E9%80%80%E5%87%BA%E7%A0%81/">阅读全文</a><div class="post-tags">
@@ -128,21 +143,6 @@
         <a href="/ch12_%E6%95%B0%E7%BB%84/">shell 数组</a>
     </h1><div class="post-meta"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-publish">发布于 <time datetime="2020-04-17">2020-04-17</time></span>&nbsp;<span class="post-category">收录于 <a href="/categories/shell/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Shell</a></span></div><div class="content">要给某个环境变量设置多个值，可以把值放在括号里，值与值之间用空格分隔。 声明 1 2 3 4 5 6 7 mytest=(one two three four five) echo ${mytest[2]} # 输出 three echo ${mytest[*]} # 输出 one two three four five 修改数组值</div><div class="post-footer">
         <a href="/ch12_%E6%95%B0%E7%BB%84/">阅读全文</a><div class="post-tags">
-                <i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/shell/">Shell</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h1 class="single-title" itemprop="name headline">
-        <a href="/ch13_%E5%AD%97%E5%85%B8/">shell 字典</a>
-    </h1><div class="post-meta"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-publish">发布于 <time datetime="2020-04-16">2020-04-16</time></span>&nbsp;<span class="post-category">收录于 <a href="/categories/shell/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Shell</a></span></div><div class="content">在shell编程中，字典是一种非常有用的数据结构，用于存储键值对。字典可以用于存储和检索数据，它类似于其他编程语言中的关联数组或哈希表。 在s</div><div class="post-footer">
-        <a href="/ch13_%E5%AD%97%E5%85%B8/">阅读全文</a><div class="post-tags">
-                <i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/shell/">Shell</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h1 class="single-title" itemprop="name headline">
-        <a href="/ch14_test%E6%9D%A1%E4%BB%B6%E5%88%A4%E6%96%AD/">shell test 条件判断</a>
-    </h1><div class="post-meta"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-publish">发布于 <time datetime="2020-04-15">2020-04-15</time></span>&nbsp;<span class="post-category">收录于 <a href="/categories/shell/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Shell</a></span></div><div class="content">介绍 test 是 Shell 内置命令，用来检测某个条件是否成立。test 通常和 if 语句一起使用，并且大部分 if 语句都依赖 test。 test 命令有很多选项，可以进行数值、</div><div class="post-footer">
-        <a href="/ch14_test%E6%9D%A1%E4%BB%B6%E5%88%A4%E6%96%AD/">阅读全文</a><div class="post-tags">
-                <i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/shell/">Shell</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h1 class="single-title" itemprop="name headline">
-        <a href="/ch15_%E5%8F%82%E6%95%B0%E5%A4%84%E7%90%86/">shell 参数处理</a>
-    </h1><div class="post-meta"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-publish">发布于 <time datetime="2020-04-14">2020-04-14</time></span>&nbsp;<span class="post-category">收录于 <a href="/categories/shell/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Shell</a></span></div><div class="content">Shell 参数处理是指在 Shell 脚本中，对命令行传入的参数进行处理和操作的技术。这在编写 Shell 脚本时非常重要，因为它允许脚本根据不同的参数执行不同的操作，增强</div><div class="post-footer">
-        <a href="/ch15_%E5%8F%82%E6%95%B0%E5%A4%84%E7%90%86/">阅读全文</a><div class="post-tags">
                 <i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/shell/">Shell</a></div></div>
 </article><ul class="pagination"><li class="page-item ">
                     <span class="page-link">
@@ -165,6 +165,10 @@
                 </li><li class="page-item ">
                     <span class="page-link">
                         <a href="/page/11/">11</a>
+                    </span>
+                </li><li class="page-item ">
+                    <span class="page-link">
+                        <a href="/page/12/">12</a>
                     </span>
                 </li></ul></div></div>
             </main><footer class="footer">
