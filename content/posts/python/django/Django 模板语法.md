@@ -226,9 +226,9 @@ def index(request):
 | `truncatewords` | 按单词长度截取内容                       | 同上                            |
 
 过滤器的使用
-```Python
-视图代码 myapp.views.py;
 
+视图代码 myapp.views.py;
+```Python
 def index(request):
     """过滤器 filters"""
     content = "Django template"
