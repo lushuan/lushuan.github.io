@@ -265,6 +265,7 @@ $ containerd config default > /etc/containerd/config.toml
 $ sed -i 's/registry.k8s.io\/pause:3.8/registry.cn-hangzhou.aliyuncs.com\/google_containers\/pause:3.9/g' /etc/containerd/config.toml
 # 驱动使用为SystemdCgroup
 $ sed -i 's/SystemdCgroup = false/SystemdCgroup = true/g' /etc/containerd/config.toml
+$ sed -i 's/disabled_plugins/#disabled_plugins/g' /etc/containerd/config.toml
 
 ```
 ### 2.3 设置containerd开机自启动
@@ -749,6 +750,7 @@ mkdir -p /etc/containerd
 containerd config default > /etc/containerd/config.toml
 sed -i 's/registry.k8s.io\/pause:3.8/registry.cn-hangzhou.aliyuncs.com\/google_containers\/pause:3.9/g' /etc/containerd/config.toml
 sed -i 's/SystemdCgroup = false/SystemdCgroup = true/g' /etc/containerd/config.toml
+sed -i 's/disabled_plugins/#disabled_plugins/g' /etc/containerd/config.toml
 
 # 使用systemd托管containerd
 # 生成system service文件
