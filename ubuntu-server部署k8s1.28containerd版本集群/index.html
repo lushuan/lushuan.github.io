@@ -33,7 +33,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "http:\/\/localhost:1313\/ubuntu-server%E9%83%A8%E7%BD%B2k8s1.28containerd%E7%89%88%E6%9C%AC%E9%9B%86%E7%BE%A4\/"
-        },"genre": "posts","keywords": "Kubernetes","wordcount":  6004 ,
+        },"genre": "posts","keywords": "Kubernetes","wordcount":  6015 ,
         "url": "http:\/\/localhost:1313\/ubuntu-server%E9%83%A8%E7%BD%B2k8s1.28containerd%E7%89%88%E6%9C%AC%E9%9B%86%E7%BE%A4\/","datePublished": "2024-06-20T12:06:37+08:00","dateModified": "2024-06-26T12:06:37+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -121,8 +121,8 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Ubuntu-server部署k8s1.28(containerd版本)集群</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/kubernetes/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Kubernetes</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2024-06-20">2024-06-20</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 6004 字&nbsp;
-                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 12 分钟&nbsp;</div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2024-06-20">2024-06-20</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 6015 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 13 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  data-kept="true">
                 <div class="details-summary toc-title">
                     <span>目录</span>
@@ -694,6 +694,7 @@ k8s-master01 节点</p>
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span><span class="lnt">6
+</span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ mkdir -p /etc/containerd
@@ -702,6 +703,7 @@ k8s-master01 节点</p>
 </span></span><span class="line"><span class="cl">$ sed -i <span class="s1">&#39;s/registry.k8s.io\/pause:3.8/registry.cn-hangzhou.aliyuncs.com\/google_containers\/pause:3.9/g&#39;</span> /etc/containerd/config.toml
 </span></span><span class="line"><span class="cl"><span class="c1"># 驱动使用为SystemdCgroup</span>
 </span></span><span class="line"><span class="cl">$ sed -i <span class="s1">&#39;s/SystemdCgroup = false/SystemdCgroup = true/g&#39;</span> /etc/containerd/config.toml
+</span></span><span class="line"><span class="cl">$ sed -i <span class="s1">&#39;s/disabled_plugins/#disabled_plugins/g&#39;</span> /etc/containerd/config.toml
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h3 id="23-设置containerd开机自启动">2.3 设置containerd开机自启动</h3>
@@ -1762,6 +1764,7 @@ k8s-master01 节点</p>
 </span><span class="lnt">420
 </span><span class="lnt">421
 </span><span class="lnt">422
+</span><span class="lnt">423
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="c1">#！/bin/bash</span>
@@ -1926,6 +1929,7 @@ k8s-master01 节点</p>
 </span></span><span class="line"><span class="cl"><span class="n">containerd</span> <span class="n">config</span> <span class="n">default</span> <span class="o">&gt;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">containerd</span><span class="o">/</span><span class="n">config</span><span class="o">.</span><span class="n">toml</span>
 </span></span><span class="line"><span class="cl"><span class="n">sed</span> <span class="o">-</span><span class="n">i</span> <span class="s1">&#39;s/registry.k8s.io\/pause:3.8/registry.cn-hangzhou.aliyuncs.com\/google_containers\/pause:3.9/g&#39;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">containerd</span><span class="o">/</span><span class="n">config</span><span class="o">.</span><span class="n">toml</span>
 </span></span><span class="line"><span class="cl"><span class="n">sed</span> <span class="o">-</span><span class="n">i</span> <span class="s1">&#39;s/SystemdCgroup = false/SystemdCgroup = true/g&#39;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">containerd</span><span class="o">/</span><span class="n">config</span><span class="o">.</span><span class="n">toml</span>
+</span></span><span class="line"><span class="cl"><span class="n">sed</span> <span class="o">-</span><span class="n">i</span> <span class="s1">&#39;s/disabled_plugins/#disabled_plugins/g&#39;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">containerd</span><span class="o">/</span><span class="n">config</span><span class="o">.</span><span class="n">toml</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="c1"># 使用systemd托管containerd</span>
 </span></span><span class="line"><span class="cl"><span class="c1"># 生成system service文件</span>
