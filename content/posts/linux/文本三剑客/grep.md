@@ -35,7 +35,7 @@ Grep是一个在Linux和其他类Unix系统上可用的命令行实用程序，�
 | grep -lr "pattern" file.txt|递归匹配哪些文件名包含匹配的关键词|
 | grep -o "pattern" file.txt|只输出匹配的内容|
 
-![grep](/images/linux/grep.jpg)
+![grep](/images/linux/grep.jpg "grep")
 
 ## 参考
 1. [是真的很详细了！Linux中的Grep命令使用实例](https://cloud.tencent.com/developer/article/1554542)

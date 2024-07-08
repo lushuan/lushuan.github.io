@@ -32,7 +32,7 @@ k8s 某台主机的/var/lib/kubelet目录存储使用率超过80% 使用了40多
 定位容器为prometheus  
 
 6. docker inspect 122ec2fbbd1e  
-![kubelet](/images/kubernetes/problem_and_solve/kubelet.png)
+![kubelet](/images/kubernetes/problem_and_solve/kubelet.png "kubelet")
 该容器使用了empty-dir挂载内部的/data
 
 

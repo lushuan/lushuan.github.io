@@ -1,0 +1,38 @@
+/* 目录 */
+.toc {
+    background: white;
+	opacity: .95;
+}
+[theme=dark] .toc {
+    background: #3a3535;
+}
+[theme=dark] #toc-auto {
+    border-left-color: #6f6a6a;
+}
+
+.toc .toc-content {
+    font-size: .8rem;
+}
+
+.toc .toc-content code {
+    border: none;
+    color: #f7ab01;
+    font-size: 1em;
+}
+
+nav#TableOfContents ol {
+    padding-inline-start: 30px;
+
+    & ol {
+        padding-inline-start: 15px;
+        font-size: .75rem;
+        display: none;
+    }
+
+    & li.has-active ol {
+        display: block;
+    }
+}
+
+
+

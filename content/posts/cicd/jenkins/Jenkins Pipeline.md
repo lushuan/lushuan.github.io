@@ -46,10 +46,10 @@ Pipeline，简单来说，就是一套运行在 Jenkins 上的工作流框架，
 - Pipeline 也有两种创建方法：可以直接在 Jenkins 的 Web UI 界面中输入脚本；也可以通过创建一个 Jenkinsfile 脚本文件放入项目源码库中
 
 
-![jenkins-pipeline-demo](/images/cicd/jenkins-pipeline-demo.png)
+![jenkins-pipeline-demo](/images/cicd/jenkins-pipeline-demo.png "Jenkins")
 
 一般我们都推荐在 Jenkins 中直接从源代码控制(SCMD)中直接载入 Jenkinsfile Pipeline 这种方法，正常项目中会将 Jenkinsfile 流水线文件放到项目目录下，可以选择`Pipeline script from SCM`
-![jenkins-pipeline-scm](/images/cicd/jenkins-pipeline-scm.png)
+![jenkins-pipeline-scm](/images/cicd/jenkins-pipeline-scm.png "Jenkins")
 
 - [参考项目](https://gitee.com/lu_shuan/spring-mytest)
 

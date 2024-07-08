@@ -12,7 +12,7 @@ tags: ["linux"]
 ---
 打算给一台服务器做逻辑卷分区，发现磁盘未做分区，且磁盘空间余量较大，本篇记录一下 fdisk 磁盘分区划分的过程
 
-![fdisk-1](/images/linux/fdisk-1.jpg)
+![fdisk-1](/images/linux/fdisk-1.jpg "fdisk")
 ## 事情的起因
 通过`pvcreate` 创建逻辑卷组提示报错
 报错信息
@@ -43,7 +43,7 @@ Disk identifier: 0x0003eb01
 
 主分区和扩展分区
 
-![fdisk-2](/images/linux/fdisk-2.jpg)
+![fdisk-2](/images/linux/fdisk-2.jpg "fdisk")
 
 ## 划分磁盘分区
 ### 首先了解什么是 fdisk 命令

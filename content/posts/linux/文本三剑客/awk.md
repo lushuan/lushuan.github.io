@@ -188,7 +188,7 @@ seq 9 | sed 'H;g' | awk -v RS='' '{for(i=1;i<=NF;i++)printf("%dx%d=%d%s", i, NR,
 ```
 
 ## 思维导图
-![常用参数和常用内置变量](/images/linux/akw-1.jpg)
+![常用参数和常用内置变量](/images/linux/akw-1.jpg "awk")
 
 
 

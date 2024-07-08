@@ -17,7 +17,7 @@ ctr是containerd自带的工具，有命名空间的概念
 crictl是k8s社区的专用CLI工具，所有操作都在命名空间k8s.io
 所以使用ctr操作时注意指定-n k8s.io
 
-![docker-containerd-k8s](../../images/kubernetes/docker-containerd-k8s.png)
+![docker-containerd-k8s](../../images/kubernetes/docker-containerd-k8s.png "Docker vs Containerd")
 
 ## 清理未被使用的镜像，一般用于释放本地空间
 docker 场景

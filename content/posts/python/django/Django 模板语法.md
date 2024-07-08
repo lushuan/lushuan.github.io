@@ -105,7 +105,7 @@ def index(request):
     return render(request, "index.html",context={"name":name})
 ```
 ### render函数内部本质
-![django-template-render](/images/python/django-template-render.png)
+![django-template-render](/images/python/django-template-render.png "django render函数内部本质")
 
 ```Python
 from django.shortcuts import render

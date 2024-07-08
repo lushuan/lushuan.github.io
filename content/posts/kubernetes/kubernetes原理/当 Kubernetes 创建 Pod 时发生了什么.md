@@ -14,4 +14,4 @@ tags: ["Kubernetes"]
 - https://github.com/jamiehannaford/what-happens-when-k8s/tree/master/zh-cn
 
 
-<center><img src="/images/kubernetes/what-happens-when-k8s.svg" width="50%" /></center>
+![what-happens-when-k8s](/images/kubernetes/what-happens-when-k8s.svg "what-happens-when-k8s")

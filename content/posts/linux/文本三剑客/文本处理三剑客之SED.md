@@ -131,7 +131,7 @@ sed '$a\AAA' aa.txt  
 - 9、将文本文件的n和n+1行合并为一行，n为奇数行
 
 ## 思维导图
-![sed](/images/linux/sed-1.jpg)
+![sed](/images/linux/sed-1.jpg "sed")
 
 
 ## 参考

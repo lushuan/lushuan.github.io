@@ -89,7 +89,7 @@ Python文档下载地址：https://www.python.org/doc/
 ###  通过配置编辑器（如 VS Code、PyCharm 等）
 通过配置编辑器如Pycharm 创建虚拟环境是一种更方便的方式，原理还是通过命令行，通过界面化操作会直观一些
 
-![virtualenv](/images/python/pycharm-1.png)
+![virtualenv](/images/python/pycharm-1.png "virtualenv")
 
 ## 基础语法
 ### 变量
@@ -128,7 +128,7 @@ while 判断条件：
 ```
 Gif 演示 Python while 语句执行过程
 
-![loop-over-python-list-animation](/images/python/loop-over-python-list-animation.gif)
+![loop-over-python-list-animation](/images/python/loop-over-python-list-animation.gif "loop-over-python-list-animation")
 
 - for循环语句
 ```
@@ -137,7 +137,7 @@ for iterating_var in sequence:
 ```
 流程图
 
-![loop-over-python-list-animation](/images/python/python_for_loop.jpg)
+![python_for_loop](/images/python/python_for_loop.jpg "python_for_loop")
 
 实例
 ```Python
@@ -661,7 +661,7 @@ file object = open(file_name [, access_mode][, buffering])
 
 下图很好的总结了这几种模式：
 
-![file-accessmode](/images/python/file-accessmode.png)
+![file-accessmode](/images/python/file-accessmode.png "file accessmode")
 
 |    模式    |  r   |  r+  |  w   |  w+  |  a   |  a+  |
 | :--------: | :--: | :--: | :--: | :--: | :--: | :--: |

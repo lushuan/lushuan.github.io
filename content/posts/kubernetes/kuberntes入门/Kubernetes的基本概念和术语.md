@@ -59,7 +59,7 @@ Kubernetes为每个Pod都分配了唯一的IP地址，称之为Pod IP，一个Po
 Pod其实有两种类型：普通的Pod及静态Pod（Static Pod）。后者比较特殊，它并没被存放在Kubernetes的etcd中，而是被存放在某个具体的Node上的一个具体文件中，并且只能在此Node上启动、运行。而普通的Pod一旦被创建，就会被放入etcd中存储，随后被Kubernetes Master调度到某个具体的Node上并绑定（Binding），该Pod被对应的Node上的kubelet进程实例化成一组相关的Docker容器并启动。在默认情况下，当Pod里的某个容器停止时，Kubernetes会自动检测到这个问题并且重新启动这个Pod（重启Pod里的所有容器），如果Pod所在的Node宕机，就会将这个Node上的所有Pod都重新调度到其他节点上。
 
 Pod、容器与Node的关系
-![Pod、容器与Node的关系](/images/kubernetes/basic/pod-node.png)
+![Pod、容器与Node的关系](/images/kubernetes/basic/pod-node.png "Pod、容器与Node的关系")
 
 ##  Label与标签选择器
 Label（标签）是Kubernetes系统中的另一个核心概念，相当于我们熟悉的"标签"。一个Label是一个key=value的键值对，其中的key与value由用户自己指定。Label可以被附加到各种资源对象上，例如Node、Pod、Service、Deployment等，一个资源对象可以定义任意数量的Label，同一个Label也可以被添加到任意数量的资源对象上。Label通常在资源对象定义时确定，也可以在对象创建后动态添加或者删除。我们可以通过给指定的资源对象捆绑一个或多个不同的Label来实现多维度的资源分组管理功能，以便灵活、方便地进行资源分配、调度、配置、部署等管理工作，例如，部署不同版本的应用到不同的环境中，以及监控、分析应用（日志记录、监控、告警）等。一些常用的Label示例如下。

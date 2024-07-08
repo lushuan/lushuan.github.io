@@ -178,18 +178,18 @@ service/grafana   NodePort   10.110.17.117   <none>        3000:30009/TCP   11m
 
 成功部署后，数据库会反向生成相关的表信息
 
-![grafan-1](/images/grafana/grafana-1.png)
+![grafan-1](/images/grafana/grafana-1.png "grafana")
 
 ## 访问功能界面
-`http://ip:30009` 登录是默认账号口令为'admin/admin',第一次登录时提示修改密码
-![grafan-2](/images/grafana/grafana-2.png)
+`http://ip:30009` 登录是默认账号口令为`admin/admin`,第一次登录时提示修改密码
+![grafan-2](/images/grafana/grafana-2.png "grafana")
 
 登录成功界面
 
-![grafan-3](/images/grafana/grafana-3.png)
+![grafan-3](/images/grafana/grafana-3.png "grafana")
 
 ## 数据源深入集成
-![grafan-4](/images/grafana/grafana-4.png)
+![grafan-4](/images/grafana/grafana-4.png "grafana")
 
 在Grafana中，数据源的集成是构建有效监控和分析系统的关键步骤。Grafana支持众多流行的数据存储和监控工具作为数据源，包括时序数据库Prometheus, InfluxDB，日志和文档存储如Elasticsearch，以及传统的SQL数据库如MySQL和PostgreSQL。
 
@@ -199,11 +199,16 @@ service/grafana   NodePort   10.110.17.117   <none>        3000:30009/TCP   11m
 
 在侧边栏点击 "+"，选择 Import，在 Grafana Dashboard 的文本框中输入 8919 即可导入：
 
-![grafan-5](/images/grafana/grafana-5.png)
+![grafan-5](/images/grafana/grafana-5.png "grafana")
 
 {{< admonition >}}
 在导入之前需要先创建数据源，大屏是适配的Prometheus 数据源
 {{< /admonition >}}
+
+通过部署Prometheus 和 Node Exporter 采集的实时数据大屏
+
+![grafan-7](/images/grafana/grafana-7.png "grafana")
+
 
 ## Grafana 相关组件概念了解
 ### 面板介绍
@@ -242,10 +247,10 @@ Panel 是 Grafana 中最基本的可视化单元，每一种类型的面板都�
 
 > 还可以添加引用的内容
 
-![这是一张图片](https://p8s.io/docs/assets/img/illustration.png)
+![这是一张图片](https://p8s.io/docs/assets/img/illustration.png "grafana")
 ```
 渲染后的图片
-![grafana-6](/images/grafana/grafana-6.png)
+![grafana-6](/images/grafana/grafana-6.png "grafana")
 
 ### 其它
 #### 安全与维护

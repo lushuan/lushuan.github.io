@@ -38,7 +38,7 @@ headless service作为service的一种类型，它又解决了什么问题？hea
 
 例如主节点可以对数据库进行读写操作，而其它的两个工作节点只能读，在这里客户端就没必要指定pod服务的集群地址，直接指定数据库Pod ip地址即可，这里需要绑定dns，客户端访问dns，dns会自动返回pod IP地址列表
 
-![server-and-Headless-Service](/images/kubernetes/blog/service-and-headless-service.png)
+![server-and-Headless-Service](/images/kubernetes/blog/service-and-headless-service.png "Service")
 
 ## 总结
 - 无头服务不需要指定集群地址

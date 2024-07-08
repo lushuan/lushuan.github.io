@@ -30,7 +30,7 @@ Blue Ocean 重新思考Jenkins的用户体验，从头开始设计Jenkins Pipeli
 在系统管理>插件管理>可选插件中搜索 Blue Ocean >安装,安装成功之后，就可以在页面上看到Blue Ocean的图标,打开后注册git 仓库地址
 认证后就可以创建流水线了。
 
-![jenkins-blue-ocean-4](/images/cicd/jenkins-blue-ocean-4.png)
+![jenkins-blue-ocean-4](/images/cicd/jenkins-blue-ocean-4.png "Blue Ocean")
 
 ## 创建流水线
 创建流水线前需要先安装对应的插件
@@ -40,13 +40,13 @@ Blue Ocean 重新思考Jenkins的用户体验，从头开始设计Jenkins Pipeli
 这边使用的git 仓库是gitee，使用gitlab 也是一样的方式，有两种认证的方式
 1. 通过账号口令
 2. 通过生成 ssh 公钥在gitlab 或者gitee 仓库上进行注册
-![jenkins-blue-ocean](/images/cicd/jenkins-blue-ocean.png)
+![jenkins-blue-ocean](/images/cicd/jenkins-blue-ocean.png "Blue Ocean")
 
 首先先进行证书认证，然后再创建流水线，如果项目中没有 Jenkinsfile 文件，会自动生成一个文件并默认推到 master 分支。
 
 ### 在Blue Ocean 查看任务进度视图
 点击对应的工作节点，可以查询任务运行过程中的日志详情
-![jenkins-blue-ocean-3](/images/cicd/jenkins-blue-ocean-3.png)
+![jenkins-blue-ocean-3](/images/cicd/jenkins-blue-ocean-3.png "Blue Ocean")
 
 blue ocean 反向生成的pipeline 代码
 ```

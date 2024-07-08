@@ -19,6 +19,8 @@ LoveIt提供了admonition shortcode，支持 12 种样式，可以在页面中�
 一个 **注意** 横幅
 {{< /admonition >}}
 
+
+
 {{< admonition abstract >}}
 一个 **摘要** 横幅
 {{< /admonition >}}
@@ -65,6 +67,10 @@ LoveIt提供了admonition shortcode，支持 12 种样式，可以在页面中�
 
 ```
 {{< admonition >}}
+一个 **注意** 横幅
+{{< /admonition >}}
+
+{{< admonition title="这是一个默认不展开的横幅" open=false >}}
 一个 **注意** 横幅
 {{< /admonition >}}
 

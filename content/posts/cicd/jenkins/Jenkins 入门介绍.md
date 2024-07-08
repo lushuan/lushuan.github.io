@@ -237,7 +237,7 @@ kubectl -n kube-ops get pod
 代理镜像源信息：
 `https://mirrors.tuna.tsinghua.edu.cn/jenkins/updates/update-center.json`
 
-![jenkins-update-center](/images/cicd/jenkins-update-center.png)
+![jenkins-update-center](/images/cicd/jenkins-update-center.png "Jenkins")
 
 对应服务器上配置文件
 ```shell
