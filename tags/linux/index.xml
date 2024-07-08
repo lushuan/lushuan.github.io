@@ -26,7 +26,7 @@
     <pubDate>Thu, 29 Apr 2021 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
     <guid>http://localhost:1313/fdisk%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86%E8%AF%A6%E8%A7%A3/</guid>
-    <description><![CDATA[打算给一台服务器做逻辑卷分区，发现磁盘未做分区，且磁盘空间余量较大，本篇记录一下 fdisk 磁盘分区划分的过程 事情的起因 通过pvcreate 创建逻辑卷]]></description>
+    <description><![CDATA[打算给一台服务器做逻辑卷分区，发现磁盘未做分区，且磁盘空间余量较大，本篇记录一下 fdisk 磁盘分区划分的过程 fdisk 事情的起因 通过pvcreate 创建逻辑]]></description>
 </item>
 <item>
     <title>lvm 逻辑卷组管理</title>

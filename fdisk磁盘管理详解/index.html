@@ -7,7 +7,7 @@
         <title>fdisk 磁盘管理详解 - Less is more</title><meta name="Description" content="知识有两种，一种是你知道的，一种是你知道在哪里能找到的！ --塞缪尔·约翰逊"><meta property="og:url" content="http://localhost:1313/fdisk%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86%E8%AF%A6%E8%A7%A3/">
   <meta property="og:site_name" content="Less is more">
   <meta property="og:title" content="fdisk 磁盘管理详解">
-  <meta property="og:description" content="打算给一台服务器做逻辑卷分区，发现磁盘未做分区，且磁盘空间余量较大，本篇记录一下 fdisk 磁盘分区划分的过程 事情的起因 通过pvcreate 创建逻辑卷">
+  <meta property="og:description" content="打算给一台服务器做逻辑卷分区，发现磁盘未做分区，且磁盘空间余量较大，本篇记录一下 fdisk 磁盘分区划分的过程 fdisk 事情的起因 通过pvcreate 创建逻辑">
   <meta property="og:locale" content="zh_CN">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="http://localhost:1313/images/avatar.png">
   <meta name="twitter:title" content="fdisk 磁盘管理详解">
-  <meta name="twitter:description" content="打算给一台服务器做逻辑卷分区，发现磁盘未做分区，且磁盘空间余量较大，本篇记录一下 fdisk 磁盘分区划分的过程 事情的起因 通过pvcreate 创建逻辑卷">
+  <meta name="twitter:description" content="打算给一台服务器做逻辑卷分区，发现磁盘未做分区，且磁盘空间余量较大，本篇记录一下 fdisk 磁盘分区划分的过程 fdisk 事情的起因 通过pvcreate 创建逻辑">
       <meta name="twitter:site" content="@xxxx">
 <meta name="application-name" content="我的网站">
 <meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/images/avatar.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://localhost:1313/fdisk%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86%E8%AF%A6%E8%A7%A3/" /><link rel="prev" href="http://localhost:1313/git%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/" /><link rel="next" href="http://localhost:1313/kubeadm%E5%AE%89%E8%A3%85k8s%E9%9B%86%E7%BE%A4%E6%8A%A5%E9%94%99%E6%8F%90%E7%A4%BAkubelet%E6%9C%AA%E8%BF%90%E8%A1%8C/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -33,7 +33,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "http:\/\/localhost:1313\/fdisk%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86%E8%AF%A6%E8%A7%A3\/"
-        },"genre": "posts","keywords": "linux","wordcount":  2024 ,
+        },"genre": "posts","keywords": "linux","wordcount":  2026 ,
         "url": "http:\/\/localhost:1313\/fdisk%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86%E8%AF%A6%E8%A7%A3\/","datePublished": "2021-04-29T12:06:37+08:00","dateModified": "2024-06-26T12:06:37+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -121,7 +121,7 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">fdisk 磁盘管理详解</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/linux/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Linux</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2021-04-29">2021-04-29</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 2024 字&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2021-04-29">2021-04-29</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 2026 字&nbsp;
                 <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 5 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  data-kept="true">
                 <div class="details-summary toc-title">
@@ -147,14 +147,16 @@
   </ul>
 </nav></div>
             </div><div class="content" id="content"><p>打算给一台服务器做逻辑卷分区，发现磁盘未做分区，且磁盘空间余量较大，本篇记录一下 fdisk 磁盘分区划分的过程</p>
-<p><img
-        class="lazyload"
-        src="/svg/loading.min.svg"
-        data-src="/images/linux/fdisk-1.jpg"
-        data-srcset="/images/linux/fdisk-1.jpg, /images/linux/fdisk-1.jpg 1.5x, /images/linux/fdisk-1.jpg 2x"
-        data-sizes="auto"
-        alt="/images/linux/fdisk-1.jpg"
-        title="fdisk-1" /></p>
+<p><figure><a class="lightgallery" href="/images/linux/fdisk-1.jpg" title="fdisk-1" data-thumbnail="/images/linux/fdisk-1.jpg" data-sub-html="<h2>fdisk</h2><p>fdisk-1</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/linux/fdisk-1.jpg"
+            data-srcset="/images/linux/fdisk-1.jpg, /images/linux/fdisk-1.jpg 1.5x, /images/linux/fdisk-1.jpg 2x"
+            data-sizes="auto"
+            alt="/images/linux/fdisk-1.jpg" />
+    </a><figcaption class="image-caption">fdisk</figcaption>
+    </figure></p>
 <h2 id="事情的起因">事情的起因</h2>
 <p>通过<code>pvcreate</code> 创建逻辑卷组提示报错
 报错信息</p>
@@ -201,14 +203,16 @@
 且通过<code>pvdisplay</code>查看该<code>/dev/sda2 </code> 分区为131G，已经全部用完。总的磁盘有1000.2 GB 可用，抛出boot /dev/sda1分区和/dev/sda2 的
 131GB空间，还剩800多GB的磁盘空间未使用。闲言少叙，开始通过fdisk划分新的磁盘分区<code>/dev/sda3</code></p>
 <p>主分区和扩展分区</p>
-<p><img
-        class="lazyload"
-        src="/svg/loading.min.svg"
-        data-src="/images/linux/fdisk-2.jpg"
-        data-srcset="/images/linux/fdisk-2.jpg, /images/linux/fdisk-2.jpg 1.5x, /images/linux/fdisk-2.jpg 2x"
-        data-sizes="auto"
-        alt="/images/linux/fdisk-2.jpg"
-        title="fdisk-2" /></p>
+<p><figure><a class="lightgallery" href="/images/linux/fdisk-2.jpg" title="fdisk-2" data-thumbnail="/images/linux/fdisk-2.jpg" data-sub-html="<h2>fdisk</h2><p>fdisk-2</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/linux/fdisk-2.jpg"
+            data-srcset="/images/linux/fdisk-2.jpg, /images/linux/fdisk-2.jpg 1.5x, /images/linux/fdisk-2.jpg 2x"
+            data-sizes="auto"
+            alt="/images/linux/fdisk-2.jpg" />
+    </a><figcaption class="image-caption">fdisk</figcaption>
+    </figure></p>
 <h2 id="划分磁盘分区">划分磁盘分区</h2>
 <h3 id="首先了解什么是-fdisk-命令">首先了解什么是 fdisk 命令</h3>
 <p>fdisk 的意思是 固定磁盘(Fixed Disk) 或 格式化磁盘(Format Disk)，它是命令行下允许用户对分区进行查看、创建、调整大小、删除、移动和复制的工具。它支持 MBR、Sun、SGI、BSD 分区表，但是它不支持 GUID 分区表（GPT）。它不是为操作大分区设计的。</p>
@@ -477,5 +481,5 @@
             </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
                 <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
             </a>
-        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+        </div><link rel="stylesheet" href="/lib/lightgallery/css/lightgallery-bundle.min.css"><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/lightgallery/lightgallery.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/zoom/lg-zoom.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"lightgallery":true,"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
 </html>

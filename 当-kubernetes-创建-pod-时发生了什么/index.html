@@ -7,7 +7,7 @@
         <title>当 Kubernetes 创建 Pod 时发生了什么 - Less is more</title><meta name="Description" content="知识有两种，一种是你知道的，一种是你知道在哪里能找到的！ --塞缪尔·约翰逊"><meta property="og:url" content="http://localhost:1313/%E5%BD%93-kubernetes-%E5%88%9B%E5%BB%BA-pod-%E6%97%B6%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88/">
   <meta property="og:site_name" content="Less is more">
   <meta property="og:title" content="当 Kubernetes 创建 Pod 时发生了什么">
-  <meta property="og:description" content="当Kubernetes创建Pod时发生了什么-全景图 https://github.com/jamiehannaford/what-happens-when-k8s/tree/master/zh-cn">
+  <meta property="og:description" content="当Kubernetes创建Pod时发生了什么-全景图 https://github.com/jamiehannaford/what-happens-when-k8s/tree/master/zh-cn what-happens-when-k8s">
   <meta property="og:locale" content="zh_CN">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="http://localhost:1313/images/avatar.png">
   <meta name="twitter:title" content="当 Kubernetes 创建 Pod 时发生了什么">
-  <meta name="twitter:description" content="当Kubernetes创建Pod时发生了什么-全景图 https://github.com/jamiehannaford/what-happens-when-k8s/tree/master/zh-cn">
+  <meta name="twitter:description" content="当Kubernetes创建Pod时发生了什么-全景图 https://github.com/jamiehannaford/what-happens-when-k8s/tree/master/zh-cn what-happens-when-k8s">
       <meta name="twitter:site" content="@xxxx">
 <meta name="application-name" content="我的网站">
 <meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/images/avatar.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://localhost:1313/%E5%BD%93-kubernetes-%E5%88%9B%E5%BB%BA-pod-%E6%97%B6%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88/" /><link rel="prev" href="http://localhost:1313/helm_charts%E7%BC%96%E5%86%99%E6%A8%A1%E6%9D%BF%E8%AF%B4%E6%98%8E/" /><link rel="next" href="http://localhost:1313/kube-dns%E5%88%87%E6%8D%A2%E4%B8%BAcoredns%E5%AE%9E%E8%B7%B5/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -33,7 +33,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "http:\/\/localhost:1313\/%E5%BD%93-kubernetes-%E5%88%9B%E5%BB%BA-pod-%E6%97%B6%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88\/"
-        },"genre": "posts","keywords": "Kubernetes","wordcount":  27 ,
+        },"genre": "posts","keywords": "Kubernetes","wordcount":  28 ,
         "url": "http:\/\/localhost:1313\/%E5%BD%93-kubernetes-%E5%88%9B%E5%BB%BA-pod-%E6%97%B6%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88\/","datePublished": "2023-03-26T12:06:37+08:00","dateModified": "2024-06-26T12:06:37+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -121,7 +121,7 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">当 Kubernetes 创建 Pod 时发生了什么</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/kubernetes/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Kubernetes</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-03-26">2023-03-26</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 27 字&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-03-26">2023-03-26</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 28 字&nbsp;
                 <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 1 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  data-kept="true">
                 <div class="details-summary toc-title">
@@ -133,7 +133,17 @@
 <li><a href="https://hugo-picture.oss-cn-beijing.aliyuncs.com/what-happens-when-k8s.svg" target="_blank" rel="noopener noreffer ">当Kubernetes创建Pod时发生了什么-全景图</a></li>
 <li><a href="https://github.com/jamiehannaford/what-happens-when-k8s/tree/master/zh-cn" target="_blank" rel="noopener noreffer ">https://github.com/jamiehannaford/what-happens-when-k8s/tree/master/zh-cn</a></li>
 </ul>
-<center><img src="/images/kubernetes/what-happens-when-k8s.svg" width="50%" /></center></div><div class="post-footer" id="post-footer">
+<p><figure><a class="lightgallery" href="/images/kubernetes/what-happens-when-k8s.svg" title="what-happens-when-k8s" data-thumbnail="/images/kubernetes/what-happens-when-k8s.svg" data-sub-html="<h2>what-happens-when-k8s</h2><p>what-happens-when-k8s</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/kubernetes/what-happens-when-k8s.svg"
+            data-srcset="/images/kubernetes/what-happens-when-k8s.svg, /images/kubernetes/what-happens-when-k8s.svg 1.5x, /images/kubernetes/what-happens-when-k8s.svg 2x"
+            data-sizes="auto"
+            alt="/images/kubernetes/what-happens-when-k8s.svg" />
+    </a><figcaption class="image-caption">what-happens-when-k8s</figcaption>
+    </figure></p>
+</div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
@@ -170,5 +180,5 @@
             </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
                 <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
             </a>
-        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+        </div><link rel="stylesheet" href="/lib/lightgallery/css/lightgallery-bundle.min.css"><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/lightgallery/lightgallery.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/zoom/lg-zoom.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"lightgallery":true,"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
 </html>

@@ -33,7 +33,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "http:\/\/localhost:1313\/lvm%E9%80%BB%E8%BE%91%E5%8D%B7%E7%BB%84%E7%AE%A1%E7%90%86\/"
-        },"genre": "posts","keywords": "linux","wordcount":  2462 ,
+        },"genre": "posts","keywords": "linux","wordcount":  2465 ,
         "url": "http:\/\/localhost:1313\/lvm%E9%80%BB%E8%BE%91%E5%8D%B7%E7%BB%84%E7%AE%A1%E7%90%86\/","datePublished": "2021-03-18T12:06:37+08:00","dateModified": "2022-06-26T12:06:37+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -121,7 +121,7 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">lvm 逻辑卷组管理</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/linux/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Linux</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2021-03-18">2021-03-18</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 2462 字&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2021-03-18">2021-03-18</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 2465 字&nbsp;
                 <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 5 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  data-kept="true">
                 <div class="details-summary toc-title">
@@ -167,14 +167,16 @@
             </div><div class="content" id="content"><h2 id="背景">背景</h2>
 <p>部署 k8s 时需要对磁盘进行分区划分，正常是集成是直接给创建好的，现场在沟通过程中只提供了一块磁盘。
 本篇文章记录一下磁盘分区划分的原理和步骤，尽量选择大白话。</p>
-<p><img
-        class="lazyload"
-        src="/svg/loading.min.svg"
-        data-src="/images/linux/lvm-1.jpg"
-        data-srcset="/images/linux/lvm-1.jpg, /images/linux/lvm-1.jpg 1.5x, /images/linux/lvm-1.jpg 2x"
-        data-sizes="auto"
-        alt="/images/linux/lvm-1.jpg"
-        title="lvm-1" /></p>
+<p><figure><a class="lightgallery" href="/images/linux/lvm-1.jpg" title="lvm-1" data-thumbnail="/images/linux/lvm-1.jpg" data-sub-html="<h2>lvm</h2><p>lvm-1</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/linux/lvm-1.jpg"
+            data-srcset="/images/linux/lvm-1.jpg, /images/linux/lvm-1.jpg 1.5x, /images/linux/lvm-1.jpg 2x"
+            data-sizes="auto"
+            alt="/images/linux/lvm-1.jpg" />
+    </a><figcaption class="image-caption">lvm</figcaption>
+    </figure></p>
 <h2 id="lvm-介绍">lvm 介绍</h2>
 <p>LVM——全称Logical Volume Manager，可以将多个硬盘和硬盘分区做成一个逻辑卷，并把这个逻辑卷作为一个整体来统一管理，动态对分区进行扩缩空间大小，提高磁盘管理灵活性。</p>
 <p>在安装CentOS 7的过程中选择自动分区时，默认就是以LVM的方案安装的系统。</p>
@@ -191,14 +193,16 @@
 <h3 id="lvlogical-volume-逻辑卷">LV(Logical Volume) 逻辑卷</h3>
 <p>逻辑卷，Logical Volume，建立在卷组之上，与物理卷没有直接关系。格式化后，即可挂载使用。</p>
 <h2 id="三者关系">三者关系</h2>
-<p><img
-        class="lazyload"
-        src="/svg/loading.min.svg"
-        data-src="/images/linux/lvm.png"
-        data-srcset="/images/linux/lvm.png, /images/linux/lvm.png 1.5x, /images/linux/lvm.png 2x"
-        data-sizes="auto"
-        alt="/images/linux/lvm.png"
-        title="lvm" /></p>
+<p><figure><a class="lightgallery" href="/images/linux/lvm.png" title="lvm" data-thumbnail="/images/linux/lvm.png" data-sub-html="<h2>lvm</h2><p>lvm</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/linux/lvm.png"
+            data-srcset="/images/linux/lvm.png, /images/linux/lvm.png 1.5x, /images/linux/lvm.png 2x"
+            data-sizes="auto"
+            alt="/images/linux/lvm.png" />
+    </a><figcaption class="image-caption">lvm</figcaption>
+    </figure></p>
 <h2 id="lvm特点">lvm特点</h2>
 <p>LVM最大的特点就是可以对磁盘进行动态管理。因为逻辑卷的大小是可以动态调整的，而且不会丢失现有的数据。我们如果新增加了硬盘，其也不会改变现有上层的逻辑卷。作为一个动态磁盘管理机制，逻辑卷技术大大提高了磁盘管理的灵活性！</p>
 <h2 id="工作原理">工作原理</h2>
@@ -217,14 +221,16 @@
 VG-XJ,现在亚洲舞王尼古拉斯赵四想要吃馒头，就选择了去大脚供销社去购买面粉，打算购买50斤面粉。这50斤面粉供销提供的lv,
 lv 一小份的面粉是来自于vg供销社而不是pv 面粉制造机器。下面会给出示例从小麦生产到赵四购买面粉。</p>
 <h2 id="操作">操作</h2>
-<p><img
-        class="lazyload"
-        src="/svg/loading.min.svg"
-        data-src="/images/linux/lvm-2.jpg"
-        data-srcset="/images/linux/lvm-2.jpg, /images/linux/lvm-2.jpg 1.5x, /images/linux/lvm-2.jpg 2x"
-        data-sizes="auto"
-        alt="/images/linux/lvm-2.jpg"
-        title="lvm-2" /></p>
+<p><figure><a class="lightgallery" href="/images/linux/lvm-2.jpg" title="lvm-2" data-thumbnail="/images/linux/lvm-2.jpg" data-sub-html="<h2>lvm</h2><p>lvm-2</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/linux/lvm-2.jpg"
+            data-srcset="/images/linux/lvm-2.jpg, /images/linux/lvm-2.jpg 1.5x, /images/linux/lvm-2.jpg 2x"
+            data-sizes="auto"
+            alt="/images/linux/lvm-2.jpg" />
+    </a><figcaption class="image-caption">lvm</figcaption>
+    </figure></p>
 <h3 id="分区操作">分区操作</h3>
 <p>1、 查看磁盘</p>
 <p>通过<code>fdisk -l</code>可以看出集成提供了一块600多G的磁盘 <code>/dev/xvdc</code></p>
@@ -627,5 +633,5 @@ lv 一小份的面粉是来自于vg供销社而不是pv 面粉制造机器。下
             </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
                 <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
             </a>
-        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+        </div><link rel="stylesheet" href="/lib/lightgallery/css/lightgallery-bundle.min.css"><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/lightgallery/lightgallery.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/zoom/lg-zoom.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"lightgallery":true,"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
 </html>
