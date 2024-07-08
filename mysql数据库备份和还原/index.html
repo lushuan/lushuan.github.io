@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>MySQL 数据库备份和还原 - Less is more</title><meta name="Description" content="知识有两种，一种是你知道的，一种是你知道在哪里能找到的！ --塞缪尔·约翰逊"><meta property="og:url" content="http://localhost:1313/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E5%92%8C%E8%BF%98%E5%8E%9F/">
+  <meta property="og:site_name" content="Less is more">
+  <meta property="og:title" content="MySQL 数据库备份和还原">
+  <meta property="og:description" content="背景 数据是企业生产的重中之重，保护数据安全，防止数据丢失很关键 使用 mysqldump 进行备份 备份的方案场景，列举部分场景 只备份某一个库，不要里面的表 备份所有">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2020-08-17T12:06:37+08:00">
+    <meta property="article:modified_time" content="2024-06-26T12:06:37+08:00">
+    <meta property="article:tag" content="MySQL">
+    <meta property="og:image" content="http://localhost:1313/images/avatar.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/images/avatar.png">
+  <meta name="twitter:title" content="MySQL 数据库备份和还原">
+  <meta name="twitter:description" content="背景 数据是企业生产的重中之重，保护数据安全，防止数据丢失很关键 使用 mysqldump 进行备份 备份的方案场景，列举部分场景 只备份某一个库，不要里面的表 备份所有">
+      <meta name="twitter:site" content="@xxxx">
+<meta name="application-name" content="我的网站">
+<meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/images/avatar.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://localhost:1313/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E5%92%8C%E8%BF%98%E5%8E%9F/" /><link rel="prev" href="http://localhost:1313/%E6%AC%B2%E7%BD%A2%E4%B8%8D%E8%83%BD%E7%9A%84%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95%E7%AD%96%E7%95%A5/" /><link rel="next" href="http://localhost:1313/xargs%E5%8E%9F%E7%90%86%E5%8F%8A%E4%BD%BF%E7%94%A8/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "MySQL 数据库备份和还原",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost:1313\/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E5%92%8C%E8%BF%98%E5%8E%9F\/"
+        },"genre": "posts","keywords": "MySQL","wordcount":  6546 ,
+        "url": "http:\/\/localhost:1313\/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E5%92%8C%E8%BF%98%E5%8E%9F\/","datePublished": "2020-08-17T12:06:37+08:00","dateModified": "2024-06-26T12:06:37+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "lushuan"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Less is more"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Less is more</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 归档 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/" title="About"> 关于 </a><a class="menu-item" href="/friends/" title="friends"> 友链 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Less is more"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Less is more</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">归档</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="About">关于</a><a class="menu-item" href="/friends/" title="friends">友链</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">MySQL 数据库备份和还原</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/mysql/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>MySQL</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2020-08-17">2020-08-17</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 6546 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 14 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="true">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#背景">背景</a></li>
+    <li><a href="#使用-mysqldump-进行备份">使用 mysqldump 进行备份</a>
+      <ul>
+        <li><a href="#数据备份的各个场景">数据备份的各个场景</a>
+          <ul>
+            <li><a href="#场景一备份所有数据库实例">场景一：备份所有数据库实例</a></li>
+            <li><a href="#场景二导出某个或某几个数据库">场景二：导出某个或某几个数据库</a></li>
+            <li><a href="#场景三导出一张表">场景三：导出一张表</a></li>
+            <li><a href="#场景四导出整个数据库结构">场景四：导出整个数据库结构</a></li>
+            <li><a href="#场景五导出数据库中的一张表结构">场景五：导出数据库中的一张表结构</a></li>
+            <li><a href="#场景六导出数据库一个表数据不包括表结构">场景六：导出数据库一个表数据,不包括表结构</a></li>
+          </ul>
+        </li>
+        <li><a href="#数据还原">数据还原</a></li>
+      </ul>
+    </li>
+    <li><a href="#通过-crontab-定时备份指定数据库脚本参考">通过 crontab 定时备份指定数据库脚本参考</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="背景">背景</h2>
+<p>数据是企业生产的重中之重，保护数据安全，防止数据丢失很关键</p>
+<h2 id="使用-mysqldump-进行备份">使用 mysqldump 进行备份</h2>
+<p>备份的方案场景，列举部分场景</p>
+<ol>
+<li>只备份某一个库，不要里面的表</li>
+<li>备份所有的库，和所有的表，但是不要表中的数据，只备份它的结构(创建的SQL)</li>
+<li>只要某一个库，以及这个库中的所有表，以及所有数据</li>
+<li>只要某一个库，里面的某一张表</li>
+</ol>
+<div class="details admonition note">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-pencil-alt fa-fw" aria-hidden="true"></i>mysqldump 相关命令<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content"><p>mysqldump客户端可用来转储数据库或搜集数据库进行备份或将数据转移到另一个SQL服务器(不一定是一个MySQL服务器)。转储包含创建表和/或装载表的SQL语句。</p>
+<p>如果你在服务器上进行备份，并且表均为MyISAM表，应考虑使用mysqlhotcopy，因为可以更快地进行备份和恢复。参见8.9节，“mysqlhotcopy：数据库备份程序”。</p>
+<p>有3种方式来调用mysqldump：</p>
+<p>shell&gt; mysqldump [options] db_name [tables]
+shell&gt; mysqldump [options] &mdash;database DB1 [DB2 DB3&hellip;]
+shell&gt; mysqldump [options] &ndash;all&ndash;database
+如果没有指定任何表或使用了&mdash;database或&ndash;all&ndash;database选项，则转储整个数据库。</p>
+<p>要想获得你的版本的mysqldump支持的选项，执行mysqldump &mdash;help。</p>
+<p>如果运行mysqldump没有&ndash;quick或&ndash;opt选项，mysqldump在转储结果前将整个结果集装入内存。如果转储大数据库可能会出现问题。该选项默认启用，但可以用&ndash;skip-opt禁用。</p>
+<p>如果使用最新版本的mysqldump程序生成一个转储重装到很旧版本的MySQL服务器中，不应使用&ndash;opt或-e选项。</p>
+<p>mysqldump支持下面的选项：</p>
+<p>&mdash;help，-？
+显示帮助消息并退出。</p>
+<p>&ndash;add-drop&ndash;database</p>
+<pre><code>在每个CREATE DATABASE语句前添加DROP DATABASE语句。
+</code></pre>
+<p>&ndash;add-drop-tables</p>
+<pre><code>在每个CREATE TABLE语句前添加DROP TABLE语句。
+</code></pre>
+<p>&ndash;add-locking</p>
+<pre><code>用LOCK TABLES和UNLOCK TABLES语句引用每个表转储。重载转储文件时插入得更快。参见7.2.16节，“INSERT语句的速度”。
+</code></pre>
+<p>&ndash;all&ndash;database，-A</p>
+<pre><code>转储所有数据库中的所有表。与使用---database选项相同，在命令行中命名所有数据库。
+</code></pre>
+<p>&ndash;allow-keywords</p>
+<pre><code>允许创建关键字列名。应在每个列名前面加上表名前缀。
+</code></pre>
+<p>&mdash;comments[={0|1}]</p>
+<pre><code>如果设置为 0，禁止转储文件中的其它信息，例如程序版本、服务器版本和主机。--skip—comments与---comments=0的结果相同。 默认值为1，即包括额外信息。
+</code></pre>
+<p>&ndash;compact</p>
+<pre><code>产生少量输出。该选项禁用注释并启用--skip-add-drop-tables、--no-set-names、--skip-disable-keys和--skip-add-locking选项。
+</code></pre>
+<p>&ndash;compatible=name</p>
+<pre><code>产生与其它数据库系统或旧的MySQL服务器更兼容的输出。值可以为ansi、mysql323、mysql40、postgresql、oracle、mssql、db2、maxdb、no_key_options、no_tables_options或者no_field_options。要使用几个值，用逗号将它们隔开。这些值与设置服务器SQL模式的相应选项有相同的含义。参见5.3.2节，“SQL服务器模式”。
+
+该选项不能保证同其它服务器之间的兼容性。它只启用那些目前能够使转储输出更兼容的SQL模式值。例如，--compatible=oracle 不映射Oracle类型或使用Oracle注释语法的数据类型。
+</code></pre>
+<p>&ndash;complete-insert，-c</p>
+<pre><code>使用包括列名的完整的INSERT语句。
+</code></pre>
+<p>&ndash;compress，-C</p>
+<pre><code>压缩在客户端和服务器之间发送的所有信息（如果二者均支持压缩）。
+</code></pre>
+<p>&ndash;create-option</p>
+<pre><code>在CREATE TABLE语句中包括所有MySQL表选项。
+</code></pre>
+<p>&mdash;database，-B</p>
+<pre><code>转储几个数据库。通常情况，mysqldump将命令行中的第1个名字参量看作数据库名，后面的名看作表名。使用该选项，它将所有名字参量看作数据库名。CREATE DATABASE IF NOT EXISTS db_name和USE db_name语句包含在每个新数据库前的输出中。
+</code></pre>
+<p>&mdash;debug[=debug_options]，-# [debug_options]</p>
+<pre><code>写调试日志。debug_options字符串通常为'd:t:o,file_name'。
+</code></pre>
+<p>&ndash;default-character-set=charset</p>
+<pre><code>使用charsetas默认字符集。参见5.10.1节，“数据和排序用字符集”。如果没有指定，mysqldump使用utf8。
+</code></pre>
+<p>&ndash;delayed-insert</p>
+<pre><code>使用INSERT DELAYED语句插入行。
+</code></pre>
+<p>&ndash;delete-master-logs</p>
+<pre><code>在主复制服务器上，完成转储操作后删除二进制日志。该选项自动启用--master-data。
+</code></pre>
+<p>&ndash;disable-keys，-K</p>
+<pre><code>对于每个表，用/*!40000 ALTER TABLE tbl_name DISABLE KEYS */;和/*!40000 ALTER TABLE tbl_name ENABLE KEYS */;语句引用INSERT语句。这样可以更快地装载转储文件，因为在插入所有行后创建索引。该选项只适合MyISAM表。
+</code></pre>
+<p>&ndash;extended-insert，-e</p>
+<pre><code>使用包括几个VALUES列表的多行INSERT语法。这样使转储文件更小，重载文件时可以加速插入。
+</code></pre>
+<p>&ndash;fields-terminated-by=&hellip;，&ndash;fields-enclosed-by=&hellip;，&ndash;fields-optionally-enclosed-by=&hellip;，&ndash;fields-escaped-by=&hellip;，&ndash;行-terminated-by=&hellip;</p>
+<pre><code>这些选项结合-T选项使用，与LOAD DATA INFILE的相应子句有相同的含义。参见13.2.5节，“LOAD DATA INFILE语法”。
+</code></pre>
+<p>&ndash;first-slave，-x</p>
+<pre><code>不赞成使用，现在重新命名为--lock-all-tables。
+</code></pre>
+<p>&ndash;flush-logs，-F</p>
+<pre><code>开始转储前刷新MySQL服务器日志文件。该选项要求RELOAD权限。请注意如果结合--all--database(或-A)选项使用该选项，根据每个转储的数据库刷新日志。例外情况是当使用--lock-all-tables或--master-data的时候：在这种情况下，日志只刷新一次，在所有 表被锁定后刷新。如果你想要同时转储和刷新日志，应使用--flush-logs连同--lock-all-tables或--master-data。
+</code></pre>
+<p>&ndash;force，-f
+在表转储过程中，即使出现SQL错误也继续。</p>
+<p>&ndash;host=host_name，-h host_name
+从给定主机的MySQL服务器转储数据。默认主机是localhost。</p>
+<p>&ndash;hex-blob
+使用十六进制符号转储二进制字符串列(例如，&lsquo;abc&rsquo; 变为0x616263)。影响到的列有BINARY、VARBINARY、BLOB。</p>
+<p>&ndash;lock-all-tables，-x
+所有数据库中的所有表加锁。在整体转储过程中通过全局读锁定来实现。该选项自动关闭&ndash;single-transaction和&ndash;lock-tables。</p>
+<p>&ndash;lock-tables，-l
+开始转储前锁定所有表。用READ LOCAL锁定表以允许并行插入MyISAM表。对于事务表例如InnoDB和BDB，&ndash;single-transaction是一个更好的选项，因为它不根本需要锁定表。
+请注意当转储多个数据库时，&ndash;lock-tables分别为每个数据库锁定表。因此，该选项不能保证转储文件中的表在数据库之间的逻辑一致性。不同数据库表的转储状态可以完全不同。</p>
+<p>&ndash;master-data[=value]
+该选项将二进制日志的位置和文件名写入到输出中。该选项要求有RELOAD权限，并且必须启用二进制日志。如果该选项值等于1，位置和文件名被写入CHANGE MASTER语句形式的转储输出，如果你使用该SQL转储主服务器以设置从服务器，从服务器从主服务器二进制日志的正确位置开始。如果选项值等于2，CHANGE MASTER语句被写成SQL注释。如果value被省略，这是默认动作。</p>
+<p>&ndash;master-data
+选项启用&ndash;lock-all-tables，除非还指定&ndash;single-transaction(在这种情况下，只在刚开始转储时短时间获得全局读锁定。又见&ndash;single-transaction。在任何一种情况下，日志相关动作发生在转储时。该选项自动关闭&ndash;lock-tables。</p>
+<p>&ndash;no-create-db，-n</p>
+<pre><code>该选项禁用CREATE DATABASE /*!32312 IF NOT EXISTS*/ db_name语句，如果给出---database或--all--database选项，则包含到输出中。
+</code></pre>
+<p>&ndash;no-create-info，-t</p>
+<pre><code>不写重新创建每个转储表的CREATE TABLE语句。
+</code></pre>
+<p>&ndash;no-data，-d</p>
+<pre><code>不写表的任何行信息。如果你只想转储表的结构这很有用。
+</code></pre>
+<p>&ndash;opt</p>
+<pre><code>该选项是速记；等同于指定 --add-drop-tables--add-locking --create-option --disable-keys--extended-insert --lock-tables --quick --set-charset。它可以给出很快的转储操作并产生一个可以很快装入MySQL服务器的转储文件。该选项默认开启，但可以用--skip-opt禁用。要想只禁用确信用-opt启用的选项，使用--skip形式；例如，--skip-add-drop-tables或--skip-quick。
+</code></pre>
+<p>&ndash;password[=password]，-p[password]</p>
+<pre><code>连接服务器时使用的密码。如果你使用短选项形式(-p)，不能在选项和密码之间有一个空格。如果在命令行中，忽略了--password或-p选项后面的 密码值，将提示你输入一个。
+</code></pre>
+<p>&ndash;port=port_num，-P port_num</p>
+<pre><code>用于连接的TCP/IP端口号。
+</code></pre>
+<p>&ndash;protocol={TCP | SOCKET | PIPE | MEMORY}</p>
+<pre><code>使用的连接协议。
+</code></pre>
+<p>&ndash;quick，-q</p>
+<pre><code>该选项用于转储大的表。它强制mysqldump从服务器一次一行地检索表中的行而不是检索所有行并在输出前将它缓存到内存中。
+</code></pre>
+<p>&ndash;quote-names，-Q</p>
+<pre><code>用‘`’字符引用数据库、表和列名。如果服务器SQL模式包括ANSI_QUOTES选项，用‘&quot;’字符引用名。默认启用该选项。可以用--skip-quote-names禁用，但该选项应跟在其它选项后面，例如可以启用--quote-names的--compatible。
+</code></pre>
+<p>&ndash;result-file=file，-r file</p>
+<pre><code>将输出转向给定的文件。该选项应用在Windows中，因为它禁止将新行‘\n’字符转换为‘\r\n’回车、返回/新行序列。
+</code></pre>
+<p>&ndash;routines，-R</p>
+<pre><code>在转储的数据库中转储存储程序(函数和程序)。使用---routines产生的输出包含CREATE PROCEDURE和CREATE FUNCTION语句以重新创建子程序。但是，这些语句不包括属性，例如子程序定义者或创建和修改时间戳。这说明当重载子程序时，对它们进行创建时定义者应设置为重载用户，时间戳等于重载时间。
+
+如果你需要创建的子程序使用原来的定义者和时间戳属性，不使用--routines。相反，使用一个具有mysql数据库相应权限的MySQL账户直接转储和重载mysql.proc表的内容。
+
+该选项在MySQL 5.1.2中添加进来。在此之前，存储程序不转储。
+</code></pre>
+<p>&ndash;set-charset</p>
+<pre><code>将SET NAMES default_character_set加到输出中。该选项默认启用。要想禁用SET NAMES语句，使用--skip-set-charset。
+</code></pre>
+<p>&ndash;single-transaction</p>
+<pre><code>该选项从服务器转储数据之前发出一个BEGIN SQL语句。它只适用于事务表，例如InnoDB和BDB，因为然后它将在发出BEGIN而没有阻塞任何应用程序时转储一致的数据库状态。
+
+当使用该选项时，应记住只有InnoDB表能以一致的状态被转储。例如，使用该选项时任何转储的MyISAM或HEAP表仍然可以更改状态。
+</code></pre>
+<p>&ndash;single-transaction选项和&ndash;lock-tables选项是互斥的，因为LOCK TABLES会使任何挂起的事务隐含提交。</p>
+<pre><code>要想转储大的表，应结合--quick使用该选项。
+</code></pre>
+<p>&ndash;socket=path，-S path</p>
+<pre><code>当连接localhost(为默认主机)时使用的套接字文件。
+</code></pre>
+<p>&ndash;skip&ndash;comments</p>
+<pre><code>参见---comments选项的描述。
+</code></pre>
+<p>&ndash;tab=path，-T path</p>
+<pre><code>产生tab分割的数据文件。对于每个转储的表，mysqldump创建一个包含创建表的CREATE TABLE语句的tbl_name.sql文件，和一个包含其数据的tbl_name.txt文件。选项值为写入文件的目录。
+
+默认情况，.txt数据文件的格式是在列值和每行后面的新行之间使用tab字符。可以使用--fields-xxx和--行--xxx选项明显指定格式。
+
+注释：该选项只适用于mysqldump与mysqld服务器在同一台机器上运行时。你必须具有FILE权限，并且服务器必须有在你指定的目录中有写文件的许可。
+</code></pre>
+<p>&ndash;tables</p>
+<pre><code>覆盖---database或-B选项。选项后面的所有参量被看作表名。
+</code></pre>
+<p>&ndash;triggers</p>
+<pre><code>为每个转储的表转储触发器。该选项默认启用；用--skip-triggers禁用它。
+</code></pre>
+<p>&ndash;tz-utc</p>
+<pre><code>在转储文件中加入SET TIME_ZONE='+00:00'以便TIMESTAMP列可以在具有不同时区的服务器之间转储和重载。(不使用该选项，TIMESTAMP列在具有本地时区的源服务器和目的服务器之间转储和重载）。--tz-utc也可以保护由于夏令时带来的更改。--tz-utc默认启用。要想禁用它，使用--skip-tz-utc。该选项在MySQL 5.1.2中加入。
+</code></pre>
+<p>&ndash;user=user_name，-u user_name</p>
+<pre><code>连接服务器时使用的MySQL用户名。
+</code></pre>
+<p>&ndash;verbose，-v</p>
+<pre><code>冗长模式。打印出程序操作的详细信息。
+</code></pre>
+<p>&ndash;version，-V</p>
+<pre><code>显示版本信息并退出。
+</code></pre>
+<p>&ndash;where=&lsquo;where-condition&rsquo;, -w &lsquo;where-condition&rsquo;</p>
+<pre><code>只转储给定的WHERE条件选择的记录。请注意如果条件包含命令解释符专用空格或字符，一定要将条件引用起来。
+
+例如：
+
+&quot;--where=user='jimf'&quot;
+&quot;-wuserid&gt;1&quot;
+&quot;-wuserid&lt;1&quot;
+--xml，-X
+
+将转储输出写成XML。
+
+还可以使用--var_name=value选项设置下面的变量：
+
+max_allowed_packet
+
+客户端/服务器之间通信的缓存区的最大大小。最大为1GB。
+
+net_buffer_length
+
+客户端/服务器之间通信的缓存区的初始大小。当创建多行插入语句时(如同使用选项--extended-insert或--opt)，mysqldump创建长度达net_buffer_length的行。如果增加该变量，还应确保在MySQL服务器中的net_buffer_length变量至少这么大。
+
+还可以使用--set-variable=var_name=value或-O var_name=value语法设置变量。然而，现在不赞成使用该语法。
+</code></pre>
+</div>
+        </div>
+    </div>
+<h3 id="数据备份的各个场景">数据备份的各个场景</h3>
+<h4 id="场景一备份所有数据库实例">场景一：备份所有数据库实例</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="n">mysqldump</span><span class="w"> </span><span class="o">-</span><span class="n">u</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">-</span><span class="n">p</span><span class="w"> </span><span class="c1">--all-databases&gt; all_databases.sql
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="场景二导出某个或某几个数据库">场景二：导出某个或某几个数据库</h4>
+<p>数据库为<code>myblog</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="n">mysqldump</span><span class="w"> </span><span class="o">-</span><span class="n">u</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">-</span><span class="n">p</span><span class="w"> </span><span class="c1">--databases test mysql &gt; db_test_and_mysql.sql
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="场景三导出一张表">场景三：导出一张表</h4>
+<p>数据库为<code>myblog</code>，表为<code>wp_users</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="n">mysqldump</span><span class="w"> </span><span class="o">-</span><span class="n">u</span><span class="w"> </span><span class="n">dbadmin</span><span class="w"> </span><span class="o">-</span><span class="n">p</span><span class="w"> </span><span class="n">myblog</span><span class="w"> </span><span class="n">wp_users</span><span class="o">&gt;</span><span class="w"> </span><span class="n">blog_users</span><span class="p">.</span><span class="k">sql</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="场景四导出整个数据库结构">场景四：导出整个数据库结构</h4>
+<p>导出一个数据库结构  -d 没有数据 &ndash;add-drop-table 在每个create语句之前增加一个drop table</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="n">mysqldump</span><span class="w"> </span><span class="o">-</span><span class="n">u</span><span class="w"> </span><span class="n">dbadmin</span><span class="w"> </span><span class="o">-</span><span class="n">p</span><span class="w"> </span><span class="o">-</span><span class="n">d</span><span class="w"> </span><span class="c1">--add-drop-table myblog &gt; blog_struc.sql
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="场景五导出数据库中的一张表结构">场景五：导出数据库中的一张表结构</h4>
+<p>数据库为<code>myblog</code>，表为<code>wp_users</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="n">mysqldump</span><span class="w"> </span><span class="o">-</span><span class="n">u</span><span class="w"> </span><span class="n">dbadmin</span><span class="w"> </span><span class="o">-</span><span class="n">p</span><span class="w"> </span><span class="o">-</span><span class="n">d</span><span class="w"> </span><span class="c1">--add-drop-table myblog  wp_users&gt; blog_users_struc.sql
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="场景六导出数据库一个表数据不包括表结构">场景六：导出数据库一个表数据,不包括表结构</h4>
+<p>数据库为<code>test</code>，表为<code>person</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="n">mysqldump</span><span class="w"> </span><span class="o">-</span><span class="n">u</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">-</span><span class="n">p</span><span class="w"> </span><span class="o">-</span><span class="n">t</span><span class="w"> </span><span class="n">test</span><span class="w"> </span><span class="n">person</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="k">order</span><span class="p">.</span><span class="k">sql</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="数据还原">数据还原</h3>
+<p>数据导出就有导入还原,库实例为<code>test</code>,将备份的数据进行还原</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="n">mysql</span><span class="w"> </span><span class="o">-</span><span class="n">h127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="n">uroot</span><span class="w"> </span><span class="o">-</span><span class="n">P3306</span><span class="w"> </span><span class="o">-</span><span class="n">p</span><span class="w"> </span><span class="n">test</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="k">order</span><span class="p">.</span><span class="k">sql</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="通过-crontab-定时备份指定数据库脚本参考">通过 crontab 定时备份指定数据库脚本参考</h2>
+<p>脚本验证适用环境Centos7.x</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="cp">#!/bin/bash
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="c1">#set -e</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 备份并清理，将mysql 表数据保留21天</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nv">dateDir</span><span class="o">=</span><span class="k">$(</span>date +%Y%m%d<span class="k">)</span><span class="s2">&#34;_all&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">backUpFolder</span><span class="o">=</span>/zpaasssd/zcm/mysql_171_grafana_dashboard_bkp
+</span></span><span class="line"><span class="cl"><span class="nv">host</span><span class="o">=</span>10.10.168.67
+</span></span><span class="line"><span class="cl"><span class="nv">port</span><span class="o">=</span><span class="m">20821</span>
+</span></span><span class="line"><span class="cl"><span class="nv">username</span><span class="o">=</span><span class="s2">&#34;root&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">password</span><span class="o">=</span><span class="s2">&#34;password&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">main<span class="o">(){</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">mkdir <span class="si">${</span><span class="nv">backUpFolder</span><span class="si">}</span>/<span class="si">${</span><span class="nv">dateDir</span><span class="si">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#rm  -rf ${backUpFolder}/$(date -d &#34;-21 day&#34; +%Y%m%d)&#34;_all&#34;.tar.gz</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="o">[[</span> -f <span class="si">${</span><span class="nv">backUpFolder</span><span class="si">}</span>/<span class="k">$(</span>date -d <span class="s2">&#34;-21 day&#34;</span> +%Y%m%d<span class="k">)</span><span class="s2">&#34;_all&#34;</span>.tar.gz <span class="o">]]</span><span class="p">;</span><span class="k">then</span>
+</span></span><span class="line"><span class="cl">  rm  -rf <span class="si">${</span><span class="nv">backUpFolder</span><span class="si">}</span>/<span class="k">$(</span>date -d <span class="s2">&#34;-21 day&#34;</span> +%Y%m%d<span class="k">)</span><span class="s2">&#34;_all&#34;</span>.tar.gz
+</span></span><span class="line"><span class="cl"><span class="k">fi</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">mysqldump -h <span class="nv">$host</span> -P <span class="nv">$port</span> -u <span class="si">${</span><span class="nv">username</span><span class="si">}</span> -p<span class="si">${</span><span class="nv">password</span><span class="si">}</span>  --databases zcm_grafana --default-character-set utf8  &gt; <span class="si">${</span><span class="nv">backUpFolder</span><span class="si">}</span>/<span class="si">${</span><span class="nv">dateDir</span><span class="si">}</span>/zcm_grafana.sql
+</span></span><span class="line"><span class="cl">mysqldump -h <span class="nv">$host</span> -P <span class="nv">$port</span> -u <span class="si">${</span><span class="nv">username</span><span class="si">}</span> -p<span class="si">${</span><span class="nv">password</span><span class="si">}</span>  --databases zcm_grafpub --default-character-set utf8 &gt; <span class="si">${</span><span class="nv">backUpFolder</span><span class="si">}</span>/<span class="si">${</span><span class="nv">dateDir</span><span class="si">}</span>/zcm_grafpub.sql
+</span></span><span class="line"><span class="cl"><span class="c1">#mysqldump -h $host -P $port -u ${username} -p${password}  --databases zcm_nms --default-character-set utf8 &gt; ${backUpFolder}/${dateDir}/zcm_nms.sql</span>
+</span></span><span class="line"><span class="cl">mysqldump -h <span class="nv">$host</span> -P <span class="nv">$port</span> -u <span class="si">${</span><span class="nv">username</span><span class="si">}</span> -p<span class="si">${</span><span class="nv">password</span><span class="si">}</span>  --databases zcm_task --default-character-set utf8 &gt; <span class="si">${</span><span class="nv">backUpFolder</span><span class="si">}</span>/<span class="si">${</span><span class="nv">dateDir</span><span class="si">}</span>/zcm_task.sql
+</span></span><span class="line"><span class="cl">mysqldump -h <span class="nv">$host</span> -P <span class="nv">$port</span> -u <span class="si">${</span><span class="nv">username</span><span class="si">}</span> -p<span class="si">${</span><span class="nv">password</span><span class="si">}</span>  --databases zcm_dialing --default-character-set utf8 &gt; <span class="si">${</span><span class="nv">backUpFolder</span><span class="si">}</span>/<span class="si">${</span><span class="nv">dateDir</span><span class="si">}</span>/zcm_dialing.sql
+</span></span><span class="line"><span class="cl"><span class="c1">#mysqldump -h $host -P $port -u ${username} -p${password}  --databases zcm_idocs --default-character-set utf8 &gt; ${backUpFolder}/${dateDir}/zcm_idocs.sql</span>
+</span></span><span class="line"><span class="cl">mysqldump -h <span class="nv">$host</span> -P <span class="nv">$port</span> -u <span class="si">${</span><span class="nv">username</span><span class="si">}</span> -p<span class="si">${</span><span class="nv">password</span><span class="si">}</span>  --databases nms_sla --default-character-set utf8 &gt; <span class="si">${</span><span class="nv">backUpFolder</span><span class="si">}</span>/<span class="si">${</span><span class="nv">dateDir</span><span class="si">}</span>/nms_sla.sql
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#压缩备份文件,清理原始文件</span>
+</span></span><span class="line"><span class="cl"><span class="nb">cd</span> <span class="si">${</span><span class="nv">backUpFolder</span><span class="si">}</span>
+</span></span><span class="line"><span class="cl">tar zcvf <span class="si">${</span><span class="nv">dateDir</span><span class="si">}</span>.tar.gz <span class="si">${</span><span class="nv">dateDir</span><span class="si">}</span>
+</span></span><span class="line"><span class="cl">rm -rf <span class="si">${</span><span class="nv">backUpFolder</span><span class="si">}</span>/<span class="si">${</span><span class="nv">dateDir</span><span class="si">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 解压</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#tar zxvf /zpaasssd/zcm/mysql_171_grafana_dashboard_bkp.tar.gz</span>
+</span></span><span class="line"><span class="cl"><span class="nb">echo</span> success
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">main
+</span></span></code></pre></td></tr></table>
+</div>
+</div></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2024-06-26</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://localhost:1313/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E5%92%8C%E8%BF%98%E5%8E%9F/" data-title="MySQL 数据库备份和还原" data-via="xxxx" data-hashtags="MySQL"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E5%92%8C%E8%BF%98%E5%8E%9F/" data-hashtag="MySQL"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="http://localhost:1313/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E5%92%8C%E8%BF%98%E5%8E%9F/" data-title="MySQL 数据库备份和还原"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://localhost:1313/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E5%92%8C%E8%BF%98%E5%8E%9F/" data-title="MySQL 数据库备份和还原"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E5%92%8C%E8%BF%98%E5%8E%9F/" data-title="MySQL 数据库备份和还原"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/mysql/">MySQL</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/%E6%AC%B2%E7%BD%A2%E4%B8%8D%E8%83%BD%E7%9A%84%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95%E7%AD%96%E7%95%A5/" class="prev" rel="prev" title="欲罢不能的学习方法策略"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>欲罢不能的学习方法策略</a>
+            <a href="/xargs%E5%8E%9F%E7%90%86%E5%8F%8A%E4%BD%BF%E7%94%A8/" class="next" rel="next" title="xargs原理及使用">xargs原理及使用<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">我是有底线的</div><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.126.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2024</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">lushuan</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/lightgallery/css/lightgallery-bundle.min.css"><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/lightgallery/lightgallery.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/zoom/lg-zoom.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"lightgallery":true,"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

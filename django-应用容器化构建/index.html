@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>Django 应用容器化构建 - Less is more</title><meta name="Description" content="知识有两种，一种是你知道的，一种是你知道在哪里能找到的！ --塞缪尔·约翰逊"><meta property="og:url" content="http://localhost:1313/django-%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E5%8C%96%E6%9E%84%E5%BB%BA/">
+  <meta property="og:site_name" content="Less is more">
+  <meta property="og:title" content="Django 应用容器化构建">
+  <meta property="og:description" content="Docker 是一个用于构建、运行和分发应用程序的平台。它允许您将应用程序及其所有依赖项打包到一个容器中，然后可以在任何安装了 Docker 的服务器上运行。 这使得 Docker">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2022-07-20T12:06:37+08:00">
+    <meta property="article:modified_time" content="2024-06-26T12:06:37+08:00">
+    <meta property="article:tag" content="Django">
+    <meta property="og:image" content="http://localhost:1313/images/avatar.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/images/avatar.png">
+  <meta name="twitter:title" content="Django 应用容器化构建">
+  <meta name="twitter:description" content="Docker 是一个用于构建、运行和分发应用程序的平台。它允许您将应用程序及其所有依赖项打包到一个容器中，然后可以在任何安装了 Docker 的服务器上运行。 这使得 Docker">
+      <meta name="twitter:site" content="@xxxx">
+<meta name="application-name" content="我的网站">
+<meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/images/avatar.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://localhost:1313/django-%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E5%8C%96%E6%9E%84%E5%BB%BA/" /><link rel="prev" href="http://localhost:1313/linux%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/" /><link rel="next" href="http://localhost:1313/helm%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5%E8%AE%B0%E5%BD%95/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Django 应用容器化构建",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost:1313\/django-%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E5%8C%96%E6%9E%84%E5%BB%BA\/"
+        },"genre": "posts","keywords": "Django","wordcount":  1487 ,
+        "url": "http:\/\/localhost:1313\/django-%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E5%8C%96%E6%9E%84%E5%BB%BA\/","datePublished": "2022-07-20T12:06:37+08:00","dateModified": "2024-06-26T12:06:37+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "lushuan"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Less is more"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Less is more</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 归档 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/" title="About"> 关于 </a><a class="menu-item" href="/friends/" title="friends"> 友链 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Less is more"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Less is more</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">归档</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="About">关于</a><a class="menu-item" href="/friends/" title="friends">友链</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Django 应用容器化构建</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/django/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Django</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2022-07-20">2022-07-20</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 1487 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 3 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="true">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#准备">准备</a>
+      <ul>
+        <li><a href="#软件安装">软件安装</a></li>
+        <li><a href="#创建django项目">创建Django项目</a></li>
+      </ul>
+    </li>
+    <li><a href="#dockerfile">Dockerfile</a></li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p>Docker 是一个用于构建、运行和分发应用程序的平台。它允许您将应用程序及其所有依赖项打包到一个容器中，然后可以在任何安装了 Docker 的服务器上运行。</p>
+<p>这使得 Docker 成为部署 Web 应用程序的理想选择，因为它可以轻松地将应用程序从一个环境移动到另一个环境，而无需担心任何兼容性问题。</p>
+<p>另一方面，Django 是一个 Python Web 框架，可以轻松创建强大且可扩展的 Web 应用程序。 Django 提供了许多开箱即用的功能，例如用户身份验证系统、数据库抽象层和模板引擎。</p>
+<p>这使得 Django 的入门变得容易，并且快速、轻松地构建复杂的 Web 应用程序。</p>
+<p>Docker 化和部署 Django 应用程序是一个相对简单的过程。涉及的主要步骤是：</p>
+<ol>
+<li>为您的 Django 应用程序创建 Dockerfile。</li>
+<li>从 Dockerfile 构建 Docker 映像。</li>
+<li>将Docker镜像部署到生产环境。</li>
+</ol>
+<h2 id="准备">准备</h2>
+<p>基于 Python 3.9、Django 3.2、docker 20.10.13</p>
+<h3 id="软件安装">软件安装</h3>
+<ul>
+<li>Docker</li>
+<li>Python3</li>
+</ul>
+<h3 id="创建django项目">创建Django项目</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">pip install django==3.2
+</span></span><span class="line"><span class="cl">django-admin startproject django-demo
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这行代码将会在当前目录下创建一个 simplesite 目录
+让我们看看 startproject 创建了些什么:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">django-demo/
+</span></span><span class="line"><span class="cl">    manage.py
+</span></span><span class="line"><span class="cl">    django-demo/
+</span></span><span class="line"><span class="cl">        __init__.py
+</span></span><span class="line"><span class="cl">        settings.py
+</span></span><span class="line"><span class="cl">        urls.py
+</span></span><span class="line"><span class="cl">        asgi.py
+</span></span><span class="line"><span class="cl">        wsgi.py
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这些目录和文件的用处是：</p>
+<ul>
+<li>最外层的 mysite/ 根目录只是你项目的容器， 根目录名称对 Django 没有影响，你可以将它重命名为任何你喜欢的名称。</li>
+<li>manage.py: 一个让你用各种方式管理 Django 项目的命令行工具。</li>
+<li>里面一层的 mysite/ 目录包含你的项目，它是一个纯 Python 包。</li>
+<li>mysite/<strong>init</strong>.py：一个空文件，告诉 Python 这个目录应该被认为是一个 Python 包。</li>
+<li>mysite/settings.py：Django 项目的配置文件。</li>
+<li>mysite/urls.py：Django 项目的 URL 声明，就像你网站的“目录”。</li>
+<li>mysite/asgi.py：作为你的项目的运行在 ASGI 兼容的 Web 服务器上的入口。</li>
+<li>mysite/wsgi.py：作为你的项目的运行在 WSGI 兼容的Web服务器上的入口。</li>
+</ul>
+<p>如果你的当前目录不是外层的 mysite 目录的话，请切换到此目录，然后运行下面的命令：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ python manage.py runserver
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="dockerfile">Dockerfile</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># 使用官方Python运行时作为父镜像
+</span></span><span class="line"><span class="cl">FROM python:3.9-alpine
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">LABEL maintainer=&#34;lushuan2071@126.com&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># 设置 python 环境变量
+</span></span><span class="line"><span class="cl">ENV PYTHONUNBUFFERED 1
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># 设置工作目录
+</span></span><span class="line"><span class="cl">WORKDIR /app
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># 将代码复制到容器中
+</span></span><span class="line"><span class="cl">COPY . /app
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># 添加 pip 清华镜像源
+</span></span><span class="line"><span class="cl">RUN pip install pip -U -i https://pypi.tuna.tsinghua.edu.cn/simple
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># 安装依赖
+</span></span><span class="line"><span class="cl">RUN pip install --no-cache-dir -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># 暴露端口
+</span></span><span class="line"><span class="cl">EXPOSE 8000
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># 运行Django应用
+</span></span><span class="line"><span class="cl">CMD [&#34;python&#34;, &#34;manage.py&#34;, &#34;runserver&#34;, &#34;0.0.0.0:8000&#34;]
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>构建镜像</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">docker build -t mydjangoapp:v1.0 . -f Dockerfile
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>运行容器</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">docker run  --name mydjangoapp  -p 8000:8000 -d mydjangoapp:v1.0
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>构建记录</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="c1"># docker build -t mydjangoapp:v1.0 . -f Dockerfile</span>
+</span></span><span class="line"><span class="cl"><span class="n">Emulate</span> <span class="n">Docker</span> <span class="n">CLI</span> <span class="n">using</span> <span class="n">podman</span><span class="o">.</span> <span class="n">Create</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">containers</span><span class="o">/</span><span class="n">nodocker</span> <span class="n">to</span> <span class="n">quiet</span> <span class="n">msg</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">STEP</span> <span class="mi">1</span><span class="o">/</span><span class="mi">7</span><span class="p">:</span> <span class="n">FROM</span> <span class="n">localhost</span><span class="o">/</span><span class="n">python</span><span class="p">:</span><span class="mf">3.9</span><span class="o">-</span><span class="n">alpine</span>
+</span></span><span class="line"><span class="cl"><span class="n">STEP</span> <span class="mi">2</span><span class="o">/</span><span class="mi">7</span><span class="p">:</span> <span class="n">LABEL</span> <span class="n">maintainer</span><span class="o">=</span><span class="s2">&#34;lushuan2071@126.com&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="o">--&gt;</span> <span class="n">bf70fc48b6d</span>
+</span></span><span class="line"><span class="cl"><span class="n">STEP</span> <span class="mi">3</span><span class="o">/</span><span class="mi">7</span><span class="p">:</span> <span class="n">WORKDIR</span> <span class="o">/</span><span class="n">app</span>
+</span></span><span class="line"><span class="cl"><span class="o">--&gt;</span> <span class="mi">45</span><span class="n">b9db8d767</span>
+</span></span><span class="line"><span class="cl"><span class="n">STEP</span> <span class="mi">4</span><span class="o">/</span><span class="mi">7</span><span class="p">:</span> <span class="n">COPY</span> <span class="o">.</span> <span class="o">/</span><span class="n">app</span>
+</span></span><span class="line"><span class="cl"><span class="o">--&gt;</span> <span class="mi">7</span><span class="n">df5ef439ea</span>
+</span></span><span class="line"><span class="cl"><span class="n">STEP</span> <span class="mi">5</span><span class="o">/</span><span class="mi">7</span><span class="p">:</span> <span class="n">RUN</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">cache</span><span class="o">-</span><span class="n">dir</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
+</span></span><span class="line"><span class="cl"><span class="n">Collecting</span> <span class="n">asgiref</span><span class="o">==</span><span class="mf">3.8</span><span class="o">.</span><span class="mi">1</span>
+</span></span><span class="line"><span class="cl">  <span class="n">Downloading</span> <span class="n">asgiref</span><span class="o">-</span><span class="mf">3.8</span><span class="o">.</span><span class="mi">1</span><span class="o">-</span><span class="n">py3</span><span class="o">-</span><span class="n">none</span><span class="o">-</span><span class="n">any</span><span class="o">.</span><span class="n">whl</span> <span class="p">(</span><span class="mi">23</span> <span class="n">kB</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">Collecting</span> <span class="n">Django</span><span class="o">==</span><span class="mf">3.2</span><span class="o">.</span><span class="mi">25</span>
+</span></span><span class="line"><span class="cl">  <span class="n">Downloading</span> <span class="n">Django</span><span class="o">-</span><span class="mf">3.2</span><span class="o">.</span><span class="mi">25</span><span class="o">-</span><span class="n">py3</span><span class="o">-</span><span class="n">none</span><span class="o">-</span><span class="n">any</span><span class="o">.</span><span class="n">whl</span> <span class="p">(</span><span class="mf">7.9</span> <span class="n">MB</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">     <span class="err">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span> <span class="mf">7.9</span><span class="o">/</span><span class="mf">7.9</span> <span class="n">MB</span> <span class="mf">139.1</span> <span class="n">kB</span><span class="o">/</span><span class="n">s</span> <span class="n">eta</span> <span class="mi">0</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span>
+</span></span><span class="line"><span class="cl"><span class="n">Collecting</span> <span class="n">mysql</span><span class="o">-</span><span class="n">connector</span><span class="o">-</span><span class="n">python</span><span class="o">==</span><span class="mf">8.4</span><span class="o">.</span><span class="mi">0</span>
+</span></span><span class="line"><span class="cl">  <span class="n">Downloading</span> <span class="n">mysql_connector_python</span><span class="o">-</span><span class="mf">8.4</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">py2</span><span class="o">.</span><span class="n">py3</span><span class="o">-</span><span class="n">none</span><span class="o">-</span><span class="n">any</span><span class="o">.</span><span class="n">whl</span> <span class="p">(</span><span class="mi">565</span> <span class="n">kB</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">     <span class="err">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span> <span class="mf">565.1</span><span class="o">/</span><span class="mf">565.1</span> <span class="n">kB</span> <span class="mf">119.1</span> <span class="n">kB</span><span class="o">/</span><span class="n">s</span> <span class="n">eta</span> <span class="mi">0</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span>
+</span></span><span class="line"><span class="cl"><span class="n">Collecting</span> <span class="n">sqlparse</span><span class="o">==</span><span class="mf">0.5</span><span class="o">.</span><span class="mi">0</span>
+</span></span><span class="line"><span class="cl">  <span class="n">Downloading</span> <span class="n">sqlparse</span><span class="o">-</span><span class="mf">0.5</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">py3</span><span class="o">-</span><span class="n">none</span><span class="o">-</span><span class="n">any</span><span class="o">.</span><span class="n">whl</span> <span class="p">(</span><span class="mi">43</span> <span class="n">kB</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">     <span class="err">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span> <span class="mf">44.0</span><span class="o">/</span><span class="mf">44.0</span> <span class="n">kB</span> <span class="mf">124.3</span> <span class="n">kB</span><span class="o">/</span><span class="n">s</span> <span class="n">eta</span> <span class="mi">0</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span>
+</span></span><span class="line"><span class="cl"><span class="n">Collecting</span> <span class="n">typing_extensions</span><span class="o">==</span><span class="mf">4.11</span><span class="o">.</span><span class="mi">0</span>
+</span></span><span class="line"><span class="cl">  <span class="n">Downloading</span> <span class="n">typing_extensions</span><span class="o">-</span><span class="mf">4.11</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">py3</span><span class="o">-</span><span class="n">none</span><span class="o">-</span><span class="n">any</span><span class="o">.</span><span class="n">whl</span> <span class="p">(</span><span class="mi">34</span> <span class="n">kB</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">Collecting</span> <span class="n">tzdata</span><span class="o">==</span><span class="mf">2024.1</span>
+</span></span><span class="line"><span class="cl">  <span class="n">Downloading</span> <span class="n">tzdata</span><span class="o">-</span><span class="mf">2024.1</span><span class="o">-</span><span class="n">py2</span><span class="o">.</span><span class="n">py3</span><span class="o">-</span><span class="n">none</span><span class="o">-</span><span class="n">any</span><span class="o">.</span><span class="n">whl</span> <span class="p">(</span><span class="mi">345</span> <span class="n">kB</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">     <span class="err">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span> <span class="mf">345.4</span><span class="o">/</span><span class="mf">345.4</span> <span class="n">kB</span> <span class="mf">136.4</span> <span class="n">kB</span><span class="o">/</span><span class="n">s</span> <span class="n">eta</span> <span class="mi">0</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span>
+</span></span><span class="line"><span class="cl"><span class="n">Collecting</span> <span class="n">pytz</span>
+</span></span><span class="line"><span class="cl">  <span class="n">Downloading</span> <span class="n">pytz</span><span class="o">-</span><span class="mf">2024.1</span><span class="o">-</span><span class="n">py2</span><span class="o">.</span><span class="n">py3</span><span class="o">-</span><span class="n">none</span><span class="o">-</span><span class="n">any</span><span class="o">.</span><span class="n">whl</span> <span class="p">(</span><span class="mi">505</span> <span class="n">kB</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">     <span class="err">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span> <span class="mf">505.5</span><span class="o">/</span><span class="mf">505.5</span> <span class="n">kB</span> <span class="mf">182.8</span> <span class="n">kB</span><span class="o">/</span><span class="n">s</span> <span class="n">eta</span> <span class="mi">0</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span>
+</span></span><span class="line"><span class="cl"><span class="n">Installing</span> <span class="n">collected</span> <span class="n">packages</span><span class="p">:</span> <span class="n">pytz</span><span class="p">,</span> <span class="n">tzdata</span><span class="p">,</span> <span class="n">typing_extensions</span><span class="p">,</span> <span class="n">sqlparse</span><span class="p">,</span> <span class="n">mysql</span><span class="o">-</span><span class="n">connector</span><span class="o">-</span><span class="n">python</span><span class="p">,</span> <span class="n">asgiref</span><span class="p">,</span> <span class="n">Django</span>
+</span></span><span class="line"><span class="cl"><span class="n">Successfully</span> <span class="n">installed</span> <span class="n">Django</span><span class="o">-</span><span class="mf">3.2</span><span class="o">.</span><span class="mi">25</span> <span class="n">asgiref</span><span class="o">-</span><span class="mf">3.8</span><span class="o">.</span><span class="mi">1</span> <span class="n">mysql</span><span class="o">-</span><span class="n">connector</span><span class="o">-</span><span class="n">python</span><span class="o">-</span><span class="mf">8.4</span><span class="o">.</span><span class="mi">0</span> <span class="n">pytz</span><span class="o">-</span><span class="mf">2024.1</span> <span class="n">sqlparse</span><span class="o">-</span><span class="mf">0.5</span><span class="o">.</span><span class="mi">0</span> <span class="n">typing_extensions</span><span class="o">-</span><span class="mf">4.11</span><span class="o">.</span><span class="mi">0</span> <span class="n">tzdata</span><span class="o">-</span><span class="mf">2024.1</span>
+</span></span><span class="line"><span class="cl"><span class="n">WARNING</span><span class="p">:</span> <span class="n">Running</span> <span class="n">pip</span> <span class="n">as</span> <span class="n">the</span> <span class="s1">&#39;root&#39;</span> <span class="n">user</span> <span class="n">can</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">broken</span> <span class="n">permissions</span> <span class="ow">and</span> <span class="n">conflicting</span> <span class="n">behaviour</span> <span class="n">with</span> <span class="n">the</span> <span class="n">system</span> <span class="n">package</span> <span class="n">manager</span><span class="o">.</span> <span class="n">It</span> <span class="n">is</span> <span class="n">recommended</span> <span class="n">to</span> <span class="n">use</span> <span class="n">a</span> <span class="n">virtual</span> <span class="n">environment</span> <span class="n">instead</span><span class="p">:</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">pip</span><span class="o">.</span><span class="n">pypa</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">warnings</span><span class="o">/</span><span class="n">venv</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="n">notice</span><span class="p">]</span> <span class="n">A</span> <span class="n">new</span> <span class="n">release</span> <span class="n">of</span> <span class="n">pip</span> <span class="n">is</span> <span class="n">available</span><span class="p">:</span> <span class="mf">23.0</span><span class="o">.</span><span class="mi">1</span> <span class="o">-&gt;</span> <span class="mf">24.1</span><span class="o">.</span><span class="mi">2</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="n">notice</span><span class="p">]</span> <span class="n">To</span> <span class="n">update</span><span class="p">,</span> <span class="n">run</span><span class="p">:</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="n">pip</span>
+</span></span><span class="line"><span class="cl"><span class="o">--&gt;</span> <span class="n">dd901d2c952</span>
+</span></span><span class="line"><span class="cl"><span class="n">STEP</span> <span class="mi">6</span><span class="o">/</span><span class="mi">7</span><span class="p">:</span> <span class="n">EXPOSE</span> <span class="mi">8000</span>
+</span></span><span class="line"><span class="cl"><span class="o">--&gt;</span> <span class="n">f1884d94f8e</span>
+</span></span><span class="line"><span class="cl"><span class="n">STEP</span> <span class="mi">7</span><span class="o">/</span><span class="mi">7</span><span class="p">:</span> <span class="n">CMD</span> <span class="p">[</span><span class="s2">&#34;python&#34;</span><span class="p">,</span> <span class="s2">&#34;manage.py&#34;</span><span class="p">,</span> <span class="s2">&#34;runserver&#34;</span><span class="p">,</span> <span class="s2">&#34;0.0.0.0:8000&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">COMMIT</span> <span class="n">mydjangoapp</span><span class="p">:</span><span class="n">v1</span><span class="o">.</span><span class="mi">0</span>
+</span></span><span class="line"><span class="cl"><span class="o">--&gt;</span> <span class="mi">9253897</span><span class="n">f89f</span>
+</span></span><span class="line"><span class="cl"><span class="n">Successfully</span> <span class="n">tagged</span> <span class="n">localhost</span><span class="o">/</span><span class="n">mydjangoapp</span><span class="p">:</span><span class="n">v1</span><span class="o">.</span><span class="mi">0</span>
+</span></span><span class="line"><span class="cl"><span class="mi">9253897</span><span class="n">f89fa29c91253cdb28e8494453dd2cf330b66a51968ec817e35faf19b</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># docker images|grep django</span>
+</span></span><span class="line"><span class="cl"><span class="n">Emulate</span> <span class="n">Docker</span> <span class="n">CLI</span> <span class="n">using</span> <span class="n">podman</span><span class="o">.</span> <span class="n">Create</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">containers</span><span class="o">/</span><span class="n">nodocker</span> <span class="n">to</span> <span class="n">quiet</span> <span class="n">msg</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">localhost</span><span class="o">/</span><span class="n">mydjangoapp</span>                          <span class="n">v1</span><span class="o">.</span><span class="mi">0</span>           <span class="mi">9253897</span><span class="n">f89fa</span>  <span class="mi">13</span> <span class="n">seconds</span> <span class="n">ago</span>  <span class="mi">100</span> <span class="n">MB</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># docker run  --name mydjangoapp  -p 8000:8000 -d mydjangoapp:v1.0</span>
+</span></span><span class="line"><span class="cl"><span class="n">Emulate</span> <span class="n">Docker</span> <span class="n">CLI</span> <span class="n">using</span> <span class="n">podman</span><span class="o">.</span> <span class="n">Create</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">containers</span><span class="o">/</span><span class="n">nodocker</span> <span class="n">to</span> <span class="n">quiet</span> <span class="n">msg</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl"><span class="mi">49</span><span class="n">c212881ab19348ccb12f492a7e6f32f545efeff67daf27df6e2b9c7bf074ee</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># </span>
+</span></span><span class="line"><span class="cl"><span class="c1"># docker ps</span>
+</span></span><span class="line"><span class="cl"><span class="n">Emulate</span> <span class="n">Docker</span> <span class="n">CLI</span> <span class="n">using</span> <span class="n">podman</span><span class="o">.</span> <span class="n">Create</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">containers</span><span class="o">/</span><span class="n">nodocker</span> <span class="n">to</span> <span class="n">quiet</span> <span class="n">msg</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">CONTAINER</span> <span class="n">ID</span>  <span class="n">IMAGE</span>                       <span class="n">COMMAND</span>               <span class="n">CREATED</span>        <span class="n">STATUS</span>        <span class="n">PORTS</span>                   <span class="n">NAMES</span>
+</span></span><span class="line"><span class="cl"><span class="mi">49</span><span class="n">c212881ab1</span>  <span class="n">localhost</span><span class="o">/</span><span class="n">mydjangoapp</span><span class="p">:</span><span class="n">v1</span><span class="o">.</span><span class="mi">0</span>  <span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="o">...</span>  <span class="mi">6</span> <span class="n">seconds</span> <span class="n">ago</span>  <span class="n">Up</span> <span class="mi">7</span> <span class="n">seconds</span>  <span class="mf">0.0</span><span class="o">.</span><span class="mf">0.0</span><span class="p">:</span><span class="mi">8000</span><span class="o">-&gt;</span><span class="mi">8000</span><span class="o">/</span><span class="n">tcp</span>  <span class="n">mydjangoapp</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># docker ps</span>
+</span></span><span class="line"><span class="cl"><span class="n">Emulate</span> <span class="n">Docker</span> <span class="n">CLI</span> <span class="n">using</span> <span class="n">podman</span><span class="o">.</span> <span class="n">Create</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">containers</span><span class="o">/</span><span class="n">nodocker</span> <span class="n">to</span> <span class="n">quiet</span> <span class="n">msg</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">CONTAINER</span> <span class="n">ID</span>  <span class="n">IMAGE</span>                       <span class="n">COMMAND</span>               <span class="n">CREATED</span>        <span class="n">STATUS</span>        <span class="n">PORTS</span>                   <span class="n">NAMES</span>
+</span></span><span class="line"><span class="cl"><span class="mi">49</span><span class="n">c212881ab1</span>  <span class="n">localhost</span><span class="o">/</span><span class="n">mydjangoapp</span><span class="p">:</span><span class="n">v1</span><span class="o">.</span><span class="mi">0</span>  <span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="o">...</span>  <span class="mi">8</span> <span class="n">seconds</span> <span class="n">ago</span>  <span class="n">Up</span> <span class="mi">8</span> <span class="n">seconds</span>  <span class="mf">0.0</span><span class="o">.</span><span class="mf">0.0</span><span class="p">:</span><span class="mi">8000</span><span class="o">-&gt;</span><span class="mi">8000</span><span class="o">/</span><span class="n">tcp</span>  <span class="n">mydjangoapp</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="参考">参考</h2>
+<ul>
+<li><a href="https://blog.51cto.com/jiemei/8712683" target="_blank" rel="noopener noreffer ">Python 镜像的全方位指南 原创</a></li>
+</ul>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2024-06-26</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://localhost:1313/django-%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E5%8C%96%E6%9E%84%E5%BB%BA/" data-title="Django 应用容器化构建" data-via="xxxx" data-hashtags="Django"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/django-%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E5%8C%96%E6%9E%84%E5%BB%BA/" data-hashtag="Django"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="http://localhost:1313/django-%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E5%8C%96%E6%9E%84%E5%BB%BA/" data-title="Django 应用容器化构建"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://localhost:1313/django-%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E5%8C%96%E6%9E%84%E5%BB%BA/" data-title="Django 应用容器化构建"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/django-%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E5%8C%96%E6%9E%84%E5%BB%BA/" data-title="Django 应用容器化构建"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/django/">Django</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/linux%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/" class="prev" rel="prev" title="Linux 系统性能问题定位"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Linux 系统性能问题定位</a>
+            <a href="/helm%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5%E8%AE%B0%E5%BD%95/" class="next" rel="next" title="Helm 生产实践记录">Helm 生产实践记录<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">我是有底线的</div><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.126.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2024</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">lushuan</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/lightgallery/css/lightgallery-bundle.min.css"><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/lightgallery/lightgallery.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/zoom/lg-zoom.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"lightgallery":true,"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
