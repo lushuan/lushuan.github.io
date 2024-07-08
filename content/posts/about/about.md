@@ -11,7 +11,7 @@ categories: [""]
 tags: [""]
 ---
 # 前言
-{{< admonition abstract >}}
+{{< admonition type=quote title="生活可能不像你想象的那么好">}}
 我们在人的一生中最为辉煌的一天，并不是功成名就的那一天，而是从悲叹和绝望中产生对人生挑战的欲望，并且勇敢的迈向这种挑战的那一天。
 人生当中成功只是一时的，失败却是主旋律。但是如何面对失败却把人分成了不同的样子。有的人会被失败击垮，有的人能够不断的爬起来，继续向前。
 我想真正的成熟，应该并不是追求完美，而是直面自己的缺憾，这才是生活的本质。
@@ -20,7 +20,7 @@ tags: [""]
 
 ---
 人的一生中最大的问题不是找不到正确的方法而是在实践中长久的悖逆人性
-{{< admonition info >}}
+{{< admonition type=note title="最淡的墨水也胜过最强的记忆" >}}
 About Persistence(最淡的墨水也胜过最强的记忆)
 
 Nothing in the world can take the place of Persistence. Talent will not; nothing is more common than unsuccessful men with talent. Genius will not; 
@@ -35,14 +35,14 @@ unrewarded genius is almost a proverb. Education will not; the world is full of 
 
 - 个人信息：lushuan
 - 拿手菜：清蒸鲈鱼、红烧肉、西红柿炒蛋、炒花蛤、香辣小炒肉
-- 兴趣爱好：篮球、音乐、阅读、掼蛋
+- 兴趣爱好：篮球、音乐、阅读、掼蛋、台球、旅游等
 - 邮箱：`lushuan2071@126.com`
 - 我的微信
 
 <img src="/images/ewm.jpg" width="20%" align="center" />
 
 
-技术栈:
+技能说明：我会的东西基本上都写在博客中了，不敢说有多么精通，一直在努力学习中
 - Kubernetes
 - Prometheus
 - InfluxDB
