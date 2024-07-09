@@ -13,20 +13,20 @@
     <description><![CDATA[整体流程 部署准备 k8s 集群容器运行时 Containerd 准备 k8s 集群部署 k8s 集群软件 apt 源准备 k8s 集群软件安装 k8s 集群初始化 k8s 集群worker 节点加入 k8s 集群网络插件 Calico 准备 部]]></description>
 </item>
 <item>
+    <title>Kubernetes 技能图谱</title>
+    <link>http://localhost:1313/kubernetes-%E6%8A%80%E8%83%BD%E5%9B%BE%E8%B0%B1/</link>
+    <pubDate>Fri, 13 Oct 2023 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/kubernetes-%E6%8A%80%E8%83%BD%E5%9B%BE%E8%B0%B1/</guid>
+    <description><![CDATA[Kubernetes 技能图谱]]></description>
+</item>
+<item>
     <title>调整节点pod驱逐时间</title>
     <link>http://localhost:1313/%E8%B0%83%E6%95%B4%E8%8A%82%E7%82%B9pod%E9%A9%B1%E9%80%90%E6%97%B6%E9%97%B4/</link>
     <pubDate>Sat, 09 Sep 2023 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
     <guid>http://localhost:1313/%E8%B0%83%E6%95%B4%E8%8A%82%E7%82%B9pod%E9%A9%B1%E9%80%90%E6%97%B6%E9%97%B4/</guid>
     <description><![CDATA[问题描述 问题 在高可用的k8s集群中，当Node节点挂掉，kubelet无法提供工作的时候，pod将会自动调度到其他的节点上去， 而调度到节点上]]></description>
-</item>
-<item>
-    <title>Kubernetes 技能图谱</title>
-    <link>http://localhost:1313/kubernetes-%E6%8A%80%E8%83%BD%E5%9B%BE%E8%B0%B1/</link>
-    <pubDate>Tue, 13 Jun 2023 12:06:37 &#43;0800</pubDate>
-    <author>lushuan</author>
-    <guid>http://localhost:1313/kubernetes-%E6%8A%80%E8%83%BD%E5%9B%BE%E8%B0%B1/</guid>
-    <description><![CDATA[Kubernetes 技能图谱]]></description>
 </item>
 <item>
     <title>K8s删除Namesapce一直处于Terminating状态处理</title>
