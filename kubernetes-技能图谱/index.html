@@ -4,37 +4,37 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="noodp" />
-        <title>从Docker至Containerd - Less is more</title><meta name="Description" content="知识有两种，一种是你知道的，一种是你知道在哪里能找到的！ --塞缪尔·约翰逊"><meta property="og:url" content="http://localhost:1313/%E4%BB%8Edocker%E8%87%B3containerd/">
+        <title>Kubernetes 技能图谱 - Less is more</title><meta name="Description" content="知识有两种，一种是你知道的，一种是你知道在哪里能找到的！ --塞缪尔·约翰逊"><meta property="og:url" content="http://localhost:1313/kubernetes-%E6%8A%80%E8%83%BD%E5%9B%BE%E8%B0%B1/">
   <meta property="og:site_name" content="Less is more">
-  <meta property="og:title" content="从Docker至Containerd">
-  <meta property="og:description" content="平时较多使用的是docker项目将容器运行时迁移至了containerd，这里整理下相关的操作命令 常用指令对比 ctr是containerd自">
+  <meta property="og:title" content="Kubernetes 技能图谱">
+  <meta property="og:description" content="Kubernetes 技能图谱">
   <meta property="og:locale" content="zh_CN">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2023-06-26T16:25:58+08:00">
-    <meta property="article:modified_time" content="2024-06-26T16:25:58+08:00">
-    <meta property="article:tag" content="Docker">
+    <meta property="article:published_time" content="2023-10-13T12:06:37+08:00">
+    <meta property="article:modified_time" content="2024-06-26T12:06:37+08:00">
+    <meta property="article:tag" content="Kubernetes">
     <meta property="og:image" content="http://localhost:1313/images/avatar.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="http://localhost:1313/images/avatar.png">
-  <meta name="twitter:title" content="从Docker至Containerd">
-  <meta name="twitter:description" content="平时较多使用的是docker项目将容器运行时迁移至了containerd，这里整理下相关的操作命令 常用指令对比 ctr是containerd自">
+  <meta name="twitter:title" content="Kubernetes 技能图谱">
+  <meta name="twitter:description" content="Kubernetes 技能图谱">
       <meta name="twitter:site" content="@xxxx">
 <meta name="application-name" content="我的网站">
-<meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/images/avatar.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://localhost:1313/%E4%BB%8Edocker%E8%87%B3containerd/" /><link rel="prev" href="http://localhost:1313/kubernetes-%E6%8A%80%E8%83%BD%E5%9B%BE%E8%B0%B1/" /><link rel="next" href="http://localhost:1313/dockerfile%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BC%98%E5%8C%96/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/images/avatar.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://localhost:1313/kubernetes-%E6%8A%80%E8%83%BD%E5%9B%BE%E8%B0%B1/" /><link rel="prev" href="http://localhost:1313/%E8%B0%83%E6%95%B4%E8%8A%82%E7%82%B9pod%E9%A9%B1%E9%80%90%E6%97%B6%E9%97%B4/" /><link rel="next" href="http://localhost:1313/10-must-know-free-devops-tools-for-professional-success/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
     {
         "@context": "http://schema.org",
         "@type": "BlogPosting",
-        "headline": "从Docker至Containerd",
+        "headline": "Kubernetes 技能图谱",
         "inLanguage": "zh-CN",
         "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": "http:\/\/localhost:1313\/%E4%BB%8Edocker%E8%87%B3containerd\/"
-        },"genre": "posts","keywords": "docker","wordcount":  418 ,
-        "url": "http:\/\/localhost:1313\/%E4%BB%8Edocker%E8%87%B3containerd\/","datePublished": "2023-06-26T16:25:58+08:00","dateModified": "2024-06-26T16:25:58+08:00","publisher": {
+            "@id": "http:\/\/localhost:1313\/kubernetes-%E6%8A%80%E8%83%BD%E5%9B%BE%E8%B0%B1\/"
+        },"genre": "posts","keywords": "Kubernetes","wordcount":  5 ,
+        "url": "http:\/\/localhost:1313\/kubernetes-%E6%8A%80%E8%83%BD%E5%9B%BE%E8%B0%B1\/","datePublished": "2023-10-13T12:06:37+08:00","dateModified": "2024-06-26T12:06:37+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
                 "@type": "Person",
@@ -119,130 +119,27 @@
                 <div class="container"><div class="toc" id="toc-auto">
             <h2 class="toc-title">目录</h2>
             <div class="toc-content always-active" id="toc-content-auto"></div>
-        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">从Docker至Containerd</h1><div class="post-meta">
-            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/docker/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Docker</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-06-26">2023-06-26</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 418 字&nbsp;
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Kubernetes 技能图谱</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/kubernetes/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Kubernetes</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-10-13">2023-10-13</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 5 字&nbsp;
                 <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 1 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  data-kept="">
                 <div class="details-summary toc-title">
                     <span>目录</span>
                     <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
                 </div>
-                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
-  <ul>
-    <li><a href="#常用指令对比">常用指令对比</a></li>
-    <li><a href="#清理未被使用的镜像一般用于释放本地空间">清理未被使用的镜像，一般用于释放本地空间</a></li>
-    <li><a href="#本地文件和容器内文件间拷贝">本地文件和容器内文件间拷贝</a></li>
-  </ul>
-</nav></div>
-            </div><div class="content" id="content"><p>平时较多使用的是docker项目将容器运行时迁移至了containerd，这里整理下相关的操作命令</p>
-<h2 id="常用指令对比">常用指令对比</h2>
-<p>ctr是containerd自带的工具，有命名空间的概念
-crictl是k8s社区的专用CLI工具，所有操作都在命名空间k8s.io
-所以使用ctr操作时注意指定-n k8s.io</p>
-<p><figure><a class="lightgallery" href="../../images/kubernetes/docker-containerd-k8s.png" title="docker-containerd-k8s" data-thumbnail="../../images/kubernetes/docker-containerd-k8s.png" data-sub-html="<h2>Docker vs Containerd</h2><p>docker-containerd-k8s</p>">
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents"></nav></div>
+            </div><div class="content" id="content"><p><figure><a class="lightgallery" href="/images/kubernetes/k8s_learn.jpg" title="k8s_learn" data-thumbnail="/images/kubernetes/k8s_learn.jpg" data-sub-html="<h2>Kubernetes 技能图谱</h2><p>k8s_learn</p>">
         <img
             class="lazyload"
             src="/svg/loading.min.svg"
-            data-src="../../images/kubernetes/docker-containerd-k8s.png"
-            data-srcset="../../images/kubernetes/docker-containerd-k8s.png, ../../images/kubernetes/docker-containerd-k8s.png 1.5x, ../../images/kubernetes/docker-containerd-k8s.png 2x"
+            data-src="/images/kubernetes/k8s_learn.jpg"
+            data-srcset="/images/kubernetes/k8s_learn.jpg, /images/kubernetes/k8s_learn.jpg 1.5x, /images/kubernetes/k8s_learn.jpg 2x"
             data-sizes="auto"
-            alt="../../images/kubernetes/docker-containerd-k8s.png" />
-    </a><figcaption class="image-caption">Docker vs Containerd</figcaption>
+            alt="/images/kubernetes/k8s_learn.jpg" />
+    </a><figcaption class="image-caption">Kubernetes 技能图谱</figcaption>
     </figure></p>
-<h2 id="清理未被使用的镜像一般用于释放本地空间">清理未被使用的镜像，一般用于释放本地空间</h2>
-<p>docker 场景</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">docker image prune -a
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>containerd场景（需要高版本crictl）</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">crictl rmi --prune
-</span></span></code></pre></td></tr></table>
-</div>
-</div><h2 id="本地文件和容器内文件间拷贝">本地文件和容器内文件间拷贝</h2>
-<p>docker 场景</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">docker cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|-
-</span></span><span class="line"><span class="cl">docker cp [OPTIONS] SRC_PATH|- CONTAINER:DEST_PATH
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>使用kubectl cp</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span><span class="lnt">23
-</span><span class="lnt">24
-</span><span class="lnt">25
-</span><span class="lnt">26
-</span><span class="lnt">27
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Copy files and directories to and from containers.
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">Examples:
-</span></span><span class="line"><span class="cl">  # !!!Important Note!!!
-</span></span><span class="line"><span class="cl">  # Requires that the &#39;tar&#39; binary is present in your container
-</span></span><span class="line"><span class="cl">  # image.  If &#39;tar&#39; is not present, &#39;kubectl cp&#39; will fail.
-</span></span><span class="line"><span class="cl">  
-</span></span><span class="line"><span class="cl">  # Copy /tmp/foo_dir local directory to /tmp/bar_dir in a remote pod in the default namespace
-</span></span><span class="line"><span class="cl">  kubectl cp /tmp/foo_dir &lt;some-pod&gt;:/tmp/bar_dir
-</span></span><span class="line"><span class="cl">  
-</span></span><span class="line"><span class="cl">  # Copy /tmp/foo local file to /tmp/bar in a remote pod in a specific container
-</span></span><span class="line"><span class="cl">  kubectl cp /tmp/foo &lt;some-pod&gt;:/tmp/bar -c &lt;specific-container&gt;
-</span></span><span class="line"><span class="cl">  
-</span></span><span class="line"><span class="cl">  # Copy /tmp/foo local file to /tmp/bar in a remote pod in namespace &lt;some-namespace&gt;
-</span></span><span class="line"><span class="cl">  kubectl cp /tmp/foo &lt;some-namespace&gt;/&lt;some-pod&gt;:/tmp/bar
-</span></span><span class="line"><span class="cl">  
-</span></span><span class="line"><span class="cl">  # Copy /tmp/foo from a remote pod to /tmp/bar locally
-</span></span><span class="line"><span class="cl">  kubectl cp &lt;some-namespace&gt;/&lt;some-pod&gt;:/tmp/foo /tmp/bar
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">Options:
-</span></span><span class="line"><span class="cl">  -c, --container=&#39;&#39;: Container name. If omitted, the first container in the pod will be chosen
-</span></span><span class="line"><span class="cl">      --no-preserve=false: The copied file/directory&#39;s ownership and permissions will not be preserved in the container
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">Usage:
-</span></span><span class="line"><span class="cl">  kubectl cp &lt;file-spec-src&gt; &lt;file-spec-dest&gt; [options]
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">Use &#34;kubectl options&#34; for a list of global command-line options (applies to all commands).
-</span></span></code></pre></td></tr></table>
-</div>
-</div></div><div class="post-footer" id="post-footer">
+</div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
@@ -251,20 +148,20 @@ crictl是k8s社区的专用CLI工具，所有操作都在命名空间k8s.io
         <div class="post-info-line">
             <div class="post-info-md"></div>
             <div class="post-info-share">
-                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://localhost:1313/%E4%BB%8Edocker%E8%87%B3containerd/" data-title="从Docker至Containerd" data-via="xxxx" data-hashtags="docker"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/%E4%BB%8Edocker%E8%87%B3containerd/" data-hashtag="docker"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="http://localhost:1313/%E4%BB%8Edocker%E8%87%B3containerd/" data-title="从Docker至Containerd"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://localhost:1313/%E4%BB%8Edocker%E8%87%B3containerd/" data-title="从Docker至Containerd"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/%E4%BB%8Edocker%E8%87%B3containerd/" data-title="从Docker至Containerd"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://localhost:1313/kubernetes-%E6%8A%80%E8%83%BD%E5%9B%BE%E8%B0%B1/" data-title="Kubernetes 技能图谱" data-via="xxxx" data-hashtags="Kubernetes"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/kubernetes-%E6%8A%80%E8%83%BD%E5%9B%BE%E8%B0%B1/" data-hashtag="Kubernetes"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="http://localhost:1313/kubernetes-%E6%8A%80%E8%83%BD%E5%9B%BE%E8%B0%B1/" data-title="Kubernetes 技能图谱"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://localhost:1313/kubernetes-%E6%8A%80%E8%83%BD%E5%9B%BE%E8%B0%B1/" data-title="Kubernetes 技能图谱"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/kubernetes-%E6%8A%80%E8%83%BD%E5%9B%BE%E8%B0%B1/" data-title="Kubernetes 技能图谱"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
             </div>
         </div>
     </div>
 
     <div class="post-info-more">
-        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/docker/">Docker</a></section>
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/kubernetes/">Kubernetes</a></section>
         <section>
             <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
         </section>
     </div>
 
-    <div class="post-nav"><a href="/kubernetes-%E6%8A%80%E8%83%BD%E5%9B%BE%E8%B0%B1/" class="prev" rel="prev" title="Kubernetes 技能图谱"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Kubernetes 技能图谱</a>
-            <a href="/dockerfile%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BC%98%E5%8C%96/" class="next" rel="next" title="Dockerfile介绍及优化">Dockerfile介绍及优化<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+    <div class="post-nav"><a href="/%E8%B0%83%E6%95%B4%E8%8A%82%E7%82%B9pod%E9%A9%B1%E9%80%90%E6%97%B6%E9%97%B4/" class="prev" rel="prev" title="调整节点pod驱逐时间"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>调整节点pod驱逐时间</a>
+            <a href="/10-must-know-free-devops-tools-for-professional-success/" class="next" rel="next" title="10 Must-Know Free DevOps Tools for Professional Success">10 Must-Know Free DevOps Tools for Professional Success<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
 </div>
 
 </article></div>
