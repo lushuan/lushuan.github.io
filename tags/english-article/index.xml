@@ -1,0 +1,18 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>English Article - 标签 - Less is more</title>
+        <link>http://localhost:1313/tags/english-article/</link>
+        <description>English Article - 标签 - Less is more</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Sat, 17 Feb 2024 12:06:37 &#43;0800</lastBuildDate><atom:link href="http://localhost:1313/tags/english-article/" rel="self" type="application/rss+xml" /><item>
+    <title>10 Must-Know Free DevOps Tools for Professional Success</title>
+    <link>http://localhost:1313/10-must-know-free-devops-tools-for-professional-success/</link>
+    <pubDate>Sat, 17 Feb 2024 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/10-must-know-free-devops-tools-for-professional-success/</guid>
+    <description><![CDATA[devopsIn recent years, DevOps has emerged as a critical discipline that merges software development (Dev) with IT operations (Ops). It aims to shorten the development lifecycle and provide continuous delivery with high software quality.
+As the demand for faster development cycles and more reliable software increases, professionals in the field constantly seek tools and practices to enhance their efficiency and effectiveness.
+Enter the realm of free and open-source tools – a goldmine for DevOps practitioners looking to stay ahead of the curve.]]></description>
+</item>
+</channel>
+</rss>
