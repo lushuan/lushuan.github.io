@@ -444,7 +444,7 @@ defaultContentLanguage = "zh-cn"
       # Gitalk 评论系统设置
       [params.page.comment.gitalk]
         #
-        enable = false
+        enable = true
         owner = "lushuan"
         admin = "lushuan"
         repo = "lushuan.github.io"
