@@ -930,6 +930,7 @@ spec:
     spec:
       containers:
       - image: registry.cn-shenzhen.aliyuncs.com/xiaohh-docker/nginx:1.25.4
+        imagePullPolicy: IfNotPresent
         name: nginx
         ports:
         - containerPort: 80
