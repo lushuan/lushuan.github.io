@@ -13,6 +13,14 @@
     <description><![CDATA[整体流程 部署准备 k8s 集群容器运行时 Containerd 准备 k8s 集群部署 k8s 集群软件 apt 源准备 k8s 集群软件安装 k8s 集群初始化 k8s 集群worker 节点加入 k8s 集群网络插件 Calico 准备 部]]></description>
 </item>
 <item>
+    <title>一文了解Kubernetes RBAC 机制和实践</title>
+    <link>http://localhost:1313/%E4%B8%80%E6%96%87%E4%BA%86%E8%A7%A3kubernetes-rbac/</link>
+    <pubDate>Sat, 27 Apr 2024 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/%E4%B8%80%E6%96%87%E4%BA%86%E8%A7%A3kubernetes-rbac/</guid>
+    <description><![CDATA[前言 在了解RBAC 之前先了解一下Kubernetes API 对象，RBAC 最终操作的对象还是Kubernetes API 对象，本质还是对Kubernet]]></description>
+</item>
+<item>
     <title>Kubernetes 技能图谱</title>
     <link>http://localhost:1313/kubernetes-%E6%8A%80%E8%83%BD%E5%9B%BE%E8%B0%B1/</link>
     <pubDate>Fri, 13 Oct 2023 12:06:37 &#43;0800</pubDate>
@@ -75,14 +83,6 @@
     <author>lushuan</author>
     <guid>http://localhost:1313/%E5%BD%93-kubernetes-%E5%88%9B%E5%BB%BA-pod-%E6%97%B6%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88/</guid>
     <description><![CDATA[当Kubernetes创建Pod时发生了什么-全景图 https://github.com/jamiehannaford/what-happens-when-k8s/tree/master/zh-cn what-happens-when-k8s]]></description>
-</item>
-<item>
-    <title>Kubernetes 网络排障</title>
-    <link>http://localhost:1313/kubernetes-%E7%BD%91%E7%BB%9C%E6%8E%92%E9%94%99/</link>
-    <pubDate>Wed, 28 Sep 2022 12:06:37 &#43;0800</pubDate>
-    <author>lushuan</author>
-    <guid>http://localhost:1313/kubernetes-%E7%BD%91%E7%BB%9C%E6%8E%92%E9%94%99/</guid>
-    <description><![CDATA[记录一下kuberntes 遇到的问题场景及排查方向 DNS 解析异常 5 秒延时 如果DNS查询经常延时5秒才返回，通常是遇到内核 conntrack 冲突导致的丢包 解析超时]]></description>
 </item>
 </channel>
 </rss>

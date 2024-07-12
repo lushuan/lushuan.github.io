@@ -4,13 +4,21 @@
         <link>http://localhost:1313/posts/</link>
         <description>所有文章 | Less is more</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
-            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Wed, 26 Jun 2024 10:54:03 &#43;0800</lastBuildDate><atom:link href="http://localhost:1313/posts/" rel="self" type="application/rss+xml" /><item>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Thu, 20 Jun 2024 12:06:37 &#43;0800</lastBuildDate><atom:link href="http://localhost:1313/posts/" rel="self" type="application/rss+xml" /><item>
     <title>Ubuntu-server部署k8s1.28(containerd版本)集群</title>
     <link>http://localhost:1313/ubuntu-server%E9%83%A8%E7%BD%B2k8s1.28containerd%E7%89%88%E6%9C%AC%E9%9B%86%E7%BE%A4/</link>
     <pubDate>Thu, 20 Jun 2024 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
     <guid>http://localhost:1313/ubuntu-server%E9%83%A8%E7%BD%B2k8s1.28containerd%E7%89%88%E6%9C%AC%E9%9B%86%E7%BE%A4/</guid>
     <description><![CDATA[整体流程 部署准备 k8s 集群容器运行时 Containerd 准备 k8s 集群部署 k8s 集群软件 apt 源准备 k8s 集群软件安装 k8s 集群初始化 k8s 集群worker 节点加入 k8s 集群网络插件 Calico 准备 部]]></description>
+</item>
+<item>
+    <title>一文了解 Kubernetes RBAC 机制和实践</title>
+    <link>http://localhost:1313/%E4%B8%80%E6%96%87%E4%BA%86%E8%A7%A3kubernetes-rbac/</link>
+    <pubDate>Sat, 27 Apr 2024 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/%E4%B8%80%E6%96%87%E4%BA%86%E8%A7%A3kubernetes-rbac/</guid>
+    <description><![CDATA[前言 在了解RBAC 之前先了解一下Kubernetes API 对象，RBAC 最终操作的对象还是Kubernetes API 对象，本质还是对Kubernet]]></description>
 </item>
 <item>
     <title>10 Must-Know Free DevOps Tools for Professional Success</title>
@@ -77,14 +85,6 @@ Enter the realm of free and open-source tools – a goldmine for DevOps practiti
     <author>lushuan</author>
     <guid>http://localhost:1313/k8s_v1.20.x%E5%88%9B%E5%BB%BApvc%E6%8A%A5%E9%94%99/</guid>
     <description><![CDATA[故障描述 警告 PVC 显示创建不成功：kubectl get pvc -n efk 显示 Pending，这是由于版本太高导致的。k8sv1.20 以上版本默认禁止使用 self]]></description>
-</item>
-<item>
-    <title>Jenkins 入门介绍</title>
-    <link>http://localhost:1313/jenkins-%E5%85%A5%E9%97%A8%E4%BB%8B%E7%BB%8D/</link>
-    <pubDate>Tue, 18 Apr 2023 12:06:37 &#43;0800</pubDate>
-    <author>lushuan</author>
-    <guid>http://localhost:1313/jenkins-%E5%85%A5%E9%97%A8%E4%BB%8B%E7%BB%8D/</guid>
-    <description><![CDATA[在了解Jenkins 之前先了解一下CI&amp;CD cicd 介绍 持续集成(Continous Intergrations) 和持续部署(Continuous Deployment]]></description>
 </item>
 </channel>
 </rss>

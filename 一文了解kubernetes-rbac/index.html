@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>一文了解 Kubernetes RBAC 机制和实践 - Less is more</title><meta name="Description" content="知识有两种，一种是你知道的，一种是你知道在哪里能找到的！ --塞缪尔·约翰逊"><meta property="og:url" content="http://localhost:1313/%E4%B8%80%E6%96%87%E4%BA%86%E8%A7%A3kubernetes-rbac/">
+  <meta property="og:site_name" content="Less is more">
+  <meta property="og:title" content="一文了解 Kubernetes RBAC 机制和实践">
+  <meta property="og:description" content="前言 在了解RBAC 之前先了解一下Kubernetes API 对象，RBAC 最终操作的对象还是Kubernetes API 对象，本质还是对Kubernet">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-04-27T12:06:37+08:00">
+    <meta property="article:modified_time" content="2024-05-26T12:06:37+08:00">
+    <meta property="article:tag" content="Kubernetes">
+    <meta property="og:image" content="http://localhost:1313/images/avatar.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/images/avatar.png">
+  <meta name="twitter:title" content="一文了解 Kubernetes RBAC 机制和实践">
+  <meta name="twitter:description" content="前言 在了解RBAC 之前先了解一下Kubernetes API 对象，RBAC 最终操作的对象还是Kubernetes API 对象，本质还是对Kubernet">
+      <meta name="twitter:site" content="@xxxx">
+<meta name="application-name" content="我的网站">
+<meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/images/avatar.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://localhost:1313/%E4%B8%80%E6%96%87%E4%BA%86%E8%A7%A3kubernetes-rbac/" /><link rel="prev" href="http://localhost:1313/10-must-know-free-devops-tools-for-professional-success/" /><link rel="next" href="http://localhost:1313/ubuntu-server%E9%83%A8%E7%BD%B2k8s1.28containerd%E7%89%88%E6%9C%AC%E9%9B%86%E7%BE%A4/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "一文了解 Kubernetes RBAC 机制和实践",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost:1313\/%E4%B8%80%E6%96%87%E4%BA%86%E8%A7%A3kubernetes-rbac\/"
+        },"genre": "posts","keywords": "Kubernetes","wordcount":  5751 ,
+        "url": "http:\/\/localhost:1313\/%E4%B8%80%E6%96%87%E4%BA%86%E8%A7%A3kubernetes-rbac\/","datePublished": "2024-04-27T12:06:37+08:00","dateModified": "2024-05-26T12:06:37+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "lushuan"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Less is more"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Less is more</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 归档 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/" title="About"> 关于 </a><a class="menu-item" href="/friends/" title="friends"> 友链 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Less is more"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Less is more</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">归档</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="About">关于</a><a class="menu-item" href="/friends/" title="friends">友链</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content always-active" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">一文了解 Kubernetes RBAC 机制和实践</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/kubernetes/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Kubernetes</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2024-04-27">2024-04-27</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 5751 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 12 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a>
+      <ul>
+        <li><a href="#kubernetes-api-概念">Kubernetes API 概念</a></li>
+        <li><a href="#资源-uri">资源 URI</a></li>
+        <li><a href="#启动代理">启动代理</a></li>
+      </ul>
+    </li>
+    <li><a href="#rbac-授权模型">RBAC 授权模型</a>
+      <ul>
+        <li><a href="#kubernetes-rbac-是什么">Kubernetes RBAC 是什么？</a></li>
+        <li><a href="#为什么rbac很重要它是如何使用的">为什么RBAC很重要，它是如何使用的?</a>
+          <ul>
+            <li><a href="#kubernetes-访问控制">kubernetes 访问控制</a></li>
+          </ul>
+        </li>
+        <li><a href="#设计">设计</a></li>
+        <li><a href="#rbac-基础概念术语">RBAC 基础概念术语</a>
+          <ul>
+            <li><a href="#术语">术语</a></li>
+            <li><a href="#service-account">Service Account</a></li>
+            <li><a href="#role-和-clusterrole">Role 和 ClusterRole</a></li>
+            <li><a href="#rule">Rule</a></li>
+            <li><a href="#rolebinding-和-clusterrolebinding">RoleBinding 和 ClusterRoleBinding</a></li>
+            <li><a href="#service-account-和-token-令牌">Service Account 和 token 令牌</a>
+              <ul>
+                <li><a href="#kubernetes--120-版本">kubernetes &lt;= 1.20 版本</a></li>
+                <li><a href="#kubernetes--121---123-版本">kubernetes &gt;= 1.21 &amp;&amp; &lt;= 1.23 版本</a></li>
+                <li><a href="#kubernetes--124">kubernetes &gt;= 1.24</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#kubernetes-rbac-实例">Kubernetes RBAC 实例</a>
+          <ul>
+            <li><a href="#create-a-service-account">Create a Service Account</a></li>
+            <li><a href="#role-and-clusterrole">Role and ClusterRole</a>
+              <ul>
+                <li><a href="#role-in-rbac">Role In RBAC</a></li>
+                <li><a href="#cluster-role-in-rbac">Cluster Role In RBAC</a></li>
+              </ul>
+            </li>
+            <li><a href="#rolebinding-and-clusterrolebinding">RoleBinding and ClusterRoleBinding</a>
+              <ul>
+                <li><a href="#role-binding-in-rbac">Role Binding In RBAC</a></li>
+                <li><a href="#cluster-role-binding-in-rbac">Cluster Role Binding In RBAC</a></li>
+              </ul>
+            </li>
+            <li><a href="#权限检查">权限检查</a></li>
+            <li><a href="#只能访问某个-namespace-的普通用户">只能访问某个 namespace 的普通用户</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#总结">总结</a></li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="前言">前言</h2>
+<p>在了解RBAC 之前先了解一下Kubernetes API 对象，RBAC 最终操作的对象还是Kubernetes API 对象，本质还是对Kubernetes API的访问控制，如下RBAC 是在 Api Server 中是通过授权插件默认引入的。
+<code>/etc/kubernetes/manifests/kube-apiserver.yaml</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">spec:
+</span></span><span class="line"><span class="cl">  containers:
+</span></span><span class="line"><span class="cl">  - command:
+</span></span><span class="line"><span class="cl">    - kube-apiserver
+</span></span><span class="line"><span class="cl">    - --advertise-address=192.168.1.11
+</span></span><span class="line"><span class="cl">    - --secure-port=6443   # api server 监听的安全端口(https 协议)
+</span></span><span class="line"><span class="cl">    - --allow-privileged=true
+</span></span><span class="line"><span class="cl">    - --authorization-mode=Node,RBAC             # 启用RBAC 和Node 授权插件
+</span></span><span class="line"><span class="cl">    - --client-ca-file=/etc/kubernetes/pki/ca.crt # 启动x509 数字证书验证
+</span></span><span class="line"><span class="cl">    - --enable-admission-plugins=NodeRestriction  # 额外启用的准入控制器列表
+</span></span><span class="line"><span class="cl">    - --enable-bootstrap-token-auth=true	# 启用bootstrap 的token 认证
+</span></span><span class="line"><span class="cl">    - --requestheader-extra-headers-prefix=X-Remote-Extra- # 代理认证相关的配置
+</span></span><span class="line"><span class="cl">    - --etcd-cafile=/etc/kubernetes/pki/etcd/ca.crt
+</span></span><span class="line"><span class="cl">    - --etcd-certfile=/etc/kubernetes/pki/apiserver-etcd-client.crt
+</span></span><span class="line"><span class="cl">    - --etcd-keyfile=/etc/kubernetes/pki/apiserver-etcd-client.key
+</span></span><span class="line"><span class="cl">    - ...
+</span></span><span class="line"><span class="cl">    - --service-account-key-file=/etc/kubernetes/pki/sa.pub # 指定用于签署承载令牌的秘钥文件
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="kubernetes-api-概念">Kubernetes API 概念</h3>
+<p>Kubernetes API 是通过 HTTP 提供的基于资源 (RESTful) 的编程接口。 它支持通过标准 HTTP 动词（POST、PUT、PATCH、DELETE、GET）检索、创建、更新和删除主要资源。</p>
+<p>对于某些资源，API 包括额外的子资源，允许细粒度授权（例如：将 Pod 的详细信息与检索日志分开）， 为了方便或者提高效率，可以以不同的表示形式接受和服务这些资源。</p>
+<h3 id="资源-uri">资源 URI</h3>
+<ul>
+<li>/api/v1/namespaces</li>
+<li>/api/v1/pods</li>
+<li>/api/v1/namespaces/my-namespace/pods</li>
+<li>/apis/apps/v1/deployments</li>
+<li>/apis/apps/v1/namespaces/my-namespace/deployments</li>
+<li>/apis/apps/v1/namespaces/my-namespace/deployments/my-deployment</li>
+</ul>
+<p><code>kubectl get --raw</code>命令查看</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># kubectl get --raw /</span>
+</span></span><span class="line"><span class="cl"><span class="o">{</span>
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;paths&#34;</span>: <span class="o">[</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;/.well-known/openid-configuration&#34;</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;/api&#34;</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;/api/v1&#34;</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;/apis&#34;</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;/apis/&#34;</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;/apis/admissionregistration.k8s.io&#34;</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;/apis/admissionregistration.k8s.io/v1&#34;</span>,
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;/apis/apiextensions.k8s.io&#34;</span>,
+</span></span><span class="line"><span class="cl">    ...
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="启动代理">启动代理</h3>
+<p>代理一个本地的api server 接口</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># kubectl proxy</span>
+</span></span><span class="line"><span class="cl">Starting to serve on 127.0.0.1:8001
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后就可以直接访问api server 了，如新开一个会话查看集群中的daemonset 资源信息，这只是一个测试，正常的开发不会通过如下方式进行测试，而是有专门的sdk 如<code>client-go</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">curl http://127.0.0.1:8001/apis/apps/v1/daemonsets
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>查看kubenetes api 资源类型，资源类型是否namespaced 还是集群范围的</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ kubectl api-resources
+</span></span><span class="line"><span class="cl">NAME                              SHORTNAMES                                      APIVERSION                             NAMESPACED   KIND
+</span></span><span class="line"><span class="cl">bindings                                                                          v1                                     <span class="nb">true</span>         Binding
+</span></span><span class="line"><span class="cl">componentstatuses                 cs                                              v1                                     <span class="nb">false</span>        ComponentStatus
+</span></span><span class="line"><span class="cl">configmaps                        cm                                              v1                                     <span class="nb">true</span>         ConfigMap
+</span></span><span class="line"><span class="cl">endpoints                         ep                                              v1                                     <span class="nb">true</span>         Endpoints
+</span></span><span class="line"><span class="cl">events                            ev                                     
+</span></span><span class="line"><span class="cl">....
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>下面就进入正体RBAC,以上的介绍就是为了说明RBAC 最终的操作还是kubernetes api 对象，当然也不止是kubernetes api 各类资源对象，还有非资源类型的URL.</p>
+<h2 id="rbac-授权模型">RBAC 授权模型</h2>
+<p>kubernetes 系统的RBAC 授权插件将角色分为Role和ClusterRole两类，它们都是kubernetes 内置支持的API 资源类型，其中role 作用于名称空间级别，用于承载名称空间内的资源权限集合，而clusterrole 则能够同时承载名称空间和集群级别的资源权限集合。</p>
+<p>利用Role 和ClusterRole 两类角色进行赋权时，需要用到另外两种资源RoleBinding和ClusterRoleBinding,它们同样是由Apiserver内置支持的资源类型。</p>
+<h3 id="kubernetes-rbac-是什么">Kubernetes RBAC 是什么？</h3>
+<p>RBAC 是一个特定的权限管理模型，它把可以施加在&quot;资源对象&quot;上的&quot;动作&rsquo;&lsquo;称为&quot;许可权限&quot;,这些许可权限能按需组合在一起构建出&quot;角色&quot;及其职能，并通过为&quot;用户账户和组账户&quot;分配到一个到多个角色完成权限委派。这些能够发出动作的用户在RBAC中称为&quot;主体(subject)&quot;</p>
+<p><figure><a class="lightgallery" href="/images/kubernetes/rbac/rbac-2.png" title="RBAC中的用户、角色、权限" data-thumbnail="/images/kubernetes/rbac/rbac-2.png" data-sub-html="<h2>RBAC中的用户、角色、权限</h2><p>RBAC中的用户、角色、权限</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/kubernetes/rbac/rbac-2.png"
+            data-srcset="/images/kubernetes/rbac/rbac-2.png, /images/kubernetes/rbac/rbac-2.png 1.5x, /images/kubernetes/rbac/rbac-2.png 2x"
+            data-sizes="auto"
+            alt="/images/kubernetes/rbac/rbac-2.png" />
+    </a><figcaption class="image-caption">RBAC中的用户、角色、权限</figcaption>
+    </figure></p>
+<p>简单来说，RBAC 就是一种访问控制模型，它以角色为中心界定&quot;谁&quot;(subject)能够&quot;操作&quot;(verb)哪个或哪类&quot;对象&quot;(object)。</p>
+<p>动作发出者即&quot;主体&quot;，通常以&quot;账号&quot;为载体，在kubernetes 中，它可以是普通账户(user),也可以是服务账户(service account).&ldquo;动作&quot;表示要执行的具体操作，包括创建、删除、修改和查看等行为，对于API Server来说，即PUT、POST、DELETE、GET等请求方法。而&quot;对象&quot;则是指管理操作能够施加的目标实体，对 kubernetes API 来说主要指各类资源对象以及非资源类型URL.</p>
+<h3 id="为什么rbac很重要它是如何使用的">为什么RBAC很重要，它是如何使用的?</h3>
+<h4 id="kubernetes-访问控制">kubernetes 访问控制</h4>
+<p><figure><a class="lightgallery" href="/images/kubernetes/rbac/kubernetes-access-control-diagram.png" title="kubernetes 访问控制流程图" data-thumbnail="/images/kubernetes/rbac/kubernetes-access-control-diagram.png" data-sub-html="<h2>用户、服务账户、认证、授权和准入控制</h2><p>kubernetes 访问控制流程图</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/kubernetes/rbac/kubernetes-access-control-diagram.png"
+            data-srcset="/images/kubernetes/rbac/kubernetes-access-control-diagram.png, /images/kubernetes/rbac/kubernetes-access-control-diagram.png 1.5x, /images/kubernetes/rbac/kubernetes-access-control-diagram.png 2x"
+            data-sizes="auto"
+            alt="/images/kubernetes/rbac/kubernetes-access-control-diagram.png" />
+    </a><figcaption class="image-caption">用户、服务账户、认证、授权和准入控制</figcaption>
+    </figure></p>
+<h3 id="设计">设计</h3>
+<p><figure><a class="lightgallery" href="/images/kubernetes/rbac/rbac-4.jpg" title="RBAC 设计" data-thumbnail="/images/kubernetes/rbac/rbac-4.jpg" data-sub-html="<h2>RBAC Design</h2><p>RBAC 设计</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/kubernetes/rbac/rbac-4.jpg"
+            data-srcset="/images/kubernetes/rbac/rbac-4.jpg, /images/kubernetes/rbac/rbac-4.jpg 1.5x, /images/kubernetes/rbac/rbac-4.jpg 2x"
+            data-sizes="auto"
+            alt="/images/kubernetes/rbac/rbac-4.jpg" />
+    </a><figcaption class="image-caption">RBAC Design</figcaption>
+    </figure></p>
+<h3 id="rbac-基础概念术语">RBAC 基础概念术语</h3>
+<h4 id="术语">术语</h4>
+<ul>
+<li><strong>Subjects</strong>: 主体，谁可以访问kubernetes API.</li>
+<li><strong>Resources</strong>: 哪些 kubernetes API 资源对象可以被访问.</li>
+<li><strong>Verbs</strong>: 可以对这些 Kubernetes API 做哪些操作(CRUD)</li>
+</ul>
+<p>可以简单的说RBAC是一种身份和访问管理形式，它涉及一组权限或模板，这些权限或模板决定谁(Subjects)可以执行什么(Verbs)，以及在哪里(命名空间或集群)。</p>
+<p>补充：</p>
+<ul>
+<li>Subject:主体，对应集群中尝试操作的对象，集群中定义了 3 种类型的主体资源:
+<ul>
+<li>User Account:用户，这是有外部独立服务进行管理的，管理员进行私钥的分配，用户可以使用KeyStone 或者 Goolge 帐号，甚至一个用户名和密码的文件列表也可以。对于用户的管理集群内部没有一个关联的资源对象，所以用户不能通过集群内部的 API 来进行管理</li>
+<li>Group:组，这是用来关联多个账户的，集群中有一些默认创建的组，比如 cluster-admin</li>
+<li>Service Account: 服务帐号</li>
+</ul>
+</li>
+</ul>
+<h4 id="service-account">Service Account</h4>
+<p>ServiceAccount 为 Pod 中运行的进程提供了一个身份，Pod 内的进程可以使用其关联服务账号的身份，向集群的 APIServer 进行身份认证。
+通过下图可以了解Service Account 的位置和作用</p>
+<p><figure><a class="lightgallery" href="/images/kubernetes/rbac/rbac-7.png" title="Service Account" data-thumbnail="/images/kubernetes/rbac/rbac-7.png" data-sub-html="<h2>Service Account</h2><p>Service Account</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/kubernetes/rbac/rbac-7.png"
+            data-srcset="/images/kubernetes/rbac/rbac-7.png, /images/kubernetes/rbac/rbac-7.png 1.5x, /images/kubernetes/rbac/rbac-7.png 2x"
+            data-sizes="auto"
+            alt="/images/kubernetes/rbac/rbac-7.png" />
+    </a><figcaption class="image-caption">Service Account</figcaption>
+    </figure></p>
+<h4 id="role-和-clusterrole">Role 和 ClusterRole</h4>
+<p>Kubernetes 系统的RBAC 授权插件将角色分为Role 和 ClusterRole 两类，它们都是kubernetes 内置支持的API 资源类型，其中Role 用作于空间级别，用于承载名称空间内的资源权限集合，而ClusterRole则能够同时承载名称空间和集群级别的资源权限集合。</p>
+<p>Role 无法承载集群级别的资源类型的操作权限，这类的资源包括集群级别的资源(例如Node)、非资源类型的端点(例如/healthz),以及作用于所有名称空间的资源(例如跨名称空间获取任何资源的权限)等。</p>
+<p>查看不属于任何特定的命名空间，而是在整个集群范围内管理和配置的API 资源对象</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ kubectl api-resources --namespaced<span class="o">=</span><span class="nb">false</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="rule">Rule</h4>
+<p>规则，规则是一组属于不同 API Group 资源上的一组操作的集合,在Role 和 ClusterRole资源上定义的rule 也称为PolicyRule,即策略规则，它可以内嵌的字段有如下几个</p>
+<ul>
+<li>apiGroups</li>
+<li>resources</li>
+<li>resourceNames</li>
+<li>nonResourceURLs</li>
+<li>verbs</li>
+</ul>
+<h4 id="rolebinding-和-clusterrolebinding">RoleBinding 和 ClusterRoleBinding</h4>
+<p>利用Role 和 ClusterRole 进行角色赋权时，需要用到另外两种资源RoleBinding和ClusterRoleBinding,它们同样是API Server 内置的支持的资源类型。</p>
+<ul>
+<li>RoleBinding 用于将Role 绑定到一个或一组用户之上，它隶属于且仅能作用于其所在的单个名称空间。</li>
+<li>RoleBinding 可以引用同一名称空间中的role,也可以引用集群级别的ClusterRole,但是引用ClusterRole的许可权限会降级到仅能在Rolebingding所在的名称空间生效。</li>
+<li>ClusterRoleBinding 则用于将ClusterRole 绑定到用户和组，它作用于集群全局，且仅能够引用ClusterRole.</li>
+</ul>
+<p>简单来说就是把声明的Subject 和我们的 Role 进行绑定的过程(给某个用户绑定上操作的权限)，二者的区别也是作用范围的区别:RoleBinding 只会影响到当前 namespace 下面的资源操作权限，而ClusterRoleBinding 会影响到所有的 namespace。</p>
+<p>四者关系如图：</p>
+<p><figure><a class="lightgallery" href="/images/kubernetes/rbac/rbac-3.png" title="角色和角色绑定" data-thumbnail="/images/kubernetes/rbac/rbac-3.png" data-sub-html="<h2>Role、RoleBinding、ClusterRole和ClusterRoleBinding</h2><p>角色和角色绑定</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/kubernetes/rbac/rbac-3.png"
+            data-srcset="/images/kubernetes/rbac/rbac-3.png, /images/kubernetes/rbac/rbac-3.png 1.5x, /images/kubernetes/rbac/rbac-3.png 2x"
+            data-sizes="auto"
+            alt="/images/kubernetes/rbac/rbac-3.png" />
+    </a><figcaption class="image-caption">Role、RoleBinding、ClusterRole和ClusterRoleBinding</figcaption>
+    </figure></p>
+<h4 id="service-account-和-token-令牌">Service Account 和 token 令牌</h4>
+<p>注：sa 是service account 的缩写</p>
+<h5 id="kubernetes--120-版本">kubernetes &lt;= 1.20 版本</h5>
+<p>sa 创建后会自动创建一个secret,该secret 会包含一个token,这个token 就是serviceaccount的令牌，而且是永久有效的</p>
+<h5 id="kubernetes--121---123-版本">kubernetes &gt;= 1.21 &amp;&amp; &lt;= 1.23 版本</h5>
+<p>sa 创建后依然会自动创建一个secret,但是pod 里面使用的sa token不是该secret里面包含的令牌了，而是kubelet 去tokenrequest api 请求的有时间限制的token</p>
+<h5 id="kubernetes--124">kubernetes &gt;= 1.24</h5>
+<p>sa 创建后不会自动创建一个secret 进行关联，然后和前面这个方式一样，通过tokenrequest api 请求token，每个一小时会自动刷新一次令牌，pod 容器内令牌路径为<code>/var/run/secrets/kubernetes.io/serviceaccount/token</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ kubectl <span class="nb">exec</span> -it nginx-deploy-5947669f9-9h9vg -- cat /var/run/secrets/kubernetes.io/serviceaccount/token
+</span></span><span class="line"><span class="cl">eyJhbGciOiJSUzI1NiIsImtpZCI6IjlsalZmUVpQLXEzRjhLSk9hMnpOV0FKWEJMT2RGam15MDIyR1BlMXNkSjAifQ.eyJhdWQiOlsiaHR0cHM6Ly9rdWJlcm5ldGVzLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwiXSwiZXhwIjoxNzUyMjIxMTQ1LCJpYXQiOjE3MjA2ODUxNDUsImlzcyI6Imh0dHBzOi8va3ViZXJuZXRlcy5kZWZhdWx0LnN2Yy5jbHVzdGVyLmxvY2FsIiwia3ViZXJuZXRlcy5pbyI6eyJuYW1lc3BhY2UiOiJkZWZhdWx0IiwicG9kIjp7Im5hbWUiOiJuZ2lueC1kZXBsb3ktNTk0NzY2OWY5LTloOXZnIiwidWlkIjoiMThlODJmZTUtNzFjZS00ZTBmLWEwYTItNTNlYWJhYjRjNzgxIn0sInNlcnZpY2VhY2NvdW50Ijp7Im5hbWUiOiJkZWZhdWx0IiwidWlkIjoiNzFlYjM5MzEtMWU5Ny00MGI0LWFmNTItODdiZWYwZjQ2MjVhIn0sIndhcm5hZnRlciI6MTcyMDY4ODc1Mn0sIm5iZiI6MTcyMDY4NTE0NSwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50OmRlZmF1bHQ6ZGVmYXVsdCJ9.0VZaQGqg1bCxzBIaRMXQ3doYWsu6g4PYsnTPoIDjCuF4IufFq-eG9YppkhjR21cfg-SJpV4h1maW1axB3yevpf9PYFxuEDRrLY4_qpkJW5UR-r_nz0D99iiQCisb2znrDSjChGFpUnStQ1TMgQfkejPgRh08RqKLNJE1QhQ6dncebALBmWeXEdi2vWkXUOT9KlvZxP7Bk2gYaQH39PhxiHb_b2nLSPwfiVNvK0Lpxe54oCQE4WH3qSWTg0GQ0nLn74E0fgSkyegBJhmPzyPcJ-iR8Je5qL6SKyNjHftu1m49q40RrNkeh0ogLBcD0qobpMWWw-XvtiK-bcwQt1qgLA
+</span></span><span class="line"><span class="cl">$
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>通过<a href="https://jwt.io/" target="_blank" rel="noopener noreffer ">jwt</a>令牌解析查看</p>
+<p><figure><a class="lightgallery" href="/images/kubernetes/rbac/rbac-4.png" title="Service Account 和 Token" data-thumbnail="/images/kubernetes/rbac/rbac-4.png" data-sub-html="<h2>Service Account 和 Token</h2><p>Service Account 和 Token</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/kubernetes/rbac/rbac-4.png"
+            data-srcset="/images/kubernetes/rbac/rbac-4.png, /images/kubernetes/rbac/rbac-4.png 1.5x, /images/kubernetes/rbac/rbac-4.png 2x"
+            data-sizes="auto"
+            alt="/images/kubernetes/rbac/rbac-4.png" />
+    </a><figcaption class="image-caption">Service Account 和 Token</figcaption>
+    </figure></p>
+<p>最新版本的令牌是一小时刷新一次，并且exp 是一年后到期，如果创建的ServiceAcccount 设置不自动挂载可以通过如下设置</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">ServiceAccount</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="kc">no</span>-<span class="l">access-sa</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">automountServiceAccountToken</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>for pod</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Pod</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">test-pod</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">serviceAccountName</span><span class="p">:</span><span class="w"> </span><span class="kc">no</span>-<span class="l">access-sa</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">automountServiceAccountToken</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="kubernetes-rbac-实例">Kubernetes RBAC 实例</h3>
+<h4 id="create-a-service-account">Create a Service Account</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ kubectl create sa sa-demo
+</span></span><span class="line"><span class="cl">serviceaccount/sa-demo created
+</span></span><span class="line"><span class="cl">$ kubectl create sa sa2
+</span></span><span class="line"><span class="cl">serviceaccount/sa2 created
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>如果创建一个Pod 资源，不绑定serviceaccount 则使用namesapce命名空间下的默认的serviceaccount 也就是default</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ kubectl get pod nginx-deploy-5947669f9-9h9vg -o yaml<span class="p">|</span>grep -i serviceAccount
+</span></span><span class="line"><span class="cl">    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+</span></span><span class="line"><span class="cl">  serviceAccount: default
+</span></span><span class="line"><span class="cl">  serviceAccountName: default
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="role-and-clusterrole">Role and ClusterRole</h4>
+<h5 id="role-in-rbac">Role In RBAC</h5>
+<p>在<code>default</code> 名称空间中定义一个名称为<code>pod-reader</code>的Role 资源，且只能访问<code>default</code>名字空间下的<code>secrets</code>资源，对该资源只能做&quot;get&rdquo;, &ldquo;watch&quot;和&quot;list&rdquo; 操作
+<code>pod-reader_role.yaml</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">rbac.authorization.k8s.io/v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Role</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l">default</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">pod-reader</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">rules</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span>- <span class="nt">apigroups</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&#34;&#34;</span><span class="p">]</span><span class="w">  </span><span class="c"># 表示核心API 群组</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&#34;pods&#34;</span><span class="p">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&#34;get&#34;</span><span class="p">,</span><span class="w"> </span><span class="s2">&#34;watch&#34;</span><span class="p">,</span><span class="w"> </span><span class="s2">&#34;list&#34;</span><span class="p">]</span><span class="w">  </span><span class="c"># 也可以使用[&#39;*&#39;]</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>read_secret_role.yaml</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">rbac.authorization.k8s.io/v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Role</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">read-secret</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l">default</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">rules</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span>- <span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&#34;&#34;</span><span class="p">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&#34;secrets&#34;</span><span class="p">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&#34;get&#34;</span><span class="p">,</span><span class="w"> </span><span class="s2">&#34;watch&#34;</span><span class="p">,</span><span class="w"> </span><span class="s2">&#34;list&#34;</span><span class="p">]</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h5 id="cluster-role-in-rbac">Cluster Role In RBAC</h5>
+<p>Roles in RBAC 是用来访问指定某一个命名空间下的资源，如果想要提升到集群级别那么就需要使用ClusterRole
+<code>secret-reader-clusterole.yaml</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">rbac.authorization.k8s.io/v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">ClusterRole</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">secret-reader</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">rules</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span>- <span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&#34;&#34;</span><span class="p">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&#34;secrets&#34;</span><span class="p">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&#34;get&#34;</span><span class="p">,</span><span class="w"> </span><span class="s2">&#34;watch&#34;</span><span class="p">,</span><span class="w"> </span><span class="s2">&#34;list&#34;</span><span class="p">]</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="rolebinding-and-clusterrolebinding">RoleBinding and ClusterRoleBinding</h4>
+<h5 id="role-binding-in-rbac">Role Binding In RBAC</h5>
+<p><figure><a class="lightgallery" href="/images/kubernetes/rbac/rbac-5.png" title="Role Binding In RBAC" data-thumbnail="/images/kubernetes/rbac/rbac-5.png" data-sub-html="<h2>Role Binding In RBAC</h2><p>Role Binding In RBAC</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/kubernetes/rbac/rbac-5.png"
+            data-srcset="/images/kubernetes/rbac/rbac-5.png, /images/kubernetes/rbac/rbac-5.png 1.5x, /images/kubernetes/rbac/rbac-5.png 2x"
+            data-sizes="auto"
+            alt="/images/kubernetes/rbac/rbac-5.png" />
+    </a><figcaption class="image-caption">Role Binding In RBAC</figcaption>
+    </figure>
+<code>read_pod_rolebinding.yaml</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">rbac.authorization.k8s.io/v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">RoleBinding</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">read-pods</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l">default</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">subjects</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span>- <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">ServiceAccount</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">sa-demo</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l">default</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">roleRef</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="c"># &#34;roleRef&#34; 指定关联是  Role / ClusterRole</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Role   </span><span class="w"> </span><span class="c"># 这里 必须指定 Role or ClusterRole</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">pod-reader </span><span class="w"> </span><span class="c"># 这里绑定你想匹配的 Role or ClusterRole 的名称</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">apiGroup</span><span class="p">:</span><span class="w"> </span><span class="l">rbac.authorization.k8s.io</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>read_secret_rolebinding.yaml</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">rbac.authorization.k8s.io/v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">RoleBinding</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">read-secret</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l">default</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">subjects</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span>- <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">ServiceAccount</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">sa2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l">default</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">roleRef</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Role </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">read-secret</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">apiGroup</span><span class="p">:</span><span class="w"> </span><span class="l">rbac.authorization.k8s.io</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h5 id="cluster-role-binding-in-rbac">Cluster Role Binding In RBAC</h5>
+<p>Cluster Role Binding in RBAC 用来赋予subject 集群级别的权限，对所有的名字空间都有访问的权限</p>
+<p><figure><a class="lightgallery" href="/images/kubernetes/rbac/rbac-6.png" title="Cluster Role Binding In RBAC" data-thumbnail="/images/kubernetes/rbac/rbac-6.png" data-sub-html="<h2>Cluster Role Binding In RBAC</h2><p>Cluster Role Binding In RBAC</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/kubernetes/rbac/rbac-6.png"
+            data-srcset="/images/kubernetes/rbac/rbac-6.png, /images/kubernetes/rbac/rbac-6.png 1.5x, /images/kubernetes/rbac/rbac-6.png 2x"
+            data-sizes="auto"
+            alt="/images/kubernetes/rbac/rbac-6.png" />
+    </a><figcaption class="image-caption">Cluster Role Binding In RBAC</figcaption>
+    </figure></p>
+<p><code>secret-reader-ClusterRoleBinding.yaml</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">rbac.authorization.k8s.io/v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c"># 允许任何人在&#34;manager&#34;组中都可以访问任何namespace 下的secrets api 对象</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">ClusterRoleBinding</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">read-secrets-global</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">subjects</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span>- <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">ServiceAccount</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">sa2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l">default</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">roleRef</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">ClusterRole</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">secret-reader</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">apiGroup</span><span class="p">:</span><span class="w"> </span><span class="l">rbac.authorization.k8s.io</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="权限检查">权限检查</h4>
+<ul>
+<li>检查用户或者服务账户是否有对应的权限，可以使用命令<code>kubectl auth can-i</code></li>
+<li>例如： 检查 service account sa-demo 在namespace &ldquo;default&rdquo; 是否有查看secrets 的权限</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ kubectl auth can-i get secrets -n default --as<span class="o">=</span>system:serviceaccount:default:sa-demo
+</span></span><span class="line"><span class="cl">yes
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>名字空间下检查两个service account  的权限</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ kubectl auth can-i get pods -n default --as<span class="o">=</span>system:serviceaccount:default:sa-demo
+</span></span><span class="line"><span class="cl">yes
+</span></span><span class="line"><span class="cl">$ kubectl auth can-i get secrets -n default --as<span class="o">=</span>system:serviceaccount:default:sa-demo
+</span></span><span class="line"><span class="cl">no
+</span></span><span class="line"><span class="cl">$ kubectl auth can-i get pods -n default --as<span class="o">=</span>system:serviceaccount:default:sa2
+</span></span><span class="line"><span class="cl">no
+</span></span><span class="line"><span class="cl">$ kubectl auth can-i get secrets -n default --as<span class="o">=</span>system:serviceaccount:default:sa2
+</span></span><span class="line"><span class="cl">yes
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>集群级别检查service account sa 的权限</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ kubectl auth can-i get secrets -n default --as<span class="o">=</span>system:serviceaccount:default:sa2
+</span></span><span class="line"><span class="cl">$ kubectl auth can-i get secrets -n kube-system --as<span class="o">=</span>system:serviceaccount:default:sa2
+</span></span><span class="line"><span class="cl">yes
+</span></span><span class="line"><span class="cl">$ kubectl auth can-i get daemonsets -n kube-system --as<span class="o">=</span>system:serviceaccount:default:sa2
+</span></span><span class="line"><span class="cl">no
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="只能访问某个-namespace-的普通用户">只能访问某个 namespace 的普通用户</h4>
+<p>创建一个User Account，只能访问 kube-system 这个命名空间，对应的用户信息如下所示：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">username: lushuan
+</span></span><span class="line"><span class="cl">group: ikubernetes
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>创建用户凭证
+我们前面已经提到过，Kubernetes 没有 User Account 的 API 对象，不过要创建一个用户帐号的话也是挺简单的，利用管理员分配给你的一个私钥就可以创建了，这个我们可以参考官方文档中的方法，这里我们来使用 0penssL 证书来创建一个 User，当然我们也可以使用更简单的 cfssl 工具来创建:给用户 lushuan 创建一个私钥，命名成 lushuan.key:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ openssl genrsa -out lushuan.key <span class="m">2048</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>使用我们刚刚创建的私钥创建一个证书签名请求文件:lushuan.csr，要注意需要确保在-subj参数中指定用户名和组(CN 表示用户名，0表示组):</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ openssl req -new -key lushuan.key -out lushuan.csr -subj <span class="s2">&#34;/CN=lushuan/O=ikubernetes&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后找到我们的 Kubernetes 集群的 CA 证书，我们使用的是 kubeadm 安装的集群，CA 相关证书位于<code>/etc/kubernetes/pki/</code> 目录下面，如果你是二进制方式搭建的，你应该在最开始搭建集群的时候就已经指定好了 CA 的目录，我们会利用该目录下面的ca.crt和 ca.key两个文件来批准上面的证书请求。生成最终的证书文件，我们这里设置证书的有效期为500天:</p>
+<p>基于 ca.key、ca.crt 和 lushuan.csr 等三个文件生成服务端证书lushuan.crt</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ openssl x509 -req -in lushuan.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key -CAcreateserial -out lushuan.crt -days <span class="m">500</span>
+</span></span><span class="line"><span class="cl">Certificate request self-signature ok
+</span></span><span class="line"><span class="cl"><span class="nv">subject</span><span class="o">=</span><span class="nv">CN</span> <span class="o">=</span> lushuan, <span class="nv">O</span> <span class="o">=</span> ikubernetes
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>将创建的证书文件和私钥文件将其嵌入到凭证中</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ kubectl config set-credentials lushuan --client-certificate<span class="o">=</span>lushuan.crt --client-key<span class="o">=</span>lushuan.key
+</span></span><span class="line"><span class="cl">User <span class="s2">&#34;lushuan&#34;</span> set.
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>将创建的证书文件和私钥文件将其嵌入到上下文中</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ kubectl cluster-info
+</span></span><span class="line"><span class="cl">Kubernetes control plane is running at https://192.168.1.11:6443
+</span></span><span class="line"><span class="cl">CoreDNS is running at https://192.168.1.11:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">To further debug and diagnose cluster problems, use <span class="s1">&#39;kubectl cluster-info dump&#39;</span>.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">$ kubectl config set-cluster <span class="s2">&#34;cluster-demo&#34;</span> --insecure-skip-tls-verify<span class="o">=</span><span class="nb">true</span> --server<span class="o">=</span>https://192.168.1.11:6443
+</span></span><span class="line"><span class="cl">Cluster <span class="s2">&#34;cluster-demo&#34;</span> set.
+</span></span><span class="line"><span class="cl">$ kubectl config get-clusters
+</span></span><span class="line"><span class="cl">NAME
+</span></span><span class="line"><span class="cl">cluster-demo
+</span></span><span class="line"><span class="cl">kubernetes
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 创建上下文lushuan-contex，指定对应的集群，命名空间和用户，表示了用户lushuan 具有了在kube-system 命名空间下操作的权限</span>
+</span></span><span class="line"><span class="cl">$ kubectl config set-context lushuan-context --cluster<span class="o">=</span>cluster-demo --namespace<span class="o">=</span>kube-system --user<span class="o">=</span>lushuan
+</span></span><span class="line"><span class="cl">Context <span class="s2">&#34;lushuan-context&#34;</span> created.
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>查看创建结果</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ kubectl config get-contexts
+</span></span><span class="line"><span class="cl">CURRENT   NAME                          CLUSTER        AUTHINFO           NAMESPACE
+</span></span><span class="line"><span class="cl">*         kubernetes-admin@kubernetes   kubernetes     kubernetes-admin   
+</span></span><span class="line"><span class="cl">          lushuan-context               cluster-demo   lushuan            kube-system
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>验证,在我们执行<code>kubectl get pod</code> 是使用的默认的上下文，此时我们指定上面创建的上下文<code>lushuan-context</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ kubectl get pod
+</span></span><span class="line"><span class="cl">No resources found in default namespace.
+</span></span><span class="line"><span class="cl">$ kubectl get pod --context<span class="o">=</span>lushuan-context
+</span></span><span class="line"><span class="cl">Error from server <span class="o">(</span>Forbidden<span class="o">)</span>: pods is forbidden: User <span class="s2">&#34;lushuan&#34;</span> cannot list resource <span class="s2">&#34;pods&#34;</span> in API group <span class="s2">&#34;&#34;</span> in the namespace <span class="s2">&#34;kube-system&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 或者直接切换上下文</span>
+</span></span><span class="line"><span class="cl">$ kubectl config use-context lushuan-context
+</span></span><span class="line"><span class="cl">Switched to context <span class="s2">&#34;lushuan-context&#34;</span>.
+</span></span><span class="line"><span class="cl">kubectl get pod --context<span class="o">=</span>lushuan-context
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>分享报错信息为无法list (操作)资源pods,在哪个组下,在哪个名字空间下，说白了就是需要操作的资源的相关权限，后面就需要配置RBAC了，会用到上面的提到的相关概念。
+创建<code>lushuan-role.yaml</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">rbac.authorization.k8s.io/v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Role</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">lushuan-role</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l">kube-system</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span><span class="c">#权限的规则</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span>- <span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&#34;&#34;</span><span class="p">,</span><span class="s2">&#34;apps&#34;</span><span class="p">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&#34;deployments&#34;</span><span class="p">,</span><span class="s2">&#34;replicasets&#34;</span><span class="p">,</span><span class="s2">&#34;pods&#34;</span><span class="p">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&#34;get&#34;</span><span class="p">,</span><span class="w"> </span><span class="s2">&#34;list&#34;</span><span class="p">,</span><span class="s2">&#34;watch&#34;</span><span class="p">,</span><span class="s2">&#34;create&#34;</span><span class="p">,</span><span class="s2">&#34;update&#34;</span><span class="p">,</span><span class="s2">&#34;patch&#34;</span><span class="p">,</span><span class="s2">&#34;delete&#34;</span><span class="p">]</span><span class="w">  </span><span class="c"># 也可以使用[&#39;*&#39;]</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>创建<code>lushuan-rolebinding.yaml</code> 角色绑定文件</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">rbac.authorization.k8s.io/v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">RoleBinding</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata </span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">lushuan-rolebindirg</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l">kube-system</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">subjects</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">User </span><span class="w"> </span><span class="c"># 外部用户</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">lushuan</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">apiGroup</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">roleRef</span><span class="p">:</span><span class="w">     </span><span class="c"># 管理权限声明的角色</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Role</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">lushuan-role</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">apiGroup</span><span class="p">:</span><span class="w"> </span><span class="l">rbac.authorization.k8s.io   </span><span class="w"> </span><span class="c"># 留空字符串也可以，则使用当前的apiGroup</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>创建角色和角色绑定并验证，现在就是可以正常访问了。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ kubectl create -f lushuan-role.yaml
+</span></span><span class="line"><span class="cl">$ kubectl create -f lushuan-rolebinding.yaml
+</span></span><span class="line"><span class="cl">$ kubectl get pod --context<span class="o">=</span>lushuan-context
+</span></span><span class="line"><span class="cl">NAME                                   READY   STATUS    RESTARTS         AGE
+</span></span><span class="line"><span class="cl">coredns-6554b8b87f-rf7kb               1/1     Running   <span class="m">4</span> <span class="o">(</span>6h47m ago<span class="o">)</span>    4d
+</span></span><span class="line"><span class="cl">coredns-6554b8b87f-wjt6p               1/1     Running   <span class="m">10</span> <span class="o">(</span>6h47m ago<span class="o">)</span>   4d
+</span></span><span class="line"><span class="cl">etcd-k8s-master01                      1/1     Running   <span class="m">51</span> <span class="o">(</span>6h47m ago<span class="o">)</span>   4d
+</span></span><span class="line"><span class="cl">kube-apiserver-k8s-master01            1/1     Running   <span class="m">46</span> <span class="o">(</span>6h47m ago<span class="o">)</span>   4d
+</span></span><span class="line"><span class="cl">kube-controller-manager-k8s-master01   1/1     Running   <span class="m">47</span> <span class="o">(</span>6h47m ago<span class="o">)</span>   3d23h
+</span></span><span class="line"><span class="cl">kube-proxy-78db5                       1/1     Running   <span class="m">36</span> <span class="o">(</span>6h47m ago<span class="o">)</span>   4d
+</span></span><span class="line"><span class="cl">kube-scheduler-k8s-master01            1/1     Running   <span class="m">45</span> <span class="o">(</span>6h47m ago<span class="o">)</span>   4d
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>如果访问daemonsets 资源呢，是否可以正常访问</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ kubectl get daemonsets --context<span class="o">=</span>lushuan-context
+</span></span><span class="line"><span class="cl">Error from server <span class="o">(</span>Forbidden<span class="o">)</span>: daemonsets.apps is forbidden: User <span class="s2">&#34;lushuan&#34;</span> cannot list resource <span class="s2">&#34;daemonsets&#34;</span> in API group <span class="s2">&#34;apps&#34;</span> in the namespace <span class="s2">&#34;kube-system&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>我们可以看到没有权限获取，因为我们并没有为当前操作用户指定其他对象资源的访问权限，是符合我们的预期的。
+这样我们就创建了一个只有单个命名空间访问权限的普通 User。</p>
+<h2 id="总结">总结</h2>
+<ul>
+<li>Role 和 RoleBinding 用于同一个namespace</li>
+<li>RoleBindings 可以存在于不同的命名空间，以授予服务账户权限。</li>
+<li>RoleBinding 可以引用同一名称空间中的role,也可以引用集群级别的ClusterRole,但是引用ClusterRole的许可权限会降级到仅能在Rolebingding所在的名称空间生效。</li>
+<li>ClusterRoleBinding 则用于将ClusterRole 绑定到用户和组，它作用于集群全局，可以访问集群所有资源，但是仅能够引用ClusterRole.</li>
+<li>ClusterRoleBinding 不可以引用Role</li>
+</ul>
+<h2 id="参考">参考</h2>
+<ol>
+<li><a href="https://kubernetes.io/zh-cn/docs/reference/access-authn-authz/rbac/" target="_blank" rel="noopener noreffer ">https://kubernetes.io/zh-cn/docs/reference/access-authn-authz/rbac/</a></li>
+<li><a href="https://kubernetes.io/zh-cn/docs/reference/using-api/api-concepts/" target="_blank" rel="noopener noreffer ">https://kubernetes.io/zh-cn/docs/reference/using-api/api-concepts/</a></li>
+<li><a href="https://kubernetes.io/zh-cn/docs/tasks/administer-cluster/certificates/#openssl" target="_blank" rel="noopener noreffer ">https://kubernetes.io/zh-cn/docs/tasks/administer-cluster/certificates/#openssl</a></li>
+</ol>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2024-05-26</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://localhost:1313/%E4%B8%80%E6%96%87%E4%BA%86%E8%A7%A3kubernetes-rbac/" data-title="一文了解 Kubernetes RBAC 机制和实践" data-via="xxxx" data-hashtags="Kubernetes"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/%E4%B8%80%E6%96%87%E4%BA%86%E8%A7%A3kubernetes-rbac/" data-hashtag="Kubernetes"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="http://localhost:1313/%E4%B8%80%E6%96%87%E4%BA%86%E8%A7%A3kubernetes-rbac/" data-title="一文了解 Kubernetes RBAC 机制和实践"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://localhost:1313/%E4%B8%80%E6%96%87%E4%BA%86%E8%A7%A3kubernetes-rbac/" data-title="一文了解 Kubernetes RBAC 机制和实践"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/%E4%B8%80%E6%96%87%E4%BA%86%E8%A7%A3kubernetes-rbac/" data-title="一文了解 Kubernetes RBAC 机制和实践"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/kubernetes/">Kubernetes</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/10-must-know-free-devops-tools-for-professional-success/" class="prev" rel="prev" title="10 Must-Know Free DevOps Tools for Professional Success"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>10 Must-Know Free DevOps Tools for Professional Success</a>
+            <a href="/ubuntu-server%E9%83%A8%E7%BD%B2k8s1.28containerd%E7%89%88%E6%9C%AC%E9%9B%86%E7%BE%A4/" class="next" rel="next" title="Ubuntu-server部署k8s1.28(containerd版本)集群">Ubuntu-server部署k8s1.28(containerd版本)集群<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">我是有底线的</div><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.126.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2024</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">lushuan</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/lightgallery/css/lightgallery-bundle.min.css"><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/lightgallery/lightgallery.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/zoom/lg-zoom.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"lightgallery":true,"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

@@ -13,6 +13,14 @@
     <description><![CDATA[整体流程 部署准备 k8s 集群容器运行时 Containerd 准备 k8s 集群部署 k8s 集群软件 apt 源准备 k8s 集群软件安装 k8s 集群初始化 k8s 集群worker 节点加入 k8s 集群网络插件 Calico 准备 部]]></description>
 </item>
 <item>
+    <title>一文了解Kubernetes RBAC 机制和实践</title>
+    <link>http://localhost:1313/%E4%B8%80%E6%96%87%E4%BA%86%E8%A7%A3kubernetes-rbac/</link>
+    <pubDate>Sat, 27 Apr 2024 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/%E4%B8%80%E6%96%87%E4%BA%86%E8%A7%A3kubernetes-rbac/</guid>
+    <description><![CDATA[前言 在了解RBAC 之前先了解一下Kubernetes API 对象，RBAC 最终操作的对象还是Kubernetes API 对象，本质还是对Kubernet]]></description>
+</item>
+<item>
     <title>Kubernetes 技能图谱</title>
     <link>http://localhost:1313/kubernetes-%E6%8A%80%E8%83%BD%E5%9B%BE%E8%B0%B1/</link>
     <pubDate>Fri, 13 Oct 2023 12:06:37 &#43;0800</pubDate>
@@ -75,14 +83,6 @@
     <author>lushuan</author>
     <guid>http://localhost:1313/kubernetes-configmap%E5%A4%9A%E6%96%87%E4%BB%B6%E6%8C%82%E8%BD%BD%E8%87%B3%E5%90%8C%E4%B8%80%E4%B8%AApod%E5%86%85%E7%9B%AE%E5%BD%95%E5%AE%9E%E8%B7%B5/</guid>
     <description><![CDATA[理解ConfigMap 为了能够准确和深刻理解Kubernetes ConfigMap的功能和价值，我们需要从Docker说起。我们知道，Doc]]></description>
-</item>
-<item>
-    <title>Pod调度</title>
-    <link>http://localhost:1313/pod%E8%B0%83%E5%BA%A6/</link>
-    <pubDate>Fri, 16 Jul 2021 12:06:37 &#43;0800</pubDate>
-    <author>lushuan</author>
-    <guid>http://localhost:1313/pod%E8%B0%83%E5%BA%A6/</guid>
-    <description><![CDATA[Pod调度 一般情况下我们部署的 Pod 是通过集群的自动调度策略来选择节点的，默认情况下调度器考虑的是资源足够，并且负载尽量平均，但是有的时候我们需]]></description>
 </item>
 </channel>
 </rss>
