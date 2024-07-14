@@ -104,7 +104,14 @@ RBAC 是一个特定的权限管理模型，它把可以施加在"资源对象"�
 动作发出者即"主体"，通常以"账号"为载体，在kubernetes 中，它可以是普通账户(user),也可以是服务账户(service account)."动作"表示要执行的具体操作，包括创建、删除、修改和查看等行为，对于API Server来说，即PUT、POST、DELETE、GET等请求方法。而"对象"则是指管理操作能够施加的目标实体，对 kubernetes API 来说主要指各类资源对象以及非资源类型URL.
 
 
-### 为什么RBAC很重要，它是如何使用的?
+### 为什么RBAC很重要，有什么优势?
+RBAC是基于角色的访问控制，是一种基于个人用户的角色来管理对计算机或网络资源的访问的方法。
+
+相对于其他授权模式，RBAC具有如下优势：
+- 对集群中的资源和非资源权限均有完整的覆盖。
+- 整个RBAC完全由几个API对象完成， 同其他API对象一样， 可以用kubectl或API进行操作。
+- 可以在运行时进行调整，无须重新启动API Server。
+
 ####  kubernetes 访问控制
 ![kubernetes 访问控制流程图](/images/kubernetes/rbac/kubernetes-access-control-diagram.png "用户、服务账户、认证、授权和准入控制")
 ### 设计
