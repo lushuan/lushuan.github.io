@@ -33,7 +33,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "http:\/\/localhost:1313\/%E4%B8%80%E6%96%87%E4%BA%86%E8%A7%A3kubernetes-rbac\/"
-        },"genre": "posts","keywords": "Kubernetes","wordcount":  5751 ,
+        },"genre": "posts","keywords": "Kubernetes","wordcount":  5913 ,
         "url": "http:\/\/localhost:1313\/%E4%B8%80%E6%96%87%E4%BA%86%E8%A7%A3kubernetes-rbac\/","datePublished": "2024-04-27T12:06:37+08:00","dateModified": "2024-05-26T12:06:37+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -121,7 +121,7 @@
             <div class="toc-content always-active" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">一文了解 Kubernetes RBAC 机制和实践</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/kubernetes/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Kubernetes</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2024-04-27">2024-04-27</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 5751 字&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2024-04-27">2024-04-27</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 5913 字&nbsp;
                 <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 12 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  data-kept="">
                 <div class="details-summary toc-title">
@@ -140,7 +140,7 @@
     <li><a href="#rbac-授权模型">RBAC 授权模型</a>
       <ul>
         <li><a href="#kubernetes-rbac-是什么">Kubernetes RBAC 是什么？</a></li>
-        <li><a href="#为什么rbac很重要它是如何使用的">为什么RBAC很重要，它是如何使用的?</a>
+        <li><a href="#为什么rbac很重要有什么优势">为什么RBAC很重要，有什么优势?</a>
           <ul>
             <li><a href="#kubernetes-访问控制">kubernetes 访问控制</a></li>
           </ul>
@@ -337,7 +337,14 @@
     </figure></p>
 <p>简单来说，RBAC 就是一种访问控制模型，它以角色为中心界定&quot;谁&quot;(subject)能够&quot;操作&quot;(verb)哪个或哪类&quot;对象&quot;(object)。</p>
 <p>动作发出者即&quot;主体&quot;，通常以&quot;账号&quot;为载体，在kubernetes 中，它可以是普通账户(user),也可以是服务账户(service account).&ldquo;动作&quot;表示要执行的具体操作，包括创建、删除、修改和查看等行为，对于API Server来说，即PUT、POST、DELETE、GET等请求方法。而&quot;对象&quot;则是指管理操作能够施加的目标实体，对 kubernetes API 来说主要指各类资源对象以及非资源类型URL.</p>
-<h3 id="为什么rbac很重要它是如何使用的">为什么RBAC很重要，它是如何使用的?</h3>
+<h3 id="为什么rbac很重要有什么优势">为什么RBAC很重要，有什么优势?</h3>
+<p>RBAC是基于角色的访问控制，是一种基于个人用户的角色来管理对计算机或网络资源的访问的方法。</p>
+<p>相对于其他授权模式，RBAC具有如下优势：</p>
+<ul>
+<li>对集群中的资源和非资源权限均有完整的覆盖。</li>
+<li>整个RBAC完全由几个API对象完成， 同其他API对象一样， 可以用kubectl或API进行操作。</li>
+<li>可以在运行时进行调整，无须重新启动API Server。</li>
+</ul>
 <h4 id="kubernetes-访问控制">kubernetes 访问控制</h4>
 <p><figure><a class="lightgallery" href="/images/kubernetes/rbac/kubernetes-access-control-diagram.png" title="kubernetes 访问控制流程图" data-thumbnail="/images/kubernetes/rbac/kubernetes-access-control-diagram.png" data-sub-html="<h2>用户、服务账户、认证、授权和准入控制</h2><p>kubernetes 访问控制流程图</p>">
         <img
