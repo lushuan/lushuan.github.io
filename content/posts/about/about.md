@@ -60,5 +60,3 @@ unrewarded genius is almost a proverb. Education will not; the world is full of 
 
 
 <center>{{< figure src="/images/certificates/lu-shuan-cks-certificate.jpg" width="50%" title="CKS" >}}</center>
-
-
