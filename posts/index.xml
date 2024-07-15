@@ -4,7 +4,7 @@
         <link>http://localhost:1313/posts/</link>
         <description>所有文章 | Less is more</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
-            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Thu, 20 Jun 2024 12:06:37 &#43;0800</lastBuildDate><atom:link href="http://localhost:1313/posts/" rel="self" type="application/rss+xml" /><item>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Wed, 26 Jun 2024 10:54:03 &#43;0800</lastBuildDate><atom:link href="http://localhost:1313/posts/" rel="self" type="application/rss+xml" /><item>
     <title>Ubuntu-server部署k8s1.28(containerd版本)集群</title>
     <link>http://localhost:1313/ubuntu-server%E9%83%A8%E7%BD%B2k8s1.28containerd%E7%89%88%E6%9C%AC%E9%9B%86%E7%BE%A4/</link>
     <pubDate>Thu, 20 Jun 2024 12:06:37 &#43;0800</pubDate>
