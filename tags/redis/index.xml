@@ -1,0 +1,16 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Redis - 标签 - Less is more</title>
+        <link>http://localhost:1313/tags/redis/</link>
+        <description>Redis - 标签 - Less is more</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Tue, 19 Apr 2022 12:06:37 &#43;0800</lastBuildDate><atom:link href="http://localhost:1313/tags/redis/" rel="self" type="application/rss+xml" /><item>
+    <title>Redis 知识体系</title>
+    <link>http://localhost:1313/redis%E7%9F%A5%E8%AF%86%E4%BD%93%E7%B3%BB/</link>
+    <pubDate>Tue, 19 Apr 2022 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/redis%E7%9F%A5%E8%AF%86%E4%BD%93%E7%B3%BB/</guid>
+    <description><![CDATA[基本概念 Redis（REmote DIctionary Service）是一个开源的键值对数据库服务器。 Redis是一个开源（BSD许可），内存存储的数据结构服务]]></description>
+</item>
+</channel>
+</rss>

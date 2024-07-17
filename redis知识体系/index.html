@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>Redis 知识体系 - Less is more</title><meta name="Description" content="知识有两种，一种是你知道的，一种是你知道在哪里能找到的！ --塞缪尔·约翰逊"><meta property="og:url" content="http://localhost:1313/redis%E7%9F%A5%E8%AF%86%E4%BD%93%E7%B3%BB/">
+  <meta property="og:site_name" content="Less is more">
+  <meta property="og:title" content="Redis 知识体系">
+  <meta property="og:description" content="基本概念 Redis（REmote DIctionary Service）是一个开源的键值对数据库服务器。 Redis是一个开源（BSD许可），内存存储的数据结构服务">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2022-04-19T12:06:37+08:00">
+    <meta property="article:modified_time" content="2023-06-26T12:06:37+08:00">
+    <meta property="article:tag" content="Redis">
+    <meta property="og:image" content="http://localhost:1313/images/avatar.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/images/avatar.png">
+  <meta name="twitter:title" content="Redis 知识体系">
+  <meta name="twitter:description" content="基本概念 Redis（REmote DIctionary Service）是一个开源的键值对数据库服务器。 Redis是一个开源（BSD许可），内存存储的数据结构服务">
+      <meta name="twitter:site" content="@xxxx">
+<meta name="application-name" content="我的网站">
+<meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/images/avatar.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://localhost:1313/redis%E7%9F%A5%E8%AF%86%E4%BD%93%E7%B3%BB/" /><link rel="prev" href="http://localhost:1313/linux%E7%BD%91%E7%BB%9C%E6%8E%92%E9%9A%9C/" /><link rel="next" href="http://localhost:1313/kubernetes%E9%80%9A%E8%BF%87nfs%E5%8A%A8%E6%80%81%E5%88%9B%E5%BB%BApv%E5%BC%82%E5%B8%B8/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Redis 知识体系",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost:1313\/redis%E7%9F%A5%E8%AF%86%E4%BD%93%E7%B3%BB\/"
+        },"genre": "posts","keywords": "Redis","wordcount":  7264 ,
+        "url": "http:\/\/localhost:1313\/redis%E7%9F%A5%E8%AF%86%E4%BD%93%E7%B3%BB\/","datePublished": "2022-04-19T12:06:37+08:00","dateModified": "2023-06-26T12:06:37+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "lushuan"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Less is more"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Less is more</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 归档 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/" title="About"> 关于 </a><a class="menu-item" href="/friends/" title="friends"> 友链 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Less is more"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Less is more</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">归档</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="About">关于</a><a class="menu-item" href="/friends/" title="friends">友链</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content always-active" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Redis 知识体系</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/redis/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Redis</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2022-04-19">2022-04-19</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 7264 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 15 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#基本概念">基本概念</a>
+      <ul>
+        <li><a href="#使用场景">使用场景</a></li>
+        <li><a href="#redis优势">Redis优势</a></li>
+        <li><a href="#竞品对比">竞品对比</a></li>
+      </ul>
+    </li>
+    <li><a href="#安装配置">安装配置</a>
+      <ul>
+        <li><a href="#启动-redis">启动 Redis</a></li>
+        <li><a href="#图形化工具redisinsight">图形化工具RedisInsight</a></li>
+        <li><a href="#使用方式">使用方式</a></li>
+      </ul>
+    </li>
+    <li><a href="#常用命令">常用命令</a>
+      <ul>
+        <li><a href="#key-commands">Key Commands</a></li>
+        <li><a href="#string-commands">String Commands</a></li>
+        <li><a href="#hash-commands">Hash Commands</a></li>
+        <li><a href="#list-commands">List Commands</a></li>
+        <li><a href="#set-commands">Set Commands</a></li>
+        <li><a href="#sorted-set-commands">Sorted Set Commands</a></li>
+      </ul>
+    </li>
+    <li><a href="#十大数据模型">十大数据模型</a>
+      <ul>
+        <li><a href="#5种基本数据类型">5种基本数据类型</a>
+          <ul>
+            <li><a href="#string字符串">String字符串</a></li>
+            <li><a href="#list列表">List列表</a></li>
+            <li><a href="#set-集合">Set 集合</a></li>
+            <li><a href="#hash-散列">Hash 散列</a></li>
+            <li><a href="#zset有序集合">Zset有序集合</a></li>
+          </ul>
+        </li>
+        <li><a href="#5种高级数据类型">5种高级数据类型</a></li>
+      </ul>
+    </li>
+    <li><a href="#事务">事务</a>
+      <ul>
+        <li><a href="#什么是-redis-事务">什么是 Redis 事务</a></li>
+        <li><a href="#redis事务相关命令和使用">Redis事务相关命令和使用</a></li>
+        <li><a href="#实例">实例</a></li>
+      </ul>
+    </li>
+    <li><a href="#数据持久化">数据持久化</a>
+      <ul>
+        <li><a href="#rdb">RDB</a>
+          <ul>
+            <li><a href="#redis中默认的周期新设置">Redis中默认的周期新设置</a></li>
+            <li><a href="#实例-1">实例</a></li>
+            <li><a href="#触发方式">触发方式</a></li>
+            <li><a href="#rdb-优缺点">RDB 优缺点</a></li>
+          </ul>
+        </li>
+        <li><a href="#aof">AOF</a>
+          <ul>
+            <li><a href="#redisconf中配置aof">redis.conf中配置AOF</a></li>
+          </ul>
+        </li>
+        <li><a href="#rdb和aof混合方式">RDB和AOF混合方式</a></li>
+      </ul>
+    </li>
+    <li><a href="#主从复制">主从复制</a>
+      <ul>
+        <li><a href="#启动从节点">启动从节点</a></li>
+      </ul>
+    </li>
+    <li><a href="#高可用哨兵机制redis-sentinel">高可用：哨兵机制（Redis Sentinel）</a>
+      <ul>
+        <li><a href="#哨兵机制redis-sentinel">哨兵机制（Redis Sentinel）</a></li>
+        <li><a href="#哨兵集群的组建">哨兵集群的组建</a></li>
+        <li><a href="#启动哨兵节点">启动哨兵节点</a></li>
+      </ul>
+    </li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="基本概念">基本概念</h2>
+<p>Redis（REmote DIctionary Service）是一个开源的键值对数据库服务器。</p>
+<p>Redis是一个开源（BSD许可），内存存储的数据结构服务器，可用作数据库，高速缓存和消息队列代理。它支持字符串、哈希表、列表、集合、有序集合，位图，hyperloglogs等数据类型。内置复制、Lua脚本、LRU收回、事务以及不同级别磁盘持久化功能，同时通过Redis Sentinel提供高可用，通过Redis Cluster提供自动分区。</p>
+<p><figure><a class="lightgallery" href="/images/redis/redis-explained.png" title="redis explained" data-thumbnail="/images/redis/redis-explained.png" data-sub-html="<h2>redis explained</h2><p>redis explained</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/redis/redis-explained.png"
+            data-srcset="/images/redis/redis-explained.png, /images/redis/redis-explained.png 1.5x, /images/redis/redis-explained.png 2x"
+            data-sizes="auto"
+            alt="/images/redis/redis-explained.png" />
+    </a><figcaption class="image-caption">redis explained</figcaption>
+    </figure></p>
+<h3 id="使用场景">使用场景</h3>
+<ol>
+<li>数据库</li>
+<li>缓存</li>
+<li>MQ</li>
+</ol>
+<h3 id="redis优势">Redis优势</h3>
+<ul>
+<li>性能极高</li>
+<li>数据类型丰富，单键值对最大支持512M大小的数据</li>
+<li>简单易用，支持所有主流编程语言</li>
+<li>支持数据持久化，主从复制，哨兵模式等高可用特性</li>
+</ul>
+<h3 id="竞品对比">竞品对比</h3>
+<p>Memcached  vs Redis</p>
+<p><figure><a class="lightgallery" href="/images/redis/redis-vs-memcached.png" title="redis-1" data-thumbnail="/images/redis/redis-vs-memcached.png" data-sub-html="<h2>redis-vs-memcached</h2><p>redis-1</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/redis/redis-vs-memcached.png"
+            data-srcset="/images/redis/redis-vs-memcached.png, /images/redis/redis-vs-memcached.png 1.5x, /images/redis/redis-vs-memcached.png 2x"
+            data-sizes="auto"
+            alt="/images/redis/redis-vs-memcached.png" />
+    </a><figcaption class="image-caption">redis-vs-memcached</figcaption>
+    </figure></p>
+<h2 id="安装配置">安装配置</h2>
+<p>这里安装的环境是Linux Ubuntu 22.04.4 LTS 操作系统，其它安装方式见<a href="https://redis.ac.cn/docs/install/install-redis/" target="_blank" rel="noopener noreffer ">安装介绍</a></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">sudo apt install lsb-release curl gpg
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">curl -fsSL https://packages.redis.io/gpg <span class="p">|</span> sudo gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">echo</span> <span class="s2">&#34;deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb </span><span class="k">$(</span>lsb_release -cs<span class="k">)</span><span class="s2"> main&#34;</span> <span class="p">|</span> sudo tee /etc/apt/sources.list.d/redis.list
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">sudo apt-get update
+</span></span><span class="line"><span class="cl">sudo apt-get install redis
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Linux Centos 安装方式</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ yum install redis -y
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="启动-redis">启动 Redis</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">root@k8s-master01:~/redis# redis-server
+</span></span><span class="line"><span class="cl">9204:C 17 Jul 2024 17:47:22.376 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+</span></span><span class="line"><span class="cl">9204:C 17 Jul 2024 17:47:22.377 * Redis version=7.2.5, bits=64, commit=00000000, modified=0, pid=9204, just started
+</span></span><span class="line"><span class="cl">9204:C 17 Jul 2024 17:47:22.377 # Warning: no config file specified, using the default config. In order to specify a config file use redis-server /path/to/redis.conf
+</span></span><span class="line"><span class="cl">9204:M 17 Jul 2024 17:47:22.377 * Increased maximum number of open files to 10032 (it was originally set to 1024).
+</span></span><span class="line"><span class="cl">9204:M 17 Jul 2024 17:47:22.377 * monotonic clock: POSIX clock_gettime
+</span></span><span class="line"><span class="cl">                _._                                                  
+</span></span><span class="line"><span class="cl">           _.-``__ &#39;&#39;-._                                             
+</span></span><span class="line"><span class="cl">      _.-``    `.  `_.  &#39;&#39;-._           Redis 7.2.5 (00000000/0) 64 bit
+</span></span><span class="line"><span class="cl">  .-`` .-```.  ```\/    _.,_ &#39;&#39;-._                                  
+</span></span><span class="line"><span class="cl"> (    &#39;      ,       .-`  | `,    )     Running in standalone mode
+</span></span><span class="line"><span class="cl"> |`-._`-...-` __...-.``-._|&#39;` _.-&#39;|     Port: 6379
+</span></span><span class="line"><span class="cl"> |    `-._   `._    /     _.-&#39;    |     PID: 9204
+</span></span><span class="line"><span class="cl">  `-._    `-._  `-./  _.-&#39;    _.-&#39;                                   
+</span></span><span class="line"><span class="cl"> |`-._`-._    `-.__.-&#39;    _.-&#39;_.-&#39;|                                  
+</span></span><span class="line"><span class="cl"> |    `-._`-._        _.-&#39;_.-&#39;    |           https://redis.io       
+</span></span><span class="line"><span class="cl">  `-._    `-._`-.__.-&#39;_.-&#39;    _.-&#39;                                   
+</span></span><span class="line"><span class="cl"> |`-._`-._    `-.__.-&#39;    _.-&#39;_.-&#39;|                                  
+</span></span><span class="line"><span class="cl"> |    `-._`-._        _.-&#39;_.-&#39;    |                                  
+</span></span><span class="line"><span class="cl">  `-._    `-._`-.__.-&#39;_.-&#39;    _.-&#39;                                   
+</span></span><span class="line"><span class="cl">      `-._    `-.__.-&#39;    _.-&#39;                                       
+</span></span><span class="line"><span class="cl">          `-._        _.-&#39;                                           
+</span></span><span class="line"><span class="cl">              `-.__.-&#39;                                               
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">9204:M 17 Jul 2024 17:47:22.378 # Warning: Could not create server TCP listening socket *:6379: bind: Address already in use
+</span></span><span class="line"><span class="cl">9204:M 17 Jul 2024 17:47:22.378 # Failed listening on port 6379 (tcp), aborting.
+</span></span><span class="line"><span class="cl">root@k8s-master01:~/redis# netstat -anp|grep 6379
+</span></span><span class="line"><span class="cl">tcp        0      0 127.0.0.1:6379          0.0.0.0:*               LISTEN      8799/redis-server 1 
+</span></span><span class="line"><span class="cl">tcp6       0      0 ::1:6379                :::*                    LISTEN      8799/redis-server 1 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>客户端命令连接redis 服务，并通过命令操作redis</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">root@k8s-master01:~/redis# redis-cli
+</span></span><span class="line"><span class="cl">127.0.0.1:6379&gt; set key1 value1
+</span></span><span class="line"><span class="cl">OK
+</span></span><span class="line"><span class="cl">127.0.0.1:6379&gt; get key1
+</span></span><span class="line"><span class="cl">&#34;value1&#34;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>备注：如果设置的键中有中文查看时是返回的二进制，需要使用<code>redis-cli --raw</code> 登录</p>
+<h3 id="图形化工具redisinsight">图形化工具RedisInsight</h3>
+<h3 id="使用方式">使用方式</h3>
+<ul>
+<li>CLI 命令行</li>
+<li>API (Application Programming interface)</li>
+<li>GUI (Graphical User Interface)</li>
+</ul>
+<h2 id="常用命令">常用命令</h2>
+<p>redis 的<a href="https://redis.io/docs/latest/commands/" target="_blank" rel="noopener noreffer ">使用命令</a>很多,这里重点介绍几种常用的命令</p>
+<h3 id="key-commands">Key Commands</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">SET key value #: set a key to a value
+</span></span><span class="line"><span class="cl">GET key #: get the value of a key (string only)
+</span></span><span class="line"><span class="cl">DEL key #: delete a key
+</span></span><span class="line"><span class="cl">EXPIRE key seconds #: set a timeout on a key
+</span></span><span class="line"><span class="cl">TTL key #: get the remaining time to live of a key
+</span></span><span class="line"><span class="cl">KEYS pattern #: find all keys matching a pattern
+</span></span><span class="line"><span class="cl">SCAN cursor [MATCH pattern] [COUNT count] [TYPE type] #: iterate over keys with a cursor
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="string-commands">String Commands</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">APPEND key value #: append a value to a key
+</span></span><span class="line"><span class="cl">STRLEN key #: get the length of the value of a key
+</span></span><span class="line"><span class="cl">INCR key #: increment the value of a key by 1
+</span></span><span class="line"><span class="cl">DECR key #: decrement the value of a key by 1
+</span></span><span class="line"><span class="cl">INCRBY key increment #: increment the value of a key by a specified amount
+</span></span><span class="line"><span class="cl">DECRBY key decrement #: decrement the value of a key by a specified amount
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="hash-commands">Hash Commands</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">HSET key field value #: set a field in a hash to a value
+</span></span><span class="line"><span class="cl">HGET key field #: get the value of a field in a hash
+</span></span><span class="line"><span class="cl">HDEL key field [field …] #: delete one or more fields from a hash
+</span></span><span class="line"><span class="cl">HGETALL key #: get all fields and values from a hash
+</span></span><span class="line"><span class="cl">HKEYS key #: get all fields from a hash
+</span></span><span class="line"><span class="cl">HVALS key #: get all values from a hash
+</span></span><span class="line"><span class="cl">HEXISTS key field #: check if a field exists in a hash
+</span></span><span class="line"><span class="cl">HLEN key #: get the number of fields in a hash
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>hash 命令实际使用方式</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># Initialize the hash
+</span></span><span class="line"><span class="cl">HMSET user name &#34;John Doe&#34; age 30 email &#34;lushuan2071@126.com&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Get the value of a field
+</span></span><span class="line"><span class="cl">HGET user name   # Output: &#34;John Doe&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Get the values of multiple fields
+</span></span><span class="line"><span class="cl">HMGET user name age   # Output: 1) &#34;John Doe&#34; 2) &#34;30&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Get all fields and values
+</span></span><span class="line"><span class="cl">HGETALL user   # Output: 1) &#34;name&#34; 2) &#34;John Doe&#34; 3) &#34;age&#34; 4) &#34;30&#34; 5) &#34;email&#34; 6) &#34;johndoe@example.com&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Get all fields
+</span></span><span class="line"><span class="cl">HKEYS user   # Output: 1) &#34;name&#34; 2) &#34;age&#34; 3) &#34;email&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Get all values
+</span></span><span class="line"><span class="cl">HVALS user   # Output: 1) &#34;John Doe&#34; 2) &#34;30&#34; 3) &#34;johndoe@example.com&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Get the number of fields
+</span></span><span class="line"><span class="cl">HLEN user   # Output: 3
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Modify a field
+</span></span><span class="line"><span class="cl">HSET user age 31
+</span></span><span class="line"><span class="cl">HGET user age   # Output: &#34;31&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Increment a field
+</span></span><span class="line"><span class="cl">HINCRBY user age 1
+</span></span><span class="line"><span class="cl">HGET user age   # Output: &#34;32&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Delete a field
+</span></span><span class="line"><span class="cl">HDEL user email
+</span></span><span class="line"><span class="cl">HKEYS user   # Output: 1) &#34;name&#34; 2) &#34;age&#34;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="list-commands">List Commands</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">LPUSH key value [value …] #: prepend one or more values to a list
+</span></span><span class="line"><span class="cl">RPUSH key value [value …] #: append one or more values to a list
+</span></span><span class="line"><span class="cl">LPOP key #: remove and return the first element of a list
+</span></span><span class="line"><span class="cl">RPOP key #: remove and return the last element of a list
+</span></span><span class="line"><span class="cl">LINDEX key index #: get the element at a specified index in a list
+</span></span><span class="line"><span class="cl">LLEN key #: get the length of a list
+</span></span><span class="line"><span class="cl">LRANGE key start stop #: get a range of elements from a list
+</span></span><span class="line"><span class="cl">LREM key count value #: remove a specified number of occurrences of a value from a list
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>list 使用实例</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># Initialize the list
+</span></span><span class="line"><span class="cl">LPUSH numbers 3 2 1
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Get the length of the list
+</span></span><span class="line"><span class="cl">LLEN numbers   # Output: 3
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Get an element by index
+</span></span><span class="line"><span class="cl">LINDEX numbers 1   # Output: &#34;2&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Get a range of elements
+</span></span><span class="line"><span class="cl">LRANGE numbers 0 1   # Output: 1) &#34;1&#34; 2) &#34;2&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Append an element
+</span></span><span class="line"><span class="cl">RPUSH numbers 4
+</span></span><span class="line"><span class="cl">LRANGE numbers 0 -1   # Output: 1) &#34;1&#34; 2) &#34;2&#34; 3) &#34;3&#34; 4) &#34;4&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Pop an element
+</span></span><span class="line"><span class="cl">LPOP numbers   # Output: &#34;1&#34;
+</span></span><span class="line"><span class="cl">RPOP numbers   # Output: &#34;4&#34;
+</span></span><span class="line"><span class="cl">LRANGE numbers 0 -1   # Output: 1) &#34;2&#34; 2) &#34;3&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Insert an element
+</span></span><span class="line"><span class="cl">LINSERT numbers BEFORE 2 1
+</span></span><span class="line"><span class="cl">LRANGE numbers 0 -1   # Output: 1) &#34;1&#34; 2) &#34;2&#34; 3) &#34;3&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Remove an element
+</span></span><span class="line"><span class="cl">LREM numbers 1 2
+</span></span><span class="line"><span class="cl">LRANGE numbers 0 -1   # Output: 1) &#34;1&#34; 2) &#34;3&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Trim the list
+</span></span><span class="line"><span class="cl">LTRIM numbers 0 0
+</span></span><span class="line"><span class="cl">LRANGE numbers 0 -1   # Output: 1) &#34;1&#34;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="set-commands">Set Commands</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">SADD key member [member …] #: add one or more members to a set
+</span></span><span class="line"><span class="cl">SREM key member [member …] #: remove one or more members from a set
+</span></span><span class="line"><span class="cl">SMEMBERS key #: get all members of a set
+</span></span><span class="line"><span class="cl">SISMEMBER key member #: check if a member exists in a set
+</span></span><span class="line"><span class="cl">SINTER key [key …] #: get the intersection of sets
+</span></span><span class="line"><span class="cl">SUNION key [key …] #: get the union of sets
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Set 使用实例，注意，由于set不是有序数据类型，所以运行以下命令时，项的顺序可能会有所不同:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># Initialize the set
+</span></span><span class="line"><span class="cl">SADD fruits apple banana orange
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Get the number of elements in the set
+</span></span><span class="line"><span class="cl">SCARD fruits   # Output: 3
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Check if an element is a member of the set
+</span></span><span class="line"><span class="cl">SISMEMBER fruits apple   # Output: 1 (true)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Get all members of the set
+</span></span><span class="line"><span class="cl">SMEMBERS fruits   # Output: 1) &#34;apple&#34; 2) &#34;banana&#34; 3) &#34;orange&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Remove an element from the set
+</span></span><span class="line"><span class="cl">SREM fruits banana
+</span></span><span class="line"><span class="cl">SMEMBERS fruits   # Output: 1) &#34;apple&#34; 2) &#34;orange&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Add multiple elements to the set
+</span></span><span class="line"><span class="cl">SADD fruits pear peach
+</span></span><span class="line"><span class="cl">SMEMBERS fruits   # Output: 1) &#34;apple&#34; 2) &#34;orange&#34; 3) &#34;pear&#34; 4) &#34;peach&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Get the intersection of multiple sets
+</span></span><span class="line"><span class="cl">SADD fruits2 orange kiwi
+</span></span><span class="line"><span class="cl">SINTER fruits fruits2   # Output: 1) &#34;orange&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Get the union of multiple sets
+</span></span><span class="line"><span class="cl">SUNION fruits fruits2   # Output: 1) &#34;apple&#34; 2) &#34;orange&#34; 3) &#34;pear&#34; 4) &#34;peach&#34; 5) &#34;kiwi&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Get a random element from the set
+</span></span><span class="line"><span class="cl">SRANDMEMBER fruits   # Output: &#34;pear&#34;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="sorted-set-commands">Sorted Set Commands</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">ZADD key score member [score member …] #: add one or more members with scores to a sorted set
+</span></span><span class="line"><span class="cl">ZREM key member [member …] #: remove one or more members from a sorted set
+</span></span><span class="line"><span class="cl">ZRANGE key start stop [WITHSCORES] #: The order of elements is from the lowest to the highest score. Elements with the same score are ordered lexicographically.
+</span></span><span class="line"><span class="cl">ZREVRANGE key start stop [WITHSCORES] #: Returns the specified range of elements in the sorted set stored at key. The elements are considered to be ordered from the highest to the lowest score.
+</span></span><span class="line"><span class="cl">ZSCORE key member #: get the score of a member in a sorted set
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>实例</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># Initialize the sorted set
+</span></span><span class="line"><span class="cl">ZADD scores 90 &#34;Alice&#34; 85 &#34;Bob&#34; 95 &#34;Charlie&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Get the number of elements in the sorted set
+</span></span><span class="line"><span class="cl">ZCARD scores   # Output: 3
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Get the rank of an element
+</span></span><span class="line"><span class="cl">ZRANK scores &#34;Charlie&#34;   # Output: 2
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Get the score of an element
+</span></span><span class="line"><span class="cl">ZSCORE scores &#34;Bob&#34;   # Output: 85
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Get a range of elements by rank
+</span></span><span class="line"><span class="cl">ZRANGE scores 0 1   # Output: 1) &#34;Bob&#34; 2) &#34;Alice&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Get a range of elements by score
+</span></span><span class="line"><span class="cl">ZRANGEBYSCORE scores 90 95   # Output: 1) &#34;Alice&#34; 2) &#34;Charlie&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Increment the score of an element
+</span></span><span class="line"><span class="cl">ZINCRBY scores 10 &#34;Alice&#34;
+</span></span><span class="line"><span class="cl">ZSCORE scores &#34;Alice&#34;   # Output: 100
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Remove an element from the sorted set
+</span></span><span class="line"><span class="cl">ZREM scores &#34;Bob&#34;
+</span></span><span class="line"><span class="cl">ZRANGE scores 0 -1   # Output: 1) &#34;Charlie&#34; 2) &#34;Alice&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Get the highest-scoring element(s)
+</span></span><span class="line"><span class="cl">ZREVRANGE scores 0 0   # Output: 1) &#34;Alice&#34;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="十大数据模型">十大数据模型</h2>
+<p>redis 初始化不同的数据类型，更多数据类型可以查看<a href="https://redis.io/docs/latest/develop/data-types/" target="_blank" rel="noopener noreffer ">官网介绍</a></p>
+<p><figure><a class="lightgallery" href="/images/redis/redis-datatype.png" title="redis-datatype" data-thumbnail="/images/redis/redis-datatype.png" data-sub-html="<h2>redis-datatype</h2><p>redis-datatype</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/redis/redis-datatype.png"
+            data-srcset="/images/redis/redis-datatype.png, /images/redis/redis-datatype.png 1.5x, /images/redis/redis-datatype.png 2x"
+            data-sizes="auto"
+            alt="/images/redis/redis-datatype.png" />
+    </a><figcaption class="image-caption">redis-datatype</figcaption>
+    </figure></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># String
+</span></span><span class="line"><span class="cl">SET key value
+</span></span><span class="line"><span class="cl">SET name &#34;John Doe&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># List
+</span></span><span class="line"><span class="cl">RPUSH key element [element ...]
+</span></span><span class="line"><span class="cl">RPUSH numbers 1 2 3 4 5
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Set
+</span></span><span class="line"><span class="cl">SADD key member [member ...]
+</span></span><span class="line"><span class="cl">SADD colors red green blue
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Hash
+</span></span><span class="line"><span class="cl">HSET key field value [field value ...]
+</span></span><span class="line"><span class="cl">HSET user id 1 name &#34;John Doe&#34; email &#34;john.doe@example.com&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Sorted set
+</span></span><span class="line"><span class="cl">ZADD key score member [score member ...]
+</span></span><span class="line"><span class="cl">ZADD scores 90 &#34;John Doe&#34; 80 &#34;Jane Doe&#34; 95 &#34;Bob Smith&#34;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="5种基本数据类型">5种基本数据类型</h3>
+<p>首先对redis来说，所有的key（键）都是字符串。我们在谈基础数据结构时，讨论的是存储值的数据类型，主要包括常见的5种数据类型，分别是：String、List、Set、Zset、Hash。</p>
+<p><figure><a class="lightgallery" href="/images/redis/db-redis-ds-1.jpg" title="redis-datatype" data-thumbnail="/images/redis/db-redis-ds-1.jpg" data-sub-html="<h2>redis datatype common in use</h2><p>redis-datatype</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/redis/db-redis-ds-1.jpg"
+            data-srcset="/images/redis/db-redis-ds-1.jpg, /images/redis/db-redis-ds-1.jpg 1.5x, /images/redis/db-redis-ds-1.jpg 2x"
+            data-sizes="auto"
+            alt="/images/redis/db-redis-ds-1.jpg" />
+    </a><figcaption class="image-caption">redis datatype common in use</figcaption>
+    </figure></p>
+<table>
+<thead>
+<tr>
+<th>结构类型</th>
+<th>结构存储的值</th>
+<th>结构的读写能力</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>String字符串</strong></td>
+<td>可以是字符串、整数或浮点数</td>
+<td>对整个字符串或字符串的一部分进行操作；对整数或浮点数进行自增或自减操作；</td>
+</tr>
+<tr>
+<td><strong>List列表</strong></td>
+<td>一个链表，链表上的每个节点都包含一个字符串</td>
+<td>对链表的两端进行push和pop操作，读取单个或多个元素；根据值查找或删除元素；</td>
+</tr>
+<tr>
+<td><strong>Set集合</strong></td>
+<td>包含字符串的无序集合</td>
+<td>字符串的集合，包含基础的方法有看是否存在添加、获取、删除；还包含计算交集、并集、差集等</td>
+</tr>
+<tr>
+<td><strong>Hash散列</strong></td>
+<td>包含键值对的无序散列表</td>
+<td>包含方法有添加、获取、删除单个元素</td>
+</tr>
+<tr>
+<td><strong>Zset有序集合</strong></td>
+<td>和散列一样，用于存储键值对</td>
+<td>字符串成员与浮点数分数之间的有序映射；元素的排列顺序由分数的大小决定；包含方法有添加、获取、删除单个元素以及根据分值范围或成员来获取元素</td>
+</tr>
+</tbody>
+</table>
+<h4 id="string字符串">String字符串</h4>
+<p>String是redis中最基本的数据类型，一个key对应一个value。</p>
+<p>String类型是二进制安全的，意思是 redis 的 string 可以包含任何数据。如数字，字符串，jpg图片或者序列化的对象。</p>
+<h4 id="list列表">List列表</h4>
+<p>Redis中的List其实就是链表（Redis用双端链表实现List）。</p>
+<p>使用List结构，我们可以轻松地实现最新消息排队功能（比如新浪微博的TimeLine）。List的另一个应用就是消息队列，可以利用List的 PUSH 操作，将任务存放在List中，然后工作线程再用 POP 操作将任务取出进行执行。</p>
+<h4 id="set-集合">Set 集合</h4>
+<p>Redis 的 Set 是 String 类型的无序集合。集合成员是唯一的，这就意味着集合中不能出现重复的数据。</p>
+<p>Redis 中集合是通过哈希表实现的，所以添加，删除，查找的复杂度都是 O(1)。</p>
+<h4 id="hash-散列">Hash 散列</h4>
+<p>Redis hash 是一个 string 类型的 field（字段） 和 value（值） 的映射表，hash 特别适合用于存储对象。</p>
+<h4 id="zset有序集合">Zset有序集合</h4>
+<p>Redis 有序集合和集合一样也是 string 类型元素的集合,且不允许重复的成员。不同的是每个元素都会关联一个 double 类型的分数。redis 正是通过分数来为集合中的成员进行从小到大的排序。</p>
+<p>有序集合的成员是唯一的, 但分数(score)却可以重复。有序集合是通过两种数据结构实现：</p>
+<h3 id="5种高级数据类型">5种高级数据类型</h3>
+<ul>
+<li>消息队列 Stream</li>
+<li>地理空间 Geospatial</li>
+<li>HyperLogLog 是一种用来做基数统计的算法</li>
+<li>Bitmap 即位图数据结构，都是操作二进制位来进行记录，只有0 和 1 两个状态</li>
+<li>位域 Bitfield</li>
+</ul>
+<h2 id="事务">事务</h2>
+<h3 id="什么是-redis-事务">什么是 Redis 事务</h3>
+<p>Redis 事务的本质是一组命令的集合。事务支持一次执行多个命令，一个事务中所有命令都会被序列化。在事务执行过程，会按照顺序串行化执行队列中的命令，其他客户端提交的命令请求不会插入到事务执行命令序列中。总结说：redis事务就是一次性、顺序性、排他性的执行一个队列中的一系列命令。</p>
+<h3 id="redis事务相关命令和使用">Redis事务相关命令和使用</h3>
+<ul>
+<li>MULTI ：开启事务，redis会将后续的命令逐个放入队列中，然后使用EXEC命令来原子化执行这个命令系列。</li>
+<li>EXEC：执行事务中的所有操作命令。</li>
+<li>DISCARD：取消事务，放弃执行事务块中的所有命令。</li>
+<li>WATCH：监视一个或多个key,如果事务在执行前，这个key(或多个key)被其他命令修改，则事务被中断，不会执行事务中的任何命令。</li>
+<li>UNWATCH：取消WATCH对所有key的监视。</li>
+</ul>
+<h3 id="实例">实例</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">127.0.0.1:6379&gt; MULTI 
+</span></span><span class="line"><span class="cl">OK
+</span></span><span class="line"><span class="cl">127.0.0.1:6379(TX)&gt; SET key1 1
+</span></span><span class="line"><span class="cl">QUEUED
+</span></span><span class="line"><span class="cl">127.0.0.1:6379(TX)&gt; SET key2 2
+</span></span><span class="line"><span class="cl">QUEUED
+</span></span><span class="line"><span class="cl">127.0.0.1:6379(TX)&gt; EXEC
+</span></span><span class="line"><span class="cl">OK
+</span></span><span class="line"><span class="cl">OK
+</span></span><span class="line"><span class="cl">127.0.0.1:6379&gt; GET key1
+</span></span><span class="line"><span class="cl">1
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="数据持久化">数据持久化</h2>
+<p>为了防止数据丢失以及服务重启时能够恢复数据，Redis支持数据的持久化，主要分为两种方式，分别是RDB和AOF; 当然实际场景下还会使用这两种的混合模式。</p>
+<ul>
+<li>RDB(Redis Database)</li>
+<li>AOF(Append Only File)</li>
+</ul>
+<h3 id="rdb">RDB</h3>
+<p>RDB 就是 Redis DataBase 的缩写，中文名为快照/内存快照，RDB持久化是把当前进程数据生成快照保存到磁盘上的过程，由于是某一时刻的快照，那么快照中的值要早于或者等于内存中的值。</p>
+<p>可以理解为数据的快照机制，是某一个时间点上数据的完整副本，就是定时或者手动的给数据做一下快照，所以触发方式有两种，定时或者手动触发</p>
+<p>在某个快照时间点修改过的数据就会丢失掉，所以RDB 更适合用来做备份</p>
+<h4 id="redis中默认的周期新设置">Redis中默认的周期新设置</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># 周期性执行条件的设置格式为
+</span></span><span class="line"><span class="cl">save &lt;seconds&gt; &lt;changes&gt;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># 默认的设置为：
+</span></span><span class="line"><span class="cl">save 900 1
+</span></span><span class="line"><span class="cl">save 300 10
+</span></span><span class="line"><span class="cl">save 60 10000
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># 以下设置方式为关闭RDB快照功能
+</span></span><span class="line"><span class="cl">save &#34;&#34;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="实例-1">实例</h4>
+<p><code>xxd</code> 是linux 查看二进制或者16进制的文件内容的命令，rdb备份文件默认目录是<code>/var/lib/redis/</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">root</span><span class="err">@</span><span class="n">k8s</span><span class="o">-</span><span class="n">master01</span><span class="p">:</span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">redis</span><span class="c1"># redis-cli </span>
+</span></span><span class="line"><span class="cl"><span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span><span class="p">:</span><span class="mi">6379</span><span class="o">&gt;</span> <span class="n">set</span> <span class="n">name</span> <span class="n">lushuan</span>
+</span></span><span class="line"><span class="cl"><span class="n">OK</span>
+</span></span><span class="line"><span class="cl"><span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span><span class="p">:</span><span class="mi">6379</span><span class="o">&gt;</span> <span class="n">save</span>
+</span></span><span class="line"><span class="cl"><span class="n">OK</span>
+</span></span><span class="line"><span class="cl"><span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span><span class="p">:</span><span class="mi">6379</span><span class="o">&gt;</span> <span class="n">exit</span>
+</span></span><span class="line"><span class="cl"><span class="n">root</span><span class="err">@</span><span class="n">k8s</span><span class="o">-</span><span class="n">master01</span><span class="p">:</span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">redis</span><span class="c1"># cd /var/lib/redis/</span>
+</span></span><span class="line"><span class="cl"><span class="n">root</span><span class="err">@</span><span class="n">k8s</span><span class="o">-</span><span class="n">master01</span><span class="p">:</span><span class="o">/</span><span class="k">var</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">redis</span><span class="c1"># ls</span>
+</span></span><span class="line"><span class="cl"><span class="n">dump</span><span class="o">.</span><span class="n">rdb</span>
+</span></span><span class="line"><span class="cl"><span class="n">root</span><span class="err">@</span><span class="n">k8s</span><span class="o">-</span><span class="n">master01</span><span class="p">:</span><span class="o">/</span><span class="k">var</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">redis</span><span class="c1"># xxd dump.rdb </span>
+</span></span><span class="line"><span class="cl"><span class="mi">00000000</span><span class="p">:</span> <span class="mi">5245</span> <span class="mi">4449</span> <span class="mi">5330</span> <span class="mi">3031</span> <span class="mi">31</span><span class="n">fa</span> <span class="mi">0972</span> <span class="mi">6564</span> <span class="mi">6973</span>  <span class="n">REDIS0011</span><span class="o">..</span><span class="n">redis</span>
+</span></span><span class="line"><span class="cl"><span class="mi">00000010</span><span class="p">:</span> <span class="mi">2</span><span class="n">d76</span> <span class="mi">6572</span> <span class="mi">0537</span> <span class="mf">2e32</span> <span class="mf">2e35</span> <span class="n">fa0a</span> <span class="mi">7265</span> <span class="mi">6469</span>  <span class="o">-</span><span class="n">ver</span><span class="o">.</span><span class="mf">7.2</span><span class="o">.</span><span class="mf">5.</span><span class="o">.</span><span class="n">redi</span>
+</span></span><span class="line"><span class="cl"><span class="mi">00000020</span><span class="p">:</span> <span class="mi">732</span><span class="n">d</span> <span class="mi">6269</span> <span class="mi">7473</span> <span class="n">c040</span> <span class="n">fa05</span> <span class="mi">6374</span> <span class="mi">696</span><span class="n">d</span> <span class="mi">65</span><span class="n">c2</span>  <span class="n">s</span><span class="o">-</span><span class="n">bits</span><span class="o">.</span><span class="err">@</span><span class="o">..</span><span class="n">ctime</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl"><span class="mi">00000030</span><span class="p">:</span> <span class="n">ffd0</span> <span class="mi">9766</span> <span class="n">fa08</span> <span class="mi">7573</span> <span class="mi">6564</span> <span class="mi">2</span><span class="n">d6d</span> <span class="mi">656</span><span class="n">d</span> <span class="n">c220</span>  <span class="o">...</span><span class="n">f</span><span class="o">..</span><span class="n">used</span><span class="o">-</span><span class="n">mem</span><span class="o">.</span> 
+</span></span><span class="line"><span class="cl"><span class="mi">00000040</span><span class="p">:</span> <span class="mi">7812</span> <span class="mi">00</span><span class="n">fa</span> <span class="mi">0861</span> <span class="mi">6</span><span class="n">f66</span> <span class="mi">2</span><span class="n">d62</span> <span class="mi">6173</span> <span class="mi">65</span><span class="n">c0</span> <span class="mi">00</span><span class="n">fe</span>  <span class="n">x</span><span class="o">....</span><span class="n">aof</span><span class="o">-</span><span class="n">base</span><span class="o">...</span>
+</span></span><span class="line"><span class="cl"><span class="mi">00000050</span><span class="p">:</span> <span class="mi">00</span><span class="n">fb</span> <span class="mi">0600</span> <span class="mi">0007</span> <span class="mi">636</span><span class="n">f</span> <span class="mi">7572</span> <span class="mi">7365</span> <span class="mi">321</span><span class="n">b</span> <span class="mi">4859</span>  <span class="o">......</span><span class="n">course2</span><span class="o">.</span><span class="n">HY</span>
+</span></span><span class="line"><span class="cl"><span class="mi">00000060</span><span class="p">:</span> <span class="mi">4</span><span class="n">c4c</span> <span class="mi">0100</span> <span class="mi">0000</span> <span class="mi">0300</span> <span class="mi">0000</span> <span class="mi">0000</span> <span class="mi">0000</span> <span class="mi">6821</span>  <span class="n">LL</span><span class="o">............</span><span class="n">h</span><span class="o">!</span>
+</span></span><span class="line"><span class="cl"><span class="mi">00000070</span><span class="p">:</span> <span class="mi">8048</span> <span class="mi">6</span><span class="n">c80</span> <span class="mi">4366</span> <span class="mi">844</span><span class="n">c</span> <span class="mi">0600</span> <span class="mi">0663</span> <span class="mi">6</span><span class="n">f75</span> <span class="mi">7273</span>  <span class="o">.</span><span class="n">Hl</span><span class="o">.</span><span class="n">Cf</span><span class="o">.</span><span class="n">L</span><span class="o">...</span><span class="n">cours</span>
+</span></span><span class="line"><span class="cl"><span class="mi">00000080</span><span class="p">:</span> <span class="mi">6524</span> <span class="mi">4859</span> <span class="mi">4</span><span class="n">c4c</span> <span class="mi">0100</span> <span class="mi">0000</span> <span class="mi">0400</span> <span class="mi">0000</span> <span class="mi">0000</span>  <span class="n">e</span><span class="o">$</span><span class="n">HYLL</span><span class="o">..........</span>
+</span></span><span class="line"><span class="cl"><span class="mi">00000090</span><span class="p">:</span> <span class="mi">0080</span> <span class="mi">4303</span> <span class="mi">8442</span> <span class="mi">5284</span> <span class="mi">4</span><span class="n">af7</span> <span class="mi">8057</span> <span class="n">cf80</span> <span class="mi">486</span><span class="n">c</span>  <span class="o">..</span><span class="n">C</span><span class="o">..</span><span class="n">BR</span><span class="o">.</span><span class="n">J</span><span class="o">..</span><span class="n">W</span><span class="o">..</span><span class="n">Hl</span>
+</span></span><span class="line"><span class="cl"><span class="mi">000000</span><span class="n">a0</span><span class="p">:</span> <span class="mi">8043</span> <span class="mi">6684</span> <span class="mi">4</span><span class="n">c06</span> <span class="mi">0004</span> <span class="mf">6e61</span> <span class="mi">6</span><span class="n">d65</span> <span class="mi">076</span><span class="n">c</span> <span class="mi">7573</span>  <span class="o">.</span><span class="n">Cf</span><span class="o">.</span><span class="n">L</span><span class="o">...</span><span class="n">name</span><span class="o">.</span><span class="n">lus</span>
+</span></span><span class="line"><span class="cl"><span class="mi">000000</span><span class="n">b0</span><span class="p">:</span> <span class="mi">6875</span> <span class="mi">616</span><span class="n">e</span> <span class="mi">0006</span> <span class="mi">7265</span> <span class="mi">7375</span> <span class="mi">6</span><span class="n">c74</span> <span class="mi">2448</span> <span class="mi">594</span><span class="n">c</span>  <span class="n">huan</span><span class="o">..</span><span class="n">result</span><span class="o">$</span><span class="n">HYL</span>
+</span></span><span class="line"><span class="cl"><span class="mi">000000</span><span class="n">c0</span><span class="p">:</span> <span class="mi">4</span><span class="n">c01</span> <span class="mi">0000</span> <span class="mi">0006</span> <span class="mi">0000</span> <span class="mi">0000</span> <span class="mi">0000</span> <span class="mi">0043</span> <span class="mi">0384</span>  <span class="n">L</span><span class="o">............</span><span class="n">C</span><span class="o">..</span>
+</span></span><span class="line"><span class="cl"><span class="mi">000000</span><span class="n">d0</span><span class="p">:</span> <span class="mi">4252</span> <span class="mi">844</span><span class="n">a</span> <span class="n">f780</span> <span class="mi">57</span><span class="n">cf</span> <span class="mi">8048</span> <span class="mi">6</span><span class="n">c80</span> <span class="mi">4366</span> <span class="mi">844</span><span class="n">c</span>  <span class="n">BR</span><span class="o">.</span><span class="n">J</span><span class="o">..</span><span class="n">W</span><span class="o">..</span><span class="n">Hl</span><span class="o">.</span><span class="n">Cf</span><span class="o">.</span><span class="n">L</span>
+</span></span><span class="line"><span class="cl"><span class="mf">000000e0</span><span class="p">:</span> <span class="mi">0600</span> <span class="mi">046</span><span class="n">b</span> <span class="mi">6579</span> <span class="mi">32</span><span class="n">c0</span> <span class="mi">0200</span> <span class="mi">046</span><span class="n">b</span> <span class="mi">6579</span> <span class="mi">31</span><span class="n">c0</span>  <span class="o">...</span><span class="n">key2</span><span class="o">....</span><span class="n">key1</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl"><span class="mi">000000</span><span class="n">f0</span><span class="p">:</span> <span class="mi">01</span><span class="n">ff</span> <span class="mi">7</span><span class="n">d49</span> <span class="mi">6715</span> <span class="mi">3957</span> <span class="n">c40c</span>                 <span class="o">..</span><span class="p">}</span><span class="n">Ig</span><span class="o">.</span><span class="mi">9</span><span class="n">W</span><span class="o">..</span>
+</span></span><span class="line"><span class="cl"><span class="n">root</span><span class="err">@</span><span class="n">k8s</span><span class="o">-</span><span class="n">master01</span><span class="p">:</span><span class="o">/</span><span class="k">var</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">redis</span><span class="c1"># </span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="触发方式">触发方式</h4>
+<ul>
+<li>save命令：阻塞当前Redis服务器，直到RDB过程完成为止，对于内存 比较大的实例会造成长时间阻塞，线上环境不建议使用</li>
+<li>bgsave命令：Redis进程执行fork操作创建子进程，RDB持久化过程由子 进程负责，完成后自动结束。阻塞只发生在fork阶段，一般时间很短</li>
+</ul>
+<h4 id="rdb-优缺点">RDB 优缺点</h4>
+<ul>
+<li>
+<p>优点</p>
+<ul>
+<li>RDB文件是某个时间节点的快照，默认使用LZF算法进行压缩，压缩后的文件体积远远小于内存大小，适用于备份、全量复制等场景；</li>
+<li>Redis加载RDB文件恢复数据要远远快于AOF方式；</li>
+</ul>
+</li>
+<li>
+<p>缺点</p>
+<ul>
+<li>RDB方式实时性不够，无法做到秒级的持久化；</li>
+<li>每次调用bgsave都需要fork子进程，fork子进程属于重量级操作，频繁执行成本较高；</li>
+<li>RDB文件是二进制的，没有可读性，AOF文件在了解其结构的情况下可以手动修改或者补全；</li>
+<li>版本兼容RDB文件问题；</li>
+</ul>
+</li>
+</ul>
+<p>针对RDB不适合实时持久化的问题，Redis提供了AOF持久化方式来解决</p>
+<h3 id="aof">AOF</h3>
+<p>Redis是“写后”日志，Redis先执行命令，把数据写入内存，然后才记录日志。日志里记录的是Redis收到的每一条命令，这些命令是以文本形式保存。PS: 大多数的数据库采用的是写前日志（WAL），例如MySQL，通过写前日志和两阶段提交，实现数据和逻辑的一致性。</p>
+<p>为了解决RDB 在快照时阻塞服务状态，即便是RDB 的bgsave fork一个子进程备份时时间很短，不过在这很短的时间内redis 还是不能处理任何请求，无法做到秒级的快照，为了解决这个问题，可以使用AOF(追加文件)的持久化方式。</p>
+<p>当开启AOF redis 重启后会先从磁盘上读取AOF 持久化的数据至内存中。</p>
+<p>虽然 bgsave 执行时不阻塞主线程，但是，如果频繁地执行全量快照，也会带来两方面的开销：</p>
+<ul>
+<li>一方面，频繁将全量数据写入磁盘，会给磁盘带来很大压力，多个快照竞争有限的磁盘带宽，前一个快照还没有做完，后一个又开始做了，容易造成恶性循环。</li>
+<li>另一方面，bgsave 子进程需要通过 fork 操作从主线程创建出来。虽然，子进程在创建后不会再阻塞主线程，但是，fork 这个创建过程本身会阻塞主线程，而且主线程的内存越大，阻塞时间越长。如果频繁 fork 出 bgsave 子进程，这就会频繁阻塞主线程了。</li>
+</ul>
+<p>那么，有什么其他好方法吗？此时，我们可以做增量快照，就是指做了一次全量快照后，后续的快照只对修改的数据进行快照记录，这样可以避免每次全量快照的开销。这个比较好理解。</p>
+<p>但是它需要我们使用额外的元数据信息去记录哪些数据被修改了，这会带来额外的空间开销问题。那么，还有什么方法既能利用 RDB 的快速恢复，又能以较小的开销做到尽量少丢数据呢？
+这个时候就需要引入RDB和AOF的混合方式解决方案了。</p>
+<h4 id="redisconf中配置aof">redis.conf中配置AOF</h4>
+<p>默认情况下，Redis是没有开启AOF的，可以通过配置redis.conf文件来开启AOF持久化，关于AOF的配置如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="c1"># appendonly参数开启AOF持久化</span>
+</span></span><span class="line"><span class="cl"><span class="n">appendonly</span> <span class="n">no</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># AOF持久化的文件名，默认是appendonly.aof</span>
+</span></span><span class="line"><span class="cl"><span class="n">appendfilename</span> <span class="s2">&#34;appendonly.aof&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># AOF文件的保存位置和RDB文件的位置相同，都是通过dir参数设置的</span>
+</span></span><span class="line"><span class="cl"><span class="n">dir</span> <span class="o">./</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 同步策略</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># appendfsync always</span>
+</span></span><span class="line"><span class="cl"><span class="n">appendfsync</span> <span class="n">everysec</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># appendfsync no</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># aof重写期间是否同步</span>
+</span></span><span class="line"><span class="cl"><span class="n">no</span><span class="o">-</span><span class="n">appendfsync</span><span class="o">-</span><span class="n">on</span><span class="o">-</span><span class="n">rewrite</span> <span class="n">no</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 重写触发配置</span>
+</span></span><span class="line"><span class="cl"><span class="n">auto</span><span class="o">-</span><span class="n">aof</span><span class="o">-</span><span class="n">rewrite</span><span class="o">-</span><span class="n">percentage</span> <span class="mi">100</span>
+</span></span><span class="line"><span class="cl"><span class="n">auto</span><span class="o">-</span><span class="n">aof</span><span class="o">-</span><span class="n">rewrite</span><span class="o">-</span><span class="nb">min</span><span class="o">-</span><span class="n">size</span> <span class="mi">64</span><span class="n">mb</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 加载aof出错如何处理</span>
+</span></span><span class="line"><span class="cl"><span class="n">aof</span><span class="o">-</span><span class="nb">load</span><span class="o">-</span><span class="n">truncated</span> <span class="n">yes</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 文件重写策略</span>
+</span></span><span class="line"><span class="cl"><span class="n">aof</span><span class="o">-</span><span class="n">rewrite</span><span class="o">-</span><span class="n">incremental</span><span class="o">-</span><span class="n">fsync</span> <span class="n">yes</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>以下是Redis中关于AOF的主要配置信息：</p>
+<ul>
+<li>appendonly：默认情况下AOF功能是关闭的，将该选项改为yes以便打开Redis的AOF功能。- - &ndash; &mdash; appendfilename：这个参数项很好理解了，就是AOF文件的名字。</li>
+<li>appendfsync：这个参数项是AOF功能最重要的设置项之一，主要用于设置“真正执行”操作命令向AOF文件中同步的策略。</li>
+</ul>
+<h3 id="rdb和aof混合方式">RDB和AOF混合方式</h3>
+<p>Redis 4.0 中提出了一个混合使用 AOF 日志和内存快照的方法。简单来说，内存快照以一定的频率执行，在两次快照之间，使用 AOF 日志记录这期间的所有命令操作。</p>
+<p>这样一来，快照不用很频繁地执行，这就避免了频繁 fork 对主线程的影响。而且，AOF 日志也只用记录两次快照间的操作，也就是说，不需要记录所有操作了，因此，就不会出现文件过大的情况了，也可以避免重写开销。</p>
+<h2 id="主从复制">主从复制</h2>
+<p>我们知道要避免单点故障，即保证高可用，便需要冗余（副本）方式提供集群服务。而Redis 提供了主从库模式，以保证数据副本的一致，主从库之间采用的是读写分离的方式。本文主要阐述Redis的主从复制。</p>
+<p>主从复制，是指将一台Redis服务器的数据，复制到其他的Redis服务器。前者称为主节点(master)，后者称为从节点(slave)；数据的复制是单向的，只能由主节点到从节点。</p>
+<p>主从复制的作用主要包括：</p>
+<ul>
+<li>数据冗余：主从复制实现了数据的热备份，是持久化之外的一种数据冗余方式。</li>
+<li>故障恢复：当主节点出现问题时，可以由从节点提供服务，实现快速的故障恢复；实际上是一种服务的冗余。</li>
+<li>负载均衡：在主从复制的基础上，配合读写分离，可以由主节点提供写服务，由从节点提供读服务（即写Redis数据时应用连接主节点，读Redis数据时应用连接从节点），分担服- 务器负载；尤其是在写少读多的场景下，通过多个从节点分担读负载，可以大大提高Redis服务器的并发量。</li>
+<li>高可用基石：除了上述作用以外，主从复制还是哨兵和集群能够实施的基础，因此说主从复制是Redis高可用的基础。</li>
+</ul>
+<p>主从库之间采用的是读写分离的方式。</p>
+<ul>
+<li>读操作：主库、从库都可以接收；</li>
+<li>写操作：首先到主库执行，然后，主库将写操作同步给从库。</li>
+</ul>
+<p><figure><a class="lightgallery" href="/images/redis/db-redis-copy-1.png" title="redis explained" data-thumbnail="/images/redis/db-redis-copy-1.png" data-sub-html="<h2>redis 读写分离</h2><p>redis explained</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/redis/db-redis-copy-1.png"
+            data-srcset="/images/redis/db-redis-copy-1.png, /images/redis/db-redis-copy-1.png 1.5x, /images/redis/db-redis-copy-1.png 2x"
+            data-sizes="auto"
+            alt="/images/redis/db-redis-copy-1.png" />
+    </a><figcaption class="image-caption">redis 读写分离</figcaption>
+    </figure></p>
+<p>这里在同一台主机上演示，备份<code>redis.conf</code> 为<code>redis-6380.conf</code>，修改以下四个配置项</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">port</span> <span class="mi">6380</span>
+</span></span><span class="line"><span class="cl"><span class="o">...</span>
+</span></span><span class="line"><span class="cl"><span class="o">...</span>
+</span></span><span class="line"><span class="cl"><span class="n">pidfile</span> <span class="o">/</span><span class="k">var</span><span class="o">/</span><span class="n">run</span><span class="o">/</span><span class="n">reids_6380</span><span class="o">.</span><span class="n">pid</span>
+</span></span><span class="line"><span class="cl"><span class="o">...</span>
+</span></span><span class="line"><span class="cl"><span class="o">...</span>
+</span></span><span class="line"><span class="cl"><span class="n">dbfilename</span> <span class="n">dump</span><span class="o">-</span><span class="mf">6380.</span><span class="n">rdb</span> <span class="c1"># 在同一台主机做测试时使用</span>
+</span></span><span class="line"><span class="cl"><span class="o">...</span>
+</span></span><span class="line"><span class="cl"><span class="o">...</span>
+</span></span><span class="line"><span class="cl"><span class="n">replicaof</span> <span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span> <span class="mi">6379</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="启动从节点">启动从节点</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">redis-server redis-6380.conf
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>客户端连接从节点,可以看到角色为从节点，这样表示主从配置就成功了。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">root@k8s-master01:/etc/redis# redis-cli -p 6380
+</span></span><span class="line"><span class="cl">127.0.0.1:6379&gt; info replication
+</span></span><span class="line"><span class="cl"># Replication
+</span></span><span class="line"><span class="cl">role:slave
+</span></span><span class="line"><span class="cl">...
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="高可用哨兵机制redis-sentinel">高可用：哨兵机制（Redis Sentinel）</h2>
+<p>在上文主从复制的基础上，如果主节点出现故障该怎么办呢？ 在 Redis 主从集群中，哨兵机制是实现主从库自动切换的关键机制，它有效地解决了主从复制模式下故障转移的问题。</p>
+<h3 id="哨兵机制redis-sentinel">哨兵机制（Redis Sentinel）</h3>
+<p>Redis Sentinel，即Redis哨兵，在Redis 2.8版本开始引入。哨兵的核心功能是主节点的自动故障转移。</p>
+<p>哨兵集群监控的逻辑图：</p>
+<p><figure><a class="lightgallery" href="/images/redis/db-redis-sen-1.png" title="redis explained" data-thumbnail="/images/redis/db-redis-sen-1.png" data-sub-html="<h2>redis 哨兵机制</h2><p>redis explained</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/redis/db-redis-sen-1.png"
+            data-srcset="/images/redis/db-redis-sen-1.png, /images/redis/db-redis-sen-1.png 1.5x, /images/redis/db-redis-sen-1.png 2x"
+            data-sizes="auto"
+            alt="/images/redis/db-redis-sen-1.png" />
+    </a><figcaption class="image-caption">redis 哨兵机制</figcaption>
+    </figure></p>
+<p>哨兵实现了什么功能呢？下面是Redis官方文档的描述：</p>
+<ul>
+<li>监控（Monitoring）：哨兵会不断地检查主节点和从节点是否运作正常。</li>
+<li>自动故障转移（Automatic failover）：当主节点不能正常工作时，哨兵会开始自动故障转移操作，它会将失效主节点的其中一个从节点升级为新的主节点，并让其他从节点改为复制新的主节点。</li>
+<li>配置提供者（Configuration provider）：客户端在初始化时，通过连接哨兵来获得当前Redis服务的主节点地址。</li>
+<li>通知（Notification）：哨兵可以将故障转移的结果发送给客户端。</li>
+</ul>
+<p>其中，监控和自动故障转移功能，使得哨兵可以及时发现主节点故障并完成转移；而配置提供者和通知功能，则需要在与客户端的交互中才能体现。</p>
+<h3 id="哨兵集群的组建">哨兵集群的组建</h3>
+<p>上图中哨兵集群是如何组件的呢？哨兵实例之间可以相互发现，要归功于 Redis 提供的 pub/sub 机制，也就是发布 / 订阅机制。</p>
+<h3 id="启动哨兵节点">启动哨兵节点</h3>
+<p><code>sentinel.conf</code>,模拟还是当前主机下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">sentinel monitor master 127.0.0.1 6379
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>启动哨兵节点，会以哨兵模式进行启动</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">redis-sentinel sentinel.conf
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>注意：生产环境需要三个哨兵节点</p>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="https://redis.io/docs/latest/develop/" target="_blank" rel="noopener noreffer ">https://redis.io/docs/latest/develop/</a></li>
+<li><a href="https://www.redis.net.cn/" target="_blank" rel="noopener noreffer ">https://www.redis.net.cn/</a></li>
+<li><a href="https://huangz.works/redisbook1e/index.html#id9" target="_blank" rel="noopener noreffer ">Redis 设计与实现</a></li>
+<li><a href="https://datmt.com/backend/redis-command-cheatsheet/" target="_blank" rel="noopener noreffer ">https://datmt.com/backend/redis-command-cheatsheet/</a></li>
+<li><a href="https://pdai.tech/md/db/nosql-redis/db-redis-overview.html" target="_blank" rel="noopener noreffer ">https://pdai.tech/md/db/nosql-redis/db-redis-overview.html</a></li>
+</ul>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2023-06-26</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://localhost:1313/redis%E7%9F%A5%E8%AF%86%E4%BD%93%E7%B3%BB/" data-title="Redis 知识体系" data-via="xxxx" data-hashtags="Redis"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/redis%E7%9F%A5%E8%AF%86%E4%BD%93%E7%B3%BB/" data-hashtag="Redis"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="http://localhost:1313/redis%E7%9F%A5%E8%AF%86%E4%BD%93%E7%B3%BB/" data-title="Redis 知识体系"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://localhost:1313/redis%E7%9F%A5%E8%AF%86%E4%BD%93%E7%B3%BB/" data-title="Redis 知识体系"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/redis%E7%9F%A5%E8%AF%86%E4%BD%93%E7%B3%BB/" data-title="Redis 知识体系"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/redis/">Redis</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/linux%E7%BD%91%E7%BB%9C%E6%8E%92%E9%9A%9C/" class="prev" rel="prev" title="Linux 网络排障"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Linux 网络排障</a>
+            <a href="/kubernetes%E9%80%9A%E8%BF%87nfs%E5%8A%A8%E6%80%81%E5%88%9B%E5%BB%BApv%E5%BC%82%E5%B8%B8/" class="next" rel="next" title="Kubernetes 通过 nfs 动态创建 pv 异常">Kubernetes 通过 nfs 动态创建 pv 异常<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">我是有底线的</div><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.126.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2024</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">lushuan</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/lightgallery/css/lightgallery-bundle.min.css"><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/lightgallery/lightgallery.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/zoom/lg-zoom.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"lightgallery":true,"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
