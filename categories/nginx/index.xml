@@ -1,0 +1,16 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Nginx - 分类 - Less is more</title>
+        <link>http://localhost:1313/categories/nginx/</link>
+        <description>Nginx - 分类 - Less is more</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Wed, 19 Jan 2022 12:06:37 &#43;0800</lastBuildDate><atom:link href="http://localhost:1313/categories/nginx/" rel="self" type="application/rss+xml" /><item>
+    <title>Nginx 介绍-快速了解</title>
+    <link>http://localhost:1313/nginx%E4%BB%8B%E7%BB%8D-%E5%BF%AB%E9%80%9F%E4%BA%86%E8%A7%A3/</link>
+    <pubDate>Wed, 19 Jan 2022 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/nginx%E4%BB%8B%E7%BB%8D-%E5%BF%AB%E9%80%9F%E4%BA%86%E8%A7%A3/</guid>
+    <description><![CDATA[Nginx 介绍 Nginx 是什么？ Nginx (engine x) 是一个高性能的HTTP和反向代理web服务器。 Nginx是由伊戈尔·赛索耶夫为俄罗斯访问量第二的Rambler.ru站]]></description>
+</item>
+</channel>
+</rss>
