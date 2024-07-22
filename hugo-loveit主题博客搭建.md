@@ -140,6 +140,8 @@ Disqus、Gitalk和Valine是三种常见的评论系统，它们在功能、特�
 1. [新网域名](https://www.xinnet.com/domain/domainQueryResult.html?prefix=xmddlu&suffix=.cn)
 2. [gitee 关闭个人购买域名入口](https://help.gitee.com/services/gitee-pages/pro/)
 
+## 待演进
+博客最初是基于GitHub Pages创建的，但由于国内访问较慢，我使用了GitHub Pages + Vercel + Cloudflare的方式，并购买了域名备案到了国内，并使用国内的服务器。
 
 ## 参考
 1. [Hugo的工作原理](https://hugo.aiaide.com/post/hugo%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/#:~:text=%E6%96%87%E7%AB%A0%E5%B0%B1%E6%98%AF%E4%BD%9C%E8%80%85%E9%9C%80%E8%A6%81%E6%92%B0%E5%86%99%E7%9A%84%E5%86%85%E5%AE%B9%2C%20%E4%BB%96%E4%BB%A5markdown%E6%A0%BC%E5%BC%8F%E7%9A%84%E6%96%87%E4%BB%B6%E5%AD%98%E6%94%BE%E5%9C%A8content%E7%9B%AE%E5%BD%95%E4%B8%8B%E9%9D%A2.%20%E6%88%91%E4%BB%AC%E6%97%A2%E5%8F%AF%E4%BB%A5%E9%80%9A%E8%BF%87%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%9A%84%E6%96%B9%E5%BC%8F%E5%88%9B%E5%BB%BA%E6%96%87%E7%AB%A0%20hugo%20new%20about.md%2C%20%E4%B9%9F%E5%8F%AF%E4%BB%A5%E9%80%9A%E8%BF%87%E6%89%8B%E5%B7%A5%E7%9A%84%E6%96%B9%E5%BC%8F%E5%9C%A8content%E5%88%9B%E5%BB%BA.%20%E9%80%9A%E5%B8%B8%E6%88%91%E4%BB%AC%E6%8A%8A%E5%8D%95%E7%8B%AC%E7%9A%84%E6%96%87%E7%AB%A0%E5%86%85%E5%AE%B9%E6%94%BE%E5%9C%A8content%E7%9B%AE%E5%BD%95%E4%B8%8B%E9%9D%A2%2C,%E5%8D%B3%3A%20%E9%A1%B5%E9%9D%A2%20%3D%20%E6%96%87%E7%AB%A0%20%2B%20%E6%A8%A1%E6%9D%BF.%20hugo%E4%BC%9A%E6%A0%B9%E6%8D%AE%E4%B8%80%E5%AE%9A%E7%9A%84%E8%A7%84%E5%88%B6%E5%8E%BB%E5%AF%BB%E6%89%BE%E6%96%87%E7%AB%A0%E5%AF%B9%E5%BA%94%E7%9A%84%E6%A8%A1%E6%9D%BF%E9%A1%B5%E9%9D%A2%2C%20%E4%BB%8E%E8%80%8C%E7%94%9F%E6%88%90%E9%A1%B5%E9%9D%A2.)

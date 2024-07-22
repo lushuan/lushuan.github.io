@@ -326,7 +326,7 @@ ZADD scores 90 "John Doe" 80 "Jane Doe" 95 "Bob Smith"
 ### 5种基本数据类型
 首先对redis来说，所有的key（键）都是字符串。我们在谈基础数据结构时，讨论的是存储值的数据类型，主要包括常见的5种数据类型，分别是：String、List、Set、Zset、Hash。
 
-![redis-datatype](/images/redis/db-redis-ds-1.jpg "redis datatype common in use")
+![redis-datatype](/images/redis/db-redis-ds-1.jpeg "redis datatype common in use")
 
 | 结构类型         | 结构存储的值                               | 结构的读写能力                                               |
 | ---------------- | ------------------------------------------ | ------------------------------------------------------------ |
