@@ -21,6 +21,14 @@
     <description><![CDATA[前言 在了解RBAC 之前先了解一下Kubernetes API 对象，RBAC 最终操作的对象还是Kubernetes API 对象，本质还是对Kubernet]]></description>
 </item>
 <item>
+    <title>k8s 常见故障和解决思路及方法</title>
+    <link>http://localhost:1313/k8s-%E5%B8%B8%E8%A7%81%E6%95%85%E9%9A%9C%E5%92%8C%E8%A7%A3%E5%86%B3%E6%80%9D%E8%B7%AF%E5%8F%8A%E6%96%B9%E6%B3%95/</link>
+    <pubDate>Sat, 13 Jan 2024 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/k8s-%E5%B8%B8%E8%A7%81%E6%95%85%E9%9A%9C%E5%92%8C%E8%A7%A3%E5%86%B3%E6%80%9D%E8%B7%AF%E5%8F%8A%E6%96%B9%E6%B3%95/</guid>
+    <description><![CDATA[K8S 之连接异常——【集群故障】 Pod问题思考思路 Kubernetes集群中Pod一般哪些方面容易出现问题呢？ Kubernetes资源配置错误：]]></description>
+</item>
+<item>
     <title>Kubernetes 技能图谱</title>
     <link>http://localhost:1313/kubernetes-%E6%8A%80%E8%83%BD%E5%9B%BE%E8%B0%B1/</link>
     <pubDate>Fri, 13 Oct 2023 12:06:37 &#43;0800</pubDate>
@@ -75,14 +83,6 @@
     <author>lushuan</author>
     <guid>http://localhost:1313/kube-dns%E5%88%87%E6%8D%A2%E4%B8%BAcoredns%E5%AE%9E%E8%B7%B5/</guid>
     <description><![CDATA[kube-dns切换为coredns k8s版本及其dns适配版本 k8s版本 coredns版本 镜像 镜像yaml 1.17 1.6.7 coredns-1.6.7.tar.gz coredns-1.6.7.yaml 1.22 1.8.4 coredns-1.8.4.tar.gz coredns-1.8.4.yaml coredns/coredns:1.6.7/1.8.4 操作 根据版本选]]></description>
-</item>
-<item>
-    <title>当 Kubernetes 创建 Pod 时发生了什么</title>
-    <link>http://localhost:1313/%E5%BD%93-kubernetes-%E5%88%9B%E5%BB%BA-pod-%E6%97%B6%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88/</link>
-    <pubDate>Sun, 26 Mar 2023 12:06:37 &#43;0800</pubDate>
-    <author>lushuan</author>
-    <guid>http://localhost:1313/%E5%BD%93-kubernetes-%E5%88%9B%E5%BB%BA-pod-%E6%97%B6%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88/</guid>
-    <description><![CDATA[当Kubernetes创建Pod时发生了什么-全景图 https://github.com/jamiehannaford/what-happens-when-k8s/tree/master/zh-cn what-happens-when-k8s]]></description>
 </item>
 </channel>
 </rss>
