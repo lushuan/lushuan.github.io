@@ -33,7 +33,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "http:\/\/localhost:1313\/k8s-%E5%B8%B8%E8%A7%81%E6%95%85%E9%9A%9C%E5%92%8C%E8%A7%A3%E5%86%B3%E6%80%9D%E8%B7%AF%E5%8F%8A%E6%96%B9%E6%B3%95\/"
-        },"genre": "posts","keywords": "Kubernetes排障","wordcount":  6539 ,
+        },"genre": "posts","keywords": "Kubernetes排障","wordcount":  6536 ,
         "url": "http:\/\/localhost:1313\/k8s-%E5%B8%B8%E8%A7%81%E6%95%85%E9%9A%9C%E5%92%8C%E8%A7%A3%E5%86%B3%E6%80%9D%E8%B7%AF%E5%8F%8A%E6%96%B9%E6%B3%95\/","datePublished": "2024-01-13T12:06:37+08:00","dateModified": "2024-04-26T12:06:37+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -121,7 +121,7 @@
             <div class="toc-content always-active" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">k8s 常见故障和解决思路及方法</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/kubernetes/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Kubernetes</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2024-01-13">2024-01-13</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 6539 字&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2024-01-13">2024-01-13</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 6536 字&nbsp;
                 <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 14 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  data-kept="">
                 <div class="details-summary toc-title">
@@ -463,17 +463,17 @@ resolv.conf文件，如果里面存在本地回环如127.0.0.1或者127.0.0.53�
 </ul>
 <h3 id="节点异常2-pod调度失败故障排查">节点异常2: pod调度失败故障排查</h3>
 <p>在k8s集群中，pod是最小单元，需要调度到具体的物理节点上运行，那么为了更好排查问题，了解pod的调度流程是重中之重，接下来介绍下pod工作和调度流程：</p>
-<p>创建pod过程：
-1、用户创建pod的信息通过API Server存储到etcd中，etcd记录pod的元信息并将结果返回API Server
-2、API Server告知调度器请求资源调度分配，调度器通过计算，将优先级高的node与pod绑定并告知API Server
-3、API Server将此信息写入etcd，得到etcd回复后调用kubelet创建pod
-4、kubelet使用docker run创建pod内的容器，得到反馈信息后将容器信息告知API Server
-5、API Server将收到的信息写入etcd并得到回馈
+<p>创建pod过程：</p>
+<p>1、用户创建pod的信息通过API Server存储到etcd中，etcd记录pod的元信息并将结果返回API Server<br>
+2、API Server告知调度器请求资源调度分配，调度器通过计算，将优先级高的node与pod绑定并告知API Server<br>
+3、API Server将此信息写入etcd，得到etcd回复后调用kubelet创建pod<br>
+4、kubelet使用docker run创建pod内的容器，得到反馈信息后将容器信息告知API Server<br>
+5、API Server将收到的信息写入etcd并得到回馈<br>
 6、此时使用kubectl get pod就可以查看到信息了</p>
-<p>调度方式：
-1、当我们发送请求创建Pod，调度器就会把pod调度到合适的物理节点，大致分为以下过程：
-Scheduler根据预选策略和优选函数，选额合适的noed节点调度
-2、可以通过定义nodeName和nodeSelector进行调度
+<p>调度方式：</p>
+<p>1、当我们发送请求创建Pod，调度器就会把pod调度到合适的物理节点，大致分为以下过程：<br>
+Scheduler根据预选策略和优选函数，选额合适的noed节点调度<br>
+2、可以通过定义nodeName和nodeSelector进行调度<br>
 3、可以通过节点亲和性进行调度</p>
 <p>Pod在调度的时候会找到一个合适的节点，所以如果节点资源不足；pod定义了指定的节点，但是指定的节点出现故障，或者pod定义了亲和性，但是节点没有满足的条件，都会导致调度失败。</p>
 <p>排查思路</p>
@@ -507,7 +507,7 @@ Scheduler根据预选策略和优选函数，选额合适的noed节点调度
 <li><code>kubectl describe nodes 查看node节点信息</code></li>
 <li><code>kubectl describe pods &lt;pod 名字&gt; 查看pod节点信息</code></li>
 <li><code>systemctl status 查看kubelet状态</code></li>
-<li>`Journalctl查看系统日志``</li>
+<li><code>Journalctl查看系统日志</code></li>
 <li><code>free查看内存</code></li>
 <li><code>top查看cpu</code></li>
 </ul>
