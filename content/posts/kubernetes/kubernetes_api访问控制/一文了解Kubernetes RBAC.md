@@ -483,3 +483,5 @@ Error from server (Forbidden): daemonsets.apps is forbidden: User "lushuan" cann
 1. https://kubernetes.io/zh-cn/docs/reference/access-authn-authz/rbac/
 2. https://kubernetes.io/zh-cn/docs/reference/using-api/api-concepts/
 3. https://kubernetes.io/zh-cn/docs/tasks/administer-cluster/certificates/#openssl
+4. [什么是基于角色的访问控制（RBAC）？](https://www.redhat.com/zh/topics/security/what-is-role-based-access-control#rbac-%E7%9A%84%E4%BC%98%E5%8A%BF)
+5. [RBAC权限系统分析、设计与实现](https://cloud.tencent.com/developer/article/1802329)

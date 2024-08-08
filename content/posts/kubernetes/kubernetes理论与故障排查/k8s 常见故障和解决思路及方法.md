@@ -241,18 +241,20 @@ systemctl status kubelet
 在k8s集群中，pod是最小单元，需要调度到具体的物理节点上运行，那么为了更好排查问题，了解pod的调度流程是重中之重，接下来介绍下pod工作和调度流程：
 
 创建pod过程：
-1、用户创建pod的信息通过API Server存储到etcd中，etcd记录pod的元信息并将结果返回API Server
-2、API Server告知调度器请求资源调度分配，调度器通过计算，将优先级高的node与pod绑定并告知API Server
-3、API Server将此信息写入etcd，得到etcd回复后调用kubelet创建pod
-4、kubelet使用docker run创建pod内的容器，得到反馈信息后将容器信息告知API Server
-5、API Server将收到的信息写入etcd并得到回馈
-6、此时使用kubectl get pod就可以查看到信息了
+
+1、用户创建pod的信息通过API Server存储到etcd中，etcd记录pod的元信息并将结果返回API Server  
+2、API Server告知调度器请求资源调度分配，调度器通过计算，将优先级高的node与pod绑定并告知API Server  
+3、API Server将此信息写入etcd，得到etcd回复后调用kubelet创建pod  
+4、kubelet使用docker run创建pod内的容器，得到反馈信息后将容器信息告知API Server  
+5、API Server将收到的信息写入etcd并得到回馈  
+6、此时使用kubectl get pod就可以查看到信息了  
 
 调度方式：
-1、当我们发送请求创建Pod，调度器就会把pod调度到合适的物理节点，大致分为以下过程：
-Scheduler根据预选策略和优选函数，选额合适的noed节点调度
-2、可以通过定义nodeName和nodeSelector进行调度
-3、可以通过节点亲和性进行调度
+
+1、当我们发送请求创建Pod，调度器就会把pod调度到合适的物理节点，大致分为以下过程：  
+Scheduler根据预选策略和优选函数，选额合适的noed节点调度  
+2、可以通过定义nodeName和nodeSelector进行调度  
+3、可以通过节点亲和性进行调度  
 
 Pod在调度的时候会找到一个合适的节点，所以如果节点资源不足；pod定义了指定的节点，但是指定的节点出现故障，或者pod定义了亲和性，但是节点没有满足的条件，都会导致调度失败。
 
@@ -289,7 +291,7 @@ Pod超过节点资源限制分两种情况：
 - `kubectl describe nodes 查看node节点信息`
 - `kubectl describe pods <pod 名字> 查看pod节点信息`
 - `systemctl status 查看kubelet状态`
-- `Journalctl查看系统日志``
+- `Journalctl查看系统日志`
 - `free查看内存`
 - `top查看cpu`
 
