@@ -1,7 +1,7 @@
 ---
 title: "Helm修改configmap后应用自动重启生效"
 subtitle: ""
-date: 2023-04-17T12:06:37+08:00
+date: 2024-07-21T12:06:37+08:00
 lastmod: 2024-07-21T12:06:37+08:00
 draft: false
 toc:
