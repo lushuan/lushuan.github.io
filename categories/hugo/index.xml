@@ -1,15 +1,15 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title>Hugo - 分类 - Less is more</title>
-        <link>http://localhost:1313/categories/hugo/</link>
+        <link>https://lushuan.gihub.io/categories/hugo/</link>
         <description>Hugo - 分类 - Less is more</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
-            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Wed, 15 Sep 2021 19:49:09 &#43;0800</lastBuildDate><atom:link href="http://localhost:1313/categories/hugo/" rel="self" type="application/rss+xml" /><item>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Wed, 15 Sep 2021 19:49:09 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/categories/hugo/" rel="self" type="application/rss+xml" /><item>
     <title>First_post</title>
-    <link>http://localhost:1313/first_post/</link>
+    <link>https://lushuan.gihub.io/first_post/</link>
     <pubDate>Wed, 15 Sep 2021 19:49:09 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>http://localhost:1313/first_post/</guid>
+    <guid>https://lushuan.gihub.io/first_post/</guid>
     <description><![CDATA[test test LoveIt提供了admonition shortcode，支持 12 种样式，可以在页面中插入提示的横幅。代码如下 主题自带的admonitio]]></description>
 </item>
 </channel>

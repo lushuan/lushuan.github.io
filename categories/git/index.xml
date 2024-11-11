@@ -1,15 +1,15 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title>Git - 分类 - Less is more</title>
-        <link>http://localhost:1313/categories/git/</link>
+        <link>https://lushuan.gihub.io/categories/git/</link>
         <description>Git - 分类 - Less is more</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
-            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Sat, 17 Apr 2021 12:06:37 &#43;0800</lastBuildDate><atom:link href="http://localhost:1313/categories/git/" rel="self" type="application/rss+xml" /><item>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Sat, 17 Apr 2021 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/categories/git/" rel="self" type="application/rss+xml" /><item>
     <title>Git 常用操作</title>
-    <link>http://localhost:1313/git%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/</link>
+    <link>https://lushuan.gihub.io/git%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/</link>
     <pubDate>Sat, 17 Apr 2021 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>http://localhost:1313/git%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/</guid>
+    <guid>https://lushuan.gihub.io/git%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/</guid>
     <description><![CDATA[创建版本库 1 2 $ git clone &lt;url&gt; # 克隆远程仓库 $ git init # 初始化本地仓库 Git 全局设置 1 2 git config --global user.name &#34;lu.shua&#34; git config --global user.email &#34;lu.shuan@iwhalecloud.com&#34; 修改和提交 1 2 3 4 5 6 7 8 9 $ git status # 查看状态 $ git]]></description>
 </item>
 </channel>

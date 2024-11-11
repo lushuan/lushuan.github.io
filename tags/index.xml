@@ -1,87 +1,87 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title>Tags - 标签 - Less is more</title>
-        <link>http://localhost:1313/tags/</link>
+        <link>https://lushuan.gihub.io/tags/</link>
         <description>Tags - 标签 - Less is more</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
-            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Thu, 20 Jun 2024 12:06:37 &#43;0800</lastBuildDate><atom:link href="http://localhost:1313/tags/" rel="self" type="application/rss+xml" /><item>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Thu, 20 Jun 2024 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/tags/" rel="self" type="application/rss+xml" /><item>
     <title>Kubernetes</title>
-    <link>http://localhost:1313/tags/kubernetes/</link>
+    <link>https://lushuan.gihub.io/tags/kubernetes/</link>
     <pubDate>Thu, 20 Jun 2024 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>http://localhost:1313/tags/kubernetes/</guid>
+    <guid>https://lushuan.gihub.io/tags/kubernetes/</guid>
     <description><![CDATA[]]></description>
 </item>
 <item>
     <title>DevOps</title>
-    <link>http://localhost:1313/tags/devops/</link>
+    <link>https://lushuan.gihub.io/tags/devops/</link>
     <pubDate>Sat, 17 Feb 2024 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>http://localhost:1313/tags/devops/</guid>
+    <guid>https://lushuan.gihub.io/tags/devops/</guid>
     <description><![CDATA[]]></description>
 </item>
 <item>
     <title>English Article</title>
-    <link>http://localhost:1313/tags/english-article/</link>
+    <link>https://lushuan.gihub.io/tags/english-article/</link>
     <pubDate>Sat, 17 Feb 2024 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>http://localhost:1313/tags/english-article/</guid>
+    <guid>https://lushuan.gihub.io/tags/english-article/</guid>
     <description><![CDATA[]]></description>
 </item>
 <item>
     <title>Kubernetes排障</title>
-    <link>http://localhost:1313/tags/kubernetes%E6%8E%92%E9%9A%9C/</link>
+    <link>https://lushuan.gihub.io/tags/kubernetes%E6%8E%92%E9%9A%9C/</link>
     <pubDate>Sat, 13 Jan 2024 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>http://localhost:1313/tags/kubernetes%E6%8E%92%E9%9A%9C/</guid>
+    <guid>https://lushuan.gihub.io/tags/kubernetes%E6%8E%92%E9%9A%9C/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
+    <title>Linux</title>
+    <link>https://lushuan.gihub.io/tags/linux/</link>
+    <pubDate>Fri, 15 Sep 2023 09:44:54 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>https://lushuan.gihub.io/tags/linux/</guid>
     <description><![CDATA[]]></description>
 </item>
 <item>
     <title>Docker</title>
-    <link>http://localhost:1313/tags/docker/</link>
+    <link>https://lushuan.gihub.io/tags/docker/</link>
     <pubDate>Mon, 26 Jun 2023 16:25:58 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>http://localhost:1313/tags/docker/</guid>
+    <guid>https://lushuan.gihub.io/tags/docker/</guid>
     <description><![CDATA[]]></description>
 </item>
 <item>
     <title>Jenkins</title>
-    <link>http://localhost:1313/tags/jenkins/</link>
+    <link>https://lushuan.gihub.io/tags/jenkins/</link>
     <pubDate>Tue, 18 Apr 2023 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>http://localhost:1313/tags/jenkins/</guid>
+    <guid>https://lushuan.gihub.io/tags/jenkins/</guid>
     <description><![CDATA[]]></description>
 </item>
 <item>
     <title>Helm</title>
-    <link>http://localhost:1313/tags/helm/</link>
+    <link>https://lushuan.gihub.io/tags/helm/</link>
     <pubDate>Mon, 17 Apr 2023 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>http://localhost:1313/tags/helm/</guid>
+    <guid>https://lushuan.gihub.io/tags/helm/</guid>
     <description><![CDATA[]]></description>
 </item>
 <item>
     <title>Prometheus</title>
-    <link>http://localhost:1313/tags/prometheus/</link>
+    <link>https://lushuan.gihub.io/tags/prometheus/</link>
     <pubDate>Mon, 29 Aug 2022 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>http://localhost:1313/tags/prometheus/</guid>
+    <guid>https://lushuan.gihub.io/tags/prometheus/</guid>
     <description><![CDATA[]]></description>
 </item>
 <item>
     <title>Grafana</title>
-    <link>http://localhost:1313/tags/grafana/</link>
+    <link>https://lushuan.gihub.io/tags/grafana/</link>
     <pubDate>Wed, 17 Aug 2022 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>http://localhost:1313/tags/grafana/</guid>
-    <description><![CDATA[]]></description>
-</item>
-<item>
-    <title>Django</title>
-    <link>http://localhost:1313/tags/django/</link>
-    <pubDate>Wed, 20 Jul 2022 12:06:37 &#43;0800</pubDate>
-    <author>lushuan</author>
-    <guid>http://localhost:1313/tags/django/</guid>
+    <guid>https://lushuan.gihub.io/tags/grafana/</guid>
     <description><![CDATA[]]></description>
 </item>
 </channel>

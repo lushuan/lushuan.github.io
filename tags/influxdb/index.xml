@@ -1,15 +1,15 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title>Influxdb - 标签 - Less is more</title>
-        <link>http://localhost:1313/tags/influxdb/</link>
+        <link>https://lushuan.gihub.io/tags/influxdb/</link>
         <description>Influxdb - 标签 - Less is more</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
-            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Fri, 28 May 2021 12:06:37 &#43;0800</lastBuildDate><atom:link href="http://localhost:1313/tags/influxdb/" rel="self" type="application/rss+xml" /><item>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Fri, 28 May 2021 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/tags/influxdb/" rel="self" type="application/rss+xml" /><item>
     <title>Influxdb 添加鉴权</title>
-    <link>http://localhost:1313/influxdb-%E9%85%8D%E7%BD%AE%E9%89%B4%E6%9D%83/</link>
+    <link>https://lushuan.gihub.io/influxdb-%E9%85%8D%E7%BD%AE%E9%89%B4%E6%9D%83/</link>
     <pubDate>Fri, 28 May 2021 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>http://localhost:1313/influxdb-%E9%85%8D%E7%BD%AE%E9%89%B4%E6%9D%83/</guid>
+    <guid>https://lushuan.gihub.io/influxdb-%E9%85%8D%E7%BD%AE%E9%89%B4%E6%9D%83/</guid>
     <description><![CDATA[InfluxDB 基础了解 介绍 一个开源的时间序列数据库 特性 1、内置HTTP-API,无需编写服务端代码来启动和运行。 2、数据可以被标记，允许非常灵活的查询 3]]></description>
 </item>
 </channel>
