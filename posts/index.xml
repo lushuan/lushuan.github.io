@@ -4,13 +4,13 @@
         <link>https://lushuan.gihub.io/posts/</link>
         <description>所有文章 | Less is more</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
-            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Wed, 26 Jun 2024 10:54:03 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/posts/" rel="self" type="application/rss+xml" /><item>
-    <title>Demo 图像和 shortcode</title>
-    <link>https://lushuan.gihub.io/demo/</link>
-    <pubDate>Wed, 26 Jun 2024 10:54:03 &#43;0800</pubDate>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Sun, 21 Jul 2024 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/posts/" rel="self" type="application/rss+xml" /><item>
+    <title>Helm修改configmap后应用自动重启生效</title>
+    <link>https://lushuan.gihub.io/helm%E4%BF%AE%E6%94%B9configmap%E5%90%8E%E5%BA%94%E7%94%A8%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF%E7%94%9F%E6%95%88/</link>
+    <pubDate>Sun, 21 Jul 2024 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>https://lushuan.gihub.io/demo/</guid>
-    <description><![CDATA[图片测试 测试1 直接引用 xxx 测试2 使用html 标签图片会根据比率缩放 测试5 图片会默认左对齐 测试6 图片会居中 测试6 显示图注，当文章的图片比较多的时]]></description>
+    <guid>https://lushuan.gihub.io/helm%E4%BF%AE%E6%94%B9configmap%E5%90%8E%E5%BA%94%E7%94%A8%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF%E7%94%9F%E6%95%88/</guid>
+    <description><![CDATA[前言 通过Helm部署应用，修改configmap后，Deployment 副本控制器不会自动生效，需要手动删除pod 重建一下才会生效，这里实践]]></description>
 </item>
 <item>
     <title>Ubuntu-server部署k8s1.28(containerd版本)集群</title>
