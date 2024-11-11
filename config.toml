@@ -452,6 +452,8 @@ defaultContentLanguage = "zh-cn"
         labels= "gitalk"
         clientId = "Ov23liSh0yG2wy6B7XP1"
         clientSecret = "b036bbfb40e3baabedceddaa7556c9972b97f52b"
+        distractionFreeMode = false
+        redirect_uri = "https://blog.dazhongma.top/callback" # 添加此项确保与 OAuth 应用配置一致
       # Valine 评论系统设置
       [params.page.comment.valine]
         enable = true
