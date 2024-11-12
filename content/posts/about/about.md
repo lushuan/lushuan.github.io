@@ -34,7 +34,7 @@ unrewarded genius is almost a proverb. Education will not; the world is full of 
 相关开发经验。
 
 - 个人信息：lushuan
-- 拿手菜：清蒸鲈鱼、西红柿炒蛋、炒花蛤、香辣小炒肉
+- 拿手菜：清蒸鲈鱼、徐州地锅鸡、炒花蛤、香辣小炒肉
 - 兴趣爱好：篮球、音乐、阅读、掼蛋、台球、旅游等
 - 邮箱：`lushuan2071@126.com`
 - 我的微信
