@@ -8,7 +8,7 @@ $ git init          # 初始化本地仓库
 ## Git 全局设置
 ```Bash
 git config --global user.name "lu.shua"
-git config --global user.email "lu.shuan@iwhalecloud.com"
+git config --global user.email "lu.shuan@lushuan.com"
 ```
 ## 修改和提交
 ```Bash
@@ -78,7 +78,7 @@ $ git push --tags           # 上传所有标签
 
 ## 创建一个新仓库
 ```Bash
-git clone git@gitlab.iwhalecloud.com:monitor/nms-arm.git
+git clone git@gitlab.lushuan.com:monitor/nms-arm.git
 cd nms-arm
 touch README.md
 git add README.md
@@ -90,7 +90,7 @@ git push -u origin master
 ```Bash
 cd existing_folder
 git init
-git remote add origin git@gitlab.iwhalecloud.com:monitor/nms-arm.git
+git remote add origin git@gitlab.lushuan.com:monitor/nms-arm.git
 git add .
 git commit -m "Initial commit"
 git push -u origin master

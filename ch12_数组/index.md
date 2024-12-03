@@ -37,7 +37,7 @@ docker 中的应用启动后再进行健康检查是一个启动脚本
 
 APP=("java" "health_check")
 java=(
-     "java --add-opens java.base/java.lang=ALL-UNNAMED -DAPP_NAME=zcmMonitor -XX:MaxRAMPercentage=70.0 -Dspring.config.location=/app/conf/monitorConfig.properties -Dlogging.config=/app/conf/logback.xml -cp /app/lib/zcm-monitor-9.1.3-sec-SNAPSHOT.jar:/app/lib/run/* com.ztesoft.zsmart.zcm.monitor.App" # start command
+     "java --add-opens java.base/java.lang=ALL-UNNAMED -DAPP_NAME=zcmMonitor -XX:MaxRAMPercentage=70.0 -Dspring.config.location=/app/conf/monitorConfig.properties -Dlogging.config=/app/conf/logback.xml -cp /app/lib/zcm-monitor-9.1.3-sec-SNAPSHOT.jar:/app/lib/run/* com.lushuan.zsmart.zcm.monitor.App" # start command
      "APP_NAME=zcmMonitor" # process key
      "echo OK"    # liveness check command
      "OK"         # liveness successful code

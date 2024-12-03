@@ -220,7 +220,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="cp"></span>
 </span></span><span class="line"><span class="cl"><span class="nv">APP</span><span class="o">=(</span><span class="s2">&#34;java&#34;</span> <span class="s2">&#34;health_check&#34;</span><span class="o">)</span>
 </span></span><span class="line"><span class="cl"><span class="nv">java</span><span class="o">=(</span>
-</span></span><span class="line"><span class="cl">     <span class="s2">&#34;java --add-opens java.base/java.lang=ALL-UNNAMED -DAPP_NAME=zcmMonitor -XX:MaxRAMPercentage=70.0 -Dspring.config.location=/app/conf/monitorConfig.properties -Dlogging.config=/app/conf/logback.xml -cp /app/lib/zcm-monitor-9.1.3-sec-SNAPSHOT.jar:/app/lib/run/* com.ztesoft.zsmart.zcm.monitor.App&#34;</span> <span class="c1"># start command</span>
+</span></span><span class="line"><span class="cl">     <span class="s2">&#34;java --add-opens java.base/java.lang=ALL-UNNAMED -DAPP_NAME=zcmMonitor -XX:MaxRAMPercentage=70.0 -Dspring.config.location=/app/conf/monitorConfig.properties -Dlogging.config=/app/conf/logback.xml -cp /app/lib/zcm-monitor-9.1.3-sec-SNAPSHOT.jar:/app/lib/run/* com.lushuan.zsmart.zcm.monitor.App&#34;</span> <span class="c1"># start command</span>
 </span></span><span class="line"><span class="cl">     <span class="s2">&#34;APP_NAME=zcmMonitor&#34;</span> <span class="c1"># process key</span>
 </span></span><span class="line"><span class="cl">     <span class="s2">&#34;echo OK&#34;</span>    <span class="c1"># liveness check command</span>
 </span></span><span class="line"><span class="cl">     <span class="s2">&#34;OK&#34;</span>         <span class="c1"># liveness successful code</span>
