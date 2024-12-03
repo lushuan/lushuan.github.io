@@ -1,23 +1,23 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title>Python - 标签 - Less is more</title>
-        <link>https://lushuan.gihub.io/tags/python/</link>
+        <link>http://localhost:1313/tags/python/</link>
         <description>Python - 标签 - Less is more</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
-            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Sun, 20 Mar 2022 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/tags/python/" rel="self" type="application/rss+xml" /><item>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Sun, 20 Mar 2022 12:06:37 &#43;0800</lastBuildDate><atom:link href="http://localhost:1313/tags/python/" rel="self" type="application/rss+xml" /><item>
     <title>Python3 快速上手指南</title>
-    <link>https://lushuan.gihub.io/python3-%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B%E6%8C%87%E5%8D%97/</link>
+    <link>http://localhost:1313/python3-%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B%E6%8C%87%E5%8D%97/</link>
     <pubDate>Sun, 20 Mar 2022 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>https://lushuan.gihub.io/python3-%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B%E6%8C%87%E5%8D%97/</guid>
+    <guid>http://localhost:1313/python3-%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B%E6%8C%87%E5%8D%97/</guid>
     <description><![CDATA[介绍 Python 简介 摘要 Python 是一个高层次的结合了解释性、编译性、互动性和面向对象的脚本语言。 Python 的设计具有很强的可读性，相比其他语言经常使用英文关键字，其]]></description>
 </item>
 <item>
     <title>Python 快速上手指南 项目目录</title>
-    <link>https://lushuan.gihub.io/python-%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B%E6%8C%87%E5%8D%97_%E9%A1%B9%E7%9B%AE%E7%9B%AE%E5%BD%95/</link>
+    <link>http://localhost:1313/python-%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B%E6%8C%87%E5%8D%97_%E9%A1%B9%E7%9B%AE%E7%9B%AE%E5%BD%95/</link>
     <pubDate>Fri, 18 Mar 2022 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>https://lushuan.gihub.io/python-%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B%E6%8C%87%E5%8D%97_%E9%A1%B9%E7%9B%AE%E7%9B%AE%E5%BD%95/</guid>
+    <guid>http://localhost:1313/python-%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B%E6%8C%87%E5%8D%97_%E9%A1%B9%E7%9B%AE%E7%9B%AE%E5%BD%95/</guid>
     <description><![CDATA[项目目录布局 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 project_name ├── docs │ ├── make.bat │ ├── Makefile │ └── source │ ├── conf.py │ └── index.rst ├── examples │ └─]]></description>
 </item>
 </channel>

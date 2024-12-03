@@ -1,15 +1,15 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title>MySQL - 分类 - Less is more</title>
-        <link>https://lushuan.gihub.io/categories/mysql/</link>
+        <link>http://localhost:1313/categories/mysql/</link>
         <description>MySQL - 分类 - Less is more</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
-            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Mon, 17 Aug 2020 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/categories/mysql/" rel="self" type="application/rss+xml" /><item>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Mon, 17 Aug 2020 12:06:37 &#43;0800</lastBuildDate><atom:link href="http://localhost:1313/categories/mysql/" rel="self" type="application/rss+xml" /><item>
     <title>MySQL 数据库备份和还原</title>
-    <link>https://lushuan.gihub.io/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E5%92%8C%E8%BF%98%E5%8E%9F/</link>
+    <link>http://localhost:1313/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E5%92%8C%E8%BF%98%E5%8E%9F/</link>
     <pubDate>Mon, 17 Aug 2020 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>https://lushuan.gihub.io/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E5%92%8C%E8%BF%98%E5%8E%9F/</guid>
+    <guid>http://localhost:1313/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E5%92%8C%E8%BF%98%E5%8E%9F/</guid>
     <description><![CDATA[背景 数据是企业生产的重中之重，保护数据安全，防止数据丢失很关键 使用 mysqldump 进行备份 备份的方案场景，列举部分场景 只备份某一个库，不要里面的表 备份所有]]></description>
 </item>
 </channel>
