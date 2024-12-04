@@ -11,7 +11,8 @@ categories: ["Helm"]
 tags: ["Helm"]
 ---
 ## 前言
-通过Helm部署应用，修改configmap后，Deployment 副本控制器不会自动生效，需要手动删除pod 重建一下才会生效，这里实践通过添加标签的方式在通过只修改configmap也能联动Deployment自动重建
+通过Helm部署应用，修改configmap后，Deployment 副本控制器不会自动生效，需要手动删除pod 重建一下才会生效，
+这里实践通过添加标签的方式在通过只修改configmap也能联动Deployment自动重建
 
 ## 安装应用
 ```shell
@@ -27,7 +28,6 @@ grafana	default  	4       	2024-07-21 15:28:58.208948145 +0800 CST	deployed	graf
 $ kubectl get pod
 NAME                       READY   STATUS    RESTARTS   AGE
 grafana-6cc56576dc-97bvw   1/1     Running   0          138m
-
 ```
 
 ## 验证
@@ -73,5 +73,3 @@ grafana-7b8869fd4f-6jrd5   0/1     Running   0          4s
 ```
 ## 总结
 Helm借助添加标签hash化，动态更新deployment
-
-
