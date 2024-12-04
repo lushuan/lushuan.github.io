@@ -1,31 +1,31 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title>Linux文本三剑客 - 标签 - Less is more</title>
-        <link>http://localhost:1313/tags/linux%E6%96%87%E6%9C%AC%E4%B8%89%E5%89%91%E5%AE%A2/</link>
+        <link>https://lushuan.gihub.io/tags/linux%E6%96%87%E6%9C%AC%E4%B8%89%E5%89%91%E5%AE%A2/</link>
         <description>Linux文本三剑客 - 标签 - Less is more</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
-            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Tue, 29 Jun 2021 12:06:37 &#43;0800</lastBuildDate><atom:link href="http://localhost:1313/tags/linux%E6%96%87%E6%9C%AC%E4%B8%89%E5%89%91%E5%AE%A2/" rel="self" type="application/rss+xml" /><item>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Tue, 29 Jun 2021 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/tags/linux%E6%96%87%E6%9C%AC%E4%B8%89%E5%89%91%E5%AE%A2/" rel="self" type="application/rss+xml" /><item>
     <title>文本三剑客之 awk</title>
-    <link>http://localhost:1313/awk/</link>
+    <link>https://lushuan.gihub.io/awk/</link>
     <pubDate>Tue, 29 Jun 2021 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>http://localhost:1313/awk/</guid>
+    <guid>https://lushuan.gihub.io/awk/</guid>
     <description><![CDATA[awk 是 Linux/Unix 系统中的一个强大的文本处理工具,主要用于处理文本文件和字符串。 特性 awk 的一些关键特性: 可以根据字段进行操作,如打印指定列、求列的总和等 支]]></description>
 </item>
 <item>
     <title>文本三剑客之 sed</title>
-    <link>http://localhost:1313/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86%E4%B8%89%E5%89%91%E5%AE%A2%E4%B9%8Bsed/</link>
+    <link>https://lushuan.gihub.io/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86%E4%B8%89%E5%89%91%E5%AE%A2%E4%B9%8Bsed/</link>
     <pubDate>Sat, 26 Jun 2021 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>http://localhost:1313/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86%E4%B8%89%E5%89%91%E5%AE%A2%E4%B9%8Bsed/</guid>
+    <guid>https://lushuan.gihub.io/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86%E4%B8%89%E5%89%91%E5%AE%A2%E4%B9%8Bsed/</guid>
     <description><![CDATA[文本处理三剑客之SED Stream EDitor, 流编辑器 sed是一种流编辑器，它一次处理一行内容。处理时，把当前处理的行存储在临时缓冲区中，称为&quot;模式空]]></description>
 </item>
 <item>
     <title>文本三剑客之 grep</title>
-    <link>http://localhost:1313/grep/</link>
+    <link>https://lushuan.gihub.io/grep/</link>
     <pubDate>Sun, 20 Jun 2021 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>http://localhost:1313/grep/</guid>
+    <guid>https://lushuan.gihub.io/grep/</guid>
     <description><![CDATA[为什么使用Linux grep命令? Grep是一个非常有用的命令行工具，可以用来在文件中查找指定的文本模式。通过使用grep命令，你可以快速定]]></description>
 </item>
 </channel>

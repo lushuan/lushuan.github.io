@@ -1,15 +1,15 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title>Learning Method - 分类 - Less is more</title>
-        <link>http://localhost:1313/categories/learning-method/</link>
+        <link>https://lushuan.gihub.io/categories/learning-method/</link>
         <description>Learning Method - 分类 - Less is more</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
-            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Fri, 19 Jun 2020 12:06:37 &#43;0800</lastBuildDate><atom:link href="http://localhost:1313/categories/learning-method/" rel="self" type="application/rss+xml" /><item>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Fri, 19 Jun 2020 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/categories/learning-method/" rel="self" type="application/rss+xml" /><item>
     <title>欲罢不能的学习方法策略</title>
-    <link>http://localhost:1313/%E6%AC%B2%E7%BD%A2%E4%B8%8D%E8%83%BD%E7%9A%84%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95%E7%AD%96%E7%95%A5/</link>
+    <link>https://lushuan.gihub.io/%E6%AC%B2%E7%BD%A2%E4%B8%8D%E8%83%BD%E7%9A%84%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95%E7%AD%96%E7%95%A5/</link>
     <pubDate>Fri, 19 Jun 2020 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>http://localhost:1313/%E6%AC%B2%E7%BD%A2%E4%B8%8D%E8%83%BD%E7%9A%84%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95%E7%AD%96%E7%95%A5/</guid>
+    <guid>https://lushuan.gihub.io/%E6%AC%B2%E7%BD%A2%E4%B8%8D%E8%83%BD%E7%9A%84%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95%E7%AD%96%E7%95%A5/</guid>
     <description><![CDATA[摘要 欲罢不能的学习需要一个良好的学习情绪和专注力。 下面主要是学习节奏的控制 改变学习心态，而不是在电脑旁坐了12小时，其实只是学了2个小时 1. 如]]></description>
 </item>
 </channel>

@@ -1,15 +1,15 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title>Kafka - 分类 - Less is more</title>
-        <link>http://localhost:1313/categories/kafka/</link>
+        <link>https://lushuan.gihub.io/categories/kafka/</link>
         <description>Kafka - 分类 - Less is more</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
-            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Wed, 19 May 2021 12:06:37 &#43;0800</lastBuildDate><atom:link href="http://localhost:1313/categories/kafka/" rel="self" type="application/rss+xml" /><item>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Wed, 19 May 2021 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/categories/kafka/" rel="self" type="application/rss+xml" /><item>
     <title>Apache kafka 介绍</title>
-    <link>http://localhost:1313/kafka%E4%BB%8B%E7%BB%8D/</link>
+    <link>https://lushuan.gihub.io/kafka%E4%BB%8B%E7%BB%8D/</link>
     <pubDate>Wed, 19 May 2021 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>http://localhost:1313/kafka%E4%BB%8B%E7%BB%8D/</guid>
+    <guid>https://lushuan.gihub.io/kafka%E4%BB%8B%E7%BB%8D/</guid>
     <description><![CDATA[kafka 简介 Kafka 被称为下一代分布式消息系统，是非营利性组织ASF(Apache Software Foundation，简称为ASF)基金会中的一个开源项目，比如HT]]></description>
 </item>
 </channel>
