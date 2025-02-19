@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>K3s 快速入门及安装部署 - Less is more</title><meta name="Description" content="晚来天欲雪,能饮一杯无?"><meta property="og:url" content="http://localhost:1313/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/">
+  <meta property="og:site_name" content="Less is more">
+  <meta property="og:title" content="K3s 快速入门及安装部署">
+  <meta property="og:description" content="背景 为物联网和边缘计算构建的经过认证的Kubernetes发行版，是Rancher旗下的产品 Great for: Edge IoT CI Development ARM Embedding k8s Situations where a PhD in k8s clusterology is infeasible 发展历程 微型">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-09-23T12:06:37+08:00">
+    <meta property="article:modified_time" content="2024-12-26T12:06:37+08:00">
+    <meta property="article:tag" content="K3s">
+    <meta property="og:image" content="http://localhost:1313/images/avatar.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/images/avatar.png">
+  <meta name="twitter:title" content="K3s 快速入门及安装部署">
+  <meta name="twitter:description" content="背景 为物联网和边缘计算构建的经过认证的Kubernetes发行版，是Rancher旗下的产品 Great for: Edge IoT CI Development ARM Embedding k8s Situations where a PhD in k8s clusterology is infeasible 发展历程 微型">
+      <meta name="twitter:site" content="@xxxx">
+<meta name="application-name" content="我的网站">
+<meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/images/avatar.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://localhost:1313/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/" /><link rel="prev" href="http://localhost:1313/rsync%E7%BB%93%E5%90%88inotify%E5%AE%9E%E7%8E%B0%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E5%AE%9E%E6%97%B6%E5%90%8C%E6%AD%A5/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "K3s 快速入门及安装部署",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost:1313\/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2\/"
+        },"genre": "posts","keywords": "K3s","wordcount":  4466 ,
+        "url": "http:\/\/localhost:1313\/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2\/","datePublished": "2024-09-23T12:06:37+08:00","dateModified": "2024-12-26T12:06:37+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "lushuan"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Less is more"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Less is more</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 归档 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/" title="About"> 关于 </a><a class="menu-item" href="/friends/" title="friends"> 友链 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Less is more"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Less is more</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">归档</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="About">关于</a><a class="menu-item" href="/friends/" title="friends">友链</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content always-active" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">K3s 快速入门及安装部署</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/k3s/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>K3s</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2024-09-23">2024-09-23</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 4466 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 9 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#背景">背景</a></li>
+    <li><a href="#发展历程">发展历程</a></li>
+    <li><a href="#基本架构">基本架构</a></li>
+    <li><a href="#安装部署">安装部署</a>
+      <ul>
+        <li><a href="#server-部署">server 部署</a></li>
+        <li><a href="#agent-部署">agent 部署</a></li>
+      </ul>
+    </li>
+    <li><a href="#k3s-各名字空间介绍">K3s 各名字空间介绍</a>
+      <ul>
+        <li><a href="#其他名字空间">其他名字空间</a></li>
+      </ul>
+    </li>
+    <li><a href="#生产环境参考">生产环境参考</a>
+      <ul>
+        <li><a href="#1-server">1. server</a></li>
+        <li><a href="#2-agent">2. agent</a></li>
+      </ul>
+    </li>
+    <li><a href="#用户案例">用户案例</a></li>
+    <li><a href="#qa">Q/A</a></li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="背景">背景</h2>
+<p>为物联网和边缘计算构建的经过认证的Kubernetes发行版，是Rancher旗下的产品</p>
+<p>Great for:</p>
+<ul>
+<li>Edge</li>
+<li>IoT</li>
+<li>CI</li>
+<li>Development</li>
+<li>ARM</li>
+<li>Embedding k8s</li>
+<li>Situations where a PhD in k8s clusterology is infeasible</li>
+</ul>
+<h2 id="发展历程">发展历程</h2>
+<p>微型kubernetes发行版</p>
+<ol>
+<li>CNCF认证的Kubernetes发行版</li>
+<li>50MB左右二进制包，500MB左右内存消耗</li>
+<li>单一进程包含Kubernetes master,Kubelet,和 containerd</li>
+<li>支持SQLite/Mysql/PostgreSQL/DQlite和etcd</li>
+<li>同时为x86 64,Arm64,和 Armv7 平台发布</li>
+</ol>
+<p>变更</p>
+<ol>
+<li>多合一：将基础服务合并到了单一的进程中，如api-server,controller manager、scheduler和cloud-controller-manager合到了单一的进程中,简化了运维，降低了复杂度</li>
+</ol>
+<h2 id="基本架构">基本架构</h2>
+<p>角色</p>
+<ul>
+<li>k3s server
+<ul>
+<li>api-server</li>
+<li>controller-manager</li>
+<li>scheduler</li>
+<li>etcd(option)</li>
+<li>containerd</li>
+<li>k3s-agent</li>
+</ul>
+</li>
+<li>k3s agent
+<ul>
+<li>k3s-agent</li>
+<li>containerd|docker(optional)</li>
+<li></li>
+</ul>
+</li>
+</ul>
+<p><figure><a class="lightgallery" href="/images/k3s/k3s-arch.png" title="k3s-arch" data-thumbnail="/images/k3s/k3s-arch.png" data-sub-html="<h2>K3s 架构</h2><p>k3s-arch</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/k3s/k3s-arch.png"
+            data-srcset="/images/k3s/k3s-arch.png, /images/k3s/k3s-arch.png 1.5x, /images/k3s/k3s-arch.png 2x"
+            data-sizes="auto"
+            alt="/images/k3s/k3s-arch.png" />
+    </a><figcaption class="image-caption">K3s 架构</figcaption>
+    </figure></p>
+<p>技术亮点</p>
+<ul>
+<li>单进程架构简化部署</li>
+<li>移除各种非必须代码，减小资源占用</li>
+<li>TLS证书管理</li>
+<li>内置Containerd</li>
+<li>内置自运行rootfs</li>
+<li>内置Helm Chart管理机制</li>
+<li>内置L4/L7 LB支持</li>
+</ul>
+<p>其它</p>
+<ul>
+<li>默认使用containerd</li>
+<li>默认命名空间
+<ul>
+<li>kube-system</li>
+<li>kube-public</li>
+<li>kube-node-release</li>
+</ul>
+</li>
+<li>k3s 资源文件目录：<code>/var/lib/rancher/k3s</code></li>
+</ul>
+<h2 id="安装部署">安装部署</h2>
+<h3 id="server-部署">server 部署</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ mkdir /root/k3s <span class="o">&amp;&amp;</span> <span class="nb">cd</span> /root/k3s
+</span></span><span class="line"><span class="cl"><span class="c1"># 1. k3s镜像文件,指定安装版本为 v1.24.9</span>
+</span></span><span class="line"><span class="cl">$ wget https://github.com/k3s-io/k3s/releases/download/v1.24.9-rc1%2Bk3s2/k3s-airgap-images-amd64.tar.gz
+</span></span><span class="line"><span class="cl">$ sudo mkdir -p /var/lib/rancher/k3s/agent/images/
+</span></span><span class="line"><span class="cl">$ sudo cp /root/k3s/k3s-airgap-images-amd64.tar /var/lib/rancher/k3s/agent/images/
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 2. k3s安装脚本</span>
+</span></span><span class="line"><span class="cl">$ wget https://rancher-mirror.rancher.cn/k3s/k3s-install.sh
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 3. k3s二进制文件</span>
+</span></span><span class="line"><span class="cl">$ wget https://github.com/k3s-io/k3s/releases/download/v1.24.9-rc1%2Bk3s2/k3s
+</span></span><span class="line"><span class="cl">$ sudo chmod a+x /root/k3s/k3s /root/k3s/k3s-install.sh
+</span></span><span class="line"><span class="cl">$ sudo cp /root/k3s/k3s /usr/local/bin/
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 4. 安装k3s</span>
+</span></span><span class="line"><span class="cl">$ <span class="nv">INSTALL_K3S_SKIP_DOWNLOAD</span><span class="o">=</span><span class="nb">true</span> /root/k3s/k3s-install.sh
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 5. 验证</span>
+</span></span><span class="line"><span class="cl">$ crictl images
+</span></span><span class="line"><span class="cl">IMAGE                                        TAG                    IMAGE ID            SIZE
+</span></span><span class="line"><span class="cl">docker.io/rancher/klipper-helm               v0.7.4-build20221121   6f2af12f2834b       252MB
+</span></span><span class="line"><span class="cl">docker.io/rancher/klipper-lb                 v0.4.0                 3449ea2a2bfa7       9.21MB
+</span></span><span class="line"><span class="cl">docker.io/rancher/local-path-provisioner     v0.0.23                9621e18c33880       37.7MB
+</span></span><span class="line"><span class="cl">docker.io/rancher/mirrored-coredns-coredns   1.9.4                  a81c2ec4e946d       49.8MB
+</span></span><span class="line"><span class="cl">docker.io/rancher/mirrored-library-busybox   1.34.1                 827365c7baf13       5.09MB
+</span></span><span class="line"><span class="cl">docker.io/rancher/mirrored-library-traefik   2.9.4                  288889429becf       136MB
+</span></span><span class="line"><span class="cl">docker.io/rancher/mirrored-metrics-server    v0.6.2                 25561daa66605       70.2MB
+</span></span><span class="line"><span class="cl">docker.io/rancher/mirrored-pause             3.6                    6270bb605e12e       686kB
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">$ kubectl get pod -A
+</span></span><span class="line"><span class="cl">NAMESPACE     NAME                                      READY   STATUS      RESTARTS   AGE
+</span></span><span class="line"><span class="cl">kube-system   local-path-provisioner-687d6d7765-h8xvr   1/1     Running     <span class="m">0</span>          2m25s
+</span></span><span class="line"><span class="cl">kube-system   coredns-7b5bbc6644-nbvnf                  1/1     Running     <span class="m">0</span>          2m25s
+</span></span><span class="line"><span class="cl">kube-system   helm-install-traefik-crd-zfzqv            0/1     Completed   <span class="m">0</span>          2m25s
+</span></span><span class="line"><span class="cl">kube-system   metrics-server-667586758d-5gvfd           1/1     Running     <span class="m">0</span>          2m25s
+</span></span><span class="line"><span class="cl">kube-system   svclb-traefik-07d6e08f-gbvwd              2/2     Running     <span class="m">0</span>          107s
+</span></span><span class="line"><span class="cl">kube-system   traefik-64b96ccbcd-tbcth                  1/1     Running     <span class="m">0</span>          107s
+</span></span><span class="line"><span class="cl">kube-system   helm-install-traefik-tvcc8                0/1     Completed   <span class="m">2</span>          2m25s
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># server 节点获取k3s token</span>
+</span></span><span class="line"><span class="cl">$ <span class="nv">mynodetoken</span><span class="o">=</span><span class="sb">`</span>awk -F <span class="s1">&#39;:&#39;</span> <span class="s1">&#39;{print $4}&#39;</span>  /var/lib/rancher/k3s/server/token<span class="sb">`</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="agent-部署">agent 部署</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># 1. 准备k3s 二进制</span>
+</span></span><span class="line"><span class="cl">$ mkdir /root/k3s <span class="o">&amp;&amp;</span> <span class="nb">cd</span> /root/k3s
+</span></span><span class="line"><span class="cl">$ wget https://github.com/k3s-io/k3s/releases/download/v1.24.9-rc1%2Bk3s2/k3s
+</span></span><span class="line"><span class="cl">$ wget https://rancher-mirror.rancher.cn/k3s/k3s-install.sh
+</span></span><span class="line"><span class="cl"><span class="c1"># 需保证各主机名称不一样进入 /etc/hostname 和 /etc/hosts 修改即可</span>
+</span></span><span class="line"><span class="cl">$  <span class="nv">INSTALL_K3S_SKIP_DOWNLOAD</span><span class="o">=</span><span class="nb">true</span> <span class="nv">INSTALL_K3S_VERSION</span><span class="o">=</span><span class="s2">&#34;v1.24.9-rc1+k3s2&#34;</span> <span class="nv">K3S_URL</span><span class="o">=</span>https://192.168.143.101:6443 <span class="nv">K3S_TOKEN</span><span class="o">=</span>7983aa3ee5b8a70afa61a79e2e6476d6 /root/k3s/k3s-install.sh
+</span></span><span class="line"><span class="cl"><span class="c1"># 在线安装</span>
+</span></span><span class="line"><span class="cl">$ curl -sfL https://rancher-mirror.rancher.cn/k3s/k3s-install.sh <span class="p">|</span> <span class="nv">INSTALL_K3S_MIRROR</span><span class="o">=</span>cn <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  <span class="nv">K3S_URL</span><span class="o">=</span>https://192.168.143.101:6443 <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  <span class="nv">K3S_TOKEN</span><span class="o">=</span>7983aa3ee5b8a70afa61a79e2e6476d6 <span class="nv">INSTALL_K3S_VERSION</span><span class="o">=</span><span class="s2">&#34;v1.24.9-rc1+k3s2&#34;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  sh -
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 2. 查看状态</span>
+</span></span><span class="line"><span class="cl">$ systemctl status k3s-agent
+</span></span><span class="line"><span class="cl">● k3s-agent.service - Lightweight Kubernetes
+</span></span><span class="line"><span class="cl">   Loaded: loaded <span class="o">(</span>/etc/systemd/system/k3s-agent.service<span class="p">;</span> enabled<span class="p">;</span> vendor preset: disabled<span class="o">)</span>
+</span></span><span class="line"><span class="cl">   Active: active <span class="o">(</span>running<span class="o">)</span> since Thu 2024-09-23 17:05:24 CST<span class="p">;</span> 8s ago
+</span></span><span class="line"><span class="cl">     Docs: https://k3s.io
+</span></span><span class="line"><span class="cl">  Process: <span class="m">4125</span> <span class="nv">ExecStartPre</span><span class="o">=</span>/sbin/modprobe overlay <span class="o">(</span><span class="nv">code</span><span class="o">=</span>exited, <span class="nv">status</span><span class="o">=</span>0/SUCCESS<span class="o">)</span>
+</span></span><span class="line"><span class="cl">  Process: <span class="m">4121</span> <span class="nv">ExecStartPre</span><span class="o">=</span>/sbin/modprobe br_netfilter <span class="o">(</span><span class="nv">code</span><span class="o">=</span>exited, <span class="nv">status</span><span class="o">=</span>0/SUCCESS<span class="o">)</span>
+</span></span><span class="line"><span class="cl">  Process: <span class="m">4116</span> <span class="nv">ExecStartPre</span><span class="o">=</span>/bin/sh -xc ! /usr/bin/systemctl is-enabled --quiet nm-cloud-setup.service 2&gt;/dev/null <span class="o">(</span><span class="nv">code</span><span class="o">=</span>exited, <span class="nv">status</span><span class="o">=</span>0/SUCCESS<span class="o">)</span>
+</span></span><span class="line"><span class="cl"> Main PID: <span class="m">4131</span> <span class="o">(</span>k3s-agent<span class="o">)</span>
+</span></span><span class="line"><span class="cl">    Tasks: <span class="m">24</span>
+</span></span><span class="line"><span class="cl">   Memory: 300.4M
+</span></span><span class="line"><span class="cl">   CGroup: /system.slice/k3s-agent.service
+</span></span><span class="line"><span class="cl">           ├─4131 /usr/local/bin/k3s agent
+</span></span><span class="line"><span class="cl">           └─4159 containerd 
+</span></span><span class="line"><span class="cl"><span class="c1"># 3. 切到server 节点</span>
+</span></span><span class="line"><span class="cl">$ kubectl get node
+</span></span><span class="line"><span class="cl">NAME     STATUS   ROLES                  AGE   VERSION
+</span></span><span class="line"><span class="cl">master   Ready    control-plane,master   25m   v1.24.9-rc1+k3s2
+</span></span><span class="line"><span class="cl">node1    Ready    &lt;none&gt;                 64s   v1.24.9-rc1+k3s2
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="k3s-各名字空间介绍">K3s 各名字空间介绍</h2>
+<p>在Kubernetes中，包括K3s，命名空间（Namespaces）提供了一种机制来划分集群资源。它们对于组织和隔离工作负载非常有用，特别是在多用户环境中。以下是K3s中常见的几个命名空间及其作用：</p>
+<ol>
+<li>
+<p><strong><code>default</code></strong>：</p>
+<ul>
+<li>这是Kubernetes集群中的默认命名空间。如果你没有特别指定一个命名空间，那么你的Pod、服务等资源将会被创建在这个命名空间中。</li>
+</ul>
+</li>
+<li>
+<p><strong><code>kube-system</code></strong>：</p>
+<ul>
+<li>该命名空间包含了由Kubernetes系统自身创建的所有组件，如核心DNS服务（CoreDNS）、各种控制器和服务代理（kube-proxy）。此外，如果使用了某些网络插件或存储插件，相关的Pod也会出现在这个命名空间中。</li>
+</ul>
+</li>
+<li>
+<p><strong><code>kube-public</code></strong>：</p>
+<ul>
+<li>这个命名空间是一个特殊的命名空间，旨在供所有用户（包括那些未认证的用户）读取。它通常用于放置所有人都可以访问的信息，例如集群引导令牌（bootstrap tokens）。在标准配置下，此命名空间内只有一个ConfigMap对象，名为<code>cluster-info</code>，它包含了关于API服务器的信息。</li>
+</ul>
+</li>
+<li>
+<p><strong><code>kube-node-lease</code></strong>：</p>
+<ul>
+<li>这个命名空间是从Kubernetes 1.16版本开始引入的，用来存放节点租约（Node Lease）对象。这些对象允许节点定期更新其活跃状态，从而优化了节点健康检查的过程，使得集群能够更快地检测到不健康的节点。</li>
+</ul>
+</li>
+<li>
+<p><strong>其他命名空间</strong>：</p>
+<ul>
+<li>用户可以根据需要创建更多的命名空间来组织不同的应用或者团队的工作负载。这有助于资源管理和配额控制，并且可以在不同项目之间提供一定程度的隔离。</li>
+</ul>
+</li>
+<li>
+<p><strong>特定于K3s的命名空间</strong>：</p>
+<ul>
+<li>在一些情况下，K3s可能会引入额外的命名空间以支持特定的功能或集成。例如，当启用某些附加组件时，可能会自动创建相应的命名空间来托管这些组件。</li>
+</ul>
+</li>
+</ol>
+<h3 id="其他名字空间">其他名字空间</h3>
+<ol>
+<li>catle-system<br>
+Rancher的&quot;catle-system&quot;命名空间通常用于存储Rancher控制平面组件的资源，如Webhook服务(rancher-webhookpod)和与安全相关的配置，比如TLS证书(cattle-webhook-tls)。这些组件是Rancher管理集群自动化部署和操作的核心部分。</li>
+</ol>
+<p>当你提到洲除1oca1集群catt1e-system命名空间中的特定Pod和TLS密钥时，这意味着你可能正在清理测试环境或者准备进行维护操作。以</p>
+<h2 id="生产环境参考">生产环境参考</h2>
+<ul>
+<li>k3s 版本v1.22</li>
+<li>数据库：etcd</li>
+<li>容器运行时：containerd v1.5.9-k3s1</li>
+</ul>
+<h3 id="1-server">1. server</h3>
+<ol>
+<li>服务状态</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ systemctl status k3s
+</span></span><span class="line"><span class="cl">● k3s.service - Lightweight Kubernetes
+</span></span><span class="line"><span class="cl">   Loaded: loaded <span class="o">(</span>/etc/systemd/system/k3s.service<span class="p">;</span> enabled<span class="p">;</span> vendor preset: disabled<span class="o">)</span>
+</span></span><span class="line"><span class="cl">   Active: active <span class="o">(</span>running<span class="o">)</span> since Mon 2024-05-13 23:00:30 CST<span class="p">;</span> <span class="m">8</span> months <span class="m">10</span> days ago
+</span></span><span class="line"><span class="cl">     Docs: https://k3s.io
+</span></span><span class="line"><span class="cl"> Main PID: <span class="m">25364</span> <span class="o">(</span>k3s-server<span class="o">)</span>
+</span></span><span class="line"><span class="cl">    Tasks: <span class="m">84</span>
+</span></span><span class="line"><span class="cl">   Memory: 938.8M
+</span></span><span class="line"><span class="cl">   CGroup: /system.slice/k3s.service
+</span></span><span class="line"><span class="cl">           ├─17092 /var/lib/rancher/k3s/data/8307e9b398a0ee686ec38e18339d1464f75158a8b948b059b564246f4af3a0a6/bin/containerd-shim-runc-v2 -namespace k8s.io -id f11d857c503976e830b667a4...
+</span></span><span class="line"><span class="cl">           ├─25364 /usr/local/bin/k3s server
+</span></span><span class="line"><span class="cl">           ├─25379 containerd 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">$ systemctl status etcd
+</span></span><span class="line"><span class="cl">● etcd.service - Etcd Server
+</span></span><span class="line"><span class="cl">   Loaded: loaded <span class="o">(</span>/usr/lib/systemd/system/etcd.service<span class="p">;</span> enabled<span class="p">;</span> vendor preset: disabled<span class="o">)</span>
+</span></span><span class="line"><span class="cl">   Active: active <span class="o">(</span>running<span class="o">)</span> since Fri 2022-05-20 09:50:06 CST<span class="p">;</span> <span class="m">2</span> years <span class="m">8</span> months ago
+</span></span><span class="line"><span class="cl"> Main PID: <span class="m">63172</span> <span class="o">(</span>etcd<span class="o">)</span>
+</span></span><span class="line"><span class="cl">    Tasks: <span class="m">11</span>
+</span></span><span class="line"><span class="cl">   Memory: 413.0M
+</span></span><span class="line"><span class="cl">   CGroup: /system.slice/etcd.service
+</span></span><span class="line"><span class="cl">           └─63172 /opt/etcd/etcd --config-file<span class="o">=</span>/data/etcd/2379/conf/etcd.conf
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="2">
+<li>版本</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ kubectl version
+</span></span><span class="line"><span class="cl">Client Version: version.Info<span class="o">{</span>Major:<span class="s2">&#34;1&#34;</span>, Minor:<span class="s2">&#34;22&#34;</span>, GitVersion:<span class="s2">&#34;v1.22.6+k3s1&#34;</span>, GitCommit:<span class="s2">&#34;3228d9cb9a4727d48f60de4f1ab472f7c50df904&#34;</span>, GitTreeState:<span class="s2">&#34;clean&#34;</span>, BuildDate:<span class="s2">&#34;2022-01-25T01:27:44Z&#34;</span>, GoVersion:<span class="s2">&#34;go1.16.10&#34;</span>, Compiler:<span class="s2">&#34;gc&#34;</span>, Platform:<span class="s2">&#34;linux/amd64&#34;</span><span class="o">}</span>
+</span></span><span class="line"><span class="cl">Server Version: version.Info<span class="o">{</span>Major:<span class="s2">&#34;1&#34;</span>, Minor:<span class="s2">&#34;22&#34;</span>, GitVersion:<span class="s2">&#34;v1.22.6+k3s1&#34;</span>, GitCommit:<span class="s2">&#34;3228d9cb9a4727d48f60de4f1ab472f7c50df904&#34;</span>, GitTreeState:<span class="s2">&#34;clean&#34;</span>, BuildDate:<span class="s2">&#34;2022-01-25T01:27:44Z&#34;</span>, GoVersion:<span class="s2">&#34;go1.16.10&#34;</span>, Compiler:<span class="s2">&#34;gc&#34;</span>, Platform:<span class="s2">&#34;linux/amd64&#34;</span><span class="o">}</span>
+</span></span><span class="line"><span class="cl">$ kubectl -n kube-system get all
+</span></span><span class="line"><span class="cl">NAME                                 READY   STATUS    RESTARTS   AGE
+</span></span><span class="line"><span class="cl">pod/coredns-96cc4f57d-7k4gr          1/1     Running   <span class="m">0</span>          2y247d
+</span></span><span class="line"><span class="cl">pod/metrics-server-ff9dbcb6c-vl8hl   1/1     Running   <span class="m">0</span>          2y200d
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">NAME                     TYPE        CLUSTER-IP     EXTERNAL-IP   PORT<span class="o">(</span>S<span class="o">)</span>                        AGE
+</span></span><span class="line"><span class="cl">service/kube-dns         ClusterIP   10.43.0.10     &lt;none&gt;        53/UDP,53/TCP,9153/TCP         2y248d
+</span></span><span class="line"><span class="cl">service/kubelet          ClusterIP   None           &lt;none&gt;        10250/TCP,10255/TCP,4194/TCP   2y247d
+</span></span><span class="line"><span class="cl">service/metrics-server   ClusterIP   10.43.99.234   &lt;none&gt;        443/TCP                        2y248d
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">NAME                             READY   UP-TO-DATE   AVAILABLE   AGE
+</span></span><span class="line"><span class="cl">deployment.apps/coredns          1/1     <span class="m">1</span>            <span class="m">1</span>           2y248d
+</span></span><span class="line"><span class="cl">deployment.apps/metrics-server   1/1     <span class="m">1</span>            <span class="m">1</span>           2y248d
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">NAME                                       DESIRED   CURRENT   READY   AGE
+</span></span><span class="line"><span class="cl">replicaset.apps/coredns-96cc4f57d          <span class="m">1</span>         <span class="m">1</span>         <span class="m">1</span>       2y248d
+</span></span><span class="line"><span class="cl">replicaset.apps/metrics-server-ff9dbcb6c   <span class="m">1</span>         <span class="m">1</span>         <span class="m">1</span>       2y248d
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="3">
+<li>容器运行时
+ctr 是 containerd 的客户端命令行工具</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ ctr --help
+</span></span><span class="line"><span class="cl">NAME:
+</span></span><span class="line"><span class="cl">   ctr - 
+</span></span><span class="line"><span class="cl">        __
+</span></span><span class="line"><span class="cl">  _____/ /______
+</span></span><span class="line"><span class="cl"> / ___/ __/ ___/
+</span></span><span class="line"><span class="cl">/ /__/ /_/ /
+</span></span><span class="line"><span class="cl"><span class="se">\_</span>__/<span class="se">\_</span>_/_/
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">containerd CLI
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">USAGE:
+</span></span><span class="line"><span class="cl">   ctr <span class="o">[</span>global options<span class="o">]</span> <span class="nb">command</span> <span class="o">[</span><span class="nb">command</span> options<span class="o">]</span> <span class="o">[</span>arguments...<span class="o">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">VERSION:
+</span></span><span class="line"><span class="cl">   v1.5.9-k3s1
+</span></span><span class="line"><span class="cl">$ ctr version
+</span></span><span class="line"><span class="cl">Client:
+</span></span><span class="line"><span class="cl">  Version:  v1.5.9-k3s1
+</span></span><span class="line"><span class="cl">  Revision: 
+</span></span><span class="line"><span class="cl">  Go version: go1.16.10
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Server:
+</span></span><span class="line"><span class="cl">  Version:  v1.5.9-k3s1
+</span></span><span class="line"><span class="cl">  Revision: 
+</span></span><span class="line"><span class="cl">  UUID: 521e28e5-d9b4-4ae9-9dfd-48f742329485
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="4">
+<li>相关镜像</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ ctr images list -q<span class="p">|</span>grep -v sha256<span class="p">|</span>grep -v fluent
+</span></span><span class="line"><span class="cl">docker.io/rancher/mirrored-coredns-coredns:1.8.6
+</span></span><span class="line"><span class="cl">docker.io/rancher/mirrored-metrics-server:v0.5.2
+</span></span><span class="line"><span class="cl">docker.io/rancher/mirrored-pause:3.6
+</span></span><span class="line"><span class="cl">docker.io/rancher/pause:3.1
+</span></span><span class="line"><span class="cl">docker.io/rancher/rancher-agent:v2.6.6
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>systemd 启动配置</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ cat /etc/systemd/system/k3s.service
+</span></span><span class="line"><span class="cl"><span class="o">[</span>Unit<span class="o">]</span>
+</span></span><span class="line"><span class="cl"><span class="nv">Description</span><span class="o">=</span>Lightweight Kubernetes
+</span></span><span class="line"><span class="cl"><span class="nv">Documentation</span><span class="o">=</span>https://k3s.io
+</span></span><span class="line"><span class="cl"><span class="nv">Wants</span><span class="o">=</span>network-online.target
+</span></span><span class="line"><span class="cl"><span class="nv">After</span><span class="o">=</span>network-online.target
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">[</span>Install<span class="o">]</span>
+</span></span><span class="line"><span class="cl"><span class="nv">WantedBy</span><span class="o">=</span>multi-user.target
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">[</span>Service<span class="o">]</span>
+</span></span><span class="line"><span class="cl"><span class="nv">Type</span><span class="o">=</span>notify
+</span></span><span class="line"><span class="cl"><span class="nv">EnvironmentFile</span><span class="o">=</span>-/etc/default/%N
+</span></span><span class="line"><span class="cl"><span class="nv">EnvironmentFile</span><span class="o">=</span>-/etc/sysconfig/%N
+</span></span><span class="line"><span class="cl"><span class="nv">EnvironmentFile</span><span class="o">=</span>-/etc/systemd/system/k3s.service.env
+</span></span><span class="line"><span class="cl"><span class="nv">KillMode</span><span class="o">=</span>process
+</span></span><span class="line"><span class="cl"><span class="nv">Delegate</span><span class="o">=</span>yes
+</span></span><span class="line"><span class="cl"><span class="c1"># Having non-zero Limit*s causes performance problems due to accounting overhead</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># in the kernel. We recommend using cgroups to do container-local accounting.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">LimitNOFILE</span><span class="o">=</span><span class="m">1048576</span>
+</span></span><span class="line"><span class="cl"><span class="nv">LimitNPROC</span><span class="o">=</span>infinity
+</span></span><span class="line"><span class="cl"><span class="nv">LimitCORE</span><span class="o">=</span>infinity
+</span></span><span class="line"><span class="cl"><span class="nv">TasksMax</span><span class="o">=</span>infinity
+</span></span><span class="line"><span class="cl"><span class="nv">TimeoutStartSec</span><span class="o">=</span><span class="m">0</span>
+</span></span><span class="line"><span class="cl"><span class="nv">Restart</span><span class="o">=</span>always
+</span></span><span class="line"><span class="cl"><span class="nv">RestartSec</span><span class="o">=</span>5s
+</span></span><span class="line"><span class="cl"><span class="nv">ExecStartPre</span><span class="o">=</span>/bin/sh -xc <span class="s1">&#39;! /usr/bin/systemctl is-enabled --quiet nm-cloud-setup.service&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">ExecStartPre</span><span class="o">=</span>-/sbin/modprobe br_netfilter
+</span></span><span class="line"><span class="cl"><span class="nv">ExecStartPre</span><span class="o">=</span>-/sbin/modprobe overlay
+</span></span><span class="line"><span class="cl"><span class="nv">ExecStart</span><span class="o">=</span>/usr/local/bin/k3s <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    server <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>        <span class="s1">&#39;--disable&#39;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>        <span class="s1">&#39;traefik&#39;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>        <span class="s1">&#39;--disable&#39;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>        <span class="s1">&#39;servicelb&#39;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>        <span class="s1">&#39;--disable&#39;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>        <span class="s1">&#39;local-storage&#39;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>        <span class="s1">&#39;--datastore-endpoint=http://192.168.47.24:2379,http://192.168.47.25:2379,http://192.168.47.26:2379&#39;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>        <span class="s1">&#39;--tls-san&#39;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>        <span class="s1">&#39;192.168.47.251&#39;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>        <span class="s1">&#39;--token&#39;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>        <span class="s1">&#39;secret&#39;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>        <span class="s1">&#39;--kubelet-arg=container-log-max-files=5&#39;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>        <span class="s1">&#39;--kubelet-arg=container-log-max-size=100Mi&#39;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>        <span class="s1">&#39;--kube-proxy-arg&#39;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>        <span class="s1">&#39;proxy-mode=ipvs&#39;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>        <span class="s1">&#39;--kubelet-arg&#39;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>        <span class="s1">&#39;eviction-hard=nodefs.available&lt;10%&#39;</span> <span class="se">\
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>这个 K3s 启动命令配置了多个参数来定制其行为，下面是对每个参数的解释：</p>
+<ul>
+<li>
+<p><code>server</code>：表示启动的是 K3s 的服务器（控制平面）组件。</p>
+</li>
+<li>
+<p><code>--disable traefik</code>：禁用内置的 Traefik Ingress Controller。K3s 默认安装 Traefik 作为集群入口控制器，但如果你已经有其他入口控制器或不需要它，可以使用此选项禁用。</p>
+</li>
+<li>
+<p><code>--disable servicelb</code>：禁用服务负载均衡器（Service Load Balancer）。在多节点集群中，K3s 可以为没有外部负载均衡器的服务创建一个简单的软件负载均衡器，但你可以选择禁用它。</p>
+</li>
+<li>
+<p><code>--disable local-storage</code>：禁用本地存储功能。K3s 提供了一个简易的本地存储插件，如果不需要此功能，可以通过该参数禁用。</p>
+</li>
+<li>
+<p><code>--datastore-endpoint=http://192.168.47.24:2379,http://192.168.47.25:2379,http://192.168.47.26:2379</code>：指定外部 etcd 集群的地址列表，用于替代默认的嵌入式数据库。这使得高可用性成为可能，并且可以将数据持久化存储在专门的 etcd 集群中。</p>
+</li>
+<li>
+<p><code>--tls-san 192.168.47.251</code>：为 TLS 证书添加额外的主题备用名称（Subject Alternative Name）。这对于确保 API 服务器能够正确地验证客户端请求非常重要，特别是在使用内部 IP 或者自定义域名时。</p>
+</li>
+<li>
+<p><code>--token secret</code>：设置用于加入新节点到集群的令牌。这个令牌是所有希望加入集群的节点都需要提供的共享密钥。</p>
+</li>
+<li>
+<p><code>--kubelet-arg=container-log-max-files=5</code> 和 <code>--kubelet-arg=container-log-max-size=100Mi</code>：这些参数传递给 kubelet，用来限制容器日志文件的数量和大小。在这个例子中，设置了每个容器最多保留5个日志文件，每个文件的最大大小为100MB。</p>
+</li>
+<li>
+<p><code>--kube-proxy-arg proxy-mode=ipvs</code>：将 kube-proxy 的代理模式设置为 IPVS 模式。IPVS 是一种更高效的网络负载均衡机制，适用于较大规模的集群。</p>
+</li>
+<li>
+<p><code>--kubelet-arg eviction-hard=nodefs.available&lt;10%</code>：传递给 kubelet 的参数，用来设置驱逐策略。这里配置的是当节点文件系统的可用空间低于10%时触发驱逐操作，以防止磁盘满导致的问题。</p>
+</li>
+</ul>
+<p>通过以上参数，你可以看到这个命令是用来配置一个高度定制化的 K3s 服务器实例，它与外部 etcd 集群集成，启用了特定的日志管理策略，并调整了某些组件的行为以适应特定的需求。</p>
+<ol start="5">
+<li>镜像仓库地址</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ <span class="nb">pwd</span>
+</span></span><span class="line"><span class="cl">/etc/rancher/k3s
+</span></span><span class="line"><span class="cl">$ cat registries.yaml 
+</span></span><span class="line"><span class="cl">mirrors:
+</span></span><span class="line"><span class="cl">  hub.xxx.yyyy.com:
+</span></span><span class="line"><span class="cl">    endpoint:
+</span></span><span class="line"><span class="cl">      - <span class="s2">&#34;https://hub.xxx.yyyy.com&#34;</span>
+</span></span><span class="line"><span class="cl">configs:
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;https://hub.xxx.yyyy.com&#34;</span>:
+</span></span><span class="line"><span class="cl">    auth:
+</span></span><span class="line"><span class="cl">      username: lushaun
+</span></span><span class="line"><span class="cl">      password: password
+</span></span><span class="line"><span class="cl">    tls:
+</span></span><span class="line"><span class="cl">      insecure_skip_verify: <span class="nb">true</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="6">
+<li>node 注册到server passwd
+Agent 将使用节点集群 Secret 以及随机生成的节点密码注册到 Server，密码存储在 /etc/rancher/node/password 中。Server 会将各个节点的密码存储为 Kubernetes Secret，后续的任何尝试都必须使用相同的密码</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ <span class="nb">pwd</span>
+</span></span><span class="line"><span class="cl">/etc/rancher/node
+</span></span><span class="line"><span class="cl">$ cat password 
+</span></span><span class="line"><span class="cl">a04fffdf1effc0e03f593a3xxxxxxxxx
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="7">
+<li>查看k3s 当前配置</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span><span class="lnt">80
+</span><span class="lnt">81
+</span><span class="lnt">82
+</span><span class="lnt">83
+</span><span class="lnt">84
+</span><span class="lnt">85
+</span><span class="lnt">86
+</span><span class="lnt">87
+</span><span class="lnt">88
+</span><span class="lnt">89
+</span><span class="lnt">90
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="o">$</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">k3s</span> <span class="n">check</span><span class="o">-</span><span class="n">config</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">Verifying</span> <span class="n">binaries</span> <span class="ow">in</span> <span class="o">/</span><span class="k">var</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">rancher</span><span class="o">/</span><span class="n">k3s</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="mf">8307e9</span><span class="n">b398a0ee686ec38e18339d1464f75158a8b948b059b564246f4af3a0a6</span><span class="o">/</span><span class="n">bin</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">sha256sum</span><span class="p">:</span> <span class="n">good</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">links</span><span class="p">:</span> <span class="n">good</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">System</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="o">/</span><span class="n">sbin</span> <span class="n">iptables</span> <span class="n">v1</span><span class="o">.</span><span class="mf">4.21</span><span class="p">:</span> <span class="n">older</span> <span class="n">than</span> <span class="n">v1</span><span class="o">.</span><span class="mi">8</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">swap</span><span class="p">:</span> <span class="n">disabled</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">routes</span><span class="p">:</span> <span class="n">default</span> <span class="n">CIDRs</span> <span class="mf">10.42</span><span class="o">.</span><span class="mf">0.0</span><span class="o">/</span><span class="mi">16</span> <span class="ow">or</span> <span class="mf">10.43</span><span class="o">.</span><span class="mf">0.0</span><span class="o">/</span><span class="mi">16</span> <span class="n">already</span> <span class="n">routed</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">Limits</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="o">/</span><span class="n">proc</span><span class="o">/</span><span class="n">sys</span><span class="o">/</span><span class="n">kernel</span><span class="o">/</span><span class="n">keys</span><span class="o">/</span><span class="n">root_maxkeys</span><span class="p">:</span> <span class="mi">1000000</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">modprobe</span><span class="p">:</span> <span class="n">FATAL</span><span class="p">:</span> <span class="n">Module</span> <span class="n">configs</span> <span class="ow">not</span> <span class="n">found</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">info</span><span class="p">:</span> <span class="n">reading</span> <span class="n">kernel</span> <span class="n">config</span> <span class="n">from</span> <span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">config</span><span class="o">-</span><span class="mf">3.10</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="mf">1062.</span><span class="n">el7</span><span class="o">.</span><span class="n">x86_64</span> <span class="o">...</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">Generally</span> <span class="n">Necessary</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">cgroup</span> <span class="n">hierarchy</span><span class="p">:</span> <span class="n">cgroups</span> <span class="n">V1</span> <span class="n">mounted</span><span class="p">,</span> <span class="n">cpuset</span><span class="o">|</span><span class="n">memory</span> <span class="n">controllers</span> <span class="n">status</span><span class="p">:</span> <span class="n">good</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_NAMESPACES</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_NET_NS</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_PID_NS</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_IPC_NS</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_UTS_NS</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_CGROUPS</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_CGROUP_CPUACCT</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_CGROUP_DEVICE</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_CGROUP_FREEZER</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_CGROUP_SCHED</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_CPUSETS</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_MEMCG</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_KEYS</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_VETH</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_BRIDGE</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_BRIDGE_NETFILTER</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_IP_NF_FILTER</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_IP_NF_TARGET_MASQUERADE</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_NETFILTER_XT_MATCH_ADDRTYPE</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_NETFILTER_XT_MATCH_CONNTRACK</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_NETFILTER_XT_MATCH_IPVS</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_IP_NF_NAT</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_NF_NAT</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_POSIX_MQUEUE</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_DEVPTS_MULTIPLE_INSTANCES</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">Optional</span> <span class="n">Features</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_USER_NS</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl">  <span class="p">(</span><span class="n">RHEL7</span><span class="o">/</span><span class="n">CentOS7</span><span class="p">:</span> <span class="n">User</span> <span class="n">namespaces</span> <span class="n">disabled</span><span class="p">;</span> <span class="n">add</span> <span class="s1">&#39;user_namespace.enable=1&#39;</span> <span class="n">to</span> <span class="n">boot</span> <span class="n">command</span> <span class="n">line</span><span class="p">)</span> <span class="p">(</span><span class="n">fail</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_SECCOMP</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_CGROUP_PIDS</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_MEMCG_KMEM</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_RESOURCE_COUNTERS</span><span class="p">:</span> <span class="n">missing</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_BLK_CGROUP</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_BLK_DEV_THROTTLING</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_CGROUP_PERF</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_CGROUP_HUGETLB</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_NET_CLS_CGROUP</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_NETPRIO_CGROUP</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_CFS_BANDWIDTH</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_FAIR_GROUP_SCHED</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_RT_GROUP_SCHED</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_IP_NF_TARGET_REDIRECT</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_IP_SET</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_IP_VS</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_IP_VS_NFCT</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_IP_VS_PROTO_TCP</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_IP_VS_PROTO_UDP</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_IP_VS_RR</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_EXT4_FS</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_EXT4_FS_POSIX_ACL</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_EXT4_FS_SECURITY</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">Network</span> <span class="n">Drivers</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">  <span class="o">-</span> <span class="s2">&#34;overlay&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="o">-</span> <span class="n">CONFIG_VXLAN</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">      <span class="n">Optional</span> <span class="p">(</span><span class="k">for</span> <span class="n">encrypted</span> <span class="n">networks</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="n">CONFIG_CRYPTO</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="n">CONFIG_CRYPTO_AEAD</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="n">CONFIG_CRYPTO_GCM</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="n">CONFIG_CRYPTO_SEQIV</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="n">CONFIG_CRYPTO_GHASH</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="n">CONFIG_XFRM</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="n">CONFIG_XFRM_USER</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="n">CONFIG_XFRM_ALGO</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="n">CONFIG_INET_ESP</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="n">CONFIG_INET_XFRM_MODE_TRANSPORT</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">Storage</span> <span class="n">Drivers</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">  <span class="o">-</span> <span class="s2">&#34;overlay&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="o">-</span> <span class="n">CONFIG_OVERLAY_FS</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">STATUS</span><span class="p">:</span> <span class="mi">1</span> <span class="p">(</span><span class="n">fail</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="2-agent">2. agent</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ systemctl status k3s-agent
+</span></span><span class="line"><span class="cl">● k3s-agent.service - Lightweight Kubernetes
+</span></span><span class="line"><span class="cl">   Loaded: loaded <span class="o">(</span>/etc/systemd/system/k3s-agent.service<span class="p">;</span> enabled<span class="p">;</span> vendor preset: disabled<span class="o">)</span>
+</span></span><span class="line"><span class="cl">   Active: active <span class="o">(</span>running<span class="o">)</span> since Mon 2024-05-13 23:03:57 CST<span class="p">;</span> <span class="m">8</span> months <span class="m">10</span> days ago
+</span></span><span class="line"><span class="cl">     Docs: https://k3s.io
+</span></span><span class="line"><span class="cl"> Main PID: <span class="m">68145</span> <span class="o">(</span>k3s-agent<span class="o">)</span>
+</span></span><span class="line"><span class="cl">    Tasks: <span class="m">120</span>
+</span></span><span class="line"><span class="cl">   Memory: 1.2G
+</span></span><span class="line"><span class="cl">   CGroup: /system.slice/k3s-agent.service
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>k3s-agent.service 配置文件信息</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># cat /etc/systemd/system/k3s-agent.service</span>
+</span></span><span class="line"><span class="cl"><span class="o">[</span>Unit<span class="o">]</span>
+</span></span><span class="line"><span class="cl"><span class="nv">Description</span><span class="o">=</span>Lightweight Kubernetes
+</span></span><span class="line"><span class="cl"><span class="nv">Documentation</span><span class="o">=</span>https://k3s.io
+</span></span><span class="line"><span class="cl"><span class="nv">Wants</span><span class="o">=</span>network-online.target
+</span></span><span class="line"><span class="cl"><span class="nv">After</span><span class="o">=</span>network-online.target
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">[</span>Install<span class="o">]</span>
+</span></span><span class="line"><span class="cl"><span class="nv">WantedBy</span><span class="o">=</span>multi-user.target
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">[</span>Service<span class="o">]</span>
+</span></span><span class="line"><span class="cl"><span class="nv">Type</span><span class="o">=</span><span class="nb">exec</span>
+</span></span><span class="line"><span class="cl"><span class="nv">EnvironmentFile</span><span class="o">=</span>-/etc/default/%N
+</span></span><span class="line"><span class="cl"><span class="nv">EnvironmentFile</span><span class="o">=</span>-/etc/sysconfig/%N
+</span></span><span class="line"><span class="cl"><span class="nv">EnvironmentFile</span><span class="o">=</span>-/etc/systemd/system/k3s-agent.service.env
+</span></span><span class="line"><span class="cl"><span class="nv">KillMode</span><span class="o">=</span>process
+</span></span><span class="line"><span class="cl"><span class="nv">Delegate</span><span class="o">=</span>yes
+</span></span><span class="line"><span class="cl"><span class="c1"># Having non-zero Limit*s causes performance problems due to accounting overhead</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># in the kernel. We recommend using cgroups to do container-local accounting.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">LimitNOFILE</span><span class="o">=</span><span class="m">1048576</span>
+</span></span><span class="line"><span class="cl"><span class="nv">LimitNPROC</span><span class="o">=</span>infinity
+</span></span><span class="line"><span class="cl"><span class="nv">LimitCORE</span><span class="o">=</span>infinity
+</span></span><span class="line"><span class="cl"><span class="nv">TasksMax</span><span class="o">=</span>infinity
+</span></span><span class="line"><span class="cl"><span class="nv">TimeoutStartSec</span><span class="o">=</span><span class="m">0</span>
+</span></span><span class="line"><span class="cl"><span class="nv">Restart</span><span class="o">=</span>always
+</span></span><span class="line"><span class="cl"><span class="nv">RestartSec</span><span class="o">=</span>5s
+</span></span><span class="line"><span class="cl"><span class="nv">ExecStartPre</span><span class="o">=</span>/bin/sh -xc <span class="s1">&#39;! /usr/bin/systemctl is-enabled --quiet nm-cloud-setup.service&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">ExecStartPre</span><span class="o">=</span>-/sbin/modprobe br_netfilter
+</span></span><span class="line"><span class="cl"><span class="nv">ExecStartPre</span><span class="o">=</span>-/sbin/modprobe overlay
+</span></span><span class="line"><span class="cl"><span class="nv">ExecStart</span><span class="o">=</span>/usr/local/bin/k3s <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    agent <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>        <span class="s1">&#39;--kubelet-arg&#39;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>        <span class="s1">&#39;container-log-max-files=5&#39;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>        <span class="s1">&#39;--kubelet-arg&#39;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>        <span class="s1">&#39;container-log-max-size=100Mi&#39;</span> <span class="se">\
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="用户案例">用户案例</h2>
+<p>选择K3s的原因</p>
+<ol>
+<li>k3s与Kubernetes使用习惯完全一致:上手无代价</li>
+<li>与其他同类产品比，无功能绑定</li>
+<li>兼容Arm设备</li>
+<li>通过导入Rancher进行统一纳管</li>
+<li>无厂商锁定，无需绑定硬件</li>
+<li>100% 开源，合作方式灵活</li>
+<li>出错重启就可以了，不像k8s 出错重启也不一定能解决，哈哈</li>
+</ol>
+<h2 id="qa">Q/A</h2>
+<ol>
+<li>使用k8s 替换k3s 有什么问题？
+如果只是普通的使用一些workload 是没有什么问题的，如果workload 中的一些应用使用了一些诸如自定义的cloud provider 是不适配的，一般应用于iot之类的场景</li>
+</ol>
+<h2 id="参考">参考</h2>
+<ol>
+<li><a href="https://k3s.io/" target="_blank" rel="noopener noreffer ">k3s官网</a></li>
+<li><a href="https://www.rancher.cn/products" target="_blank" rel="noopener noreffer ">Rancher Product</a></li>
+<li><a href="https://docs.k3s.io/zh/architecture" target="_blank" rel="noopener noreffer ">K3s Document</a></li>
+<li><a href="https://kubernetes.io/docs/home/" target="_blank" rel="noopener noreffer ">Kubernetes Document</a></li>
+<li><a href="https://github.com/k3s-io/k3s/" target="_blank" rel="noopener noreffer ">K3s Github</a></li>
+<li><a href="https://www.bilibili.com/video/BV1g7411G7By/?spm_id_from=333.337.search-card.all.click&amp;vd_source=7e8c74e6ef5f4645e4247ef4120b7971" target="_blank" rel="noopener noreffer ">从0到1基础入门 全面了解k3s</a></li>
+<li><a href="https://mp.weixin.qq.com/s/pfUM6tr2HDeFyJExFVAc4Q" target="_blank" rel="noopener noreffer ">一文搞定全场景K3s离线安装</a></li>
+<li><a href="https://blog.csdn.net/weixin_45056021/article/details/142848836" target="_blank" rel="noopener noreffer ">k3s安装指定版本以及离线安装（docker)</a></li>
+<li><a href="https://blog.csdn.net/weixin_40274679/article/details/130155847" target="_blank" rel="noopener noreffer ">11-K3S 安装-仪表盘及卸载K3s</a></li>
+</ol>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2024-12-26</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://localhost:1313/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/" data-title="K3s 快速入门及安装部署" data-via="xxxx" data-hashtags="K3s"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/" data-hashtag="K3s"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="http://localhost:1313/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/" data-title="K3s 快速入门及安装部署"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://localhost:1313/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/" data-title="K3s 快速入门及安装部署"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/" data-title="K3s 快速入门及安装部署"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/k3s/">K3s</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/rsync%E7%BB%93%E5%90%88inotify%E5%AE%9E%E7%8E%B0%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E5%AE%9E%E6%97%B6%E5%90%8C%E6%AD%A5/" class="prev" rel="prev" title="rsync结合inotify实现静态资源实时同步"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>rsync结合inotify实现静态资源实时同步</a></div>
+</div>
+
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">我是有底线的</div><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.126.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2025</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">lushuan</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/lightgallery/css/lightgallery-bundle.min.css"><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/lightgallery/lightgallery.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/zoom/lg-zoom.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"lightgallery":true,"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

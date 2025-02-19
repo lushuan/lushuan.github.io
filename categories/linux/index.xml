@@ -1,87 +1,87 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title>Linux - 分类 - Less is more</title>
-        <link>https://lushuan.gihub.io/categories/linux/</link>
+        <link>http://localhost:1313/categories/linux/</link>
         <description>Linux - 分类 - Less is more</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
-            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Fri, 15 Sep 2023 09:44:54 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/categories/linux/" rel="self" type="application/rss+xml" /><item>
-    <title>linux</title>
-    <link>https://lushuan.gihub.io/second/</link>
-    <pubDate>Fri, 15 Sep 2023 09:44:54 &#43;0800</pubDate>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Mon, 26 Aug 2024 12:06:37 &#43;0800</lastBuildDate><atom:link href="http://localhost:1313/categories/linux/" rel="self" type="application/rss+xml" /><item>
+    <title>rsync结合inotify实现静态资源实时同步</title>
+    <link>http://localhost:1313/rsync%E7%BB%93%E5%90%88inotify%E5%AE%9E%E7%8E%B0%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E5%AE%9E%E6%97%B6%E5%90%8C%E6%AD%A5/</link>
+    <pubDate>Mon, 26 Aug 2024 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>https://lushuan.gihub.io/second/</guid>
-    <description><![CDATA[second linux]]></description>
+    <guid>http://localhost:1313/rsync%E7%BB%93%E5%90%88inotify%E5%AE%9E%E7%8E%B0%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E5%AE%9E%E6%97%B6%E5%90%8C%E6%AD%A5/</guid>
+    <description><![CDATA[rsync(remote synchronize)是一个远程数据同步工具，可通过 LAN/WAN 快速同步多台主机之间的文件，也可以使用 rsync 同步本地硬盘中的不同目录。rsync 是用于]]></description>
 </item>
 <item>
     <title>Linux 系统性能问题定位</title>
-    <link>https://lushuan.gihub.io/linux%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/</link>
+    <link>http://localhost:1313/linux%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/</link>
     <pubDate>Wed, 29 Jun 2022 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>https://lushuan.gihub.io/linux%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/</guid>
+    <guid>http://localhost:1313/linux%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/</guid>
     <description><![CDATA[监控系统资源和进程工具 top 命令 快捷键及使用场景 1：显示每个 CPU 核心的详细信息。当你需要查看系统中每个 CPU 核心的负载和使用情况时，可以按下 1 键。 E：]]></description>
 </item>
 <item>
     <title>Linux 网络排障</title>
-    <link>https://lushuan.gihub.io/linux%E7%BD%91%E7%BB%9C%E6%8E%92%E9%9A%9C/</link>
+    <link>http://localhost:1313/linux%E7%BD%91%E7%BB%9C%E6%8E%92%E9%9A%9C/</link>
     <pubDate>Tue, 29 Mar 2022 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>https://lushuan.gihub.io/linux%E7%BD%91%E7%BB%9C%E6%8E%92%E9%9A%9C/</guid>
+    <guid>http://localhost:1313/linux%E7%BD%91%E7%BB%9C%E6%8E%92%E9%9A%9C/</guid>
     <description><![CDATA[netstat netstat是一个常用的命令行网络工具，用于显示与网络连接、路由表和网络接口相关的信息。以下是一些常用的netstat命令： netstat -tunl]]></description>
 </item>
 <item>
     <title>文本三剑客之 awk</title>
-    <link>https://lushuan.gihub.io/awk/</link>
+    <link>http://localhost:1313/awk/</link>
     <pubDate>Tue, 29 Jun 2021 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>https://lushuan.gihub.io/awk/</guid>
+    <guid>http://localhost:1313/awk/</guid>
     <description><![CDATA[awk 是 Linux/Unix 系统中的一个强大的文本处理工具,主要用于处理文本文件和字符串。 特性 awk 的一些关键特性: 可以根据字段进行操作,如打印指定列、求列的总和等 支]]></description>
 </item>
 <item>
     <title>文本三剑客之 sed</title>
-    <link>https://lushuan.gihub.io/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86%E4%B8%89%E5%89%91%E5%AE%A2%E4%B9%8Bsed/</link>
+    <link>http://localhost:1313/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86%E4%B8%89%E5%89%91%E5%AE%A2%E4%B9%8Bsed/</link>
     <pubDate>Sat, 26 Jun 2021 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>https://lushuan.gihub.io/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86%E4%B8%89%E5%89%91%E5%AE%A2%E4%B9%8Bsed/</guid>
+    <guid>http://localhost:1313/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86%E4%B8%89%E5%89%91%E5%AE%A2%E4%B9%8Bsed/</guid>
     <description><![CDATA[文本处理三剑客之SED Stream EDitor, 流编辑器 sed是一种流编辑器，它一次处理一行内容。处理时，把当前处理的行存储在临时缓冲区中，称为&quot;模式空]]></description>
 </item>
 <item>
     <title>文本三剑客之 grep</title>
-    <link>https://lushuan.gihub.io/grep/</link>
+    <link>http://localhost:1313/grep/</link>
     <pubDate>Sun, 20 Jun 2021 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>https://lushuan.gihub.io/grep/</guid>
+    <guid>http://localhost:1313/grep/</guid>
     <description><![CDATA[为什么使用Linux grep命令? Grep是一个非常有用的命令行工具，可以用来在文件中查找指定的文本模式。通过使用grep命令，你可以快速定]]></description>
 </item>
 <item>
     <title>fdisk 磁盘管理详解</title>
-    <link>https://lushuan.gihub.io/fdisk%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86%E8%AF%A6%E8%A7%A3/</link>
+    <link>http://localhost:1313/fdisk%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86%E8%AF%A6%E8%A7%A3/</link>
     <pubDate>Thu, 29 Apr 2021 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>https://lushuan.gihub.io/fdisk%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86%E8%AF%A6%E8%A7%A3/</guid>
+    <guid>http://localhost:1313/fdisk%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86%E8%AF%A6%E8%A7%A3/</guid>
     <description><![CDATA[打算给一台服务器做逻辑卷分区，发现磁盘未做分区，且磁盘空间余量较大，本篇记录一下 fdisk 磁盘分区划分的过程 fdisk 事情的起因 通过pvcreate 创建逻辑]]></description>
 </item>
 <item>
     <title>lvm 逻辑卷组管理</title>
-    <link>https://lushuan.gihub.io/lvm%E9%80%BB%E8%BE%91%E5%8D%B7%E7%BB%84%E7%AE%A1%E7%90%86/</link>
+    <link>http://localhost:1313/lvm%E9%80%BB%E8%BE%91%E5%8D%B7%E7%BB%84%E7%AE%A1%E7%90%86/</link>
     <pubDate>Thu, 18 Mar 2021 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>https://lushuan.gihub.io/lvm%E9%80%BB%E8%BE%91%E5%8D%B7%E7%BB%84%E7%AE%A1%E7%90%86/</guid>
+    <guid>http://localhost:1313/lvm%E9%80%BB%E8%BE%91%E5%8D%B7%E7%BB%84%E7%AE%A1%E7%90%86/</guid>
     <description><![CDATA[背景 部署 k8s 时需要对磁盘进行分区划分，正常是集成是直接给创建好的，现场在沟通过程中只提供了一块磁盘。 本篇文章记录一下磁盘分区划分的原理和步骤，]]></description>
 </item>
 <item>
     <title>xargs原理及使用</title>
-    <link>https://lushuan.gihub.io/xargs%E5%8E%9F%E7%90%86%E5%8F%8A%E4%BD%BF%E7%94%A8/</link>
+    <link>http://localhost:1313/xargs%E5%8E%9F%E7%90%86%E5%8F%8A%E4%BD%BF%E7%94%A8/</link>
     <pubDate>Sun, 28 Feb 2021 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>https://lushuan.gihub.io/xargs%E5%8E%9F%E7%90%86%E5%8F%8A%E4%BD%BF%E7%94%A8/</guid>
+    <guid>http://localhost:1313/xargs%E5%8E%9F%E7%90%86%E5%8F%8A%E4%BD%BF%E7%94%A8/</guid>
     <description><![CDATA[简介 之所以能用到这个命令，是由于很多 linux 命令不支持用管道传递参数，xargs 可以理解为参数转换器，例如 1 2 3 4 #错误指令 find /sbin -perm +700 | ls -l #正确指]]></description>
 </item>
 <item>
     <title>Linux 时间校正</title>
-    <link>https://lushuan.gihub.io/linux%E6%97%B6%E9%97%B4%E6%A0%A1%E6%AD%A3/</link>
+    <link>http://localhost:1313/linux%E6%97%B6%E9%97%B4%E6%A0%A1%E6%AD%A3/</link>
     <pubDate>Sat, 29 Jun 2019 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>https://lushuan.gihub.io/linux%E6%97%B6%E9%97%B4%E6%A0%A1%E6%AD%A3/</guid>
+    <guid>http://localhost:1313/linux%E6%97%B6%E9%97%B4%E6%A0%A1%E6%AD%A3/</guid>
     <description><![CDATA[Linux服务器运行久时，系统时间就会存在一定的误差，一般情况下可以使用date命令进行时间设置，但在做数据库集群分片等操作时对多台机器的时]]></description>
 </item>
 </channel>

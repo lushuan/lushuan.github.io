@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>rsync结合inotify实现静态资源实时同步 - Less is more</title><meta name="Description" content="晚来天欲雪,能饮一杯无?"><meta property="og:url" content="http://localhost:1313/rsync%E7%BB%93%E5%90%88inotify%E5%AE%9E%E7%8E%B0%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E5%AE%9E%E6%97%B6%E5%90%8C%E6%AD%A5/">
+  <meta property="og:site_name" content="Less is more">
+  <meta property="og:title" content="rsync结合inotify实现静态资源实时同步">
+  <meta property="og:description" content="rsync(remote synchronize)是一个远程数据同步工具，可通过 LAN/WAN 快速同步多台主机之间的文件，也可以使用 rsync 同步本地硬盘中的不同目录。rsync 是用于">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-08-26T12:06:37+08:00">
+    <meta property="article:modified_time" content="2024-08-26T12:06:37+08:00">
+    <meta property="article:tag" content="Rsync">
+    <meta property="og:image" content="http://localhost:1313/images/avatar.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/images/avatar.png">
+  <meta name="twitter:title" content="rsync结合inotify实现静态资源实时同步">
+  <meta name="twitter:description" content="rsync(remote synchronize)是一个远程数据同步工具，可通过 LAN/WAN 快速同步多台主机之间的文件，也可以使用 rsync 同步本地硬盘中的不同目录。rsync 是用于">
+      <meta name="twitter:site" content="@xxxx">
+<meta name="application-name" content="我的网站">
+<meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/images/avatar.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://localhost:1313/rsync%E7%BB%93%E5%90%88inotify%E5%AE%9E%E7%8E%B0%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E5%AE%9E%E6%97%B6%E5%90%8C%E6%AD%A5/" /><link rel="prev" href="http://localhost:1313/helm%E4%BF%AE%E6%94%B9configmap%E5%90%8E%E5%BA%94%E7%94%A8%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF%E7%94%9F%E6%95%88/" /><link rel="next" href="http://localhost:1313/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "rsync结合inotify实现静态资源实时同步",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost:1313\/rsync%E7%BB%93%E5%90%88inotify%E5%AE%9E%E7%8E%B0%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E5%AE%9E%E6%97%B6%E5%90%8C%E6%AD%A5\/"
+        },"genre": "posts","keywords": "rsync","wordcount":  2394 ,
+        "url": "http:\/\/localhost:1313\/rsync%E7%BB%93%E5%90%88inotify%E5%AE%9E%E7%8E%B0%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E5%AE%9E%E6%97%B6%E5%90%8C%E6%AD%A5\/","datePublished": "2024-08-26T12:06:37+08:00","dateModified": "2024-08-26T12:06:37+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "lushuan"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Less is more"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Less is more</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 归档 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/" title="About"> 关于 </a><a class="menu-item" href="/friends/" title="friends"> 友链 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Less is more"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Less is more</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">归档</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="About">关于</a><a class="menu-item" href="/friends/" title="friends">友链</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content always-active" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">rsync结合inotify实现静态资源实时同步</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/linux/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Linux</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2024-08-26">2024-08-26</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 2394 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 5 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#安装">安装</a></li>
+    <li><a href="#rsyncd-增加安全认证及免密登录">rsyncd 增加安全认证及免密登录</a></li>
+    <li><a href="#rsync-推送方案">rsync 推送方案</a>
+      <ul>
+        <li><a href="#实时推送源服务器和目标服务器配置">实时推送源服务器和目标服务器配置</a></li>
+      </ul>
+    </li>
+    <li><a href="#inotify">inotify</a>
+      <ul>
+        <li><a href="#inotify-介绍">inotify 介绍</a></li>
+        <li><a href="#安装-1">安装</a></li>
+      </ul>
+    </li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p>rsync(remote synchronize)是一个远程数据同步工具，可通过 LAN/WAN 快速同步多台主机之间的文件，也可以使用 rsync 同步本地硬盘中的不同目录。rsync 是用于替代rcp的一个工具，rsync 使用所谓的 rsync算法 进行数据同步，这种算法只传送两个文件的不同部分，而不是每次都整份传送，因此速度相当快。</p>
+<p>rsync 基于inotify开发,inotify 主要的功能是监测目标目录是否有变化。rsync 用作同步，inotify 用作监测，两者结合使用实现静态资源方案同步的实现。</p>
+<p>Rsync有三种模式</p>
+<ul>
+<li>本地模式(类似于cp命令)</li>
+<li>远程模式(类似于scp命令)</li>
+<li>守护进程(socket进程：是rsync的重要功能)</li>
+</ul>
+<h2 id="安装">安装</h2>
+<ul>
+<li>测试机器节点<code>192.168.143.101</code>作为源主机 和 <code>192.168.143.102</code>作为目标主机</li>
+<li>rsync 结合inotify 监控源主机的指定目录实时推送到目标主机的指定目录下，实现静态资源的实时同步</li>
+</ul>
+<p>安装配置(Red Hat)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ yum install rsync -y
+</span></span><span class="line"><span class="cl"><span class="c1"># 修改配置文件</span>
+</span></span><span class="line"><span class="cl">$ vim /etc/rsyncd.conf
+</span></span><span class="line"><span class="cl">···
+</span></span><span class="line"><span class="cl"> <span class="o">[</span>ftp<span class="o">]</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">path</span> <span class="o">=</span> /data/rsync_test
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 启动并设置开机自启</span>
+</span></span><span class="line"><span class="cl">$ systemctl <span class="nb">enable</span> rsyncd --now
+</span></span><span class="line"><span class="cl"><span class="c1"># or</span>
+</span></span><span class="line"><span class="cl">$ rsync --daemon
+</span></span><span class="line"><span class="cl"><span class="c1"># 查看目标主机同步源主机指定目录下的文件</span>
+</span></span><span class="line"><span class="cl">$ rsync --list-only 192.168.143.101::ftp
+</span></span><span class="line"><span class="cl">drwxr-xr-x             <span class="m">19</span> 2025/02/10 10:20:40 .
+</span></span><span class="line"><span class="cl">-rw-r--r--              <span class="m">0</span> 2025/02/10 10:20:40 1.txt
+</span></span><span class="line"><span class="cl"><span class="c1"># 执行同步命令</span>
+</span></span><span class="line"><span class="cl">$ rsync -avz 192.168.143.101::ftp/ /data/rsync_test/
+</span></span><span class="line"><span class="cl">receiving incremental file list
+</span></span><span class="line"><span class="cl">./
+</span></span><span class="line"><span class="cl">1.txt
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>注意，传输的双方都必须安装 rsync。</p>
+<h2 id="rsyncd-增加安全认证及免密登录">rsyncd 增加安全认证及免密登录</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="nb">echo</span> <span class="s2">&#34;lushuan:111&#34;</span> &gt;&gt; /etc/rsyncd.pwd
+</span></span><span class="line"><span class="cl">chmod <span class="m">600</span> /etc/rsyncd.pwd
+</span></span><span class="line"><span class="cl">vim /etc/rsyncd.conf
+</span></span><span class="line"><span class="cl">...
+</span></span><span class="line"><span class="cl">auth <span class="nv">users</span> <span class="o">=</span> lushuan
+</span></span><span class="line"><span class="cl">secrets <span class="nv">file</span><span class="o">=</span>/etc/rsyncd.pwd
+</span></span><span class="line"><span class="cl"> <span class="o">[</span>ftp<span class="o">]</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">path</span> <span class="o">=</span> /data/rsync_test
+</span></span><span class="line"><span class="cl">$ rsync --list-only lushuan@192.168.143.101::ftp
+</span></span><span class="line"><span class="cl">Password: <span class="o">(</span>111<span class="o">)</span>
+</span></span><span class="line"><span class="cl">drwxr-xr-x             <span class="m">19</span> 2025/02/10 10:20:40 .
+</span></span><span class="line"><span class="cl">-rw-r--r--              <span class="m">0</span> 2025/02/10 10:20:40 1.txt
+</span></span><span class="line"><span class="cl"><span class="c1"># 目标主机免交互输入密码方式同步文件</span>
+</span></span><span class="line"><span class="cl">$ <span class="nb">echo</span> <span class="s2">&#34;111&#34;</span> &gt;&gt; /etc/rsyncd.pwd.client
+</span></span><span class="line"><span class="cl">$ chmod <span class="m">600</span> /etc/rsyncd.pwd.client
+</span></span><span class="line"><span class="cl">$ rsync --list-only --password-file<span class="o">=</span>/etc/rsyncd.pwd.client lushuan@192.168.143.101::ftp
+</span></span><span class="line"><span class="cl">drwxr-xr-x             <span class="m">19</span> 2025/02/10 10:20:40 .
+</span></span><span class="line"><span class="cl">-rw-r--r--              <span class="m">0</span> 2025/02/10 10:20:40 1.txt
+</span></span><span class="line"><span class="cl"><span class="c1"># 执行增量同步操作到目标主机的目标目录 /data/rsync_test</span>
+</span></span><span class="line"><span class="cl">$ rsync -avz --password-file<span class="o">=</span>/etc/rsyncd.pwd.client lushuan@192.168.143.101::ftp /data/rsync_test
+</span></span><span class="line"><span class="cl"><span class="c1"># 目标主机操作，源主机有文件删除时执行同步操作 --delete</span>
+</span></span><span class="line"><span class="cl">$ rsync -avz --delete --password-file<span class="o">=</span>/etc/rsyncd.pwd.client lushuan@192.168.143.101::ftp /data/rsync_test
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>rsync 常用选项</strong></p>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-a, --archive</code></td>
+<td>归档模式，表示以递归方式传输文件，并保持所有文件属性（相当于 <code>-rlptgoD</code> 的组合）。</td>
+</tr>
+<tr>
+<td><code>-r, --recursive</code></td>
+<td>对子目录以递归模式处理，同步目录时包括子目录及其中的文件。</td>
+</tr>
+<tr>
+<td><code>-v, --verbose</code></td>
+<td>详细模式输出，显示更多的关于传输过程的信息。</td>
+</tr>
+<tr>
+<td><code>-z, --compress</code></td>
+<td>在传输过程中压缩文件数据。</td>
+</tr>
+<tr>
+<td><code>-P</code></td>
+<td>相当于 <code>--partial --progress</code>，显示传输进度并保留部分传输的文件（如果传输中断）。</td>
+</tr>
+<tr>
+<td><code>-u, --update</code></td>
+<td>只更新目标端较旧的文件或不存在的文件，跳过比源文件新的目标文件。</td>
+</tr>
+<tr>
+<td><code>-l, --links</code></td>
+<td>保留符号链接，将源目录中的符号链接作为链接直接复制而不是它们指向的实际文件。</td>
+</tr>
+<tr>
+<td><code>-p, --perms</code></td>
+<td>保留文件权限。</td>
+</tr>
+<tr>
+<td><code>-t, --times</code></td>
+<td>保留修改时间。</td>
+</tr>
+<tr>
+<td><code>-g, --group</code></td>
+<td>保留文件所属组信息。</td>
+</tr>
+<tr>
+<td><code>-o, --owner</code></td>
+<td>保留文件所有者信息（仅适用于超级用户）。</td>
+</tr>
+<tr>
+<td><code>-D</code></td>
+<td>相当于 <code>--devices --specials</code>，保留设备文件和特殊文件。</td>
+</tr>
+<tr>
+<td><code>--delete</code></td>
+<td>删除目标位置上存在但在源位置不存在的文件，使目标位置的内容完全与源位置一致。</td>
+</tr>
+<tr>
+<td><code>--exclude=PATTERN</code></td>
+<td>指定排除规则，不传输匹配该模式的文件或目录。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="rsync-推送方案">rsync 推送方案</h2>
+<ul>
+<li>近时推送(目标主机定时轮询拉取源主机，会有一定的网络资源的浪费)</li>
+<li>实时推送</li>
+</ul>
+<h3 id="实时推送源服务器和目标服务器配置">实时推送源服务器和目标服务器配置</h3>
+<p>源主机<code>192.168.143.101</code>和目标主机<code>192.168.143.102</code> rsyncd 配置修改</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># 1. 192.168.143.102 目标主机配置</span>
+</span></span><span class="line"><span class="cl">$ <span class="nb">echo</span> <span class="s2">&#34;lushuan:111&#34;</span> &gt;&gt; /etc/rsyncd.pwd
+</span></span><span class="line"><span class="cl">$ chmod <span class="m">600</span> /etc/rsyncd.pwd
+</span></span><span class="line"><span class="cl">$ vim /etc/rsyncd.conf
+</span></span><span class="line"><span class="cl">...
+</span></span><span class="line"><span class="cl"><span class="nv">uid</span> <span class="o">=</span> root <span class="c1"># 创建/data/rsync_test目录的用户拥有的权限</span>
+</span></span><span class="line"><span class="cl"><span class="nv">gid</span> <span class="o">=</span> root <span class="c1"># 创建/data/rsync_test目录的用户拥有的权限</span>
+</span></span><span class="line"><span class="cl">auth <span class="nv">users</span> <span class="o">=</span> lushuan
+</span></span><span class="line"><span class="cl">secrets <span class="nv">file</span><span class="o">=</span>/etc/rsyncd.pwd
+</span></span><span class="line"><span class="cl"><span class="nb">read</span> <span class="nv">only</span> <span class="o">=</span>  no
+</span></span><span class="line"><span class="cl"> <span class="o">[</span>ftp<span class="o">]</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">path</span> <span class="o">=</span> /data/rsync_test
+</span></span><span class="line"><span class="cl"><span class="c1"># 重启服务</span>
+</span></span><span class="line"><span class="cl">$ systemctl restart rsyncd
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 2.192.168.143.101 源主机配置</span>
+</span></span><span class="line"><span class="cl">$ <span class="nb">echo</span> <span class="s2">&#34;111&#34;</span> &gt;&gt; /etc/rsyncd.pwd.client
+</span></span><span class="line"><span class="cl">$ chmod <span class="m">600</span> /etc/rsyncd.pwd.client
+</span></span><span class="line"><span class="cl">$ rsync --list-only --password-file<span class="o">=</span>/etc/rsyncd.pwd.client lushuan@192.168.143.102::ftp
+</span></span><span class="line"><span class="cl"><span class="c1"># 重启服务</span>
+</span></span><span class="line"><span class="cl">$ systemctl restart rsyncd
+</span></span><span class="line"><span class="cl"><span class="c1"># 实时推送(手动)</span>
+</span></span><span class="line"><span class="cl">$ rsync -avz --delete --password-file<span class="o">=</span>/etc/rsyncd.pwd.client /data/rsync_test/ lushuan@192.168.143.102::ftp 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="inotify">inotify</h2>
+<h3 id="inotify-介绍">inotify 介绍</h3>
+<p><code>inotify</code> 是一种用于 Linux 系统的文件系统事件监控机制，它允许应用程序监听文件或目录的变化。通过 <code>inotify</code>，程序可以接收到诸如文件被读取、写入、创建、删除、权限更改等操作的通知。这使得它非常适合需要实时响应文件系统变化的应用场景，比如自动同步文件、日志监控或者作为某些开发工具（如热重载功能）的基础。</p>
+<p>以下是 <code>inotify</code> 的一些关键特性：</p>
+<ol>
+<li><strong>高效性</strong>：与之前的方案（例如 dnotify）相比，<code>inotify</code> 使用了更高效的机制来跟踪文件系统事件，减少了资源消耗。</li>
+<li><strong>灵活性</strong>：可以监视单个文件或整个目录树，并且可以选择感兴趣的事件类型。</li>
+<li><strong>非递归监控</strong>：默认情况下，对目录的监控不是递归的；如果要监控子目录，则需要为每个子目录单独设置监控，或者使用第三方工具来实现递归监控。</li>
+<li><strong>丰富的事件类型</strong>：支持多种类型的事件，包括但不限于访问文件（access）、修改文件（modify）、文件属性或内容的改变（attrib）、打开文件（open）、关闭文件（close）、移动（move）、创建（create）、删除（delete）等。</li>
+</ol>
+<p>在实际应用中，可以通过编程接口（如 C 语言提供的 API 或者各种脚本语言的扩展库）直接使用 <code>inotify</code>，也可以利用一些基于 <code>inotify</code> 开发的工具，如 <code>inotify-tools</code>，它提供了命令行工具 <code>inotifywait</code> 和 <code>inotifywatch</code> 来简化监控任务。</p>
+<p>由于其强大的功能和灵活性，<code>inotify</code> 已经成为现代 Linux 系统上监控文件系统活动的标准方式之一。不过需要注意的是，<code>inotify</code> 主要适用于 Linux 系统，在其他类 Unix 系统上可能不直接可用。</p>
+<h3 id="安装-1">安装</h3>
+<p>推送端<code>192.168.143.101</code>安装<code>inotify</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># 依赖</span>
+</span></span><span class="line"><span class="cl">yum install -y automake
+</span></span><span class="line"><span class="cl"><span class="c1"># 安装</span>
+</span></span><span class="line"><span class="cl">yum install -y inotify-tools
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>源主机监控目录</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">inotifywait -m -r  --timefmt <span class="s1">&#39;%Y-%m-%d %H:%M:%S&#39;</span> --format <span class="s1">&#39;%T %w%f %e&#39;</span> -e close_write,modify,delete,create,attrib,move /data/rsync_test/
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>简单的自动化脚本</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="cp">#!/bin/bash
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="nv">SOURCE</span><span class="o">=</span><span class="s2">&#34;/data/rsync_test/&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">DEST_USER</span><span class="o">=</span><span class="s2">&#34;lushuan&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">DEST_HOST</span><span class="o">=</span><span class="s2">&#34;192.168.143.102&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">DEST_DIR</span><span class="o">=</span><span class="s2">&#34;ftp&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 如果没有设置加密认证可以移除掉</span>
+</span></span><span class="line"><span class="cl"><span class="nv">PASSWORD_FILE</span><span class="o">=</span><span class="s2">&#34;/etc/rsyncd.pwd.client&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">inotifywait -m -r  --timefmt <span class="s1">&#39;%Y-%m-%d %H:%M:%S&#39;</span> -e close_write,modify,delete,create,attrib,move --format <span class="s1">&#39;%w%f&#39;</span> <span class="si">${</span><span class="nv">SOURCE</span><span class="si">}</span> <span class="p">|</span> <span class="k">while</span> <span class="nb">read</span> NEWFILE
+</span></span><span class="line"><span class="cl"><span class="k">do</span>
+</span></span><span class="line"><span class="cl">    rsync -avz --delete --password-file<span class="o">=</span><span class="si">${</span><span class="nv">PASSWORD_FILE</span><span class="si">}</span> <span class="si">${</span><span class="nv">SOURCE</span><span class="si">}</span> <span class="si">${</span><span class="nv">DEST_USER</span><span class="si">}</span>@<span class="si">${</span><span class="nv">DEST_HOST</span><span class="si">}</span>::<span class="si">${</span><span class="nv">DEST_DIR</span><span class="si">}</span>
+</span></span><span class="line"><span class="cl"><span class="k">done</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>inotifywait</code> 常用参数及其含义</p>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-m, --monitor</code></td>
+<td>持续监控而不退出，即使在首次事件发生后也继续监听。</td>
+</tr>
+<tr>
+<td><code>-r, --recursive</code></td>
+<td>递归监听所有子目录中的事件。</td>
+</tr>
+<tr>
+<td><code>-e, --event</code></td>
+<td>明确指定要监听的事件类型，如 <code>access</code>, <code>modify</code>, <code>attrib</code>, <code>move</code>, <code>create</code>, <code>delete</code>, <code>close_write</code> 等。可以同时指定多个事件，使用逗号分隔。</td>
+</tr>
+<tr>
+<td><code>--timefmt</code></td>
+<td>当与 <code>--format</code> 一起使用时，设置时间输出格式，例如 <code>'%Y-%m-%d %H:%M:%S'</code>。</td>
+</tr>
+<tr>
+<td><code>--format</code></td>
+<td>定制输出信息的格式，如 <code>'[%T] %w %f %#Xe'</code>，其中 <code>%T</code> 表示时间，<code>%w</code> 监听的目录，<code>%f</code> 发生事件的文件名，<code>%#Xe</code> 表示事件列表。</td>
+</tr>
+<tr>
+<td><code>-q, --quiet</code></td>
+<td>减少或消除非错误消息的输出，用于减少命令行输出的信息量。</td>
+</tr>
+<tr>
+<td><code>-d, --daemon</code></td>
+<td>以守护进程模式运行，通常配合 <code>--outfile</code> 使用来指定日志文件。</td>
+</tr>
+<tr>
+<td><code>--outfile</code></td>
+<td>指定输出重定向到的文件路径，常与 <code>-d</code> 选项一起使用。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="参考">参考</h2>
+<ol>
+<li><a href="https://rsync.samba.org/" target="_blank" rel="noopener noreffer ">rsync官网</a></li>
+<li><a href="https://www.ruanyifeng.com/blog/2020/08/rsync.html" target="_blank" rel="noopener noreffer ">rsync 用法教程</a></li>
+</ol>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2024-08-26</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://localhost:1313/rsync%E7%BB%93%E5%90%88inotify%E5%AE%9E%E7%8E%B0%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E5%AE%9E%E6%97%B6%E5%90%8C%E6%AD%A5/" data-title="rsync结合inotify实现静态资源实时同步" data-via="xxxx" data-hashtags="rsync"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/rsync%E7%BB%93%E5%90%88inotify%E5%AE%9E%E7%8E%B0%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E5%AE%9E%E6%97%B6%E5%90%8C%E6%AD%A5/" data-hashtag="rsync"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="http://localhost:1313/rsync%E7%BB%93%E5%90%88inotify%E5%AE%9E%E7%8E%B0%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E5%AE%9E%E6%97%B6%E5%90%8C%E6%AD%A5/" data-title="rsync结合inotify实现静态资源实时同步"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://localhost:1313/rsync%E7%BB%93%E5%90%88inotify%E5%AE%9E%E7%8E%B0%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E5%AE%9E%E6%97%B6%E5%90%8C%E6%AD%A5/" data-title="rsync结合inotify实现静态资源实时同步"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/rsync%E7%BB%93%E5%90%88inotify%E5%AE%9E%E7%8E%B0%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E5%AE%9E%E6%97%B6%E5%90%8C%E6%AD%A5/" data-title="rsync结合inotify实现静态资源实时同步"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/rsync/">Rsync</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/helm%E4%BF%AE%E6%94%B9configmap%E5%90%8E%E5%BA%94%E7%94%A8%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF%E7%94%9F%E6%95%88/" class="prev" rel="prev" title="Helm修改configmap后应用自动重启生效"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Helm修改configmap后应用自动重启生效</a>
+            <a href="/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/" class="next" rel="next" title="K3s 快速入门及安装部署">K3s 快速入门及安装部署<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">我是有底线的</div><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.126.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2025</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">lushuan</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/lightgallery/css/lightgallery-bundle.min.css"><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/lightgallery/lightgallery.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/zoom/lg-zoom.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"lightgallery":true,"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

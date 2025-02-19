@@ -1,0 +1,16 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Rsync - 标签 - Less is more</title>
+        <link>http://localhost:1313/tags/rsync/</link>
+        <description>Rsync - 标签 - Less is more</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Mon, 26 Aug 2024 12:06:37 &#43;0800</lastBuildDate><atom:link href="http://localhost:1313/tags/rsync/" rel="self" type="application/rss+xml" /><item>
+    <title>rsync结合inotify实现静态资源实时同步</title>
+    <link>http://localhost:1313/rsync%E7%BB%93%E5%90%88inotify%E5%AE%9E%E7%8E%B0%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E5%AE%9E%E6%97%B6%E5%90%8C%E6%AD%A5/</link>
+    <pubDate>Mon, 26 Aug 2024 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/rsync%E7%BB%93%E5%90%88inotify%E5%AE%9E%E7%8E%B0%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E5%AE%9E%E6%97%B6%E5%90%8C%E6%AD%A5/</guid>
+    <description><![CDATA[rsync(remote synchronize)是一个远程数据同步工具，可通过 LAN/WAN 快速同步多台主机之间的文件，也可以使用 rsync 同步本地硬盘中的不同目录。rsync 是用于]]></description>
+</item>
+</channel>
+</rss>

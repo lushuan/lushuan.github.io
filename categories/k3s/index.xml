@@ -1,0 +1,16 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>K3s - 分类 - Less is more</title>
+        <link>http://localhost:1313/categories/k3s/</link>
+        <description>K3s - 分类 - Less is more</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Mon, 23 Sep 2024 12:06:37 &#43;0800</lastBuildDate><atom:link href="http://localhost:1313/categories/k3s/" rel="self" type="application/rss+xml" /><item>
+    <title>K3s 快速入门及安装部署</title>
+    <link>http://localhost:1313/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/</link>
+    <pubDate>Mon, 23 Sep 2024 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>http://localhost:1313/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/</guid>
+    <description><![CDATA[背景 为物联网和边缘计算构建的经过认证的Kubernetes发行版，是Rancher旗下的产品 Great for: Edge IoT CI Development ARM Embedding k8s Situations where a PhD in k8s clusterology is infeasible 发展历程 微型]]></description>
+</item>
+</channel>
+</rss>
