@@ -279,14 +279,14 @@ Nginx一个非常重要的特性就是拥有丰富的模块，有核心的模块
 Nginx模块主要可以分为以下几类：
 
 核心模块：
-1.HTTP 模块：用来发布http web服务网站的模块。
-2.event模块：用来处理nginx 访问请求，并进行回复。
+1. HTTP 模块：用来发布http web服务网站的模块。
+2. event模块：用来处理nginx 访问请求，并进行回复。
 
 基本模块：
-HTTP Access模块: 用来进行虚拟主机发布访问模块，起到记录访问日志。
-HTTP FastCGI模块：用于和PHP程序进行交互的模块，负责将来访问nginx 的PHP请求转发到后端的PHP上。
-HTTP Proxy模块：配置反向代理转发的模块，负责向后端传递参数。
-HTTP Rewrite模块：支持Rewrite 规则重写，支持域名跳转。
+- HTTP Access模块: 用来进行虚拟主机发布访问模块，起到记录访问日志。
+- HTTP FastCGI模块：用于和PHP程序进行交互的模块，负责将来访问nginx 的PHP请求转发到后端的PHP上。
+- HTTP Proxy模块：配置反向代理转发的模块，负责向后端传递参数。
+- HTTP Rewrite模块：支持Rewrite 规则重写，支持域名跳转。
 
 Nginx 模块中的内聚和抽象
 

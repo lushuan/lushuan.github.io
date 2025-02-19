@@ -16,17 +16,23 @@ Nginx (engine x) 是一个高性能的HTTP和反向代理web服务器。
 Nginx是由伊戈尔·赛索耶夫为俄罗斯访问量第二的Rambler.ru站点（俄文：Рамблер）开发的.
 第一个公开版本0.1.0发布于2004年10月4日。
 
+### 四个发行版本
+1. 开源版：https://nginx.org/
+2. 商业版：https://nginx.com/ f5
+3. Openresty: https://openresty.org/cn/
+4. Tengine: https://tengine.taobao.org/
+
 ### 为什么选择Nginx?
 互联网公司大都选择 Nginx
-1.Nginx 技术成熟，具备的功能是企业最常使用而且最需要的
-2.适合当前主流架构趋势, 微服务、云架构、中间层
-3.统一技术栈, 降低维护成本, 降低技术更新成本。
-### Nginx 重要性
-1.开源,可以从官网直接获取源代码
-2.高性能,Nginx性能非常残暴,支持海量并发
-3.高可靠,服务稳定,占用内存底
-4.模块化,Nginx具有丰富的模块可以按需使用，并且有开发能力的技术人员还可以二次开发
-5.支持热更新配置文件，一般情况下修改配置文件可以平滑生效，不用重新启动服务
+1. Nginx 技术成熟，具备的功能是企业最常使用而且最需要的  
+2. 适合当前主流架构趋势, 微服务、云架构、中间层  
+3. 统一技术栈, 降低维护成本, 降低技术更新成本。  
+### Nginx 特点
+1. 开源,可以从官网直接获取源代码
+2. 高并发：高性能,Nginx性能非常残暴,支持海量并发，顶住10万以上连接是没有问题的
+3. 低内存消耗：在高性能的同时，保持很低的内存消耗；
+4. 模块化：Nginx具有丰富的模块可以按需使用，并且有开发能力的技术人员还可以二次开发
+5. 热启动：例如当修改配置文件后，不需要停止与启动就可以让配置生效
 
 ### Nginx 应用场景
 
@@ -45,6 +51,7 @@ Nginx是由伊戈尔·赛索耶夫为俄罗斯访问量第二的Rambler.ru站点
 ```
 # 备份
 mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
+
 # 下载yum 源
 wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
 # 清除yum缓存
@@ -63,6 +70,8 @@ yum install openssl-devel pcre-devel epel-release -y
 3. 安装nginx 服务
 ```
 yum install nginx -y
+# or 添加 Nginx 源
+rpm -Uvh http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm
 ```
 4. 启动服务并配置开机自启动
 ```
