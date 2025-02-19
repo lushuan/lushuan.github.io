@@ -131,7 +131,7 @@ defaultContentLanguage = "zh-cn"
   # 网站标题, 用于 Open Graph 和 Twitter Cards
   title = "我的网站"
   # 网站描述, 用于 RSS, SEO, Open Graph 和 Twitter Cards
-  description = "知识有两种，一种是你知道的，一种是你知道在哪里能找到的！ --塞缪尔·约翰逊"
+  description = "晚来天欲雪,能饮一杯无?"
   # 网站图片, 用于 Open Graph 和 Twitter Cards
   images = ["/images/avatar.png"]
 
@@ -245,7 +245,7 @@ defaultContentLanguage = "zh-cn"
       #  主页显示的网站标题 (支持 HTML 格式)
       title = ""
       # 主页显示的网站副标题 (允许 HTML 格式)
-      subtitle = "知识有两种，一种是你知道的，一种是你知道在哪里能找到的！ --塞缪尔·约翰逊"
+      subtitle = "晚来天欲雪,能饮一杯无?"
       #imageWidth= 350  # 设置图像尺寸
       #imageHeight= 350 # 设置图像尺寸
       # 是否为副标题显示打字机动画
