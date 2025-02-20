@@ -60,6 +60,29 @@ git branch -M main
 git remote add origin https://github.com/lushuan/lushuan.github.io.git
 git push -u origin main
 ```
+### 新开一个项目
+1. 删除public 目录
+2. 重建一个public，指定远程的url
+3. 重新生成public 目录下的内容文件
+4. 开启代理，可以访问github.com
+```shell
+# 初始化
+git init
+git remote add origin https://github.com/lushuan/lushuan.github.io.git
+git remote set-url origin https://github.com/lushuan/lushuan.github.io.git
+
+
+# 将缓冲区大小设置为500MB。
+git config --global http.postBuffer 524288000
+# 提交文件超时时间
+git config --global http.lowSpeedLimit 0
+git config --global http.lowSpeedTime 999999
+
+git remote -v
+git pull 
+git pull origin main
+
+```
 ## 扩展
 
 ### 内容文章的元信息
