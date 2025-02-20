@@ -1,28 +1,22 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="noodp" />
-        <title>Nginx 架构原理 - Less is more</title><meta name="Description" content="晚来天欲雪,能饮一杯无?"><meta property="og:url" content="http://localhost:1313/nginx-%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/">
-  <meta property="og:site_name" content="Less is more">
-  <meta property="og:title" content="Nginx 架构原理">
-  <meta property="og:description" content="基本原理 Nginx 进程模型 Nginx启动后以daemon形式在后台运行，后台进程包含一个master进程和多个worker进程。如下图所示： 1 2 3 4">
-  <meta property="og:locale" content="zh_CN">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2022-01-16T12:06:37+08:00">
-    <meta property="article:modified_time" content="2022-06-29T12:06:37+08:00">
-    <meta property="article:tag" content="Nginx">
-    <meta property="og:image" content="http://localhost:1313/images/avatar.png">
+        <title>Nginx 架构原理 - Less is more</title><meta name="Description" content="晚来天欲雪,能饮一杯无?"><meta property="og:title" content="Nginx 架构原理" />
+<meta property="og:description" content="基本原理 Nginx 进程模型 Nginx启动后以daemon形式在后台运行，后台进程包含一个master进程和多个worker进程。如下图所示： 1 2 3 4" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://lushuan.gihub.io/nginx-%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/" /><meta property="og:image" content="https://lushuan.gihub.io/images/avatar.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-01-16T12:06:37+08:00" />
+<meta property="article:modified_time" content="2022-06-29T12:06:37+08:00" /><meta property="og:site_name" content="我的网站" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://lushuan.gihub.io/images/avatar.png"/>
 
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="http://localhost:1313/images/avatar.png">
-  <meta name="twitter:title" content="Nginx 架构原理">
-  <meta name="twitter:description" content="基本原理 Nginx 进程模型 Nginx启动后以daemon形式在后台运行，后台进程包含一个master进程和多个worker进程。如下图所示： 1 2 3 4">
-      <meta name="twitter:site" content="@xxxx">
+<meta name="twitter:title" content="Nginx 架构原理"/>
+<meta name="twitter:description" content="基本原理 Nginx 进程模型 Nginx启动后以daemon形式在后台运行，后台进程包含一个master进程和多个worker进程。如下图所示： 1 2 3 4"/>
 <meta name="application-name" content="我的网站">
-<meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/images/avatar.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://localhost:1313/nginx-%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/" /><link rel="prev" href="http://localhost:1313/nginx%E5%B8%B8%E7%94%A8%E9%85%8D%E7%BD%AE/" /><link rel="next" href="http://localhost:1313/nginx%E4%BB%8B%E7%BB%8D-%E5%BF%AB%E9%80%9F%E4%BA%86%E8%A7%A3/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/images/avatar.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://lushuan.gihub.io/nginx-%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/" /><link rel="prev" href="https://lushuan.gihub.io/nginx%E5%B8%B8%E7%94%A8%E9%85%8D%E7%BD%AE/" /><link rel="next" href="https://lushuan.gihub.io/nginx%E4%BB%8B%E7%BB%8D-%E5%BF%AB%E9%80%9F%E4%BA%86%E8%A7%A3/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
     {
@@ -32,9 +26,9 @@
         "inLanguage": "zh-CN",
         "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": "http:\/\/localhost:1313\/nginx-%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86\/"
+            "@id": "https:\/\/lushuan.gihub.io\/nginx-%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86\/"
         },"genre": "posts","keywords": "Nginx","wordcount":  3933 ,
-        "url": "http:\/\/localhost:1313\/nginx-%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86\/","datePublished": "2022-01-16T12:06:37+08:00","dateModified": "2022-06-29T12:06:37+08:00","publisher": {
+        "url": "https:\/\/lushuan.gihub.io\/nginx-%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86\/","datePublished": "2022-01-16T12:06:37+08:00","dateModified": "2022-06-29T12:06:37+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
                 "@type": "Person",
@@ -122,7 +116,9 @@
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Nginx 架构原理</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/nginx/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Nginx</a></span></div>
             <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2022-01-16">2022-01-16</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 3933 字&nbsp;
-                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 8 分钟&nbsp;</div>
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 8 分钟&nbsp;<span id="/nginx-%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/" class="leancloud_visitors" data-flag-title="Nginx 架构原理">
+                        <i class="far fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
+                    </span>&nbsp;</div>
         </div><div class="details toc" id="toc-static"  data-kept="">
                 <div class="details-summary toc-title">
                     <span>目录</span>
@@ -287,19 +283,19 @@
 </span><span class="lnt">13
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="p">[</span><span class="n">root</span><span class="err">@</span><span class="n">www</span> <span class="o">~</span><span class="p">]</span><span class="c1"># ps -ef --forest|grep nginx|grep -v grep</span>
-</span></span><span class="line"><span class="cl"><span class="n">root</span>      <span class="mi">59984</span>      <span class="mi">1</span>  <span class="mi">0</span> <span class="mi">13</span><span class="p">:</span><span class="mi">24</span> <span class="err">?</span>        <span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span> <span class="n">nginx</span><span class="p">:</span> <span class="n">master</span> <span class="n">process</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">nginx</span>
-</span></span><span class="line"><span class="cl"><span class="n">nginx</span>     <span class="mi">59985</span>  <span class="mi">59984</span>  <span class="mi">0</span> <span class="mi">13</span><span class="p">:</span><span class="mi">24</span> <span class="err">?</span>        <span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span>  \<span class="n">_</span> <span class="n">nginx</span><span class="p">:</span> <span class="n">worker</span> <span class="n">process</span>
-</span></span><span class="line"><span class="cl"><span class="n">nginx</span>     <span class="mi">59986</span>  <span class="mi">59984</span>  <span class="mi">0</span> <span class="mi">13</span><span class="p">:</span><span class="mi">24</span> <span class="err">?</span>        <span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span>  \<span class="n">_</span> <span class="n">nginx</span><span class="p">:</span> <span class="n">worker</span> <span class="n">process</span>
-</span></span><span class="line"><span class="cl"><span class="n">nginx</span>     <span class="mi">59987</span>  <span class="mi">59984</span>  <span class="mi">0</span> <span class="mi">13</span><span class="p">:</span><span class="mi">24</span> <span class="err">?</span>        <span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span>  \<span class="n">_</span> <span class="n">nginx</span><span class="p">:</span> <span class="n">worker</span> <span class="n">process</span>
-</span></span><span class="line"><span class="cl"><span class="n">nginx</span>     <span class="mi">59988</span>  <span class="mi">59984</span>  <span class="mi">0</span> <span class="mi">13</span><span class="p">:</span><span class="mi">24</span> <span class="err">?</span>        <span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span>  \<span class="n">_</span> <span class="n">nginx</span><span class="p">:</span> <span class="n">worker</span> <span class="n">process</span>
-</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="n">root</span><span class="err">@</span><span class="n">www</span> <span class="o">~</span><span class="p">]</span><span class="c1"># nginx -s reload</span>
-</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="n">root</span><span class="err">@</span><span class="n">www</span> <span class="o">~</span><span class="p">]</span><span class="c1"># ps -ef --forest|grep nginx|grep -v grep</span>
-</span></span><span class="line"><span class="cl"><span class="n">root</span>      <span class="mi">59984</span>      <span class="mi">1</span>  <span class="mi">0</span> <span class="mi">13</span><span class="p">:</span><span class="mi">24</span> <span class="err">?</span>        <span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span> <span class="n">nginx</span><span class="p">:</span> <span class="n">master</span> <span class="n">process</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">nginx</span>
-</span></span><span class="line"><span class="cl"><span class="n">nginx</span>     <span class="mi">62907</span>  <span class="mi">59984</span>  <span class="mi">0</span> <span class="mi">17</span><span class="p">:</span><span class="mi">26</span> <span class="err">?</span>        <span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span>  \<span class="n">_</span> <span class="n">nginx</span><span class="p">:</span> <span class="n">worker</span> <span class="n">process</span>
-</span></span><span class="line"><span class="cl"><span class="n">nginx</span>     <span class="mi">62908</span>  <span class="mi">59984</span>  <span class="mi">0</span> <span class="mi">17</span><span class="p">:</span><span class="mi">26</span> <span class="err">?</span>        <span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span>  \<span class="n">_</span> <span class="n">nginx</span><span class="p">:</span> <span class="n">worker</span> <span class="n">process</span>
-</span></span><span class="line"><span class="cl"><span class="n">nginx</span>     <span class="mi">62909</span>  <span class="mi">59984</span>  <span class="mi">0</span> <span class="mi">17</span><span class="p">:</span><span class="mi">26</span> <span class="err">?</span>        <span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span>  \<span class="n">_</span> <span class="n">nginx</span><span class="p">:</span> <span class="n">worker</span> <span class="n">process</span>
-</span></span><span class="line"><span class="cl"><span class="n">nginx</span>     <span class="mi">62910</span>  <span class="mi">59984</span>  <span class="mi">0</span> <span class="mi">17</span><span class="p">:</span><span class="mi">26</span> <span class="err">?</span>        <span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span>  \<span class="n">_</span> <span class="n">nginx</span><span class="p">:</span> <span class="n">worker</span> <span class="n">process</span>
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">[root@www ~]# ps -ef --forest|grep nginx|grep -v grep
+</span></span><span class="line"><span class="cl">root      59984      1  0 13:24 ?        00:00:00 nginx: master process /usr/sbin/nginx
+</span></span><span class="line"><span class="cl">nginx     59985  59984  0 13:24 ?        00:00:00  \_ nginx: worker process
+</span></span><span class="line"><span class="cl">nginx     59986  59984  0 13:24 ?        00:00:00  \_ nginx: worker process
+</span></span><span class="line"><span class="cl">nginx     59987  59984  0 13:24 ?        00:00:00  \_ nginx: worker process
+</span></span><span class="line"><span class="cl">nginx     59988  59984  0 13:24 ?        00:00:00  \_ nginx: worker process
+</span></span><span class="line"><span class="cl">[root@www ~]# nginx -s reload
+</span></span><span class="line"><span class="cl">[root@www ~]# ps -ef --forest|grep nginx|grep -v grep
+</span></span><span class="line"><span class="cl">root      59984      1  0 13:24 ?        00:00:00 nginx: master process /usr/sbin/nginx
+</span></span><span class="line"><span class="cl">nginx     62907  59984  0 17:26 ?        00:00:00  \_ nginx: worker process
+</span></span><span class="line"><span class="cl">nginx     62908  59984  0 17:26 ?        00:00:00  \_ nginx: worker process
+</span></span><span class="line"><span class="cl">nginx     62909  59984  0 17:26 ?        00:00:00  \_ nginx: worker process
+</span></span><span class="line"><span class="cl">nginx     62910  59984  0 17:26 ?        00:00:00  \_ nginx: worker process
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>单独发送终止信号终止一个 <code>worker</code> 进程会发生什么？</p>
@@ -390,54 +386,54 @@
 </span><span class="lnt">48
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">ngx_master_process_cycle</span><span class="p">(</span><span class="n">ngx_cycle_t</span> <span class="n">cycle</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="o">...</span>
-</span></span><span class="line"><span class="cl">    <span class="n">ngx_start_worker_processes</span><span class="p">(</span><span class="n">cycle</span><span class="p">,</span> <span class="n">ccf</span><span class="o">-</span><span class="n">worker_processes</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">                                        <span class="n">NGX_PROCESS_RESPAWN</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="o">...</span>
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">ngx_master_process_cycle(ngx_cycle_t cycle)
+</span></span><span class="line"><span class="cl">{
+</span></span><span class="line"><span class="cl">    ...
+</span></span><span class="line"><span class="cl">    ngx_start_worker_processes(cycle, ccf-worker_processes,
+</span></span><span class="line"><span class="cl">                                        NGX_PROCESS_RESPAWN);
+</span></span><span class="line"><span class="cl">    ...
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(</span> <span class="p">;;</span> <span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">delay</span><span class="p">)</span> <span class="p">{</span><span class="o">...</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">    for ( ;; ) {
+</span></span><span class="line"><span class="cl">        if (delay) {...}
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="n">ngx_log_debug0</span><span class="p">(</span><span class="n">NGX_LOG_DEBUG_EVENT</span><span class="p">,</span> <span class="n">cycle</span><span class="o">-</span><span class="nb">log</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">sigsuspend</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        ngx_log_debug0(NGX_LOG_DEBUG_EVENT, cycle-log, 0, sigsuspend);
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="n">sigsuspend</span><span class="p">(</span><span class="o">&amp;</span><span class="n">set</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        sigsuspend(&amp;set);
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="n">ngx_time_update</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        ngx_time_update();
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="n">ngx_log_debug1</span><span class="p">(</span><span class="n">NGX_LOG_DEBUG_EVENT</span><span class="p">,</span> <span class="n">cycle</span><span class="o">-</span><span class="nb">log</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">                             <span class="n">wake</span> <span class="n">up</span><span class="p">,</span> <span class="n">sigio</span> <span class="o">%</span><span class="n">i</span><span class="p">,</span> <span class="n">sigio</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        ngx_log_debug1(NGX_LOG_DEBUG_EVENT, cycle-log, 0,
+</span></span><span class="line"><span class="cl">                             wake up, sigio %i, sigio);
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">ngx_reap</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">            <span class="n">ngx_reap</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">            <span class="n">ngx_log_debug0</span><span class="p">(</span><span class="n">NGX_LOG_DEBUG_EVENT</span><span class="p">,</span> <span class="n">cycle</span><span class="o">-</span><span class="nb">log</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">reap</span> <span class="n">children</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">            <span class="n">live</span> <span class="o">=</span> <span class="n">ngx_reap_children</span><span class="p">(</span><span class="n">cycle</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        if (ngx_reap) {
+</span></span><span class="line"><span class="cl">            ngx_reap = 0;
+</span></span><span class="line"><span class="cl">            ngx_log_debug0(NGX_LOG_DEBUG_EVENT, cycle-log, 0, reap children);
+</span></span><span class="line"><span class="cl">            live = ngx_reap_children(cycle);
+</span></span><span class="line"><span class="cl">        }
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">live</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">ngx_terminate</span>  <span class="n">ngx_quit</span><span class="p">))</span> <span class="p">{</span><span class="o">...</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">        if (!live &amp;&amp; (ngx_terminate  ngx_quit)) {...}
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">ngx_terminate</span><span class="p">)</span> <span class="p">{</span><span class="o">...</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">        if (ngx_terminate) {...}
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">ngx_quit</span><span class="p">)</span> <span class="p">{</span><span class="o">...</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">        if (ngx_quit) {...}
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">ngx_reconfigure</span><span class="p">)</span> <span class="p">{</span><span class="o">...</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">        if (ngx_reconfigure) {...}
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">ngx_restart</span><span class="p">)</span> <span class="p">{</span><span class="o">...</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">        if (ngx_restart) {...}
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">ngx_reopen</span><span class="p">)</span> <span class="p">{</span><span class="o">...</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">        if (ngx_reopen) {...}
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">ngx_change_binary</span><span class="p">)</span> <span class="p">{</span><span class="o">...</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">        if (ngx_change_binary) {...}
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">ngx_noaccept</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">            <span class="n">ngx_noaccept</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">            <span class="n">ngx_noaccepting</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">            <span class="n">ngx_signal_worker_processes</span><span class="p">(</span><span class="n">cycle</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">                                                  <span class="n">ngx_signal_value</span><span class="p">(</span><span class="n">NGX_SHUTDOWN_SIGNAL</span><span class="p">));</span>
-</span></span><span class="line"><span class="cl">        <span class="p">}</span>
-</span></span><span class="line"><span class="cl">    <span class="p">}</span>
-</span></span><span class="line"><span class="cl"> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        if (ngx_noaccept) {
+</span></span><span class="line"><span class="cl">            ngx_noaccept = 0;
+</span></span><span class="line"><span class="cl">            ngx_noaccepting = 1;
+</span></span><span class="line"><span class="cl">            ngx_signal_worker_processes(cycle,
+</span></span><span class="line"><span class="cl">                                                  ngx_signal_value(NGX_SHUTDOWN_SIGNAL));
+</span></span><span class="line"><span class="cl">        }
+</span></span><span class="line"><span class="cl">    }
+</span></span><span class="line"><span class="cl"> }
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>由上述代码，可以理解，master进程主要用来管理worker进程，具体包括如下4个主要功能：</p>
@@ -689,7 +685,7 @@ Nginx模块主要可以分为以下几类：</p>
         <div class="post-info-line">
             <div class="post-info-md"></div>
             <div class="post-info-share">
-                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://localhost:1313/nginx-%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/" data-title="Nginx 架构原理" data-via="xxxx" data-hashtags="Nginx"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/nginx-%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/" data-hashtag="Nginx"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="http://localhost:1313/nginx-%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/" data-title="Nginx 架构原理"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://localhost:1313/nginx-%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/" data-title="Nginx 架构原理"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/nginx-%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/" data-title="Nginx 架构原理"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://lushuan.gihub.io/nginx-%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/" data-title="Nginx 架构原理" data-via="xxxx" data-hashtags="Nginx"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://lushuan.gihub.io/nginx-%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/" data-hashtag="Nginx"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="https://lushuan.gihub.io/nginx-%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/" data-title="Nginx 架构原理"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="https://lushuan.gihub.io/nginx-%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/" data-title="Nginx 架构原理"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://lushuan.gihub.io/nginx-%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/" data-title="Nginx 架构原理"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
             </div>
         </div>
     </div>
@@ -704,10 +700,14 @@ Nginx模块主要可以分为以下几类：</p>
     <div class="post-nav"><a href="/nginx%E5%B8%B8%E7%94%A8%E9%85%8D%E7%BD%AE/" class="prev" rel="prev" title="Nginx 常用配置"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Nginx 常用配置</a>
             <a href="/nginx%E4%BB%8B%E7%BB%8D-%E5%BF%AB%E9%80%9F%E4%BA%86%E8%A7%A3/" class="next" rel="next" title="Nginx 介绍-快速了解">Nginx 介绍-快速了解<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
 </div>
-
+<div id="comments"><div id="gitalk" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://github.com/gitalk/gitalk"></a>Gitalk</a>.
+            </noscript><div id="valine" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://valine.js.org/">Valine</a>.
+            </noscript></div>
 </article></div>
             </main><footer class="footer">
-        <div class="footer-container"><div class="footer-line">我是有底线的</div><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.126.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+        <div class="footer-container"><div class="footer-line">我是有底线的</div><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.114.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
                 </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2025</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">lushuan</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
         </div>
     </footer></div>
@@ -717,5 +717,5 @@ Nginx模块主要可以分为以下几类：</p>
             </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
                 <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
             </a>
-        </div><link rel="stylesheet" href="/lib/lightgallery/css/lightgallery-bundle.min.css"><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/lightgallery/lightgallery.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/zoom/lg-zoom.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"lightgallery":true,"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+        </div><link rel="stylesheet" href="/lib/gitalk/gitalk.min.css"><link rel="stylesheet" href="/lib/valine/valine.min.css"><link rel="stylesheet" href="/lib/lightgallery/css/lightgallery-bundle.min.css"><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/gitalk/gitalk.min.js"></script><script type="text/javascript" src="/lib/valine/Valine.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/lightgallery/lightgallery.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/zoom/lg-zoom.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{"gitalk":{"admin":["lushuan"],"clientID":"Ov23liSh0yG2wy6B7XP1","clientSecret":"7184a8df973267af95c92ddeb27789417ba82469","id":"2022-01-16T12:06:37+08:00","owner":"lushuan","repo":"lushuan.github.io","title":"Nginx 架构原理"},"valine":{"appId":"XQderBhsCffEN9pw26SOSQon-MdYXbMMI","appKey":"zLUsSeN2SfcBdQbGTv9iFhFp","avatar":"mp","el":"#valine","emojiCDN":"https://cdn.jsdelivr.net/npm/emoji-datasource-google@14.0.0/img/google/64/","emojiMaps":{"100":"1f4af.png","alien":"1f47d.png","anger":"1f4a2.png","angry":"1f620.png","anguished":"1f627.png","astonished":"1f632.png","black_heart":"1f5a4.png","blue_heart":"1f499.png","blush":"1f60a.png","bomb":"1f4a3.png","boom":"1f4a5.png","broken_heart":"1f494.png","brown_heart":"1f90e.png","clown_face":"1f921.png","cold_face":"1f976.png","cold_sweat":"1f630.png","confounded":"1f616.png","confused":"1f615.png","cry":"1f622.png","crying_cat_face":"1f63f.png","cupid":"1f498.png","dash":"1f4a8.png","disappointed":"1f61e.png","disappointed_relieved":"1f625.png","dizzy":"1f4ab.png","dizzy_face":"1f635.png","drooling_face":"1f924.png","exploding_head":"1f92f.png","expressionless":"1f611.png","face_vomiting":"1f92e.png","face_with_cowboy_hat":"1f920.png","face_with_hand_over_mouth":"1f92d.png","face_with_head_bandage":"1f915.png","face_with_monocle":"1f9d0.png","face_with_raised_eyebrow":"1f928.png","face_with_rolling_eyes":"1f644.png","face_with_symbols_on_mouth":"1f92c.png","face_with_thermometer":"1f912.png","fearful":"1f628.png","flushed":"1f633.png","frowning":"1f626.png","ghost":"1f47b.png","gift_heart":"1f49d.png","green_heart":"1f49a.png","grimacing":"1f62c.png","grin":"1f601.png","grinning":"1f600.png","hankey":"1f4a9.png","hear_no_evil":"1f649.png","heart":"2764-fe0f.png","heart_decoration":"1f49f.png","heart_eyes":"1f60d.png","heart_eyes_cat":"1f63b.png","heartbeat":"1f493.png","heartpulse":"1f497.png","heavy_heart_exclamation_mark_ornament":"2763-fe0f.png","hole":"1f573-fe0f.png","hot_face":"1f975.png","hugging_face":"1f917.png","hushed":"1f62f.png","imp":"1f47f.png","innocent":"1f607.png","japanese_goblin":"1f47a.png","japanese_ogre":"1f479.png","joy":"1f602.png","joy_cat":"1f639.png","kiss":"1f48b.png","kissing":"1f617.png","kissing_cat":"1f63d.png","kissing_closed_eyes":"1f61a.png","kissing_heart":"1f618.png","kissing_smiling_eyes":"1f619.png","laughing":"1f606.png","left_speech_bubble":"1f5e8-fe0f.png","love_letter":"1f48c.png","lying_face":"1f925.png","mask":"1f637.png","money_mouth_face":"1f911.png","nauseated_face":"1f922.png","nerd_face":"1f913.png","neutral_face":"1f610.png","no_mouth":"1f636.png","open_mouth":"1f62e.png","orange_heart":"1f9e1.png","partying_face":"1f973.png","pensive":"1f614.png","persevere":"1f623.png","pleading_face":"1f97a.png","pouting_cat":"1f63e.png","purple_heart":"1f49c.png","rage":"1f621.png","relaxed":"263a-fe0f.png","relieved":"1f60c.png","revolving_hearts":"1f49e.png","right_anger_bubble":"1f5ef-fe0f.png","robot_face":"1f916.png","rolling_on_the_floor_laughing":"1f923.png","scream":"1f631.png","scream_cat":"1f640.png","see_no_evil":"1f648.png","shushing_face":"1f92b.png","skull":"1f480.png","skull_and_crossbones":"2620-fe0f.png","sleeping":"1f634.png","sleepy":"1f62a.png","slightly_frowning_face":"1f641.png","slightly_smiling_face":"1f642.png","smile":"1f604.png","smile_cat":"1f638.png","smiley":"1f603.png","smiley_cat":"1f63a.png","smiling_face_with_3_hearts":"1f970.png","smiling_imp":"1f608.png","smirk":"1f60f.png","smirk_cat":"1f63c.png","sneezing_face":"1f927.png","sob":"1f62d.png","space_invader":"1f47e.png","sparkling_heart":"1f496.png","speak_no_evil":"1f64a.png","speech_balloon":"1f4ac.png","star-struck":"1f929.png","stuck_out_tongue":"1f61b.png","stuck_out_tongue_closed_eyes":"1f61d.png","stuck_out_tongue_winking_eye":"1f61c.png","sunglasses":"1f60e.png","sweat":"1f613.png","sweat_drops":"1f4a6.png","sweat_smile":"1f605.png","thinking_face":"1f914.png","thought_balloon":"1f4ad.png","tired_face":"1f62b.png","triumph":"1f624.png","two_hearts":"1f495.png","unamused":"1f612.png","upside_down_face":"1f643.png","weary":"1f629.png","white_frowning_face":"2639-fe0f.png","white_heart":"1f90d.png","wink":"1f609.png","woozy_face":"1f974.png","worried":"1f61f.png","yawning_face":"1f971.png","yellow_heart":"1f49b.png","yum":"1f60b.png","zany_face":"1f92a.png","zipper_mouth_face":"1f910.png","zzz":"1f4a4.png"},"enableQQ":false,"highlight":true,"lang":"zh-CN","pageSize":10,"placeholder":"期待您的评论...","recordIP":true,"visitor":true}},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"lightgallery":true,"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
 </html>

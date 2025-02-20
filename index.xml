@@ -1,91 +1,91 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title>Less is more</title>
-        <link>http://localhost:1313/</link>
+        <link>https://lushuan.gihub.io/</link>
         <description>晚来天欲雪,能饮一杯无?</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
             <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Mon, 23 Sep 2024 12:06:37 &#43;0800</lastBuildDate>
-            <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+            <atom:link href="https://lushuan.gihub.io/index.xml" rel="self" type="application/rss+xml" />
         <item>
     <title>K3s 快速入门及安装部署</title>
-    <link>http://localhost:1313/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/</link>
+    <link>https://lushuan.gihub.io/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/</link>
     <pubDate>Mon, 23 Sep 2024 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>http://localhost:1313/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/</guid>
-    <description><![CDATA[背景 为物联网和边缘计算构建的经过认证的Kubernetes发行版，是Rancher旗下的产品 Great for: Edge IoT CI Development ARM Embedding k8s Situations where a PhD in k8s clusterology is infeasible 发展历程 微型]]></description>
+    <guid>https://lushuan.gihub.io/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/</guid>
+    <description><![CDATA[背景 为物联网和边缘计算构建的经过认证的Kubernetes发行版，则是Rancher旗下产品 Great for: Edge IoT CI Development ARM Embedding k8s Situations where a PhD in k8s clusterology is infeasible 发展历程 微型]]></description>
 </item>
 <item>
     <title>rsync结合inotify实现静态资源实时同步</title>
-    <link>http://localhost:1313/rsync%E7%BB%93%E5%90%88inotify%E5%AE%9E%E7%8E%B0%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E5%AE%9E%E6%97%B6%E5%90%8C%E6%AD%A5/</link>
+    <link>https://lushuan.gihub.io/rsync%E7%BB%93%E5%90%88inotify%E5%AE%9E%E7%8E%B0%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E5%AE%9E%E6%97%B6%E5%90%8C%E6%AD%A5/</link>
     <pubDate>Mon, 26 Aug 2024 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>http://localhost:1313/rsync%E7%BB%93%E5%90%88inotify%E5%AE%9E%E7%8E%B0%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E5%AE%9E%E6%97%B6%E5%90%8C%E6%AD%A5/</guid>
+    <guid>https://lushuan.gihub.io/rsync%E7%BB%93%E5%90%88inotify%E5%AE%9E%E7%8E%B0%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E5%AE%9E%E6%97%B6%E5%90%8C%E6%AD%A5/</guid>
     <description><![CDATA[rsync(remote synchronize)是一个远程数据同步工具，可通过 LAN/WAN 快速同步多台主机之间的文件，也可以使用 rsync 同步本地硬盘中的不同目录。rsync 是用于]]></description>
 </item>
 <item>
     <title>Helm修改configmap后应用自动重启生效</title>
-    <link>http://localhost:1313/helm%E4%BF%AE%E6%94%B9configmap%E5%90%8E%E5%BA%94%E7%94%A8%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF%E7%94%9F%E6%95%88/</link>
+    <link>https://lushuan.gihub.io/helm%E4%BF%AE%E6%94%B9configmap%E5%90%8E%E5%BA%94%E7%94%A8%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF%E7%94%9F%E6%95%88/</link>
     <pubDate>Sun, 21 Jul 2024 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>http://localhost:1313/helm%E4%BF%AE%E6%94%B9configmap%E5%90%8E%E5%BA%94%E7%94%A8%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF%E7%94%9F%E6%95%88/</guid>
+    <guid>https://lushuan.gihub.io/helm%E4%BF%AE%E6%94%B9configmap%E5%90%8E%E5%BA%94%E7%94%A8%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF%E7%94%9F%E6%95%88/</guid>
     <description><![CDATA[前言 通过Helm部署应用，修改configmap后，Deployment 副本控制器不会自动生效，需要手动删除pod 重建一下才会生效， 这里实践]]></description>
 </item>
 <item>
     <title>Ubuntu-server部署k8s1.28(containerd版本)集群</title>
-    <link>http://localhost:1313/ubuntu-server%E9%83%A8%E7%BD%B2k8s1.28containerd%E7%89%88%E6%9C%AC%E9%9B%86%E7%BE%A4/</link>
+    <link>https://lushuan.gihub.io/ubuntu-server%E9%83%A8%E7%BD%B2k8s1.28containerd%E7%89%88%E6%9C%AC%E9%9B%86%E7%BE%A4/</link>
     <pubDate>Thu, 20 Jun 2024 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>http://localhost:1313/ubuntu-server%E9%83%A8%E7%BD%B2k8s1.28containerd%E7%89%88%E6%9C%AC%E9%9B%86%E7%BE%A4/</guid>
+    <guid>https://lushuan.gihub.io/ubuntu-server%E9%83%A8%E7%BD%B2k8s1.28containerd%E7%89%88%E6%9C%AC%E9%9B%86%E7%BE%A4/</guid>
     <description><![CDATA[整体流程 部署准备 k8s 集群容器运行时 Containerd 准备 k8s 集群部署 k8s 集群软件 apt 源准备 k8s 集群软件安装 k8s 集群初始化 k8s 集群worker 节点加入 k8s 集群网络插件 Calico 准备 部]]></description>
 </item>
 <item>
     <title>一文了解 Kubernetes RBAC 机制和实践</title>
-    <link>http://localhost:1313/%E4%B8%80%E6%96%87%E4%BA%86%E8%A7%A3kubernetes-rbac/</link>
+    <link>https://lushuan.gihub.io/%E4%B8%80%E6%96%87%E4%BA%86%E8%A7%A3kubernetes-rbac/</link>
     <pubDate>Sat, 27 Apr 2024 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>http://localhost:1313/%E4%B8%80%E6%96%87%E4%BA%86%E8%A7%A3kubernetes-rbac/</guid>
+    <guid>https://lushuan.gihub.io/%E4%B8%80%E6%96%87%E4%BA%86%E8%A7%A3kubernetes-rbac/</guid>
     <description><![CDATA[前言 在了解RBAC 之前先了解一下Kubernetes API 对象，RBAC 最终操作的对象还是Kubernetes API 对象，本质还是对Kubernet]]></description>
 </item>
 <item>
     <title>10 Must-Know Free DevOps Tools for Professional Success</title>
-    <link>http://localhost:1313/10-must-know-free-devops-tools-for-professional-success/</link>
+    <link>https://lushuan.gihub.io/10-must-know-free-devops-tools-for-professional-success/</link>
     <pubDate>Sat, 17 Feb 2024 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>http://localhost:1313/10-must-know-free-devops-tools-for-professional-success/</guid>
+    <guid>https://lushuan.gihub.io/10-must-know-free-devops-tools-for-professional-success/</guid>
     <description><![CDATA[devopsIn recent years, DevOps has emerged as a critical discipline that merges software development (Dev) with IT operations (Ops). It aims to shorten the development lifecycle and provide continuous delivery with high software quality.
 As the demand for faster development cycles and more reliable software increases, professionals in the field constantly seek tools and practices to enhance their efficiency and effectiveness.
 Enter the realm of free and open-source tools – a goldmine for DevOps practitioners looking to stay ahead of the curve.]]></description>
 </item>
 <item>
     <title>k8s 常见故障和解决思路及方法</title>
-    <link>http://localhost:1313/k8s-%E5%B8%B8%E8%A7%81%E6%95%85%E9%9A%9C%E5%92%8C%E8%A7%A3%E5%86%B3%E6%80%9D%E8%B7%AF%E5%8F%8A%E6%96%B9%E6%B3%95/</link>
+    <link>https://lushuan.gihub.io/k8s-%E5%B8%B8%E8%A7%81%E6%95%85%E9%9A%9C%E5%92%8C%E8%A7%A3%E5%86%B3%E6%80%9D%E8%B7%AF%E5%8F%8A%E6%96%B9%E6%B3%95/</link>
     <pubDate>Sat, 13 Jan 2024 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>http://localhost:1313/k8s-%E5%B8%B8%E8%A7%81%E6%95%85%E9%9A%9C%E5%92%8C%E8%A7%A3%E5%86%B3%E6%80%9D%E8%B7%AF%E5%8F%8A%E6%96%B9%E6%B3%95/</guid>
+    <guid>https://lushuan.gihub.io/k8s-%E5%B8%B8%E8%A7%81%E6%95%85%E9%9A%9C%E5%92%8C%E8%A7%A3%E5%86%B3%E6%80%9D%E8%B7%AF%E5%8F%8A%E6%96%B9%E6%B3%95/</guid>
     <description><![CDATA[K8S 之连接异常——【集群故障】 Pod问题思考思路 Kubernetes集群中Pod一般哪些方面容易出现问题呢？ Kubernetes资源配置错误：]]></description>
 </item>
 <item>
     <title>Kubernetes 技能图谱</title>
-    <link>http://localhost:1313/kubernetes-%E6%8A%80%E8%83%BD%E5%9B%BE%E8%B0%B1/</link>
+    <link>https://lushuan.gihub.io/kubernetes-%E6%8A%80%E8%83%BD%E5%9B%BE%E8%B0%B1/</link>
     <pubDate>Fri, 13 Oct 2023 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>http://localhost:1313/kubernetes-%E6%8A%80%E8%83%BD%E5%9B%BE%E8%B0%B1/</guid>
+    <guid>https://lushuan.gihub.io/kubernetes-%E6%8A%80%E8%83%BD%E5%9B%BE%E8%B0%B1/</guid>
     <description><![CDATA[Kubernetes 技能图谱]]></description>
 </item>
 <item>
     <title>调整节点pod驱逐时间</title>
-    <link>http://localhost:1313/%E8%B0%83%E6%95%B4%E8%8A%82%E7%82%B9pod%E9%A9%B1%E9%80%90%E6%97%B6%E9%97%B4/</link>
+    <link>https://lushuan.gihub.io/%E8%B0%83%E6%95%B4%E8%8A%82%E7%82%B9pod%E9%A9%B1%E9%80%90%E6%97%B6%E9%97%B4/</link>
     <pubDate>Sat, 09 Sep 2023 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>http://localhost:1313/%E8%B0%83%E6%95%B4%E8%8A%82%E7%82%B9pod%E9%A9%B1%E9%80%90%E6%97%B6%E9%97%B4/</guid>
+    <guid>https://lushuan.gihub.io/%E8%B0%83%E6%95%B4%E8%8A%82%E7%82%B9pod%E9%A9%B1%E9%80%90%E6%97%B6%E9%97%B4/</guid>
     <description><![CDATA[问题描述 问题 在高可用的k8s集群中，当Node节点挂掉，kubelet无法提供工作的时候，pod将会自动调度到其他的节点上去， 而调度到节点上]]></description>
 </item>
 <item>
     <title>CGroups与Namespaces</title>
-    <link>http://localhost:1313/cgroups%E4%B8%8Enamespaces/</link>
+    <link>https://lushuan.gihub.io/cgroups%E4%B8%8Enamespaces/</link>
     <pubDate>Mon, 26 Jun 2023 16:25:58 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>http://localhost:1313/cgroups%E4%B8%8Enamespaces/</guid>
+    <guid>https://lushuan.gihub.io/cgroups%E4%B8%8Enamespaces/</guid>
     <description><![CDATA[CGroups与Namespaces 摘要 了解下容器背后的两大核心技术：CGroups 和 Namespace。 CGroups 概述 CGroups 全称为 Linux Control Group，其作]]></description>
 </item>
 </channel>

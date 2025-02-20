@@ -1,15 +1,15 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title>Grafana - 标签 - Less is more</title>
-        <link>http://localhost:1313/tags/grafana/</link>
+        <link>https://lushuan.gihub.io/tags/grafana/</link>
         <description>Grafana - 标签 - Less is more</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
-            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Wed, 17 Aug 2022 12:06:37 &#43;0800</lastBuildDate><atom:link href="http://localhost:1313/tags/grafana/" rel="self" type="application/rss+xml" /><item>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Wed, 17 Aug 2022 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/tags/grafana/" rel="self" type="application/rss+xml" /><item>
     <title>Grafana</title>
-    <link>http://localhost:1313/grafana/</link>
+    <link>https://lushuan.gihub.io/grafana/</link>
     <pubDate>Wed, 17 Aug 2022 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>http://localhost:1313/grafana/</guid>
+    <guid>https://lushuan.gihub.io/grafana/</guid>
     <description><![CDATA[Grafana简介 Grafana 是一个监控仪表系统，它是由 Grafana Labs 公司开源的的一个系统监测 (System Monitoring) 工具。它可以大大帮助你简化监控的复杂度，你只需要提供你需要监控]]></description>
 </item>
 </channel>
