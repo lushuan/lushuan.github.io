@@ -11,7 +11,7 @@ categories: ["K3s"]
 tags: ["K3s"]
 ---
 ## 背景
-为物联网和边缘计算构建的经过认证的Kubernetes发行版，是Rancher旗下的产品
+为物联网和边缘计算构建的经过认证的Kubernetes发行版，是Rancher旗下产品
 
 Great for:
 
