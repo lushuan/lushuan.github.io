@@ -1,23 +1,23 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title>Django - 标签 - Less is more</title>
-        <link>http://localhost:1313/tags/django/</link>
+        <link>https://lushuan.gihub.io/tags/django/</link>
         <description>Django - 标签 - Less is more</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
-            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Wed, 20 Jul 2022 12:06:37 &#43;0800</lastBuildDate><atom:link href="http://localhost:1313/tags/django/" rel="self" type="application/rss+xml" /><item>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Wed, 20 Jul 2022 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/tags/django/" rel="self" type="application/rss+xml" /><item>
     <title>Django 应用容器化构建</title>
-    <link>http://localhost:1313/django-%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E5%8C%96%E6%9E%84%E5%BB%BA/</link>
+    <link>https://lushuan.gihub.io/django-%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E5%8C%96%E6%9E%84%E5%BB%BA/</link>
     <pubDate>Wed, 20 Jul 2022 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>http://localhost:1313/django-%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E5%8C%96%E6%9E%84%E5%BB%BA/</guid>
+    <guid>https://lushuan.gihub.io/django-%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E5%8C%96%E6%9E%84%E5%BB%BA/</guid>
     <description><![CDATA[Docker 是一个用于构建、运行和分发应用程序的平台。它允许您将应用程序及其所有依赖项打包到一个容器中，然后可以在任何安装了 Docker 的服务器上运行。 这使得 Docker]]></description>
 </item>
 <item>
     <title>Django 模板语法</title>
-    <link>http://localhost:1313/django-%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95/</link>
+    <link>https://lushuan.gihub.io/django-%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95/</link>
     <pubDate>Fri, 20 May 2022 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>http://localhost:1313/django-%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95/</guid>
+    <guid>https://lushuan.gihub.io/django-%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95/</guid>
     <description><![CDATA[Django 模板语法 模板引擎是一种可以让开发者把服务端数据填充到html网页中完成渲染效果的技术。它实现了把前端代码和服务端代码分离的作用，让项目中的]]></description>
 </item>
 </channel>

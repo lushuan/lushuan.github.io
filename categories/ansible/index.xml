@@ -1,23 +1,23 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title>Ansible - 分类 - Less is more</title>
-        <link>http://localhost:1313/categories/ansible/</link>
+        <link>https://lushuan.gihub.io/categories/ansible/</link>
         <description>Ansible - 分类 - Less is more</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
-            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Sun, 17 May 2020 12:06:37 &#43;0800</lastBuildDate><atom:link href="http://localhost:1313/categories/ansible/" rel="self" type="application/rss+xml" /><item>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Sun, 17 May 2020 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/categories/ansible/" rel="self" type="application/rss+xml" /><item>
     <title>Ansible 知识图谱</title>
-    <link>http://localhost:1313/ansible%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/</link>
+    <link>https://lushuan.gihub.io/ansible%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/</link>
     <pubDate>Sun, 17 May 2020 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>http://localhost:1313/ansible%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/</guid>
+    <guid>https://lushuan.gihub.io/ansible%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/</guid>
     <description><![CDATA[Ansible 中文权威指南 Ansible 知识图谱]]></description>
 </item>
 <item>
     <title>Ansible 权限认证报错问题记录</title>
-    <link>http://localhost:1313/ansible%E6%9D%83%E9%99%90%E8%AE%A4%E8%AF%81%E6%8A%A5%E9%94%99%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/</link>
+    <link>https://lushuan.gihub.io/ansible%E6%9D%83%E9%99%90%E8%AE%A4%E8%AF%81%E6%8A%A5%E9%94%99%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/</link>
     <pubDate>Fri, 17 Apr 2020 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
-    <guid>http://localhost:1313/ansible%E6%9D%83%E9%99%90%E8%AE%A4%E8%AF%81%E6%8A%A5%E9%94%99%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/</guid>
+    <guid>https://lushuan.gihub.io/ansible%E6%9D%83%E9%99%90%E8%AE%A4%E8%AF%81%E6%8A%A5%E9%94%99%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/</guid>
     <description><![CDATA[问题描述 通过ansible命令直接ping多台机器的网络状态，提示报错 失败 172.16.24.220 | UNREACHABLE! =&gt; { &ldquo;changed&rdquo;: false, &ldquo;msg&rdquo;: &ldquo;Failed to connect to the host via ssh: Permission denied (publickey,gssapi-keyex,gssapi-with-mic,password).\r\n&rdquo;, &ldquo;unreachable&rdquo;: true } 问题处理 解决方式：单向]]></description>
 </item>
 </channel>

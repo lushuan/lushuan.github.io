@@ -1,28 +1,22 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="noodp" />
-        <title>K3s 快速入门及安装部署 - Less is more</title><meta name="Description" content="晚来天欲雪,能饮一杯无?"><meta property="og:url" content="http://localhost:1313/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/">
-  <meta property="og:site_name" content="Less is more">
-  <meta property="og:title" content="K3s 快速入门及安装部署">
-  <meta property="og:description" content="背景 为物联网和边缘计算构建的经过认证的Kubernetes发行版，是Rancher旗下的产品 Great for: Edge IoT CI Development ARM Embedding k8s Situations where a PhD in k8s clusterology is infeasible 发展历程 微型">
-  <meta property="og:locale" content="zh_CN">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2024-09-23T12:06:37+08:00">
-    <meta property="article:modified_time" content="2024-12-26T12:06:37+08:00">
-    <meta property="article:tag" content="K3s">
-    <meta property="og:image" content="http://localhost:1313/images/avatar.png">
+        <title>K3s 快速入门及安装部署 - Less is more</title><meta name="Description" content="晚来天欲雪,能饮一杯无?"><meta property="og:title" content="K3s 快速入门及安装部署" />
+<meta property="og:description" content="背景 为物联网和边缘计算构建的经过认证的Kubernetes发行版，则是Rancher旗下产品 Great for: Edge IoT CI Development ARM Embedding k8s Situations where a PhD in k8s clusterology is infeasible 发展历程 微型" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://lushuan.gihub.io/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/" /><meta property="og:image" content="https://lushuan.gihub.io/images/avatar.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-09-23T12:06:37+08:00" />
+<meta property="article:modified_time" content="2024-12-26T12:06:37+08:00" /><meta property="og:site_name" content="我的网站" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://lushuan.gihub.io/images/avatar.png"/>
 
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="http://localhost:1313/images/avatar.png">
-  <meta name="twitter:title" content="K3s 快速入门及安装部署">
-  <meta name="twitter:description" content="背景 为物联网和边缘计算构建的经过认证的Kubernetes发行版，是Rancher旗下的产品 Great for: Edge IoT CI Development ARM Embedding k8s Situations where a PhD in k8s clusterology is infeasible 发展历程 微型">
-      <meta name="twitter:site" content="@xxxx">
+<meta name="twitter:title" content="K3s 快速入门及安装部署"/>
+<meta name="twitter:description" content="背景 为物联网和边缘计算构建的经过认证的Kubernetes发行版，则是Rancher旗下产品 Great for: Edge IoT CI Development ARM Embedding k8s Situations where a PhD in k8s clusterology is infeasible 发展历程 微型"/>
 <meta name="application-name" content="我的网站">
-<meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/images/avatar.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://localhost:1313/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/" /><link rel="prev" href="http://localhost:1313/rsync%E7%BB%93%E5%90%88inotify%E5%AE%9E%E7%8E%B0%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E5%AE%9E%E6%97%B6%E5%90%8C%E6%AD%A5/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/images/avatar.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://lushuan.gihub.io/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/" /><link rel="prev" href="https://lushuan.gihub.io/rsync%E7%BB%93%E5%90%88inotify%E5%AE%9E%E7%8E%B0%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E5%AE%9E%E6%97%B6%E5%90%8C%E6%AD%A5/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
     {
@@ -32,9 +26,9 @@
         "inLanguage": "zh-CN",
         "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": "http:\/\/localhost:1313\/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2\/"
+            "@id": "https:\/\/lushuan.gihub.io\/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2\/"
         },"genre": "posts","keywords": "K3s","wordcount":  4466 ,
-        "url": "http:\/\/localhost:1313\/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2\/","datePublished": "2024-09-23T12:06:37+08:00","dateModified": "2024-12-26T12:06:37+08:00","publisher": {
+        "url": "https:\/\/lushuan.gihub.io\/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2\/","datePublished": "2024-09-23T12:06:37+08:00","dateModified": "2024-12-26T12:06:37+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
                 "@type": "Person",
@@ -122,7 +116,9 @@
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">K3s 快速入门及安装部署</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/k3s/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>K3s</a></span></div>
             <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2024-09-23">2024-09-23</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 4466 字&nbsp;
-                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 9 分钟&nbsp;</div>
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 9 分钟&nbsp;<span id="/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/" class="leancloud_visitors" data-flag-title="K3s 快速入门及安装部署">
+                        <i class="far fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
+                    </span>&nbsp;</div>
         </div><div class="details toc" id="toc-static"  data-kept="">
                 <div class="details-summary toc-title">
                     <span>目录</span>
@@ -156,7 +152,7 @@
   </ul>
 </nav></div>
             </div><div class="content" id="content"><h2 id="背景">背景</h2>
-<p>为物联网和边缘计算构建的经过认证的Kubernetes发行版，是Rancher旗下的产品</p>
+<p>为物联网和边缘计算构建的经过认证的Kubernetes发行版，则是Rancher旗下产品</p>
 <p>Great for:</p>
 <ul>
 <li>Edge</li>
@@ -923,96 +919,96 @@ Agent 将使用节点集群 Secret 以及随机生成的节点密码注册到 Se
 </span><span class="lnt">90
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="o">$</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">k3s</span> <span class="n">check</span><span class="o">-</span><span class="n">config</span>
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ /usr/local/bin/k3s check-config
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">Verifying</span> <span class="n">binaries</span> <span class="ow">in</span> <span class="o">/</span><span class="k">var</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">rancher</span><span class="o">/</span><span class="n">k3s</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="mf">8307e9</span><span class="n">b398a0ee686ec38e18339d1464f75158a8b948b059b564246f4af3a0a6</span><span class="o">/</span><span class="n">bin</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">sha256sum</span><span class="p">:</span> <span class="n">good</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">links</span><span class="p">:</span> <span class="n">good</span>
+</span></span><span class="line"><span class="cl">Verifying binaries in /var/lib/rancher/k3s/data/8307e9b398a0ee686ec38e18339d1464f75158a8b948b059b564246f4af3a0a6/bin:
+</span></span><span class="line"><span class="cl">- sha256sum: good
+</span></span><span class="line"><span class="cl">- links: good
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">System</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="o">/</span><span class="n">sbin</span> <span class="n">iptables</span> <span class="n">v1</span><span class="o">.</span><span class="mf">4.21</span><span class="p">:</span> <span class="n">older</span> <span class="n">than</span> <span class="n">v1</span><span class="o">.</span><span class="mi">8</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">swap</span><span class="p">:</span> <span class="n">disabled</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">routes</span><span class="p">:</span> <span class="n">default</span> <span class="n">CIDRs</span> <span class="mf">10.42</span><span class="o">.</span><span class="mf">0.0</span><span class="o">/</span><span class="mi">16</span> <span class="ow">or</span> <span class="mf">10.43</span><span class="o">.</span><span class="mf">0.0</span><span class="o">/</span><span class="mi">16</span> <span class="n">already</span> <span class="n">routed</span>
+</span></span><span class="line"><span class="cl">System:
+</span></span><span class="line"><span class="cl">- /sbin iptables v1.4.21: older than v1.8
+</span></span><span class="line"><span class="cl">- swap: disabled
+</span></span><span class="line"><span class="cl">- routes: default CIDRs 10.42.0.0/16 or 10.43.0.0/16 already routed
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">Limits</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="o">/</span><span class="n">proc</span><span class="o">/</span><span class="n">sys</span><span class="o">/</span><span class="n">kernel</span><span class="o">/</span><span class="n">keys</span><span class="o">/</span><span class="n">root_maxkeys</span><span class="p">:</span> <span class="mi">1000000</span>
+</span></span><span class="line"><span class="cl">Limits:
+</span></span><span class="line"><span class="cl">- /proc/sys/kernel/keys/root_maxkeys: 1000000
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">modprobe</span><span class="p">:</span> <span class="n">FATAL</span><span class="p">:</span> <span class="n">Module</span> <span class="n">configs</span> <span class="ow">not</span> <span class="n">found</span><span class="o">.</span>
-</span></span><span class="line"><span class="cl"><span class="n">info</span><span class="p">:</span> <span class="n">reading</span> <span class="n">kernel</span> <span class="n">config</span> <span class="n">from</span> <span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">config</span><span class="o">-</span><span class="mf">3.10</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="mf">1062.</span><span class="n">el7</span><span class="o">.</span><span class="n">x86_64</span> <span class="o">...</span>
+</span></span><span class="line"><span class="cl">modprobe: FATAL: Module configs not found.
+</span></span><span class="line"><span class="cl">info: reading kernel config from /boot/config-3.10.0-1062.el7.x86_64 ...
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">Generally</span> <span class="n">Necessary</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">cgroup</span> <span class="n">hierarchy</span><span class="p">:</span> <span class="n">cgroups</span> <span class="n">V1</span> <span class="n">mounted</span><span class="p">,</span> <span class="n">cpuset</span><span class="o">|</span><span class="n">memory</span> <span class="n">controllers</span> <span class="n">status</span><span class="p">:</span> <span class="n">good</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_NAMESPACES</span><span class="p">:</span> <span class="n">enabled</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_NET_NS</span><span class="p">:</span> <span class="n">enabled</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_PID_NS</span><span class="p">:</span> <span class="n">enabled</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_IPC_NS</span><span class="p">:</span> <span class="n">enabled</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_UTS_NS</span><span class="p">:</span> <span class="n">enabled</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_CGROUPS</span><span class="p">:</span> <span class="n">enabled</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_CGROUP_CPUACCT</span><span class="p">:</span> <span class="n">enabled</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_CGROUP_DEVICE</span><span class="p">:</span> <span class="n">enabled</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_CGROUP_FREEZER</span><span class="p">:</span> <span class="n">enabled</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_CGROUP_SCHED</span><span class="p">:</span> <span class="n">enabled</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_CPUSETS</span><span class="p">:</span> <span class="n">enabled</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_MEMCG</span><span class="p">:</span> <span class="n">enabled</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_KEYS</span><span class="p">:</span> <span class="n">enabled</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_VETH</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_BRIDGE</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_BRIDGE_NETFILTER</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_IP_NF_FILTER</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_IP_NF_TARGET_MASQUERADE</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_NETFILTER_XT_MATCH_ADDRTYPE</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_NETFILTER_XT_MATCH_CONNTRACK</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_NETFILTER_XT_MATCH_IPVS</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_IP_NF_NAT</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_NF_NAT</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_POSIX_MQUEUE</span><span class="p">:</span> <span class="n">enabled</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_DEVPTS_MULTIPLE_INSTANCES</span><span class="p">:</span> <span class="n">enabled</span>
+</span></span><span class="line"><span class="cl">Generally Necessary:
+</span></span><span class="line"><span class="cl">- cgroup hierarchy: cgroups V1 mounted, cpuset|memory controllers status: good
+</span></span><span class="line"><span class="cl">- CONFIG_NAMESPACES: enabled
+</span></span><span class="line"><span class="cl">- CONFIG_NET_NS: enabled
+</span></span><span class="line"><span class="cl">- CONFIG_PID_NS: enabled
+</span></span><span class="line"><span class="cl">- CONFIG_IPC_NS: enabled
+</span></span><span class="line"><span class="cl">- CONFIG_UTS_NS: enabled
+</span></span><span class="line"><span class="cl">- CONFIG_CGROUPS: enabled
+</span></span><span class="line"><span class="cl">- CONFIG_CGROUP_CPUACCT: enabled
+</span></span><span class="line"><span class="cl">- CONFIG_CGROUP_DEVICE: enabled
+</span></span><span class="line"><span class="cl">- CONFIG_CGROUP_FREEZER: enabled
+</span></span><span class="line"><span class="cl">- CONFIG_CGROUP_SCHED: enabled
+</span></span><span class="line"><span class="cl">- CONFIG_CPUSETS: enabled
+</span></span><span class="line"><span class="cl">- CONFIG_MEMCG: enabled
+</span></span><span class="line"><span class="cl">- CONFIG_KEYS: enabled
+</span></span><span class="line"><span class="cl">- CONFIG_VETH: enabled (as module)
+</span></span><span class="line"><span class="cl">- CONFIG_BRIDGE: enabled (as module)
+</span></span><span class="line"><span class="cl">- CONFIG_BRIDGE_NETFILTER: enabled (as module)
+</span></span><span class="line"><span class="cl">- CONFIG_IP_NF_FILTER: enabled (as module)
+</span></span><span class="line"><span class="cl">- CONFIG_IP_NF_TARGET_MASQUERADE: enabled (as module)
+</span></span><span class="line"><span class="cl">- CONFIG_NETFILTER_XT_MATCH_ADDRTYPE: enabled (as module)
+</span></span><span class="line"><span class="cl">- CONFIG_NETFILTER_XT_MATCH_CONNTRACK: enabled (as module)
+</span></span><span class="line"><span class="cl">- CONFIG_NETFILTER_XT_MATCH_IPVS: enabled (as module)
+</span></span><span class="line"><span class="cl">- CONFIG_IP_NF_NAT: enabled (as module)
+</span></span><span class="line"><span class="cl">- CONFIG_NF_NAT: enabled (as module)
+</span></span><span class="line"><span class="cl">- CONFIG_POSIX_MQUEUE: enabled
+</span></span><span class="line"><span class="cl">- CONFIG_DEVPTS_MULTIPLE_INSTANCES: enabled
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">Optional</span> <span class="n">Features</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_USER_NS</span><span class="p">:</span> <span class="n">enabled</span>
-</span></span><span class="line"><span class="cl">  <span class="p">(</span><span class="n">RHEL7</span><span class="o">/</span><span class="n">CentOS7</span><span class="p">:</span> <span class="n">User</span> <span class="n">namespaces</span> <span class="n">disabled</span><span class="p">;</span> <span class="n">add</span> <span class="s1">&#39;user_namespace.enable=1&#39;</span> <span class="n">to</span> <span class="n">boot</span> <span class="n">command</span> <span class="n">line</span><span class="p">)</span> <span class="p">(</span><span class="n">fail</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_SECCOMP</span><span class="p">:</span> <span class="n">enabled</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_CGROUP_PIDS</span><span class="p">:</span> <span class="n">enabled</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_MEMCG_KMEM</span><span class="p">:</span> <span class="n">enabled</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_RESOURCE_COUNTERS</span><span class="p">:</span> <span class="n">missing</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_BLK_CGROUP</span><span class="p">:</span> <span class="n">enabled</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_BLK_DEV_THROTTLING</span><span class="p">:</span> <span class="n">enabled</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_CGROUP_PERF</span><span class="p">:</span> <span class="n">enabled</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_CGROUP_HUGETLB</span><span class="p">:</span> <span class="n">enabled</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_NET_CLS_CGROUP</span><span class="p">:</span> <span class="n">enabled</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_NETPRIO_CGROUP</span><span class="p">:</span> <span class="n">enabled</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_CFS_BANDWIDTH</span><span class="p">:</span> <span class="n">enabled</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_FAIR_GROUP_SCHED</span><span class="p">:</span> <span class="n">enabled</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_RT_GROUP_SCHED</span><span class="p">:</span> <span class="n">enabled</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_IP_NF_TARGET_REDIRECT</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_IP_SET</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_IP_VS</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_IP_VS_NFCT</span><span class="p">:</span> <span class="n">enabled</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_IP_VS_PROTO_TCP</span><span class="p">:</span> <span class="n">enabled</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_IP_VS_PROTO_UDP</span><span class="p">:</span> <span class="n">enabled</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_IP_VS_RR</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_EXT4_FS</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_EXT4_FS_POSIX_ACL</span><span class="p">:</span> <span class="n">enabled</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">CONFIG_EXT4_FS_SECURITY</span><span class="p">:</span> <span class="n">enabled</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">Network</span> <span class="n">Drivers</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">  <span class="o">-</span> <span class="s2">&#34;overlay&#34;</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">    <span class="o">-</span> <span class="n">CONFIG_VXLAN</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">      <span class="n">Optional</span> <span class="p">(</span><span class="k">for</span> <span class="n">encrypted</span> <span class="n">networks</span><span class="p">):</span>
-</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="n">CONFIG_CRYPTO</span><span class="p">:</span> <span class="n">enabled</span>
-</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="n">CONFIG_CRYPTO_AEAD</span><span class="p">:</span> <span class="n">enabled</span>
-</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="n">CONFIG_CRYPTO_GCM</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="n">CONFIG_CRYPTO_SEQIV</span><span class="p">:</span> <span class="n">enabled</span>
-</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="n">CONFIG_CRYPTO_GHASH</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="n">CONFIG_XFRM</span><span class="p">:</span> <span class="n">enabled</span>
-</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="n">CONFIG_XFRM_USER</span><span class="p">:</span> <span class="n">enabled</span>
-</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="n">CONFIG_XFRM_ALGO</span><span class="p">:</span> <span class="n">enabled</span>
-</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="n">CONFIG_INET_ESP</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="n">CONFIG_INET_XFRM_MODE_TRANSPORT</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="o">-</span> <span class="n">Storage</span> <span class="n">Drivers</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">  <span class="o">-</span> <span class="s2">&#34;overlay&#34;</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">    <span class="o">-</span> <span class="n">CONFIG_OVERLAY_FS</span><span class="p">:</span> <span class="n">enabled</span> <span class="p">(</span><span class="n">as</span> <span class="n">module</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">Optional Features:
+</span></span><span class="line"><span class="cl">- CONFIG_USER_NS: enabled
+</span></span><span class="line"><span class="cl">  (RHEL7/CentOS7: User namespaces disabled; add &#39;user_namespace.enable=1&#39; to boot command line) (fail)
+</span></span><span class="line"><span class="cl">- CONFIG_SECCOMP: enabled
+</span></span><span class="line"><span class="cl">- CONFIG_CGROUP_PIDS: enabled
+</span></span><span class="line"><span class="cl">- CONFIG_MEMCG_KMEM: enabled
+</span></span><span class="line"><span class="cl">- CONFIG_RESOURCE_COUNTERS: missing
+</span></span><span class="line"><span class="cl">- CONFIG_BLK_CGROUP: enabled
+</span></span><span class="line"><span class="cl">- CONFIG_BLK_DEV_THROTTLING: enabled
+</span></span><span class="line"><span class="cl">- CONFIG_CGROUP_PERF: enabled
+</span></span><span class="line"><span class="cl">- CONFIG_CGROUP_HUGETLB: enabled
+</span></span><span class="line"><span class="cl">- CONFIG_NET_CLS_CGROUP: enabled
+</span></span><span class="line"><span class="cl">- CONFIG_NETPRIO_CGROUP: enabled
+</span></span><span class="line"><span class="cl">- CONFIG_CFS_BANDWIDTH: enabled
+</span></span><span class="line"><span class="cl">- CONFIG_FAIR_GROUP_SCHED: enabled
+</span></span><span class="line"><span class="cl">- CONFIG_RT_GROUP_SCHED: enabled
+</span></span><span class="line"><span class="cl">- CONFIG_IP_NF_TARGET_REDIRECT: enabled (as module)
+</span></span><span class="line"><span class="cl">- CONFIG_IP_SET: enabled (as module)
+</span></span><span class="line"><span class="cl">- CONFIG_IP_VS: enabled (as module)
+</span></span><span class="line"><span class="cl">- CONFIG_IP_VS_NFCT: enabled
+</span></span><span class="line"><span class="cl">- CONFIG_IP_VS_PROTO_TCP: enabled
+</span></span><span class="line"><span class="cl">- CONFIG_IP_VS_PROTO_UDP: enabled
+</span></span><span class="line"><span class="cl">- CONFIG_IP_VS_RR: enabled (as module)
+</span></span><span class="line"><span class="cl">- CONFIG_EXT4_FS: enabled (as module)
+</span></span><span class="line"><span class="cl">- CONFIG_EXT4_FS_POSIX_ACL: enabled
+</span></span><span class="line"><span class="cl">- CONFIG_EXT4_FS_SECURITY: enabled
+</span></span><span class="line"><span class="cl">- Network Drivers:
+</span></span><span class="line"><span class="cl">  - &#34;overlay&#34;:
+</span></span><span class="line"><span class="cl">    - CONFIG_VXLAN: enabled (as module)
+</span></span><span class="line"><span class="cl">      Optional (for encrypted networks):
+</span></span><span class="line"><span class="cl">      - CONFIG_CRYPTO: enabled
+</span></span><span class="line"><span class="cl">      - CONFIG_CRYPTO_AEAD: enabled
+</span></span><span class="line"><span class="cl">      - CONFIG_CRYPTO_GCM: enabled (as module)
+</span></span><span class="line"><span class="cl">      - CONFIG_CRYPTO_SEQIV: enabled
+</span></span><span class="line"><span class="cl">      - CONFIG_CRYPTO_GHASH: enabled (as module)
+</span></span><span class="line"><span class="cl">      - CONFIG_XFRM: enabled
+</span></span><span class="line"><span class="cl">      - CONFIG_XFRM_USER: enabled
+</span></span><span class="line"><span class="cl">      - CONFIG_XFRM_ALGO: enabled
+</span></span><span class="line"><span class="cl">      - CONFIG_INET_ESP: enabled (as module)
+</span></span><span class="line"><span class="cl">      - CONFIG_INET_XFRM_MODE_TRANSPORT: enabled (as module)
+</span></span><span class="line"><span class="cl">- Storage Drivers:
+</span></span><span class="line"><span class="cl">  - &#34;overlay&#34;:
+</span></span><span class="line"><span class="cl">    - CONFIG_OVERLAY_FS: enabled (as module)
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">STATUS</span><span class="p">:</span> <span class="mi">1</span> <span class="p">(</span><span class="n">fail</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">STATUS: 1 (fail)
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h3 id="2-agent">2. agent</h3>
@@ -1154,7 +1150,7 @@ Agent 将使用节点集群 Secret 以及随机生成的节点密码注册到 Se
         <div class="post-info-line">
             <div class="post-info-md"></div>
             <div class="post-info-share">
-                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://localhost:1313/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/" data-title="K3s 快速入门及安装部署" data-via="xxxx" data-hashtags="K3s"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://localhost:1313/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/" data-hashtag="K3s"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="http://localhost:1313/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/" data-title="K3s 快速入门及安装部署"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://localhost:1313/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/" data-title="K3s 快速入门及安装部署"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://localhost:1313/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/" data-title="K3s 快速入门及安装部署"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://lushuan.gihub.io/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/" data-title="K3s 快速入门及安装部署" data-via="xxxx" data-hashtags="K3s"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://lushuan.gihub.io/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/" data-hashtag="K3s"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="https://lushuan.gihub.io/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/" data-title="K3s 快速入门及安装部署"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="https://lushuan.gihub.io/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/" data-title="K3s 快速入门及安装部署"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://lushuan.gihub.io/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/" data-title="K3s 快速入门及安装部署"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
             </div>
         </div>
     </div>
@@ -1168,10 +1164,14 @@ Agent 将使用节点集群 Secret 以及随机生成的节点密码注册到 Se
 
     <div class="post-nav"><a href="/rsync%E7%BB%93%E5%90%88inotify%E5%AE%9E%E7%8E%B0%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E5%AE%9E%E6%97%B6%E5%90%8C%E6%AD%A5/" class="prev" rel="prev" title="rsync结合inotify实现静态资源实时同步"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>rsync结合inotify实现静态资源实时同步</a></div>
 </div>
-
+<div id="comments"><div id="gitalk" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://github.com/gitalk/gitalk"></a>Gitalk</a>.
+            </noscript><div id="valine" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://valine.js.org/">Valine</a>.
+            </noscript></div>
 </article></div>
             </main><footer class="footer">
-        <div class="footer-container"><div class="footer-line">我是有底线的</div><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.126.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+        <div class="footer-container"><div class="footer-line">我是有底线的</div><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.114.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
                 </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2025</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">lushuan</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
         </div>
     </footer></div>
@@ -1181,5 +1181,5 @@ Agent 将使用节点集群 Secret 以及随机生成的节点密码注册到 Se
             </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
                 <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
             </a>
-        </div><link rel="stylesheet" href="/lib/lightgallery/css/lightgallery-bundle.min.css"><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/lightgallery/lightgallery.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/zoom/lg-zoom.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"lightgallery":true,"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+        </div><link rel="stylesheet" href="/lib/gitalk/gitalk.min.css"><link rel="stylesheet" href="/lib/valine/valine.min.css"><link rel="stylesheet" href="/lib/lightgallery/css/lightgallery-bundle.min.css"><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/gitalk/gitalk.min.js"></script><script type="text/javascript" src="/lib/valine/Valine.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/lightgallery/lightgallery.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/zoom/lg-zoom.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{"gitalk":{"admin":["lushuan"],"clientID":"Ov23liSh0yG2wy6B7XP1","clientSecret":"7184a8df973267af95c92ddeb27789417ba82469","id":"2024-09-23T12:06:37+08:00","owner":"lushuan","repo":"lushuan.github.io","title":"K3s 快速入门及安装部署"},"valine":{"appId":"XQderBhsCffEN9pw26SOSQon-MdYXbMMI","appKey":"zLUsSeN2SfcBdQbGTv9iFhFp","avatar":"mp","el":"#valine","emojiCDN":"https://cdn.jsdelivr.net/npm/emoji-datasource-google@14.0.0/img/google/64/","emojiMaps":{"100":"1f4af.png","alien":"1f47d.png","anger":"1f4a2.png","angry":"1f620.png","anguished":"1f627.png","astonished":"1f632.png","black_heart":"1f5a4.png","blue_heart":"1f499.png","blush":"1f60a.png","bomb":"1f4a3.png","boom":"1f4a5.png","broken_heart":"1f494.png","brown_heart":"1f90e.png","clown_face":"1f921.png","cold_face":"1f976.png","cold_sweat":"1f630.png","confounded":"1f616.png","confused":"1f615.png","cry":"1f622.png","crying_cat_face":"1f63f.png","cupid":"1f498.png","dash":"1f4a8.png","disappointed":"1f61e.png","disappointed_relieved":"1f625.png","dizzy":"1f4ab.png","dizzy_face":"1f635.png","drooling_face":"1f924.png","exploding_head":"1f92f.png","expressionless":"1f611.png","face_vomiting":"1f92e.png","face_with_cowboy_hat":"1f920.png","face_with_hand_over_mouth":"1f92d.png","face_with_head_bandage":"1f915.png","face_with_monocle":"1f9d0.png","face_with_raised_eyebrow":"1f928.png","face_with_rolling_eyes":"1f644.png","face_with_symbols_on_mouth":"1f92c.png","face_with_thermometer":"1f912.png","fearful":"1f628.png","flushed":"1f633.png","frowning":"1f626.png","ghost":"1f47b.png","gift_heart":"1f49d.png","green_heart":"1f49a.png","grimacing":"1f62c.png","grin":"1f601.png","grinning":"1f600.png","hankey":"1f4a9.png","hear_no_evil":"1f649.png","heart":"2764-fe0f.png","heart_decoration":"1f49f.png","heart_eyes":"1f60d.png","heart_eyes_cat":"1f63b.png","heartbeat":"1f493.png","heartpulse":"1f497.png","heavy_heart_exclamation_mark_ornament":"2763-fe0f.png","hole":"1f573-fe0f.png","hot_face":"1f975.png","hugging_face":"1f917.png","hushed":"1f62f.png","imp":"1f47f.png","innocent":"1f607.png","japanese_goblin":"1f47a.png","japanese_ogre":"1f479.png","joy":"1f602.png","joy_cat":"1f639.png","kiss":"1f48b.png","kissing":"1f617.png","kissing_cat":"1f63d.png","kissing_closed_eyes":"1f61a.png","kissing_heart":"1f618.png","kissing_smiling_eyes":"1f619.png","laughing":"1f606.png","left_speech_bubble":"1f5e8-fe0f.png","love_letter":"1f48c.png","lying_face":"1f925.png","mask":"1f637.png","money_mouth_face":"1f911.png","nauseated_face":"1f922.png","nerd_face":"1f913.png","neutral_face":"1f610.png","no_mouth":"1f636.png","open_mouth":"1f62e.png","orange_heart":"1f9e1.png","partying_face":"1f973.png","pensive":"1f614.png","persevere":"1f623.png","pleading_face":"1f97a.png","pouting_cat":"1f63e.png","purple_heart":"1f49c.png","rage":"1f621.png","relaxed":"263a-fe0f.png","relieved":"1f60c.png","revolving_hearts":"1f49e.png","right_anger_bubble":"1f5ef-fe0f.png","robot_face":"1f916.png","rolling_on_the_floor_laughing":"1f923.png","scream":"1f631.png","scream_cat":"1f640.png","see_no_evil":"1f648.png","shushing_face":"1f92b.png","skull":"1f480.png","skull_and_crossbones":"2620-fe0f.png","sleeping":"1f634.png","sleepy":"1f62a.png","slightly_frowning_face":"1f641.png","slightly_smiling_face":"1f642.png","smile":"1f604.png","smile_cat":"1f638.png","smiley":"1f603.png","smiley_cat":"1f63a.png","smiling_face_with_3_hearts":"1f970.png","smiling_imp":"1f608.png","smirk":"1f60f.png","smirk_cat":"1f63c.png","sneezing_face":"1f927.png","sob":"1f62d.png","space_invader":"1f47e.png","sparkling_heart":"1f496.png","speak_no_evil":"1f64a.png","speech_balloon":"1f4ac.png","star-struck":"1f929.png","stuck_out_tongue":"1f61b.png","stuck_out_tongue_closed_eyes":"1f61d.png","stuck_out_tongue_winking_eye":"1f61c.png","sunglasses":"1f60e.png","sweat":"1f613.png","sweat_drops":"1f4a6.png","sweat_smile":"1f605.png","thinking_face":"1f914.png","thought_balloon":"1f4ad.png","tired_face":"1f62b.png","triumph":"1f624.png","two_hearts":"1f495.png","unamused":"1f612.png","upside_down_face":"1f643.png","weary":"1f629.png","white_frowning_face":"2639-fe0f.png","white_heart":"1f90d.png","wink":"1f609.png","woozy_face":"1f974.png","worried":"1f61f.png","yawning_face":"1f971.png","yellow_heart":"1f49b.png","yum":"1f60b.png","zany_face":"1f92a.png","zipper_mouth_face":"1f910.png","zzz":"1f4a4.png"},"enableQQ":false,"highlight":true,"lang":"zh-CN","pageSize":10,"placeholder":"期待您的评论...","recordIP":true,"visitor":true}},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"lightgallery":true,"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
 </html>

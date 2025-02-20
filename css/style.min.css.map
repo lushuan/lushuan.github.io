@@ -1,7 +1,7 @@
 {
 	"version": 3,
 	"file": "style.min.css",
-	"sourceRoot": "D:/workspace/gitee_workspace/hugolu",
+	"sourceRoot": "D:/workspace/workspace_gitee/hugo/hugolu",
 	"sources": [
 		"themes/LoveIt/assets/css/style.scss",
 		"themes/LoveIt/assets/lib/normalize/normalize.css",
