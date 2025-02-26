@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>Nginx 安装部署 - Less is more</title><meta name="Description" content="晚来天欲雪,能饮一杯无?"><meta property="og:title" content="Nginx 安装部署" />
+<meta property="og:description" content="方式一：yum 安装(Redhat) 方式二：二进制预编译安装 指定安装版本 安装操作系统版本CentOs7.x 方式一： yum 包管理器安装 这里选择通过y" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://lushuan.gihub.io/nginx%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/" /><meta property="og:image" content="https://lushuan.gihub.io/images/avatar.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-01-15T12:06:37+08:00" />
+<meta property="article:modified_time" content="2022-06-26T12:06:37+08:00" /><meta property="og:site_name" content="我的网站" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://lushuan.gihub.io/images/avatar.png"/>
+
+<meta name="twitter:title" content="Nginx 安装部署"/>
+<meta name="twitter:description" content="方式一：yum 安装(Redhat) 方式二：二进制预编译安装 指定安装版本 安装操作系统版本CentOs7.x 方式一： yum 包管理器安装 这里选择通过y"/>
+<meta name="application-name" content="我的网站">
+<meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/images/avatar.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://lushuan.gihub.io/nginx%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/" /><link rel="prev" href="https://lushuan.gihub.io/nginx%E5%B8%B8%E7%94%A8%E9%85%8D%E7%BD%AE/" /><link rel="next" href="https://lushuan.gihub.io/nginx-%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Nginx 安装部署",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/lushuan.gihub.io\/nginx%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2\/"
+        },"genre": "posts","keywords": "Nginx","wordcount":  2266 ,
+        "url": "https:\/\/lushuan.gihub.io\/nginx%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2\/","datePublished": "2022-01-15T12:06:37+08:00","dateModified": "2022-06-26T12:06:37+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "lushuan"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Less is more"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Less is more</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 归档 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/" title="About"> 关于 </a><a class="menu-item" href="/friends/" title="friends"> 友链 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Less is more"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Less is more</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">归档</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="About">关于</a><a class="menu-item" href="/friends/" title="friends">友链</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content always-active" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Nginx 安装部署</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/nginx/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Nginx</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2022-01-15">2022-01-15</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 2266 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 5 分钟&nbsp;<span id="/nginx%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/" class="leancloud_visitors" data-flag-title="Nginx 安装部署">
+                        <i class="far fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
+                    </span>&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#方式一-yum-包管理器安装">方式一： yum 包管理器安装</a></li>
+    <li><a href="#方式二二进制预编译安装">方式二：二进制预编译安装</a>
+      <ul>
+        <li><a href="#步骤-1-下载-nginx">步骤 1: 下载 Nginx</a></li>
+        <li><a href="#步骤-2-解压下载的文件">步骤 2: 解压下载的文件</a></li>
+        <li><a href="#步骤-3-配置和编译">步骤 3: 配置和编译</a></li>
+        <li><a href="#步骤-4-安装">步骤 4: 安装</a></li>
+        <li><a href="#步骤-5-设置软链接可选">步骤 5: 设置软链接（可选）</a></li>
+        <li><a href="#步骤-6-启动-nginx">步骤 6: 启动 Nginx</a></li>
+        <li><a href="#步骤7-添加到shell-配置文件中">步骤7 添加到shell 配置文件中</a></li>
+        <li><a href="#步骤-8-配置防火墙和selinux如果适用">步骤 8: 配置防火墙和SELinux（如果适用）</a></li>
+        <li><a href="#注意事项">注意事项</a></li>
+      </ul>
+    </li>
+    <li><a href="#nginx-管理">Nginx 管理</a>
+      <ul>
+        <li><a href="#1-通过systemctl或者service管理">1. 通过<code>systemctl</code>或者<code>service</code>管理</a></li>
+        <li><a href="#2-通过nginx原生命令管理">2. 通过nginx原生命令管理</a>
+          <ul>
+            <li><a href="#设置nginx-软连接">设置nginx 软连接</a></li>
+            <li><a href="#查找nginx二进制文件的位置">查找Nginx二进制文件的位置</a></li>
+            <li><a href="#检查nginx配置文件语法是否正确">检查Nginx配置文件语法是否正确</a></li>
+            <li><a href="#启动nginx">启动Nginx</a></li>
+            <li><a href="#停止nginx">停止Nginx</a></li>
+            <li><a href="#重新加载nginx配置">重新加载Nginx配置</a></li>
+            <li><a href="#重启nginx">重启Nginx</a></li>
+            <li><a href="#注意事项-1">注意事项</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><ul>
+<li>方式一：yum 安装(Redhat)</li>
+<li>方式二：二进制预编译安装</li>
+<li>指定安装版本</li>
+<li>安装操作系统版本CentOs7.x</li>
+</ul>
+<h2 id="方式一-yum-包管理器安装">方式一： yum 包管理器安装</h2>
+<p>这里选择通过yum 源进行安装，安装操作系统为Linux CentOS 7.9</p>
+<ol>
+<li>CentOs 配置阿里云 yum 源</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># 备份
+</span></span><span class="line"><span class="cl">mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># 下载yum 源
+</span></span><span class="line"><span class="cl">wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+</span></span><span class="line"><span class="cl"># 清除yum缓存
+</span></span><span class="line"><span class="cl">yum clean all
+</span></span><span class="line"><span class="cl"># 缓存阿里云源
+</span></span><span class="line"><span class="cl">yum makecache
+</span></span><span class="line"><span class="cl"># 测试阿里云源 
+</span></span><span class="line"><span class="cl">yum list
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="2">
+<li>安装依赖包， EPEL 仓库中有 Nginx 的安装包</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">yum install openssl-devel pcre-devel epel-release -y
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="3">
+<li>安装nginx 服务</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># 查看安装提供的版本
+</span></span><span class="line"><span class="cl">$ sudo yum list nginx --showduplicates | sort -r
+</span></span><span class="line"><span class="cl">已加载插件：fastestmirror
+</span></span><span class="line"><span class="cl">已安装的软件包
+</span></span><span class="line"><span class="cl">可安装的软件包
+</span></span><span class="line"><span class="cl"> * updates: mirrors.aliyun.com
+</span></span><span class="line"><span class="cl">nginx.x86_64                        1:1.20.1-10.el7                        epel 
+</span></span><span class="line"><span class="cl">nginx.x86_64                        1:1.20.1-10.el7                        @epel
+</span></span><span class="line"><span class="cl">Loading mirror speeds from cached hostfile
+</span></span><span class="line"><span class="cl"> * extras: mirrors.aliyun.com
+</span></span><span class="line"><span class="cl"> * epel: pubmirror1.math.uh.edu
+</span></span><span class="line"><span class="cl"> * base: mirrors.aliyun.com
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># 安装指定版本
+</span></span><span class="line"><span class="cl">yum install nginx-1.20.1 -y
+</span></span><span class="line"><span class="cl"># or 添加 Nginx 源
+</span></span><span class="line"><span class="cl">rpm -Uvh http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># 查看nginx 版本
+</span></span><span class="line"><span class="cl">$ nginx -v
+</span></span><span class="line"><span class="cl">nginx version: nginx/1.20.1
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="4">
+<li>启动服务并配置开机自启动</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">systemctl start nginx
+</span></span><span class="line"><span class="cl">systemctl eable nginx
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="5">
+<li>测试</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">curl 192.168.1.20
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>浏览器访问</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># 关闭防火墙
+</span></span><span class="line"><span class="cl">systemctl stop firewalld
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="方式二二进制预编译安装">方式二：二进制预编译安装</h2>
+<p>在Linux系统上安装Nginx的二进制版本通常指的是从Nginx官方网站下载预编译的软件包，而不是通过包管理器（如<code>apt</code>或<code>yum</code>）进行安装。以下是针对Nginx 1.20.1版本的二进制安装步骤：</p>
+<h3 id="步骤-1-下载-nginx">步骤 1: 下载 Nginx</h3>
+<p>首先，你需要访问<a href="https://nginx.org/en/download.html" target="_blank" rel="noopener noreffer ">Nginx官方网站</a>找到1.20.1版本的下载链接。对于稳定版，你可以使用wget命令直接下载：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">wget https://nginx.org/download/nginx-1.20.1.tar.gz
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="步骤-2-解压下载的文件">步骤 2: 解压下载的文件</h3>
+<p>下载完成后，解压缩文件到当前目录：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">tar -zxvf nginx-1.20.1.tar.gz
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这将创建一个名为<code>nginx-1.20.1</code>的文件夹。</p>
+<h3 id="步骤-3-配置和编译">步骤 3: 配置和编译</h3>
+<p>进入解压后的目录并准备编译Nginx。首先运行配置脚本以设置编译环境：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">cd</span> nginx-1.20.1
+</span></span><span class="line"><span class="cl">./configure
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>默认情况下，上述命令会使用默认配置进行编译。如果你想自定义安装路径或其他选项，可以添加相应的参数。例如，指定不同的安装前缀路径：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">./configure --prefix<span class="o">=</span>/data/nginx --with-http_ssl_module --with-http_v2_module --with-http_realip_module --with-http_addition_module --with-http_sub_module --with-http_stub_status_module --with-http_gzip_static_module --with-http_addition_module --with-pcre --with-stream
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>配置完成后，编译源代码：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">make
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="步骤-4-安装">步骤 4: 安装</h3>
+<p>编译成功后，执行以下命令安装Nginx：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo make install
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这将会把Nginx安装到你之前配置时指定的位置，默认情况下是<code>/data/nginx</code>。</p>
+<h3 id="步骤-5-设置软链接可选">步骤 5: 设置软链接（可选）</h3>
+<p>如果你希望简化Nginx命令的调用，可以为Nginx创建一个软链接到系统的<code>sbin</code>目录中：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo ln -s /data/nginx/sbin/nginx /usr/local/sbin/nginx
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这样，你就可以直接使用<code>nginx</code>命令来管理和操作Nginx服务器了。</p>
+<h3 id="步骤-6-启动-nginx">步骤 6: 启动 Nginx</h3>
+<p>安装完成后，可以通过以下命令启动Nginx：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">nginx
+</span></span><span class="line"><span class="cl"><span class="c1"># 指定配置文件</span>
+</span></span><span class="line"><span class="cl">nginx -c /data/nginx/conf/nginx.conf
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>如果你想检查Nginx配置是否正确，可以在启动前使用如下命令测试配置文件：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">nginx -t
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>指定配置文件检查配置文件语法是否正常</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">sudo nginx -t -c /path/to/your/nginx.conf
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>重新加载Nginx配置</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">sudo nginx -s reload -c /path/to/your/nginx.conf
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="步骤7-添加到shell-配置文件中">步骤7 添加到shell 配置文件中</h3>
+<p>添加到你的shell配置文件（如<code>.bashrc</code>或<code>.profile</code>）中</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="nb">echo</span> <span class="s1">&#39;export PATH=$PATH:/usr/local/sbin&#39;</span> &gt;&gt; ~/.bashrc
+</span></span><span class="line"><span class="cl"><span class="nb">source</span> ~/.bashrc
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="步骤-8-配置防火墙和selinux如果适用">步骤 8: 配置防火墙和SELinux（如果适用）</h3>
+<p>根据你的服务器安全设置，可能需要调整防火墙规则允许HTTP(S)流量，并且如果启用了SELinux，则可能还需要对其进行适当的配置以便让Nginx正常工作。</p>
+<h3 id="注意事项">注意事项</h3>
+<ul>
+<li><strong>依赖库</strong>：确保系统已安装必要的依赖库，如PCRE、Zlib和OpenSSL等，这些对于Nginx的一些功能是必需的。如果你在<code>./configure</code>阶段遇到缺少依赖的问题，你可能需要先安装这些依赖。</li>
+<li><strong>更新与维护</strong>：虽然可以从二进制安装开始，但后续的更新可能会比通过包管理器更加复杂。建议定期检查Nginx官网获取最新的安全补丁和版本更新。</li>
+</ul>
+<p>通过以上步骤，你应该能够成功地在Linux系统上安装Nginx 1.20.1的二进制版本。</p>
+<p><figure><a class="lightgallery" href="/images/nginx/nginx-access.png" title="image-20240722133344836" data-thumbnail="/images/nginx/nginx-access.png" data-sub-html="<h2>Nginx 访问首页</h2><p>image-20240722133344836</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/nginx/nginx-access.png"
+            data-srcset="/images/nginx/nginx-access.png, /images/nginx/nginx-access.png 1.5x, /images/nginx/nginx-access.png 2x"
+            data-sizes="auto"
+            alt="/images/nginx/nginx-access.png" />
+    </a><figcaption class="image-caption">Nginx 访问首页</figcaption>
+    </figure></p>
+<h2 id="nginx-管理">Nginx 管理</h2>
+<h3 id="1-通过systemctl或者service管理">1. 通过<code>systemctl</code>或者<code>service</code>管理</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">nginx -t
+</span></span><span class="line"><span class="cl">systemctl start nginx
+</span></span><span class="line"><span class="cl">systemctl reload nginx
+</span></span><span class="line"><span class="cl">systemctl restart nginx
+</span></span><span class="line"><span class="cl">systemctl stop nginx
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="2-通过nginx原生命令管理">2. 通过nginx原生命令管理</h3>
+<h4 id="设置nginx-软连接">设置nginx 软连接</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">sudo ln -s /PATH/nginx/sbin/nginx /usr/local/sbin/nginx
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="查找nginx二进制文件的位置">查找Nginx二进制文件的位置</h4>
+<p>通常，Nginx的二进制文件位于<code>/usr/sbin/nginx</code>，但这也可能根据你的安装位置有所不同。如果不确定，可以使用<code>which nginx</code>或<code>whereis nginx</code>来查找。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">which nginx
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>或者</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">whereis nginx
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="检查nginx配置文件语法是否正确">检查Nginx配置文件语法是否正确</h4>
+<p>在启动或重新加载Nginx之前，建议先检查配置文件的语法是否有误。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ nginx -t
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这将测试配置文件的有效性，并告知你是否存在任何语法错误。</p>
+<h4 id="启动nginx">启动Nginx</h4>
+<p>要启动Nginx，请使用以下命令：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ nginx
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>如果没有指定配置文件路径，Nginx会默认寻找位于<code>/etc/nginx/nginx.conf</code>的主配置文件。如果你想指定一个不同的配置文件，可以使用<code>-c</code>选项：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ nginx -c /path/to/nginx.conf
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="停止nginx">停止Nginx</h4>
+<p>有几种方式可以停止Nginx：</p>
+<ol>
+<li>
+<p><strong>快速停止</strong>：立即停止Nginx，不等待当前处理的请求完成。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ nginx -s stop
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p><strong>优雅地停止</strong>（推荐）：允许Nginx完成当前正在处理的所有请求后再停止。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ nginx -s quit
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ol>
+<h4 id="重新加载nginx配置">重新加载Nginx配置</h4>
+<p>当你修改了Nginx配置文件并希望重新加载而不中断现有连接时，可以使用以下命令：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ nginx -s reload
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这个命令会告诉Nginx重新加载其配置文件。如果有任何语法错误，Nginx将忽略此命令并不会重新加载配置。</p>
+<h4 id="重启nginx">重启Nginx</h4>
+<p>虽然没有直接的“重启”命令，但你可以组合使用上述命令实现类似的效果。例如，先发送停止信号再启动Nginx：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ nginx -s quit <span class="o">&amp;&amp;</span> /usr/sbin/nginx
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>不过，更常用的是简单地使用<code>reload</code>命令，它可以在大多数情况下满足需求而不需要完全重启服务。</p>
+<h4 id="注意事项-1">注意事项</h4>
+<ul>
+<li>在执行这些操作前，确保有足够的权限。通常需要以root用户或使用<code>sudo</code>执行这些命令。</li>
+<li>直接使用Nginx命令行工具进行管理时，注意不要与<code>systemctl</code>或<code>service</code>同时使用，以免造成冲突或意外的服务状态变化。</li>
+<li>总是先检查配置文件的正确性（使用<code>nginx -t</code>），然后再尝试重新加载或重启服务，以避免因配置错误导致服务无法正常启动。</li>
+</ul>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2022-06-26</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://lushuan.gihub.io/nginx%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/" data-title="Nginx 安装部署" data-via="xxxx" data-hashtags="Nginx"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://lushuan.gihub.io/nginx%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/" data-hashtag="Nginx"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="https://lushuan.gihub.io/nginx%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/" data-title="Nginx 安装部署"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="https://lushuan.gihub.io/nginx%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/" data-title="Nginx 安装部署"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://lushuan.gihub.io/nginx%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/" data-title="Nginx 安装部署"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/nginx/">Nginx</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/nginx%E5%B8%B8%E7%94%A8%E9%85%8D%E7%BD%AE/" class="prev" rel="prev" title="Nginx 常用配置"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Nginx 常用配置</a>
+            <a href="/nginx-%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/" class="next" rel="next" title="Nginx 架构原理">Nginx 架构原理<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+<div id="comments"><div id="gitalk" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://github.com/gitalk/gitalk"></a>Gitalk</a>.
+            </noscript><div id="valine" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://valine.js.org/">Valine</a>.
+            </noscript></div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">我是有底线的</div><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.114.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2025</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">lushuan</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/gitalk/gitalk.min.css"><link rel="stylesheet" href="/lib/valine/valine.min.css"><link rel="stylesheet" href="/lib/lightgallery/css/lightgallery-bundle.min.css"><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/gitalk/gitalk.min.js"></script><script type="text/javascript" src="/lib/valine/Valine.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/lightgallery/lightgallery.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/zoom/lg-zoom.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{"gitalk":{"admin":["lushuan"],"clientID":"Ov23liSh0yG2wy6B7XP1","clientSecret":"7184a8df973267af95c92ddeb27789417ba82469","id":"2022-01-15T12:06:37+08:00","owner":"lushuan","repo":"lushuan.github.io","title":"Nginx 安装部署"},"valine":{"appId":"XQderBhsCffEN9pw26SOSQon-MdYXbMMI","appKey":"zLUsSeN2SfcBdQbGTv9iFhFp","avatar":"mp","el":"#valine","emojiCDN":"https://cdn.jsdelivr.net/npm/emoji-datasource-google@14.0.0/img/google/64/","emojiMaps":{"100":"1f4af.png","alien":"1f47d.png","anger":"1f4a2.png","angry":"1f620.png","anguished":"1f627.png","astonished":"1f632.png","black_heart":"1f5a4.png","blue_heart":"1f499.png","blush":"1f60a.png","bomb":"1f4a3.png","boom":"1f4a5.png","broken_heart":"1f494.png","brown_heart":"1f90e.png","clown_face":"1f921.png","cold_face":"1f976.png","cold_sweat":"1f630.png","confounded":"1f616.png","confused":"1f615.png","cry":"1f622.png","crying_cat_face":"1f63f.png","cupid":"1f498.png","dash":"1f4a8.png","disappointed":"1f61e.png","disappointed_relieved":"1f625.png","dizzy":"1f4ab.png","dizzy_face":"1f635.png","drooling_face":"1f924.png","exploding_head":"1f92f.png","expressionless":"1f611.png","face_vomiting":"1f92e.png","face_with_cowboy_hat":"1f920.png","face_with_hand_over_mouth":"1f92d.png","face_with_head_bandage":"1f915.png","face_with_monocle":"1f9d0.png","face_with_raised_eyebrow":"1f928.png","face_with_rolling_eyes":"1f644.png","face_with_symbols_on_mouth":"1f92c.png","face_with_thermometer":"1f912.png","fearful":"1f628.png","flushed":"1f633.png","frowning":"1f626.png","ghost":"1f47b.png","gift_heart":"1f49d.png","green_heart":"1f49a.png","grimacing":"1f62c.png","grin":"1f601.png","grinning":"1f600.png","hankey":"1f4a9.png","hear_no_evil":"1f649.png","heart":"2764-fe0f.png","heart_decoration":"1f49f.png","heart_eyes":"1f60d.png","heart_eyes_cat":"1f63b.png","heartbeat":"1f493.png","heartpulse":"1f497.png","heavy_heart_exclamation_mark_ornament":"2763-fe0f.png","hole":"1f573-fe0f.png","hot_face":"1f975.png","hugging_face":"1f917.png","hushed":"1f62f.png","imp":"1f47f.png","innocent":"1f607.png","japanese_goblin":"1f47a.png","japanese_ogre":"1f479.png","joy":"1f602.png","joy_cat":"1f639.png","kiss":"1f48b.png","kissing":"1f617.png","kissing_cat":"1f63d.png","kissing_closed_eyes":"1f61a.png","kissing_heart":"1f618.png","kissing_smiling_eyes":"1f619.png","laughing":"1f606.png","left_speech_bubble":"1f5e8-fe0f.png","love_letter":"1f48c.png","lying_face":"1f925.png","mask":"1f637.png","money_mouth_face":"1f911.png","nauseated_face":"1f922.png","nerd_face":"1f913.png","neutral_face":"1f610.png","no_mouth":"1f636.png","open_mouth":"1f62e.png","orange_heart":"1f9e1.png","partying_face":"1f973.png","pensive":"1f614.png","persevere":"1f623.png","pleading_face":"1f97a.png","pouting_cat":"1f63e.png","purple_heart":"1f49c.png","rage":"1f621.png","relaxed":"263a-fe0f.png","relieved":"1f60c.png","revolving_hearts":"1f49e.png","right_anger_bubble":"1f5ef-fe0f.png","robot_face":"1f916.png","rolling_on_the_floor_laughing":"1f923.png","scream":"1f631.png","scream_cat":"1f640.png","see_no_evil":"1f648.png","shushing_face":"1f92b.png","skull":"1f480.png","skull_and_crossbones":"2620-fe0f.png","sleeping":"1f634.png","sleepy":"1f62a.png","slightly_frowning_face":"1f641.png","slightly_smiling_face":"1f642.png","smile":"1f604.png","smile_cat":"1f638.png","smiley":"1f603.png","smiley_cat":"1f63a.png","smiling_face_with_3_hearts":"1f970.png","smiling_imp":"1f608.png","smirk":"1f60f.png","smirk_cat":"1f63c.png","sneezing_face":"1f927.png","sob":"1f62d.png","space_invader":"1f47e.png","sparkling_heart":"1f496.png","speak_no_evil":"1f64a.png","speech_balloon":"1f4ac.png","star-struck":"1f929.png","stuck_out_tongue":"1f61b.png","stuck_out_tongue_closed_eyes":"1f61d.png","stuck_out_tongue_winking_eye":"1f61c.png","sunglasses":"1f60e.png","sweat":"1f613.png","sweat_drops":"1f4a6.png","sweat_smile":"1f605.png","thinking_face":"1f914.png","thought_balloon":"1f4ad.png","tired_face":"1f62b.png","triumph":"1f624.png","two_hearts":"1f495.png","unamused":"1f612.png","upside_down_face":"1f643.png","weary":"1f629.png","white_frowning_face":"2639-fe0f.png","white_heart":"1f90d.png","wink":"1f609.png","woozy_face":"1f974.png","worried":"1f61f.png","yawning_face":"1f971.png","yellow_heart":"1f49b.png","yum":"1f60b.png","zany_face":"1f92a.png","zipper_mouth_face":"1f910.png","zzz":"1f4a4.png"},"enableQQ":false,"highlight":true,"lang":"zh-CN","pageSize":10,"placeholder":"期待您的评论...","recordIP":true,"visitor":true}},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"lightgallery":true,"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

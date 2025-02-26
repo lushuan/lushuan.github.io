@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>MySQL 集群之主从部署 - Less is more</title><meta name="Description" content="晚来天欲雪,能饮一杯无?"><meta property="og:title" content="MySQL 集群之主从部署" />
+<meta property="og:description" content="背景信息 为了增加数据的冗余备份，增强服务的高可用性，从传统的单服务应用升级到集群服务应用是一个合适方案，这里介绍一下MySQL 5.7 版本的部署，" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://lushuan.gihub.io/mysql%E9%9B%86%E7%BE%A4%E4%B9%8B%E4%B8%BB%E4%BB%8E%E9%83%A8%E7%BD%B2/" /><meta property="og:image" content="https://lushuan.gihub.io/images/avatar.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-10-16T12:06:37+08:00" />
+<meta property="article:modified_time" content="2024-10-26T12:06:37+08:00" /><meta property="og:site_name" content="我的网站" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://lushuan.gihub.io/images/avatar.png"/>
+
+<meta name="twitter:title" content="MySQL 集群之主从部署"/>
+<meta name="twitter:description" content="背景信息 为了增加数据的冗余备份，增强服务的高可用性，从传统的单服务应用升级到集群服务应用是一个合适方案，这里介绍一下MySQL 5.7 版本的部署，"/>
+<meta name="application-name" content="我的网站">
+<meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/images/avatar.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://lushuan.gihub.io/mysql%E9%9B%86%E7%BE%A4%E4%B9%8B%E4%B8%BB%E4%BB%8E%E9%83%A8%E7%BD%B2/" /><link rel="prev" href="https://lushuan.gihub.io/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "MySQL 集群之主从部署",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/lushuan.gihub.io\/mysql%E9%9B%86%E7%BE%A4%E4%B9%8B%E4%B8%BB%E4%BB%8E%E9%83%A8%E7%BD%B2\/"
+        },"genre": "posts","keywords": "MySQL","wordcount":  3684 ,
+        "url": "https:\/\/lushuan.gihub.io\/mysql%E9%9B%86%E7%BE%A4%E4%B9%8B%E4%B8%BB%E4%BB%8E%E9%83%A8%E7%BD%B2\/","datePublished": "2024-10-16T12:06:37+08:00","dateModified": "2024-10-26T12:06:37+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "lushuan"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Less is more"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Less is more</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 归档 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/" title="About"> 关于 </a><a class="menu-item" href="/friends/" title="friends"> 友链 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Less is more"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Less is more</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">归档</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="About">关于</a><a class="menu-item" href="/friends/" title="friends">友链</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content always-active" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">MySQL 集群之主从部署</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/mysql/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>MySQL</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2024-10-16">2024-10-16</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 3684 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 8 分钟&nbsp;<span id="/mysql%E9%9B%86%E7%BE%A4%E4%B9%8B%E4%B8%BB%E4%BB%8E%E9%83%A8%E7%BD%B2/" class="leancloud_visitors" data-flag-title="MySQL 集群之主从部署">
+                        <i class="far fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
+                    </span>&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#背景信息">背景信息</a></li>
+    <li><a href="#环境准备">环境准备</a></li>
+    <li><a href="#安装mysql-57">安装MySQL 5.7</a>
+      <ul>
+        <li><a href="#安装包功能和作用">安装包功能和作用</a></li>
+      </ul>
+    </li>
+    <li><a href="#配置主服务器">配置主服务器</a></li>
+    <li><a href="#配置从服务器">配置从服务器</a></li>
+    <li><a href="#修改登录密码">修改登录密码</a></li>
+    <li><a href="#安装后验证">安装后验证</a></li>
+    <li><a href="#开启主从同步">开启主从同步</a>
+      <ul>
+        <li><a href="#master-节点">Master 节点</a></li>
+        <li><a href="#slave-节点">Slave 节点</a></li>
+      </ul>
+    </li>
+    <li><a href="#测试主从同步">测试主从同步</a></li>
+    <li><a href="#卸载-mysql">卸载 MySQL</a></li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="背景信息">背景信息</h2>
+<p>为了增加数据的冗余备份，增强服务的高可用性，从传统的单服务应用升级到集群服务应用是一个合适方案，这里介绍一下MySQL 5.7 版本的部署，5.7 版本也是目前大多数企业当前在用的版本，虽然也有很多企业升级到了8.0 版本，不过从安装部署的角度来看其实是大同小异的</p>
+<h2 id="环境准备">环境准备</h2>
+<table>
+<thead>
+<tr>
+<th>操作系统版本</th>
+<th>cpu</th>
+<th>内存</th>
+<th>磁盘</th>
+<th>IP</th>
+<th>部署方式</th>
+<th>MySQL版本</th>
+<th>主从节点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>centos 7.9</td>
+<td>2c</td>
+<td>4G</td>
+<td>40G</td>
+<td>192.168.143.101</td>
+<td>rpm</td>
+<td>5.7.20</td>
+<td>Master</td>
+</tr>
+<tr>
+<td>centos 7.9</td>
+<td>2c</td>
+<td>4G</td>
+<td>40G</td>
+<td>192.168.143.102</td>
+<td>rpm</td>
+<td>5.7.20</td>
+<td>Slave</td>
+</tr>
+</tbody>
+</table>
+<h2 id="安装mysql-57">安装MySQL 5.7</h2>
+<p>1、下载安装包</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ cd /path/to/directory
+</span></span><span class="line"><span class="cl">$ wget https://downloads.mysql.com/archives/get/p/23/file/mysql-5.7.20-1.el7.x86_64.rpm-bundle.tar
+</span></span><span class="line"><span class="cl"># 删除不需要的安装包
+</span></span><span class="line"><span class="cl">$ ls |grep -vE &#39;client|libs|common|server-5.7&#39;|xargs rm -f
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>2、安装依赖</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># mysql-community-common-5.7.20-1.el7.x86_64.rpm 依赖
+</span></span><span class="line"><span class="cl">$ sudo yum -y install gcc vim wget net-tools lrzsz libaio
+</span></span><span class="line"><span class="cl"># mysql-community-client-5.7.20-1.el7.x86_64.rpm 依赖
+</span></span><span class="line"><span class="cl">$ sudo yum install  ncurses-compat-libs -y
+</span></span><span class="line"><span class="cl"># mysql-community-server-5.7.20-1.el7.x86_64.rpm 依赖
+</span></span><span class="line"><span class="cl">$ sudo yum install libaio numactl-libs -y
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>3、<a href="https://blog.dazhongma.top/linux%E6%97%B6%E9%97%B4%E6%A0%A1%E6%AD%A3/" target="_blank" rel="noopener noreffer ">服务器时间校正</a><br>
+4、关闭防火墙和安全(主从)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ setenforce 0
+</span></span><span class="line"><span class="cl">$ systemctl stop firewalld
+</span></span><span class="line"><span class="cl">$ systemctl disable firewalld
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>4.1 (可选)如果你的仓库中没有 ncurses-compat-libs，你可能需要添加一个额外的仓库，例如 EPEL (Extra Packages for Enterprise Linux)：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ sudo yum install epel-release  -y
+</span></span><span class="line"><span class="cl">$ sudo yum install ncurses-compat-libs  -y
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>4.2 (可选) 检验系统是否包含mariadb-lib
+检验系统是否包含mariadb-lib,如果有需要卸载，否则mysql 无法安装</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">rpm -qa <span class="p">|</span> grep mariadb
+</span></span><span class="line"><span class="cl">rpm -e --nodeps mariadb-libs-5.5.68-1.el7.x86_64
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>5、安装</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ sudo rpm -ivh mysql-community-common-5.7.20-1.el7.x86_64.rpm
+</span></span><span class="line"><span class="cl">$ sudo rpm -ivh mysql-community-libs-5.7.20-1.el7.x86_64.rpm
+</span></span><span class="line"><span class="cl">$ sudo rpm -ivh mysql-community-libs-compat-5.7.20-1.el7.x86_64.rpm
+</span></span><span class="line"><span class="cl">$ sudo rpm -ivh mysql-community-client-5.7.20-1.el7.x86_64.rpm
+</span></span><span class="line"><span class="cl">$ sudo rpm -ivh mysql-community-server-5.7.20-1.el7.x86_64.rpm
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">$ rpm -qa<span class="p">|</span>grep mysql
+</span></span><span class="line"><span class="cl">mysql-community-common-5.7.20-1.el7.x86_64
+</span></span><span class="line"><span class="cl">mysql-community-libs-5.7.20-1.el7.x86_64
+</span></span><span class="line"><span class="cl">mysql-community-libs-compat-5.7.20-1.el7.x86_64
+</span></span><span class="line"><span class="cl">mysql-community-client-5.7.20-1.el7.x86_64
+</span></span><span class="line"><span class="cl">mysql-community-server-5.7.20-1.el7.x86_64
+</span></span><span class="line"><span class="cl"><span class="c1"># 检查生成的mysql 目录和文件</span>
+</span></span><span class="line"><span class="cl">$ ls  /var/lib/mysql /etc/my.cnf 
+</span></span><span class="line"><span class="cl">/etc/my.cnf
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">/var/lib/mysql:
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>6、安装过程摘取</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># rpm -ivh mysql-community-server-5.7.20-1.el7.x86_64.rpm
+</span></span><span class="line"><span class="cl">warning: mysql-community-server-5.7.20-1.el7.x86_64.rpm: Header V3 DSA/SHA1 Signature, key ID 5072e1f5: NOKEY
+</span></span><span class="line"><span class="cl">Verifying...                          ################################# [100%]
+</span></span><span class="line"><span class="cl">Preparing...                          ################################# [100%]
+</span></span><span class="line"><span class="cl">Updating / installing...
+</span></span><span class="line"><span class="cl">   1:mysql-community-server-5.7.20-1.e################################# [100%]
+</span></span><span class="line"><span class="cl">/usr/lib/tmpfiles.d/mysql.conf:16: Line references path below legacy directory /var/run/, updating /var/run/mysqld → /run/mysqld; please update the tmpfiles.d/ drop-in file accordingly.
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="details admonition note open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-pencil-alt fa-fw" aria-hidden="true"></i>注意<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content">这个警告提示说明该 RPM 包未被 GPG 签名验证。如果你信任这个包的来源，可以忽略这个警告</div>
+        </div>
+    </div>
+<p>或者一次性安装会自动进行依赖顺序安装调整：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bas" data-lang="bas"><span class="line"><span class="cl"><span class="vg">sudo</span><span class="w"> </span><span class="vg">rpm</span><span class="w"> </span><span class="o">-</span><span class="vg">ivh</span><span class="w"> </span><span class="o">*.</span><span class="vg">rpm</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="安装包功能和作用">安装包功能和作用</h3>
+<p>部署 MySQL 5.7.20 版本的 RPM 包时，需要确保按照正确的顺序安装这些包，因为它们之间存在依赖关系。以下是各个包的功能作用和推荐的安装顺序：</p>
+<ol>
+<li>
+<p><strong>mysql-community-common-5.7.20-1.el7.x86_64.rpm</strong></p>
+<ul>
+<li>功能：提供所有 MySQL 组件共享的文件。</li>
+<li>作用：这个包是基础，其他组件依赖它提供的文件。</li>
+</ul>
+</li>
+<li>
+<p><strong>mysql-community-libs-5.7.20-1.el7.x86_64.rpm</strong></p>
+<ul>
+<li>功能：包含客户端库文件。</li>
+<li>作用：为使用 MySQL 客户端连接到 MySQL 数据库服务器提供必要的库文件。</li>
+</ul>
+</li>
+<li>
+<p><strong>mysql-community-libs-compat-5.7.20-1.el7.x86_64.rpm</strong></p>
+<ul>
+<li>功能：提供兼容性库文件。</li>
+<li>作用：为旧版本的应用程序提供与旧版 MySQL 库的向后兼容性。</li>
+</ul>
+</li>
+<li>
+<p><strong>mysql-community-client-5.7.20-1.el7.x86_64.rpm</strong></p>
+<ul>
+<li>功能：包含 MySQL 客户端命令行工具。</li>
+<li>作用：允许用户通过命令行界面与 MySQL 数据库交互。</li>
+</ul>
+</li>
+<li>
+<p><strong>mysql-community-server-5.7.20-1.el7.x86_64.rpm</strong></p>
+<ul>
+<li>功能：提供 MySQL 数据库服务器。</li>
+<li>作用：这是核心包，负责处理 SQL 查询并管理数据库。</li>
+</ul>
+</li>
+</ol>
+<h2 id="配置主服务器">配置主服务器</h2>
+<p>MySQL 的主配置文件通常位于 <code>/etc/my.cnf</code> 或 <code>/etc/mysql/my.cnf</code>，具体取决于你的操作系统。对于某些发行版或自定义安装，配置文件可能位于其他位置，如 <code>/etc/my.cnf.d/</code> 目录下的某个文件中。你可以使用以下命令来查找配置文件的位置：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ mysql --help <span class="p">|</span> grep <span class="s2">&#34;Default options&#34;</span> -A <span class="m">1</span>
+</span></span><span class="line"><span class="cl">Default options are <span class="nb">read</span> from the following files in the given order:
+</span></span><span class="line"><span class="cl">/etc/my.cnf /etc/mysql/my.cnf /usr/etc/my.cnf ~/.my.cnf 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>调整需要将数据放到<code>/data/mysql</code> 目录下，该目录为外挂磁盘，磁盘空间较大，而不是安装在默认的系统磁盘目录下</p>
+<p>创建安装目录<code>/data/mysql</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">mkdir -p /data/mysql/binlog
+</span></span><span class="line"><span class="cl">chown -R mysql:mysql /data/mysql
+</span></span><span class="line"><span class="cl">chomod -R <span class="m">755</span> /data/mysql
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>修改<code>/etc/my.cnf</code>配置文件</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span><span class="lnt">80
+</span><span class="lnt">81
+</span><span class="lnt">82
+</span><span class="lnt">83
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">[mysqld]
+</span></span><span class="line"><span class="cl">user = mysql
+</span></span><span class="line"><span class="cl">port = 3306
+</span></span><span class="line"><span class="cl">sql_mode = NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER
+</span></span><span class="line"><span class="cl">lower_case_table_names = 1
+</span></span><span class="line"><span class="cl">group_concat_max_len = 40960
+</span></span><span class="line"><span class="cl">max_allowed_packet = 1G
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">datadir = /data/mysql
+</span></span><span class="line"><span class="cl">socket = /tmp/mysql.sock
+</span></span><span class="line"><span class="cl">log_error = /data/mysql/mysqld.log
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># 设置server_id,注意要唯一
+</span></span><span class="line"><span class="cl">server_id = 1
+</span></span><span class="line"><span class="cl"># 忽略的数据，指不需要同步的数据库
+</span></span><span class="line"><span class="cl">#binlog-ignore-db=mysql
+</span></span><span class="line"><span class="cl"># 指定同步的数据库
+</span></span><span class="line"><span class="cl">#binlog-do-db=test
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">###binlog###
+</span></span><span class="line"><span class="cl">binlog_format = row
+</span></span><span class="line"><span class="cl">## 开启二进制日志功能，以备Slave作为其它Slave的Master时使用
+</span></span><span class="line"><span class="cl">log_bin = /data/mysql/binlog/binlog.log
+</span></span><span class="line"><span class="cl">expire_logs_days = 7
+</span></span><span class="line"><span class="cl">master_info_repository = table
+</span></span><span class="line"><span class="cl">relay_log_info_repository = table
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">###slave###
+</span></span><span class="line"><span class="cl">slave_parallel_type = LOGICAL_CLOCK
+</span></span><span class="line"><span class="cl">slave_parallel_workers = 4
+</span></span><span class="line"><span class="cl">log_bin_trust_function_creators = 1
+</span></span><span class="line"><span class="cl">skip_slave_start = ON
+</span></span><span class="line"><span class="cl">relay_log_recovery = ON
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">###buffer_pool###
+</span></span><span class="line"><span class="cl">join_buffer_size = 32M
+</span></span><span class="line"><span class="cl">sort_buffer_size = 16M
+</span></span><span class="line"><span class="cl">query_cache_size = 512M
+</span></span><span class="line"><span class="cl">myisam_sort_buffer_size = 128M
+</span></span><span class="line"><span class="cl">thread_cache_size = 128
+</span></span><span class="line"><span class="cl">tmp_table_size = 512M
+</span></span><span class="line"><span class="cl">max_heap_table_size = 128M
+</span></span><span class="line"><span class="cl">read_rnd_buffer_size = 2M
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">#InnoDB#
+</span></span><span class="line"><span class="cl">default_storage_engine = InnoDB
+</span></span><span class="line"><span class="cl">innodb_file_per_table = ON
+</span></span><span class="line"><span class="cl">innodb_flush_log_at_trx_commit = 2
+</span></span><span class="line"><span class="cl">innodb_buffer_pool_size = 4G
+</span></span><span class="line"><span class="cl">innodb_log_file_size = 1024M
+</span></span><span class="line"><span class="cl">innodb_flush_method = O_DIRECT
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">##### MyISAM#####
+</span></span><span class="line"><span class="cl">key_buffer_size = 512M
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">### character_set#####
+</span></span><span class="line"><span class="cl">character_set_server = utf8
+</span></span><span class="line"><span class="cl">collation_server = utf8_general_ci
+</span></span><span class="line"><span class="cl">explicit_defaults_for_timestamp = ON
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">####name_resolves####
+</span></span><span class="line"><span class="cl">host_cache_size = 0
+</span></span><span class="line"><span class="cl">skip_name_resolve = ON
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">###connection###
+</span></span><span class="line"><span class="cl">max_connections = 25000
+</span></span><span class="line"><span class="cl">max_connect_errors = 10000
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">### Enable slow_query_log permanent ###
+</span></span><span class="line"><span class="cl">slow_query_log = 1
+</span></span><span class="line"><span class="cl">long_query_time = 0.5
+</span></span><span class="line"><span class="cl">slow_query_log_file = /data/mysql/mysql_slow.log
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">### MASTER_MASTER ###
+</span></span><span class="line"><span class="cl">auto_increment_increment = 1
+</span></span><span class="line"><span class="cl">auto_increment_offset = 1
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">[mysql]
+</span></span><span class="line"><span class="cl">#prompt = &#39;mysql[\u@\h]:[\d]:&#39;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">[client]
+</span></span><span class="line"><span class="cl">socket = /tmp/mysql.sock
+</span></span><span class="line"><span class="cl">port = 3306
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>启动mysqld服务，并设置开机自启</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ sudo systemctl <span class="nb">enable</span> mysqld --now
+</span></span><span class="line"><span class="cl">$ sudo systemctl status mysqld
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="配置从服务器">配置从服务器</h2>
+<p>创建安装目录<code>/data/mysql</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">mkdir -p /data/mysql/binlog
+</span></span><span class="line"><span class="cl">chown -R mysql:mysql /data/mysql
+</span></span><span class="line"><span class="cl">chomod -R <span class="m">755</span> /data/mysql
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>修改<code>/etc/my.cnf</code>配置文件</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">[mysqld]
+</span></span><span class="line"><span class="cl"># 设置server_id,注意要唯一
+</span></span><span class="line"><span class="cl">server_id = 1
+</span></span><span class="line"><span class="cl">...
+</span></span><span class="line"><span class="cl">### MASTER_MASTER ###
+</span></span><span class="line"><span class="cl">auto_increment_increment = 1
+</span></span><span class="line"><span class="cl">auto_increment_offset = 2   # 可根据需要调整，确保从节点与主节点的 AUTO_INCREMENT 值不冲突
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>启动mysqld服务，并设置开机自启</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ sudo systemctl <span class="nb">enable</span> mysqld --now
+</span></span><span class="line"><span class="cl">$ sudo systemctl status mysqld
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="修改登录密码">修改登录密码</h2>
+<p>1、获取临时密码
+默认是在<code>/var/log/mysqld.log</code> 文件下，这里修改了安装目录为<code>/data/mysql</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo grep <span class="s1">&#39;temporary password&#39;</span> /data/mysq/mysqld.log
+</span></span><span class="line"><span class="cl"><span class="c1"># grep &#39;temporary password&#39; /var/log/mysqld.log</span>
+</span></span><span class="line"><span class="cl">2024-11-25T06:34:37.637723Z <span class="m">1</span> <span class="o">[</span>Note<span class="o">]</span> A temporary password is generated <span class="k">for</span> root@localhost: hvqki:Gp&gt;0EI
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>2、临时密码登录</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">mysql -u root -p
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>3、登录后修改默认密码并进行安全配置：
+首次登录后，建议立即更改 root 密码并执行 <code>mysql_secure_installation</code> 脚本来提高安全性。
+登录后修改root密码</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">ALTER USER &#39;root&#39;@&#39;%&#39; IDENTIFIED BY &#39;your_password&#39;;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">mysql&gt;  ALTER USER &#39;root&#39;@&#39;%&#39; IDENTIFIED BY &#39;your_password&#39;;
+</span></span><span class="line"><span class="cl">Query OK, 0 rows affected (0.00 sec)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">mysql&gt; show databases;
+</span></span><span class="line"><span class="cl">+--------------------+
+</span></span><span class="line"><span class="cl">| Database           |
+</span></span><span class="line"><span class="cl">+--------------------+
+</span></span><span class="line"><span class="cl">| information_schema |
+</span></span><span class="line"><span class="cl">| mysql              |
+</span></span><span class="line"><span class="cl">| performance_schema |
+</span></span><span class="line"><span class="cl">| sys                |
+</span></span><span class="line"><span class="cl">+--------------------+
+</span></span><span class="line"><span class="cl">4 rows in set (0.00 sec)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># 赋远程访问权限
+</span></span><span class="line"><span class="cl">mysql&gt; GRANT ALL PRIVILEGES ON *.* TO &#39;root&#39;@&#39;%&#39; IDENTIFIED BY &#39;your_password&#39; WITH GRANT OPTION;
+</span></span><span class="line"><span class="cl">Query OK, 0 rows affected, 1 warning (0.02 sec)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">mysql&gt; flush privileges;
+</span></span><span class="line"><span class="cl">Query OK, 0 rows affected (0.00 sec)
+</span></span><span class="line"><span class="cl">mysql&gt; select host, user, authentication_string, plugin from user;
+</span></span><span class="line"><span class="cl">+-----------+---------------+-------------------------------------------+-----------------------+
+</span></span><span class="line"><span class="cl">| host      | user          | authentication_string                     | plugin                |
+</span></span><span class="line"><span class="cl">+-----------+---------------+-------------------------------------------+-----------------------+
+</span></span><span class="line"><span class="cl">| localhost | root          | *4E02A7566A743B1042608F7ED03213DE937E7D0E | mysql_native_password |
+</span></span><span class="line"><span class="cl">| localhost | mysql.session | *THISISNOTAVALIDPASSWORDTHATCANBEUSEDHERE | mysql_native_password |
+</span></span><span class="line"><span class="cl">| localhost | mysql.sys     | *THISISNOTAVALIDPASSWORDTHATCANBEUSEDHERE | mysql_native_password |
+</span></span><span class="line"><span class="cl">| %         | root          | *4E02A7566A743B1042608F7ED03213DE937E7D0E | mysql_native_password |
+</span></span><span class="line"><span class="cl">+-----------+---------------+-------------------------------------------+-----------------------+
+</span></span><span class="line"><span class="cl">4 rows in set (0.00 sec)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>4、mysql_secure_installation MySQL 安全设置(可选)<br>
+mysql_secure_installation 是一个用于提高 MySQL 安装安全性的脚本。它可以帮助你执行一系列的安全设置，例如设置 root 密码、移除匿名用户、禁用远程 root 登录、移除测试数据库等。以下是执行 mysql_secure_installation 脚本的详细步骤：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">[root@localhost mysql]&lt;20241225 14:42:33&gt;# sudo mysql_secure_installation
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Securing the MySQL server deployment.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Enter password for user root: 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>跟随提示完成配置</strong></p>
+<p>运行脚本后，你会被问到一系列问题。下面是每个问题的大致内容和建议的回答方式：</p>
+<ul>
+<li>
+<p><strong>Enter password for user root:</strong>
+输入你当前的 root 用户密码（即安装时生成的临时密码或你刚刚设置的新密码）。</p>
+</li>
+<li>
+<p><strong>Switch to unix_socket authentication [Y/n]</strong>
+这个选项是关于是否切换到 Unix Socket 认证插件，默认情况下选择 <code>N</code> 不启用这个选项，这样可以继续使用基于密码的身份验证。</p>
+</li>
+<li>
+<p><strong>Change the root password? [Y/n]</strong>
+如果你已经在登录时修改了 root 密码，可以选择 <code>n</code>；如果还没有修改，可以选择 <code>y</code> 并按照提示设置新密码。</p>
+</li>
+<li>
+<p><strong>Remove anonymous users? [Y/n]</strong>
+移除匿名用户可以提高安全性，推荐选择 <code>Y</code>。</p>
+</li>
+<li>
+<p><strong>Disallow root login remotely? [Y/n]</strong>
+禁止 root 用户从远程登录通常是个好主意，除非你需要远程管理 MySQL，推荐选择 <code>Y</code>。测试环境也可以选择<code>n</code></p>
+</li>
+<li>
+<p><strong>Remove test database and access to it? [Y/n]</strong>
+移除测试数据库及其访问权限也是提高安全性的措施之一，推荐选择 <code>Y</code>。测试环境也可以选择<code>n</code></p>
+</li>
+<li>
+<p><strong>Reload privilege tables now? [Y/n]</strong>
+重新加载权限表以使更改立即生效，推荐选择 <code>Y</code>。</p>
+</li>
+</ul>
+<p><strong>对话参考</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Securing the MySQL server deployment.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Enter password for user root: ********
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Estimated strength of the password: 100 
+</span></span><span class="line"><span class="cl">Do you wish to continue with the password provided?(Press y|Y for Yes, any other key for No) : Y
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">By default, a MySQL installation has an anonymous user,
+</span></span><span class="line"><span class="cl">allowing anyone to log into MySQL without having to have
+</span></span><span class="line"><span class="cl">a user account created for them. This is intended only for
+</span></span><span class="line"><span class="cl">testing, and to make the installation go a bit smoother.
+</span></span><span class="line"><span class="cl">You should remove them before moving into a production
+</span></span><span class="line"><span class="cl">environment.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Remove anonymous users? (Press y|Y for Yes, any other key for No) : Y
+</span></span><span class="line"><span class="cl"> ... Success!
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Normally, root should only be allowed to connect from
+</span></span><span class="line"><span class="cl">&#39;localhost&#39;. This ensures that someone cannot guess at
+</span></span><span class="line"><span class="cl">the root password from the network.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Disallow root login remotely? (Press y|Y for Yes, any other key for No) : Y
+</span></span><span class="line"><span class="cl"> ... Success!
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">By default, MySQL comes with a database named &#39;test&#39; that
+</span></span><span class="line"><span class="cl">anyone can access. This is also intended only for testing,
+</span></span><span class="line"><span class="cl">and should be removed before moving into a production
+</span></span><span class="line"><span class="cl">environment.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Remove test database and access to it? (Press y|Y for Yes, any other key for No) : Y
+</span></span><span class="line"><span class="cl"> - Dropping test database...
+</span></span><span class="line"><span class="cl"> ... Success!
+</span></span><span class="line"><span class="cl"> - Removing privileges on test database...
+</span></span><span class="line"><span class="cl"> ... Success!
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Reloading the privilege tables will ensure that all changes
+</span></span><span class="line"><span class="cl">made so far will take effect immediately.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Reload privilege tables now? (Press y|Y for Yes, any other key for No) : Y
+</span></span><span class="line"><span class="cl"> ... Success!
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Cleaning up...
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">All done! If you&#39;ve completed all of the above steps, your MySQL
+</span></span><span class="line"><span class="cl">installation should now be secure.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Thanks for using MySQL!
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="details admonition note open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-pencil-alt fa-fw" aria-hidden="true"></i>注意<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content">安装过程有问题查看服务日志，<code>/data/mysql/mysqld.log</code></div>
+        </div>
+    </div>
+<h2 id="安装后验证">安装后验证</h2>
+<ul>
+<li>可以尝试通过 MySQL 客户端登录到服务器。</li>
+<li>使用 <code>mysqladmin</code> 工具验证服务器是否正在运行：</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ mysqladmin -u root -p version
+</span></span><span class="line"><span class="cl">Enter password: 
+</span></span><span class="line"><span class="cl">mysqladmin  Ver 8.42 Distrib 5.7.20, <span class="k">for</span> Linux on x86_64
+</span></span><span class="line"><span class="cl">Copyright <span class="o">(</span>c<span class="o">)</span> 2000, 2017, Oracle and/or its affiliates. All rights reserved.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Oracle is a registered trademark of Oracle Corporation and/or its
+</span></span><span class="line"><span class="cl">affiliates. Other names may be trademarks of their respective
+</span></span><span class="line"><span class="cl">owners.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Server version          5.7.20
+</span></span><span class="line"><span class="cl">Protocol version        <span class="m">10</span>
+</span></span><span class="line"><span class="cl">Connection              Localhost via UNIX socket
+</span></span><span class="line"><span class="cl">UNIX socket             /var/lib/mysql/mysql.sock
+</span></span><span class="line"><span class="cl">Uptime:                 <span class="m">14</span> min <span class="m">46</span> sec
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Threads: <span class="m">1</span>  Questions: <span class="m">12</span>  Slow queries: <span class="m">0</span>  Opens: <span class="m">106</span>  Flush tables: <span class="m">1</span>  Open tables: <span class="m">99</span>  Queries per second avg: 0.013
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="开启主从同步">开启主从同步</h2>
+<h3 id="master-节点">Master 节点</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># 登录到 MySQL 主节点</span>
+</span></span><span class="line"><span class="cl">$ mysql -u root -p
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 创建复制用户（例如：`replica_user`）</span>
+</span></span><span class="line"><span class="cl">CREATE USER <span class="s1">&#39;replica_user&#39;</span>@<span class="s1">&#39;192.168.143.102&#39;</span> IDENTIFIED BY <span class="s1">&#39;your_password&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#授予复制权限</span>
+</span></span><span class="line"><span class="cl">GRANT REPLICATION SLAVE ON *.* TO <span class="s1">&#39;replica_user&#39;</span>@<span class="s1">&#39;192.168.143.102&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#  刷新权限</span>
+</span></span><span class="line"><span class="cl">FLUSH PRIVILEGES<span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#  获取主节点的二进制日志位置</span>
+</span></span><span class="line"><span class="cl">SHOW MASTER STATUS<span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">+------------------+----------+--------------+------------------+
+</span></span><span class="line"><span class="cl"><span class="p">|</span> File             <span class="p">|</span> Position <span class="p">|</span> Binlog_Do_DB <span class="p">|</span> Binlog_Ignore_DB <span class="p">|</span>
+</span></span><span class="line"><span class="cl">+------------------+----------+--------------+------------------+
+</span></span><span class="line"><span class="cl"><span class="p">|</span> mysql-bin.000001 <span class="p">|</span> <span class="m">154</span>       <span class="p">|</span> your_database_name <span class="p">|</span>                <span class="p">|</span>
+</span></span><span class="line"><span class="cl">+------------------+----------+--------------+------------------+
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>记下 <code>File</code>二进制文件（例如：<code>mysql-bin.000001</code>）和 <code>Position</code>偏移量（例如：<code>154</code>）的值。</p>
+<h3 id="slave-节点">Slave 节点</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># 登录到 MySQL 备节点</span>
+</span></span><span class="line"><span class="cl">$ mysql -u root -p
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 配置主节点信息</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 使用 `CHANGE MASTER TO` 命令配置从库指向主库。你需要提供主库的 IP 地址、用户名、密码以及上面提到的 `File` 和 `Position` 值：</span>
+</span></span><span class="line"><span class="cl">CHANGE MASTER TO
+</span></span><span class="line"><span class="cl">  <span class="nv">MASTER_HOST</span><span class="o">=</span><span class="s1">&#39;192.168.143.101&#39;</span>,
+</span></span><span class="line"><span class="cl">  <span class="nv">MASTER_USER</span><span class="o">=</span><span class="s1">&#39;replica_user&#39;</span>,
+</span></span><span class="line"><span class="cl">  <span class="nv">MASTER_PASSWORD</span><span class="o">=</span><span class="s1">&#39;your_password&#39;</span>,
+</span></span><span class="line"><span class="cl">  <span class="nv">MASTER_LOG_FILE</span><span class="o">=</span><span class="s1">&#39;mysql-bin.000001&#39;</span>,    -- 主节点的日志文件
+</span></span><span class="line"><span class="cl">  <span class="nv">MASTER_LOG_POS</span><span class="o">=</span>154<span class="p">;</span>                    -- 主节点的日志位置
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#启动复制进程 开始从库的 I/O 和 SQL 线程以开始复制过程：</span>
+</span></span><span class="line"><span class="cl">START SLAVE<span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 查看复制状态 检查从库的状态，确认复制是否正常工作：</span>
+</span></span><span class="line"><span class="cl">SHOW SLAVE STATUS<span class="se">\G</span><span class="p">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>关注以下字段：</p>
+<ul>
+<li><code>Slave_IO_Running</code>: 应该是 <code>Yes</code></li>
+<li><code>Slave_SQL_Running</code>: 应该是 <code>Yes</code></li>
+<li><code>Last_Error</code>: 应为空或无错误信息</li>
+</ul>
+<h2 id="测试主从同步">测试主从同步</h2>
+<p>在Master主服务器上创建数据库和表，并插入数据：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">mysql&gt; create database test;
+</span></span><span class="line"><span class="cl">mysql&gt; use test;
+</span></span><span class="line"><span class="cl">mysql&gt; create table test(age int);
+</span></span><span class="line"><span class="cl">mysql&gt; insert into test values(1);
+</span></span><span class="line"><span class="cl">mysql&gt; select * from test;
+</span></span><span class="line"><span class="cl">+------+
+</span></span><span class="line"><span class="cl">| age  |
+</span></span><span class="line"><span class="cl">+------+
+</span></span><span class="line"><span class="cl">|    1 |
+</span></span><span class="line"><span class="cl">+------+
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在从服务器上检查数据是否同步：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">mysql&gt; select * from test.test;
+</span></span><span class="line"><span class="cl">+------+
+</span></span><span class="line"><span class="cl">| age  |
+</span></span><span class="line"><span class="cl">+------+
+</span></span><span class="line"><span class="cl">|    1 |
+</span></span><span class="line"><span class="cl">+------+
+</span></span><span class="line"><span class="cl">1 row in set (0.00 sec)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>以上操作确保了主服务器的数据成功复制到从服务器，实现了主从同步。</p>
+<h2 id="卸载-mysql">卸载 MySQL</h2>
+<p>卸载或者卸载重新安装</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">systemctl stop mysqld
+</span></span><span class="line"><span class="cl">systemctl status mysqld
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">rpm -evh rpm包名
+</span></span><span class="line"><span class="cl"><span class="c1"># 依次卸载rpm包，按照下面顺序卸载不然会报错</span>
+</span></span><span class="line"><span class="cl">sudo rpm -evh mysql-community-server-5.7.20-1.el7.x86_64
+</span></span><span class="line"><span class="cl">sudo rpm -evh mysql-community-client-5.7.20-1.el7.x86_64
+</span></span><span class="line"><span class="cl">sudo rpm -evh mysql-community-libs-compat-5.7.20-1.el7.x86_64
+</span></span><span class="line"><span class="cl">sudo rpm -evh mysql-community-libs-5.7.20-1.el7.x86_64
+</span></span><span class="line"><span class="cl">sudo rpm -evh mysql-community-common-5.7.20-1.el7.x86_64
+</span></span><span class="line"><span class="cl"><span class="c1"># 查询是否还存在遗漏文件</span>
+</span></span><span class="line"><span class="cl">rpm -qa<span class="p">|</span>grep mysql
+</span></span><span class="line"><span class="cl"><span class="c1"># 删除 mysql 数据库内容</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">sudo rm -rf  /data/mysql
+</span></span><span class="line"><span class="cl">sudo rm -rf  /var/lib/mysql
+</span></span><span class="line"><span class="cl">sudo rm -rf /usr/local/mysql
+</span></span><span class="line"><span class="cl">sudo rm -rf /var/run/mysqld
+</span></span><span class="line"><span class="cl">sudo rm -rf /etc/my.cnf
+</span></span><span class="line"><span class="cl">sudo rm -f /var/log/mysqld.log
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="参考">参考</h2>
+<ol>
+<li><a href="https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.29-1.el7.x86_64.rpm-bundle.tar" target="_blank" rel="noopener noreffer ">MySQL v5.7 rpm 安装包</a></li>
+<li><a href="https://downloads.mysql.com/archives/community/" target="_blank" rel="noopener noreffer ">MySQL 官网各个版本安装包</a></li>
+</ol>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2024-10-26</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://lushuan.gihub.io/mysql%E9%9B%86%E7%BE%A4%E4%B9%8B%E4%B8%BB%E4%BB%8E%E9%83%A8%E7%BD%B2/" data-title="MySQL 集群之主从部署" data-via="xxxx" data-hashtags="MySQL"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://lushuan.gihub.io/mysql%E9%9B%86%E7%BE%A4%E4%B9%8B%E4%B8%BB%E4%BB%8E%E9%83%A8%E7%BD%B2/" data-hashtag="MySQL"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="https://lushuan.gihub.io/mysql%E9%9B%86%E7%BE%A4%E4%B9%8B%E4%B8%BB%E4%BB%8E%E9%83%A8%E7%BD%B2/" data-title="MySQL 集群之主从部署"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="https://lushuan.gihub.io/mysql%E9%9B%86%E7%BE%A4%E4%B9%8B%E4%B8%BB%E4%BB%8E%E9%83%A8%E7%BD%B2/" data-title="MySQL 集群之主从部署"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://lushuan.gihub.io/mysql%E9%9B%86%E7%BE%A4%E4%B9%8B%E4%B8%BB%E4%BB%8E%E9%83%A8%E7%BD%B2/" data-title="MySQL 集群之主从部署"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/mysql/">MySQL</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/" class="prev" rel="prev" title="K3s 快速入门及安装部署"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>K3s 快速入门及安装部署</a></div>
+</div>
+<div id="comments"><div id="gitalk" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://github.com/gitalk/gitalk"></a>Gitalk</a>.
+            </noscript><div id="valine" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://valine.js.org/">Valine</a>.
+            </noscript></div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">我是有底线的</div><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.114.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2025</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">lushuan</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/gitalk/gitalk.min.css"><link rel="stylesheet" href="/lib/valine/valine.min.css"><link rel="stylesheet" href="/lib/lightgallery/css/lightgallery-bundle.min.css"><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/gitalk/gitalk.min.js"></script><script type="text/javascript" src="/lib/valine/Valine.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/lightgallery/lightgallery.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/zoom/lg-zoom.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{"gitalk":{"admin":["lushuan"],"clientID":"Ov23liSh0yG2wy6B7XP1","clientSecret":"7184a8df973267af95c92ddeb27789417ba82469","id":"2024-10-16T12:06:37+08:00","owner":"lushuan","repo":"lushuan.github.io","title":"MySQL 集群之主从部署"},"valine":{"appId":"XQderBhsCffEN9pw26SOSQon-MdYXbMMI","appKey":"zLUsSeN2SfcBdQbGTv9iFhFp","avatar":"mp","el":"#valine","emojiCDN":"https://cdn.jsdelivr.net/npm/emoji-datasource-google@14.0.0/img/google/64/","emojiMaps":{"100":"1f4af.png","alien":"1f47d.png","anger":"1f4a2.png","angry":"1f620.png","anguished":"1f627.png","astonished":"1f632.png","black_heart":"1f5a4.png","blue_heart":"1f499.png","blush":"1f60a.png","bomb":"1f4a3.png","boom":"1f4a5.png","broken_heart":"1f494.png","brown_heart":"1f90e.png","clown_face":"1f921.png","cold_face":"1f976.png","cold_sweat":"1f630.png","confounded":"1f616.png","confused":"1f615.png","cry":"1f622.png","crying_cat_face":"1f63f.png","cupid":"1f498.png","dash":"1f4a8.png","disappointed":"1f61e.png","disappointed_relieved":"1f625.png","dizzy":"1f4ab.png","dizzy_face":"1f635.png","drooling_face":"1f924.png","exploding_head":"1f92f.png","expressionless":"1f611.png","face_vomiting":"1f92e.png","face_with_cowboy_hat":"1f920.png","face_with_hand_over_mouth":"1f92d.png","face_with_head_bandage":"1f915.png","face_with_monocle":"1f9d0.png","face_with_raised_eyebrow":"1f928.png","face_with_rolling_eyes":"1f644.png","face_with_symbols_on_mouth":"1f92c.png","face_with_thermometer":"1f912.png","fearful":"1f628.png","flushed":"1f633.png","frowning":"1f626.png","ghost":"1f47b.png","gift_heart":"1f49d.png","green_heart":"1f49a.png","grimacing":"1f62c.png","grin":"1f601.png","grinning":"1f600.png","hankey":"1f4a9.png","hear_no_evil":"1f649.png","heart":"2764-fe0f.png","heart_decoration":"1f49f.png","heart_eyes":"1f60d.png","heart_eyes_cat":"1f63b.png","heartbeat":"1f493.png","heartpulse":"1f497.png","heavy_heart_exclamation_mark_ornament":"2763-fe0f.png","hole":"1f573-fe0f.png","hot_face":"1f975.png","hugging_face":"1f917.png","hushed":"1f62f.png","imp":"1f47f.png","innocent":"1f607.png","japanese_goblin":"1f47a.png","japanese_ogre":"1f479.png","joy":"1f602.png","joy_cat":"1f639.png","kiss":"1f48b.png","kissing":"1f617.png","kissing_cat":"1f63d.png","kissing_closed_eyes":"1f61a.png","kissing_heart":"1f618.png","kissing_smiling_eyes":"1f619.png","laughing":"1f606.png","left_speech_bubble":"1f5e8-fe0f.png","love_letter":"1f48c.png","lying_face":"1f925.png","mask":"1f637.png","money_mouth_face":"1f911.png","nauseated_face":"1f922.png","nerd_face":"1f913.png","neutral_face":"1f610.png","no_mouth":"1f636.png","open_mouth":"1f62e.png","orange_heart":"1f9e1.png","partying_face":"1f973.png","pensive":"1f614.png","persevere":"1f623.png","pleading_face":"1f97a.png","pouting_cat":"1f63e.png","purple_heart":"1f49c.png","rage":"1f621.png","relaxed":"263a-fe0f.png","relieved":"1f60c.png","revolving_hearts":"1f49e.png","right_anger_bubble":"1f5ef-fe0f.png","robot_face":"1f916.png","rolling_on_the_floor_laughing":"1f923.png","scream":"1f631.png","scream_cat":"1f640.png","see_no_evil":"1f648.png","shushing_face":"1f92b.png","skull":"1f480.png","skull_and_crossbones":"2620-fe0f.png","sleeping":"1f634.png","sleepy":"1f62a.png","slightly_frowning_face":"1f641.png","slightly_smiling_face":"1f642.png","smile":"1f604.png","smile_cat":"1f638.png","smiley":"1f603.png","smiley_cat":"1f63a.png","smiling_face_with_3_hearts":"1f970.png","smiling_imp":"1f608.png","smirk":"1f60f.png","smirk_cat":"1f63c.png","sneezing_face":"1f927.png","sob":"1f62d.png","space_invader":"1f47e.png","sparkling_heart":"1f496.png","speak_no_evil":"1f64a.png","speech_balloon":"1f4ac.png","star-struck":"1f929.png","stuck_out_tongue":"1f61b.png","stuck_out_tongue_closed_eyes":"1f61d.png","stuck_out_tongue_winking_eye":"1f61c.png","sunglasses":"1f60e.png","sweat":"1f613.png","sweat_drops":"1f4a6.png","sweat_smile":"1f605.png","thinking_face":"1f914.png","thought_balloon":"1f4ad.png","tired_face":"1f62b.png","triumph":"1f624.png","two_hearts":"1f495.png","unamused":"1f612.png","upside_down_face":"1f643.png","weary":"1f629.png","white_frowning_face":"2639-fe0f.png","white_heart":"1f90d.png","wink":"1f609.png","woozy_face":"1f974.png","worried":"1f61f.png","yawning_face":"1f971.png","yellow_heart":"1f49b.png","yum":"1f60b.png","zany_face":"1f92a.png","zipper_mouth_face":"1f910.png","zzz":"1f4a4.png"},"enableQQ":false,"highlight":true,"lang":"zh-CN","pageSize":10,"placeholder":"期待您的评论...","recordIP":true,"visitor":true}},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"lightgallery":true,"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
