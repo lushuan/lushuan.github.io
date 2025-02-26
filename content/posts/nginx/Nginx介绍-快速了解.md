@@ -10,101 +10,41 @@ weight: false
 categories: ["Nginx"]
 tags: ["Nginx"]
 ---
-## Nginx 介绍
-### Nginx 是什么？
+
+## Nginx 是什么？
 Nginx (engine x) 是一个高性能的HTTP和反向代理web服务器。
 Nginx是由伊戈尔·赛索耶夫为俄罗斯访问量第二的Rambler.ru站点（俄文：Рамблер）开发的.
 第一个公开版本0.1.0发布于2004年10月4日。
 
-### 四个发行版本
+## 四个发行版本
 1. 开源版：https://nginx.org/
 2. 商业版：https://nginx.com/ f5
 3. Openresty: https://openresty.org/cn/
 4. Tengine: https://tengine.taobao.org/
 
-### 为什么选择Nginx?
+## 为什么选择Nginx?
 互联网公司大都选择 Nginx
 1. Nginx 技术成熟，具备的功能是企业最常使用而且最需要的  
 2. 适合当前主流架构趋势, 微服务、云架构、中间层  
 3. 统一技术栈, 降低维护成本, 降低技术更新成本。  
-### Nginx 特点
+## Nginx 特点
 1. 开源,可以从官网直接获取源代码
 2. 高并发：高性能,Nginx性能非常残暴,支持海量并发，顶住10万以上连接是没有问题的
 3. 低内存消耗：在高性能的同时，保持很低的内存消耗；
 4. 模块化：Nginx具有丰富的模块可以按需使用，并且有开发能力的技术人员还可以二次开发
 5. 热启动：例如当修改配置文件后，不需要停止与启动就可以让配置生效
 
-### Nginx 应用场景
+## Nginx 应用场景
 
 ![image-20240721205413807](/images/nginx/nginx-usage-scenario-detail.png "Nginx 应用场景")
 
-### Nginx 的组成
+## Nginx 的组成
 
 ![image-20240721205840420](/images/nginx/nginx-components.png "Nginx 应用场景")
 
 可以将Nginx 理解为一辆小汽车，nginx.conf 可比作驾驶员，控制这Nginx的的行为，但是当汽车在驾驶的过程的过程中，出现了问题，这个时候就需要一个黑匣子到底是汽车本身出现了问题，还是驾驶员驾驶不当出现了问题。Nginx 二进制可执行文件是由本身的框架和第三方模块，编译的可执行文件，这个文件可以理解为汽车本身。它有完整的系统，所有的功能都有它提供。`access.log` 可以理解为这个汽车经过任何一个地方形成的一个GPS轨迹，`error.log` 可以理解为汽车的黑匣子,当遇到不可预期的问题时，可以查看该日志文件记录信息进行问题定位。如果要对nginx 进行运维分析，可以对`access.log`进行分析。如果遇到一些未知的错误，这时就要对`error.log`进行分析了。
 
-### 安装Nginx
-这里选择通过yum 源进行安装，安装操作系统为Linux CentOS 7.9
 
-1. CentOs 配置阿里云 yum 源
-```
-# 备份
-mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
-
-# 下载yum 源
-wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
-# 清除yum缓存
-yum clean all
-# 缓存阿里云源
-yum makecache
-# 测试阿里云源 
-yum list
-
-```
-
-2. 安装依赖包， EPEL 仓库中有 Nginx 的安装包
-```
-yum install openssl-devel pcre-devel epel-release -y
-```
-3. 安装nginx 服务
-```
-yum install nginx -y
-# or 添加 Nginx 源
-rpm -Uvh http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm
-```
-4. 启动服务并配置开机自启动
-```
-systemctl start nginx
-systemctl eable nginx
-```
-5. 测试
-```
-curl 192.168.1.20
-```
-浏览器访问
-```
-# 关闭防火墙
-systemctl stop firewalld
-
-```
-![image-20240722133344836](/images/nginx/nginx-access.png "Nginx 访问首页")
-#### Nginx 启动说明
-1. yum 安装启动说明
-```
-nginx -t
-systemctl start nginx
-systemctl reload nginx
-systemctl restart nginx
-systemctl stop nginx
-```
-2. 编译安装启动管理方式
-```
-nginx -t
-nginx
-nginx -s reload
-nginx -s stop
-```
 
 ### Nginx 重要配置文件说明
 ####  1. 查看配置文件
