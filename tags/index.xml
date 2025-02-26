@@ -4,7 +4,15 @@
         <link>https://lushuan.gihub.io/tags/</link>
         <description>Tags - 标签 - Less is more</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
-            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Mon, 23 Sep 2024 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/tags/" rel="self" type="application/rss+xml" /><item>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Wed, 16 Oct 2024 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/tags/" rel="self" type="application/rss+xml" /><item>
+    <title>MySQL</title>
+    <link>https://lushuan.gihub.io/tags/mysql/</link>
+    <pubDate>Wed, 16 Oct 2024 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>https://lushuan.gihub.io/tags/mysql/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
     <title>K3s</title>
     <link>https://lushuan.gihub.io/tags/k3s/</link>
     <pubDate>Mon, 23 Sep 2024 12:06:37 &#43;0800</pubDate>
@@ -74,14 +82,6 @@
     <pubDate>Tue, 18 Apr 2023 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
     <guid>https://lushuan.gihub.io/tags/jenkins/</guid>
-    <description><![CDATA[]]></description>
-</item>
-<item>
-    <title>prometheus</title>
-    <link>https://lushuan.gihub.io/tags/prometheus/</link>
-    <pubDate>Mon, 29 Aug 2022 12:06:37 &#43;0800</pubDate>
-    <author>lushuan</author>
-    <guid>https://lushuan.gihub.io/tags/prometheus/</guid>
     <description><![CDATA[]]></description>
 </item>
 </channel>
