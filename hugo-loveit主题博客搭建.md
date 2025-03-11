@@ -56,6 +56,7 @@ cd public
 git init
 git add . -A
 git commit -m "first commit"
+# 重命名当前分支卫main,github master 分支需要聚合至main
 git branch -M main
 git remote add origin https://github.com/lushuan/lushuan.github.io.git
 git push -u origin main
@@ -180,6 +181,10 @@ Disqus、Gitalk和Valine是三种常见的评论系统，它们在功能、特�
 11. [Hugo框架LoveIt博客主题配置](https://kissingfire123.github.io/2022/05/15_hugo%E6%A1%86%E6%9E%B6%E5%8D%9A%E5%AE%A2loveit%E4%B8%BB%E9%A2%98%E9%85%8D%E7%BD%AE%E8%BF%87%E7%A8%8B%E8%AE%B0%E5%BD%95/)
 12. [Hugo系列(3.0) - LoveIt主题美化与博客功能增强 · 第一章](https://lewky.cn/posts/hugo-3.html/)
 13. [lightgallery 图片相册功能的改进](https://stilig.me/posts/enhancing-loveit-two/#lightgallery-%E5%9B%BE%E7%89%87%E7%9B%B8%E5%86%8C%E5%8A%9F%E8%83%BD%E7%9A%84%E6%94%B9%E8%BF%9B)
+
+### 其它
+1. [hugo-translator](https://github.com/Rico00121/hugo-translator) 一个 Python 脚本，将 markdown 格式的中文 Hugo 博客帖子，翻译成英文。
+
 
 ## 总结
  借鉴

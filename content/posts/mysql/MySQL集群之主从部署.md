@@ -147,8 +147,9 @@ group_concat_max_len = 40960
 max_allowed_packet = 1G
 
 datadir = /data/mysql
-socket = /tmp/mysql.sock
+socket = /data/mysql/mysql.sock
 log_error = /data/mysql/mysqld.log
+pid_file = /data/mysql/mysqld.pid
 
 # 设置server_id,注意要唯一
 server_id = 1
@@ -219,7 +220,7 @@ auto_increment_offset = 1
 #prompt = 'mysql[\u@\h]:[\d]:'
 
 [client]
-socket = /tmp/mysql.sock
+socket = /data/mysql/mysql.sock
 port = 3306
 ```
 启动mysqld服务，并设置开机自启
@@ -252,6 +253,14 @@ $ sudo systemctl enable mysqld --now
 $ sudo systemctl status mysqld
 ```
 ## 修改登录密码
+### 快捷操作
+```shell
+MYSQL_OLDPASSWORD=`awk '/A temporary password/{print $NF}' /data/mysql/mysqld.log`
+MYSQL_ROOT_PASSWORD="your_mysql_password"
+
+mysqladmin -u root -p$MYSQL_OLDPASSWORD password $MYSQL_ROOT_PASSWORD &>/dev/null
+```
+### 分步操作
 1、获取临时密码
 默认是在`/var/log/mysqld.log` 文件下，这里修改了安装目录为`/data/mysql`
 ```bash
