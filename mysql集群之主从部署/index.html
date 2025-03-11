@@ -27,7 +27,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/lushuan.gihub.io\/mysql%E9%9B%86%E7%BE%A4%E4%B9%8B%E4%B8%BB%E4%BB%8E%E9%83%A8%E7%BD%B2\/"
-        },"genre": "posts","keywords": "MySQL","wordcount":  3684 ,
+        },"genre": "posts","keywords": "MySQL","wordcount":  3714 ,
         "url": "https:\/\/lushuan.gihub.io\/mysql%E9%9B%86%E7%BE%A4%E4%B9%8B%E4%B8%BB%E4%BB%8E%E9%83%A8%E7%BD%B2\/","datePublished": "2024-10-16T12:06:37+08:00","dateModified": "2024-10-26T12:06:37+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -115,7 +115,7 @@
             <div class="toc-content always-active" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">MySQL 集群之主从部署</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/mysql/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>MySQL</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2024-10-16">2024-10-16</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 3684 字&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2024-10-16">2024-10-16</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 3714 字&nbsp;
                 <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 8 分钟&nbsp;<span id="/mysql%E9%9B%86%E7%BE%A4%E4%B9%8B%E4%B8%BB%E4%BB%8E%E9%83%A8%E7%BD%B2/" class="leancloud_visitors" data-flag-title="MySQL 集群之主从部署">
                         <i class="far fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
                     </span>&nbsp;</div>
@@ -135,7 +135,12 @@
     </li>
     <li><a href="#配置主服务器">配置主服务器</a></li>
     <li><a href="#配置从服务器">配置从服务器</a></li>
-    <li><a href="#修改登录密码">修改登录密码</a></li>
+    <li><a href="#修改登录密码">修改登录密码</a>
+      <ul>
+        <li><a href="#快捷操作">快捷操作</a></li>
+        <li><a href="#分步操作">分步操作</a></li>
+      </ul>
+    </li>
     <li><a href="#安装后验证">安装后验证</a></li>
     <li><a href="#开启主从同步">开启主从同步</a>
       <ul>
@@ -491,6 +496,7 @@
 </span><span class="lnt">81
 </span><span class="lnt">82
 </span><span class="lnt">83
+</span><span class="lnt">84
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">[mysqld]
@@ -502,8 +508,9 @@
 </span></span><span class="line"><span class="cl">max_allowed_packet = 1G
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">datadir = /data/mysql
-</span></span><span class="line"><span class="cl">socket = /tmp/mysql.sock
+</span></span><span class="line"><span class="cl">socket = /data/mysql/mysql.sock
 </span></span><span class="line"><span class="cl">log_error = /data/mysql/mysqld.log
+</span></span><span class="line"><span class="cl">pid_file = /data/mysql/mysqld.pid
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"># 设置server_id,注意要唯一
 </span></span><span class="line"><span class="cl">server_id = 1
@@ -574,7 +581,7 @@
 </span></span><span class="line"><span class="cl">#prompt = &#39;mysql[\u@\h]:[\d]:&#39;
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">[client]
-</span></span><span class="line"><span class="cl">socket = /tmp/mysql.sock
+</span></span><span class="line"><span class="cl">socket = /data/mysql/mysql.sock
 </span></span><span class="line"><span class="cl">port = 3306
 </span></span></code></pre></td></tr></table>
 </div>
@@ -636,6 +643,22 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="修改登录密码">修改登录密码</h2>
+<h3 id="快捷操作">快捷操作</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="nv">MYSQL_OLDPASSWORD</span><span class="o">=</span><span class="sb">`</span>awk <span class="s1">&#39;/A temporary password/{print $NF}&#39;</span> /data/mysql/mysqld.log<span class="sb">`</span>
+</span></span><span class="line"><span class="cl"><span class="nv">MYSQL_ROOT_PASSWORD</span><span class="o">=</span><span class="s2">&#34;your_mysql_password&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">mysqladmin -u root -p<span class="nv">$MYSQL_OLDPASSWORD</span> password <span class="nv">$MYSQL_ROOT_PASSWORD</span> <span class="p">&amp;</span>&gt;/dev/null
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="分步操作">分步操作</h3>
 <p>1、获取临时密码
 默认是在<code>/var/log/mysqld.log</code> 文件下，这里修改了安装目录为<code>/data/mysql</code></p>
 <div class="highlight"><div class="chroma">
