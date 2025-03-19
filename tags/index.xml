@@ -4,7 +4,23 @@
         <link>https://lushuan.gihub.io/tags/</link>
         <description>Tags - 标签 - Less is more</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
-            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Wed, 16 Oct 2024 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/tags/" rel="self" type="application/rss+xml" /><item>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Tue, 19 Nov 2024 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/tags/" rel="self" type="application/rss+xml" /><item>
+    <title>linux</title>
+    <link>https://lushuan.gihub.io/tags/linux/</link>
+    <pubDate>Tue, 19 Nov 2024 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>https://lushuan.gihub.io/tags/linux/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
+    <title>防火墙</title>
+    <link>https://lushuan.gihub.io/tags/%E9%98%B2%E7%81%AB%E5%A2%99/</link>
+    <pubDate>Tue, 19 Nov 2024 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>https://lushuan.gihub.io/tags/%E9%98%B2%E7%81%AB%E5%A2%99/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
     <title>MySQL</title>
     <link>https://lushuan.gihub.io/tags/mysql/</link>
     <pubDate>Wed, 16 Oct 2024 12:06:37 &#43;0800</pubDate>
@@ -66,22 +82,6 @@
     <pubDate>Sat, 13 Jan 2024 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
     <guid>https://lushuan.gihub.io/tags/kubernetes%E6%8E%92%E9%9A%9C/</guid>
-    <description><![CDATA[]]></description>
-</item>
-<item>
-    <title>docker</title>
-    <link>https://lushuan.gihub.io/tags/docker/</link>
-    <pubDate>Mon, 26 Jun 2023 16:25:58 &#43;0800</pubDate>
-    <author>lushuan</author>
-    <guid>https://lushuan.gihub.io/tags/docker/</guid>
-    <description><![CDATA[]]></description>
-</item>
-<item>
-    <title>Jenkins</title>
-    <link>https://lushuan.gihub.io/tags/jenkins/</link>
-    <pubDate>Tue, 18 Apr 2023 12:06:37 &#43;0800</pubDate>
-    <author>lushuan</author>
-    <guid>https://lushuan.gihub.io/tags/jenkins/</guid>
     <description><![CDATA[]]></description>
 </item>
 </channel>

@@ -1,0 +1,16 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>防火墙 - 标签 - Less is more</title>
+        <link>https://lushuan.gihub.io/tags/%E9%98%B2%E7%81%AB%E5%A2%99/</link>
+        <description>防火墙 - 标签 - Less is more</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Tue, 19 Nov 2024 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/tags/%E9%98%B2%E7%81%AB%E5%A2%99/" rel="self" type="application/rss+xml" /><item>
+    <title>Linux 防火墙iptables详解</title>
+    <link>https://lushuan.gihub.io/linux%E9%98%B2%E7%81%AB%E5%A2%99iptables%E8%AF%A6%E8%A7%A3/</link>
+    <pubDate>Tue, 19 Nov 2024 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>https://lushuan.gihub.io/linux%E9%98%B2%E7%81%AB%E5%A2%99iptables%E8%AF%A6%E8%A7%A3/</guid>
+    <description><![CDATA[iptables 是运维中的重点但不算是特别的难点，是网站访问的大门，本篇记录对 iptables 的常用梳理 概述 封端口 封IP 实现Nat上网 共享上网 端口映射(端口转发)，ip]]></description>
+</item>
+</channel>
+</rss>

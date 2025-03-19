@@ -27,7 +27,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/lushuan.gihub.io\/nginx%E5%B8%B8%E7%94%A8%E9%85%8D%E7%BD%AE\/"
-        },"genre": "posts","keywords": "Nginx","wordcount":  13337 ,
+        },"genre": "posts","keywords": "Nginx","wordcount":  14031 ,
         "url": "https:\/\/lushuan.gihub.io\/nginx%E5%B8%B8%E7%94%A8%E9%85%8D%E7%BD%AE\/","datePublished": "2022-01-13T12:06:37+08:00","dateModified": "2022-06-26T12:06:37+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -115,8 +115,8 @@
             <div class="toc-content always-active" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Nginx 常用配置</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/nginx/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Nginx</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2022-01-13">2022-01-13</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 13337 字&nbsp;
-                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 27 分钟&nbsp;<span id="/nginx%E5%B8%B8%E7%94%A8%E9%85%8D%E7%BD%AE/" class="leancloud_visitors" data-flag-title="Nginx 常用配置">
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2022-01-13">2022-01-13</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 14031 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 29 分钟&nbsp;<span id="/nginx%E5%B8%B8%E7%94%A8%E9%85%8D%E7%BD%AE/" class="leancloud_visitors" data-flag-title="Nginx 常用配置">
                         <i class="far fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
                     </span>&nbsp;</div>
         </div><div class="details toc" id="toc-static"  data-kept="">
@@ -222,6 +222,17 @@
           <ul>
             <li><a href="#日志内存缓冲区">日志内存缓冲区</a></li>
             <li><a href="#json格式输出">json格式输出</a></li>
+            <li><a href="#日志切割">日志切割</a>
+              <ul>
+                <li><a href="#使用-logrotate-工具推荐">使用 <code>logrotate</code> 工具（推荐）</a>
+                  <ul>
+                    <li><a href="#步骤"><strong>步骤：</strong></a></li>
+                  </ul>
+                </li>
+                <li><a href="#关键注意事项"><strong>关键注意事项</strong></a></li>
+                <li><a href="#配置多个目录的方式">配置多个目录的方式</a></li>
+              </ul>
+            </li>
           </ul>
         </li>
         <li><a href="#nginx-upsream-重试机制">Nginx upsream 重试机制</a>
@@ -2264,7 +2275,162 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>这个例子展示了一个HTTP GET请求的日志条目，其中包含了请求的各种详细信息。通过将Nginx的日志格式化为JSON，可以更方便地进行日志分析、监控以及与其他系统集成。</p>
-<h3 id="nginx-upsream-重试机制">Nginx upsream 重试机制</h3>
+<h4 id="日志切割">日志切割</h4>
+<p><strong>日志分隔的必要性</strong></p>
+<ul>
+<li><strong>避免单个文件过大</strong>：长时间运行会导致日志文件占用过多磁盘空间。</li>
+<li><strong>便于归档和排查</strong>：按时间或大小分隔日志，方便定位问题。</li>
+<li><strong>结合压缩节省空间</strong>：压缩旧日志减少存储压力。</li>
+</ul>
+<hr>
+<h5 id="使用-logrotate-工具推荐">使用 <code>logrotate</code> 工具（推荐）</h5>
+<p><code>logrotate</code> 是Linux系统自带的日志管理工具，支持自动化轮转、压缩和删除旧日志。</p>
+<h6 id="步骤"><strong>步骤：</strong></h6>
+<ol>
+<li>
+<p><strong>编辑Nginx的logrotate配置文件</strong><br>
+通常路径为 <code>/etc/logrotate.d/nginx</code>，内容如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">/var/log/nginx/*.log <span class="o">{</span>  <span class="c1"># 匹配Nginx日志路径</span>
+</span></span><span class="line"><span class="cl">    daily               <span class="c1"># 按天轮转</span>
+</span></span><span class="line"><span class="cl">    missingok           <span class="c1"># 日志不存在时不报错</span>
+</span></span><span class="line"><span class="cl">    rotate <span class="m">14</span>           <span class="c1"># 保留最近14天的日志</span>
+</span></span><span class="line"><span class="cl">    compress            <span class="c1"># 压缩旧日志（gzip）</span>
+</span></span><span class="line"><span class="cl">    delaycompress       <span class="c1"># 延迟压缩前一个轮转的日志（方便排查最新旧日志）</span>
+</span></span><span class="line"><span class="cl">    notifempty          <span class="c1"># 空日志不轮转</span>
+</span></span><span class="line"><span class="cl">    create <span class="m">0640</span> www-data adm  <span class="c1"># 创建新日志文件并设置权限、所有者</span>
+</span></span><span class="line"><span class="cl">    sharedscripts       <span class="c1"># 所有日志处理完成后执行脚本</span>
+</span></span><span class="line"><span class="cl">    postrotate          <span class="c1"># 轮转后执行的命令</span>
+</span></span><span class="line"><span class="cl">        <span class="o">[</span> -f /var/run/nginx.pid <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">kill</span> -USR1 <span class="sb">`</span>cat /var/run/nginx.pid<span class="sb">`</span>  <span class="c1"># 通知Nginx重新打开日志</span>
+</span></span><span class="line"><span class="cl">    endscript
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p><strong>测试配置</strong><br>
+手动执行轮转并检查结果：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">logrotate -vf /etc/logrotate.d/nginx  <span class="c1"># -v: 详细输出，-f: 强制运行</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p><strong>验证日志分隔</strong><br>
+检查 <code>/var/log/nginx</code> 目录是否生成类似 <code>access.log.1.gz</code> 的压缩文件，并确认Nginx正常写入新日志。</p>
+</li>
+</ol>
+<hr>
+<h5 id="关键注意事项"><strong>关键注意事项</strong></h5>
+<ol>
+<li>
+<p><strong>权限问题</strong></p>
+<ul>
+<li>确保新日志文件所有者（如 <code>www-data</code>）与Nginx运行用户一致。</li>
+<li><code>logrotate</code> 配置中使用 <code>create</code> 指令设置权限。</li>
+</ul>
+</li>
+<li>
+<p><strong>信号机制</strong></p>
+<ul>
+<li><code>kill -USR1</code> 通知Nginx重新打开日志文件，无需重启服务。</li>
+<li>也可用 <code>nginx -s reopen</code> 命令实现相同效果。</li>
+</ul>
+</li>
+<li>
+<p><strong>轮转周期调整</strong></p>
+<ul>
+<li>修改 <code>logrotate</code> 配置中的 <code>daily</code> 为 <code>weekly</code>、<code>monthly</code> 或 <code>size</code>（如 <code>size 100M</code>）。</li>
+</ul>
+</li>
+<li>
+<p><strong>日志处理</strong></p>
+<ul>
+<li>使用 <code>compress</code> 和 <code>delaycompress</code> 控制压缩行为。</li>
+<li>通过 <code>rotate</code> 设置保留的旧日志数量。</li>
+</ul>
+</li>
+</ol>
+<h5 id="配置多个目录的方式">配置多个目录的方式</h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># /etc/logrotate.d/nginx
+</span></span><span class="line"><span class="cl">/var/log/nginx/*.log {
+</span></span><span class="line"><span class="cl">    daily
+</span></span><span class="line"><span class="cl">    rotate 14
+</span></span><span class="line"><span class="cl">    compress
+</span></span><span class="line"><span class="cl">    missingok
+</span></span><span class="line"><span class="cl">    create 0640 www-data adm
+</span></span><span class="line"><span class="cl">    postrotate
+</span></span><span class="line"><span class="cl">        nginx -s reopen
+</span></span><span class="line"><span class="cl">    endscript
+</span></span><span class="line"><span class="cl">}
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># /etc/logrotate.d/nginx
+</span></span><span class="line"><span class="cl">/opt/nginx/logs/*.log  /data/logs/nginx/*.log  {
+</span></span><span class="line"><span class="cl">    daily
+</span></span><span class="line"><span class="cl">    rotate 30
+</span></span><span class="line"><span class="cl">    missingok
+</span></span><span class="line"><span class="cl">    dateext
+</span></span><span class="line"><span class="cl">    compress
+</span></span><span class="line"><span class="cl">    delaycompress
+</span></span><span class="line"><span class="cl">    notifempty
+</span></span><span class="line"><span class="cl">    sharedscripts
+</span></span><span class="line"><span class="cl">    postrotate
+</span></span><span class="line"><span class="cl">        [ -f /opt/nginx/logs/nginx.pid ] &amp;&amp; kill -USR1 `cat /opt/nginx/logs/nginx.pid`
+</span></span><span class="line"><span class="cl">    endscript
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="nginx-upsream-重试机制">Nginx upsream 重试机制</h3>
 <p>探测上游服务器健康状态</p>
 <ul>
 <li>重试机制(被动重试机制和主动重试机制)</li>
