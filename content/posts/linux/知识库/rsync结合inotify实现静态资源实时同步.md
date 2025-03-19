@@ -36,17 +36,23 @@ $ systemctl enable rsyncd --now
 # or
 $ rsync --daemon
 # 查看目标主机同步源主机指定目录下的文件
-$ rsync --list-only 192.168.143.101::ftp
+$ rsync --list-only lushuan@192.168.143.101::ftp
 drwxr-xr-x             19 2025/02/10 10:20:40 .
 -rw-r--r--              0 2025/02/10 10:20:40 1.txt
-# 执行同步命令
+# 远程同步1：将本地内容同步到远程主机 rsync -av source/ username@remote_host:destination
+$ rsync -avz  /data/rsync_test/  lushuan@192.168.143.102::ftp/ 
+# 远程同步2: 将远程主机内容同步到本地
 $ rsync -avz 192.168.143.101::ftp/ /data/rsync_test/
 receiving incremental file list
 ./
 1.txt
 ```
 
-注意，传输的双方都必须安装 rsync。
+注意
+- 传输的双方都必须安装 rsync。
+- 目标主机需要防火墙需要对源主机开放873 端口权限
+- 目标主机的同步目录权限应为755
+
 ## rsyncd 增加安全认证及免密登录
 ```shell
 echo "lushuan:111" >> /etc/rsyncd.pwd
@@ -182,6 +188,21 @@ done
 | `-d, --daemon` | 以守护进程模式运行，通常配合 `--outfile` 使用来指定日志文件。     |
 | `--outfile`   | 指定输出重定向到的文件路径，常与 `-d` 选项一起使用。             |
 
+## 最佳实践
+在部署rsyncd 时，可能会遇到权限相关的问题，或者是配置相关的问题，下面给出对应的参考，若果有其它的异常报错可以参考[rsync故障排除解答](https://blog.51cto.com/53cto/1771826),下面是配置参考，根据自己需求来修改，这里是加密认证的配置。 另外如果是在生产环境可能遇到防火墙没有开放的问题，注意放开一下 873 端口，最后就是源主机和目标主机如果是非root 用户注意查看目录的权限，推荐目录权限为766
+```shell
+...
+uid = root
+gid = root
+auth users = lushuan
+secrets file=/etc/rsyncd.pwd
+read only =  no
+ [ftp]
+        path = /data/rsync_test
+```
+
+
 ## 参考
 1. [rsync官网](https://rsync.samba.org/)
 2. [rsync 用法教程](https://www.ruanyifeng.com/blog/2020/08/rsync.html)
+3. [rsync故障排除解答](https://blog.51cto.com/53cto/1771826)

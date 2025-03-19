@@ -1165,6 +1165,96 @@ http {
 
 这个例子展示了一个HTTP GET请求的日志条目，其中包含了请求的各种详细信息。通过将Nginx的日志格式化为JSON，可以更方便地进行日志分析、监控以及与其他系统集成。
 
+#### 日志切割
+
+
+**日志分隔的必要性**   
+- **避免单个文件过大**：长时间运行会导致日志文件占用过多磁盘空间。
+- **便于归档和排查**：按时间或大小分隔日志，方便定位问题。
+- **结合压缩节省空间**：压缩旧日志减少存储压力。
+
+---
+
+##### 使用 `logrotate` 工具（推荐）
+`logrotate` 是Linux系统自带的日志管理工具，支持自动化轮转、压缩和删除旧日志。
+
+###### **步骤：**
+1. **编辑Nginx的logrotate配置文件**  
+   通常路径为 `/etc/logrotate.d/nginx`，内容如下：
+   ```bash
+   /var/log/nginx/*.log {  # 匹配Nginx日志路径
+       daily               # 按天轮转
+       missingok           # 日志不存在时不报错
+       rotate 14           # 保留最近14天的日志
+       compress            # 压缩旧日志（gzip）
+       delaycompress       # 延迟压缩前一个轮转的日志（方便排查最新旧日志）
+       notifempty          # 空日志不轮转
+       create 0640 www-data adm  # 创建新日志文件并设置权限、所有者
+       sharedscripts       # 所有日志处理完成后执行脚本
+       postrotate          # 轮转后执行的命令
+           [ -f /var/run/nginx.pid ] && kill -USR1 `cat /var/run/nginx.pid`  # 通知Nginx重新打开日志
+       endscript
+   }
+   ```
+
+2. **测试配置**  
+   手动执行轮转并检查结果：
+   ```bash
+   logrotate -vf /etc/logrotate.d/nginx  # -v: 详细输出，-f: 强制运行
+   ```
+
+3. **验证日志分隔**  
+   检查 `/var/log/nginx` 目录是否生成类似 `access.log.1.gz` 的压缩文件，并确认Nginx正常写入新日志。
+
+---
+
+
+##### **关键注意事项**
+1. **权限问题**  
+   - 确保新日志文件所有者（如 `www-data`）与Nginx运行用户一致。
+   - `logrotate` 配置中使用 `create` 指令设置权限。
+
+2. **信号机制**  
+   - `kill -USR1` 通知Nginx重新打开日志文件，无需重启服务。
+   - 也可用 `nginx -s reopen` 命令实现相同效果。
+
+3. **轮转周期调整**  
+   - 修改 `logrotate` 配置中的 `daily` 为 `weekly`、`monthly` 或 `size`（如 `size 100M`）。
+
+4. **日志处理**  
+   - 使用 `compress` 和 `delaycompress` 控制压缩行为。
+   - 通过 `rotate` 设置保留的旧日志数量。
+
+##### 配置多个目录的方式
+```
+# /etc/logrotate.d/nginx
+/var/log/nginx/*.log {
+    daily
+    rotate 14
+    compress
+    missingok
+    create 0640 www-data adm
+    postrotate
+        nginx -s reopen
+    endscript
+}
+
+# /etc/logrotate.d/nginx
+/opt/nginx/logs/*.log  /data/logs/nginx/*.log  {
+    daily
+    rotate 30
+    missingok
+    dateext
+    compress
+    delaycompress
+    notifempty
+    sharedscripts
+    postrotate
+        [ -f /opt/nginx/logs/nginx.pid ] && kill -USR1 `cat /opt/nginx/logs/nginx.pid`
+    endscript
+}
+```
+
 ### Nginx upsream 重试机制
 探测上游服务器健康状态
 - 重试机制(被动重试机制和主动重试机制)
