@@ -164,6 +164,7 @@ Disqus、Gitalk和Valine是三种常见的评论系统，它们在功能、特�
 1. [新网域名](https://www.xinnet.com/domain/domainQueryResult.html?prefix=xmddlu&suffix=.cn)
 2. [gitee 关闭个人购买域名入口](https://help.gitee.com/services/gitee-pages/pro/)
 
+
 ## 待演进
 博客最初是基于GitHub Pages创建的，但由于国内访问较慢，我使用了GitHub Pages + Vercel + Cloudflare的方式，并购买了域名备案到了国内，并使用国内的服务器。
 
@@ -181,6 +182,7 @@ Disqus、Gitalk和Valine是三种常见的评论系统，它们在功能、特�
 11. [Hugo框架LoveIt博客主题配置](https://kissingfire123.github.io/2022/05/15_hugo%E6%A1%86%E6%9E%B6%E5%8D%9A%E5%AE%A2loveit%E4%B8%BB%E9%A2%98%E9%85%8D%E7%BD%AE%E8%BF%87%E7%A8%8B%E8%AE%B0%E5%BD%95/)
 12. [Hugo系列(3.0) - LoveIt主题美化与博客功能增强 · 第一章](https://lewky.cn/posts/hugo-3.html/)
 13. [lightgallery 图片相册功能的改进](https://stilig.me/posts/enhancing-loveit-two/#lightgallery-%E5%9B%BE%E7%89%87%E7%9B%B8%E5%86%8C%E5%8A%9F%E8%83%BD%E7%9A%84%E6%94%B9%E8%BF%9B)
+14. [Hugo 博客引入 Giscus 评论系统](https://www.lixueduan.com/posts/blog/02-add-giscus-comment/)
 
 ### 其它
 1. [hugo-translator](https://github.com/Rico00121/hugo-translator) 一个 Python 脚本，将 markdown 格式的中文 Hugo 博客帖子，翻译成英文。

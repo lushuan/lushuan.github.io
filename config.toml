@@ -459,7 +459,7 @@ defaultContentLanguage = "zh-cn"
         redirect_uri = "https://blog.dazhongma.top/callback" # 添加此项确保与 OAuth 应用配置一致
       # Valine 评论系统设置
       [params.page.comment.valine]
-        enable = true
+        enable = false
         appId = "XQderBhsCffEN9pw26SOSQon-MdYXbMMI"
         appKey = "zLUsSeN2SfcBdQbGTv9iFhFp"
         placeholder = "期待您的评论..."
@@ -512,11 +512,11 @@ defaultContentLanguage = "zh-cn"
       # giscus comment 评论系统设置 (https://giscus.app/zh-CN)
       [params.page.comment.giscus]
         # 你可以参考官方文档来使用下列配置
-        enable = false
-        repo = ""
-        repoId = ""
+        enable = true
+        repo = "lushuan/lushuan.github.io"
+        repoId = "R_kgDOMOWciQ"
         category = "Announcements"
-        categoryId = ""
+        categoryId = "DIC_kwDOMOWcic4Coqlk"
         # 为空时自动适配当前主题 i18n 配置
         lang = ""
         mapping = "pathname"
