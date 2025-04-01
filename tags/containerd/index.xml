@@ -1,0 +1,16 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>containerd - 标签 - Less is more</title>
+        <link>https://lushuan.gihub.io/tags/containerd/</link>
+        <description>containerd - 标签 - Less is more</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Mon, 26 Jun 2023 16:25:58 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/tags/containerd/" rel="self" type="application/rss+xml" /><item>
+    <title>从Docker至Containerd</title>
+    <link>https://lushuan.gihub.io/%E4%BB%8Edocker%E8%87%B3containerd/</link>
+    <pubDate>Mon, 26 Jun 2023 16:25:58 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>https://lushuan.gihub.io/%E4%BB%8Edocker%E8%87%B3containerd/</guid>
+    <description><![CDATA[平时较多使用的是docker项目将容器运行时迁移至了containerd，这里整理下相关的操作命令 常用指令对比 ctr是containerd自]]></description>
+</item>
+</channel>
+</rss>
