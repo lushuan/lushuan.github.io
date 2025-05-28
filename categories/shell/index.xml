@@ -45,6 +45,14 @@
     <description><![CDATA[一般说明，如果命令执行成功，则其返回值为0，否则为非0，因此，可以通过下面的方式判断上条命令的执行结果： if 分支 1 2 3 4 5 6 7 8 9 if [ $? -eq 0 ]]]></description>
 </item>
 <item>
+    <title>shell 字符串详解</title>
+    <link>https://lushuan.gihub.io/ch19_%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C%E8%AF%A6%E8%A7%A3/</link>
+    <pubDate>Sat, 25 Apr 2020 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>https://lushuan.gihub.io/ch19_%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C%E8%AF%A6%E8%A7%A3/</guid>
+    <description><![CDATA[Bash Shell 字符串操作详解 Bash 中的字符串操作是脚本编写的核心技能之一，涵盖定义、拼接、截取、替换、匹配等场景。以下是常见用法及示例： 1. 字符串基础 1.1 定义]]></description>
+</item>
+<item>
     <title>shell 循环</title>
     <link>https://lushuan.gihub.io/ch5_%E5%BE%AA%E7%8E%AF/</link>
     <pubDate>Fri, 24 Apr 2020 12:06:37 &#43;0800</pubDate>
@@ -75,14 +83,6 @@
     <author>lushuan</author>
     <guid>https://lushuan.gihub.io/ch8_%E6%B3%A8%E9%87%8A/</guid>
     <description><![CDATA[shell通过#来注释一行内容，前面我们已经看到过了 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 #!/bin/bash # 这是一行注释 :&#39; 这是 多行 注释 &#39; ls :&lt;&lt;EOF 这也可以 达到 多行注释 的]]></description>
-</item>
-<item>
-    <title>shell 日志保存</title>
-    <link>https://lushuan.gihub.io/ch9_%E6%97%A5%E5%BF%97%E4%BF%9D%E5%AD%98/</link>
-    <pubDate>Mon, 20 Apr 2020 12:06:37 &#43;0800</pubDate>
-    <author>lushuan</author>
-    <guid>https://lushuan.gihub.io/ch9_%E6%97%A5%E5%BF%97%E4%BF%9D%E5%AD%98/</guid>
-    <description><![CDATA[脚本执行后免不了要记录日志，最常用的方法就是重定向。以下面的脚本为例： 1 2 3 4 #!/bin/bash #test.sh lll #这个命令是没有的，因此会报错 date 方式一 将标准输出保存到文]]></description>
 </item>
 </channel>
 </rss>
