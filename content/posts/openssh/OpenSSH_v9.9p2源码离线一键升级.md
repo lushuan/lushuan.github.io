@@ -20,7 +20,6 @@ tags: ["OpenSSH"]
 如果 OpenSSL 相对版本较低，这里建议先将OpenSS版本升级至OpenSSL 1.1.1w  11 Sep 2023，然后再升级 OpenSSH v9.9p2,如果你的主机当前的OpenSSH 版本为v9.9p1，则同样建议升级至v9.9p2，因为v9.9p1 含有两个中危漏洞，OpenSSH 安全漏洞(CVE-2025-26465 ) 和 OpenSSH 资源管理错误漏洞(CVE-2025-26466 )，此漏洞同样在 v9.9p2 版本进行了修复。
 {{< /admonition >}}
 
-
 ## 相关安装包
 {{< admonition type=quote title="地址" >}}
 openssh下载地址：http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/  
@@ -29,9 +28,7 @@ zlib下载地址：http://www.zlib.net/
 openssl-1.1.1w: https://www.openssl.org/source/openssl-1.1.1w.tar.gz  
 {{< /admonition >}}
 
-
 ## 升级 OpenSSL
-
 查找openssl相关目录，然后备份  
 ```shell
 $ whereis openssl
@@ -41,13 +38,11 @@ $ cp -rp /usr/lib64/openssl /usr/lib64/openssl`date '+%Y%m%d'`
 $ cp -rp /usr/include/openssl /usr/include/openssl`date '+%Y%m%d'`
 ```
 
-## 卸载 OpenSSL(可选)
-
+### 卸载旧版本 OpenSSL(可选)
 ```shell
 $ yum -y remove openssl
 ```
-
-安装 OpenSSL v1.1.1w  
+### 安装 OpenSSL v1.1.1w  
 ```
 $ wget --inet4-only  https://www.openssl.org/source/openssl-1.1.1w.tar.gz
 $ tar -xzvf openssl-1.1.1w.tar.gz
@@ -64,7 +59,8 @@ $ ./config --prefix=/usr
 $ make
 $ make install
 ```
-验证
+
+### 验证
 ```
 $ whereis openssl
 openssl: /usr/bin/openssl /usr/include/openssl /usr/local/openssl /usr/share/man/man1/openssl.1ssl.gz /usr/share/man/man1/openssl.1ossl3.gz /usr/share/man/man1/openssl.1
