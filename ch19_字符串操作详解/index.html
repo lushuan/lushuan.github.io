@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>shell 字符串详解 - Less is more</title><meta name="Description" content="晚来天欲雪,能饮一杯无?"><meta property="og:title" content="shell 字符串详解" />
+<meta property="og:description" content="Bash Shell 字符串操作详解 Bash 中的字符串操作是脚本编写的核心技能之一，涵盖定义、拼接、截取、替换、匹配等场景。以下是常见用法及示例： 1. 字符串基础 1.1 定义" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://lushuan.gihub.io/ch19_%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C%E8%AF%A6%E8%A7%A3/" /><meta property="og:image" content="https://lushuan.gihub.io/images/avatar.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2020-04-25T12:06:37+08:00" />
+<meta property="article:modified_time" content="2024-06-26T12:06:37+08:00" /><meta property="og:site_name" content="我的网站" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://lushuan.gihub.io/images/avatar.png"/>
+
+<meta name="twitter:title" content="shell 字符串详解"/>
+<meta name="twitter:description" content="Bash Shell 字符串操作详解 Bash 中的字符串操作是脚本编写的核心技能之一，涵盖定义、拼接、截取、替换、匹配等场景。以下是常见用法及示例： 1. 字符串基础 1.1 定义"/>
+<meta name="application-name" content="我的网站">
+<meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/images/avatar.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://lushuan.gihub.io/ch19_%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C%E8%AF%A6%E8%A7%A3/" /><link rel="prev" href="https://lushuan.gihub.io/ch5_%E5%BE%AA%E7%8E%AF/" /><link rel="next" href="https://lushuan.gihub.io/ch4_%E6%9D%A1%E4%BB%B6%E5%88%86%E6%94%AF/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "shell 字符串详解",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/lushuan.gihub.io\/ch19_%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C%E8%AF%A6%E8%A7%A3\/"
+        },"genre": "posts","keywords": "Shell","wordcount":  1089 ,
+        "url": "https:\/\/lushuan.gihub.io\/ch19_%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C%E8%AF%A6%E8%A7%A3\/","datePublished": "2020-04-25T12:06:37+08:00","dateModified": "2024-06-26T12:06:37+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "lushuan"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Less is more"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Less is more</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 归档 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/" title="About"> 关于 </a><a class="menu-item" href="/friends/" title="friends"> 友链 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Less is more"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Less is more</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">归档</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="About">关于</a><a class="menu-item" href="/friends/" title="friends">友链</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content always-active" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">shell 字符串详解</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/shell/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Shell</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2020-04-25">2020-04-25</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 1089 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 3 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#bash-shell-字符串操作详解"><strong>Bash Shell 字符串操作详解</strong></a>
+          <ul>
+            <li><a href="#1-字符串基础"><strong>1. 字符串基础</strong></a>
+              <ul>
+                <li><a href="#11-定义字符串"><strong>1.1 定义字符串</strong></a></li>
+                <li><a href="#12-字符串拼接"><strong>1.2 字符串拼接</strong></a></li>
+                <li><a href="#13-获取字符串长度"><strong>1.3 获取字符串长度</strong></a></li>
+              </ul>
+            </li>
+            <li><a href="#2-字符串截取"><strong>2. 字符串截取</strong></a>
+              <ul>
+                <li><a href="#21-按位置截取"><strong>2.1 按位置截取</strong></a></li>
+                <li><a href="#22-按模式截取"><strong>2.2 按模式截取</strong></a></li>
+              </ul>
+            </li>
+            <li><a href="#3-字符串替换"><strong>3. 字符串替换</strong></a>
+              <ul>
+                <li><a href="#31-简单替换"><strong>3.1 简单替换</strong></a></li>
+                <li><a href="#32-前缀后缀替换"><strong>3.2 前缀/后缀替换</strong></a></li>
+              </ul>
+            </li>
+            <li><a href="#4-字符串查找"><strong>4. 字符串查找</strong></a>
+              <ul>
+                <li><a href="#41-查找子字符串位置"><strong>4.1 查找子字符串位置</strong></a></li>
+                <li><a href="#42-检查是否包含子串"><strong>4.2 检查是否包含子串</strong></a></li>
+              </ul>
+            </li>
+            <li><a href="#5-字符串分割为数组"><strong>5. 字符串分割为数组</strong></a></li>
+            <li><a href="#6-字符串比较"><strong>6. 字符串比较</strong></a></li>
+            <li><a href="#7-正则表达式匹配"><strong>7. 正则表达式匹配</strong></a>
+              <ul>
+                <li><a href="#71-使用--操作符"><strong>7.1 使用 <code>=~</code> 操作符</strong></a></li>
+                <li><a href="#72-提取匹配组"><strong>7.2 提取匹配组</strong></a></li>
+              </ul>
+            </li>
+            <li><a href="#8-高级技巧"><strong>8. 高级技巧</strong></a>
+              <ul>
+                <li><a href="#81-处理带空格的字符串"><strong>8.1 处理带空格的字符串</strong></a></li>
+                <li><a href="#82-使用-heredoc-定义多行字符串"><strong>8.2 使用 <code>heredoc</code> 定义多行字符串</strong></a></li>
+                <li><a href="#83-颜色和格式输出"><strong>8.3 颜色和格式输出</strong></a></li>
+              </ul>
+            </li>
+            <li><a href="#9-实用示例"><strong>9. 实用示例</strong></a>
+              <ul>
+                <li><a href="#91-获取文件名和扩展名"><strong>9.1 获取文件名和扩展名</strong></a></li>
+                <li><a href="#92-路径处理"><strong>9.2 路径处理</strong></a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#总结"><strong>总结</strong></a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h3 id="bash-shell-字符串操作详解"><strong>Bash Shell 字符串操作详解</strong></h3>
+<p>Bash 中的字符串操作是脚本编写的核心技能之一，涵盖定义、拼接、截取、替换、匹配等场景。以下是常见用法及示例：</p>
+<hr>
+<h4 id="1-字符串基础"><strong>1. 字符串基础</strong></h4>
+<h5 id="11-定义字符串"><strong>1.1 定义字符串</strong></h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nv">str1</span><span class="o">=</span><span class="s2">&#34;Hello World&#34;</span>    <span class="c1"># 双引号（允许变量替换和转义）</span>
+</span></span><span class="line"><span class="cl"><span class="nv">str2</span><span class="o">=</span><span class="s1">&#39;Hello $USER&#39;</span>    <span class="c1"># 单引号（原样输出，不解析变量）</span>
+</span></span><span class="line"><span class="cl"><span class="nv">str3</span><span class="o">=</span><span class="s1">$&#39;Line1\nLine2&#39;</span>  <span class="c1"># ANSI-C 引号（支持转义字符）</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h5 id="12-字符串拼接"><strong>1.2 字符串拼接</strong></h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nv">name</span><span class="o">=</span><span class="s2">&#34;Alice&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">greet</span><span class="o">=</span><span class="s2">&#34;Hello, &#34;</span><span class="nv">$name</span><span class="s2">&#34;!&#34;</span>  <span class="c1"># 直接拼接</span>
+</span></span><span class="line"><span class="cl"><span class="nb">echo</span> <span class="nv">$greet</span>              <span class="c1"># 输出: Hello, Alice!</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 使用双引号简化</span>
+</span></span><span class="line"><span class="cl"><span class="nv">greet</span><span class="o">=</span><span class="s2">&#34;Hello, </span><span class="si">${</span><span class="nv">name</span><span class="si">}</span><span class="s2">!&#34;</span>  <span class="c1"># 推荐写法</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h5 id="13-获取字符串长度"><strong>1.3 获取字符串长度</strong></h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nv">str</span><span class="o">=</span><span class="s2">&#34;abcdefg&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nb">echo</span> <span class="si">${#</span><span class="nv">str</span><span class="si">}</span>  <span class="c1"># 输出: 7</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><hr>
+<h4 id="2-字符串截取"><strong>2. 字符串截取</strong></h4>
+<h5 id="21-按位置截取"><strong>2.1 按位置截取</strong></h5>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>描述</th>
+<th>示例（str=&ldquo;abcdef&rdquo;）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>${str:start}</code></td>
+<td>从 <code>start</code> 开始截取到末尾</td>
+<td><code>${str:2}</code> → &ldquo;cdef&rdquo;</td>
+</tr>
+<tr>
+<td><code>${str:start:length}</code></td>
+<td>从 <code>start</code> 截取 <code>length</code> 长度</td>
+<td><code>${str:1:3}</code> → &ldquo;bcd&rdquo;</td>
+</tr>
+</tbody>
+</table>
+<h5 id="22-按模式截取"><strong>2.2 按模式截取</strong></h5>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>描述</th>
+<th>示例（str=&ldquo;app_log_20231010.txt&rdquo;）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>${str#pattern}</code></td>
+<td><strong>删除</strong>开头匹配的最短模式</td>
+<td><code>${str#*_}</code> → &ldquo;log_20231010.txt&rdquo;</td>
+</tr>
+<tr>
+<td><code>${str##pattern}</code></td>
+<td><strong>删除</strong>开头匹配的最长模式</td>
+<td><code>${str##*_}</code> → &ldquo;20231010.txt&rdquo;</td>
+</tr>
+<tr>
+<td><code>${str%pattern}</code></td>
+<td><strong>删除</strong>结尾匹配的最短模式</td>
+<td><code>${str%.*}</code> → &ldquo;app_log_20231010&rdquo;</td>
+</tr>
+<tr>
+<td><code>${str%%pattern}</code></td>
+<td><strong>删除</strong>结尾匹配的最长模式</td>
+<td><code>${str%%.*}</code> → &ldquo;app_log&rdquo;</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h4 id="3-字符串替换"><strong>3. 字符串替换</strong></h4>
+<h5 id="31-简单替换"><strong>3.1 简单替换</strong></h5>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>描述</th>
+<th>示例（str=&ldquo;hello world hello&rdquo;）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>${str/old/new}</code></td>
+<td><strong>替换第一个</strong>匹配项</td>
+<td><code>${str/hello/Hi}</code> → &ldquo;Hi world hello&rdquo;</td>
+</tr>
+<tr>
+<td><code>${str//old/new}</code></td>
+<td><strong>替换所有</strong>匹配项</td>
+<td><code>${str//hello/Hi}</code> → &ldquo;Hi world Hi&rdquo;</td>
+</tr>
+</tbody>
+</table>
+<h5 id="32-前缀后缀替换"><strong>3.2 前缀/后缀替换</strong></h5>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>描述</th>
+<th>示例（str=&ldquo;error.log&rdquo;）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>${str/#prefix/new}</code></td>
+<td>替换开头的 <code>prefix</code></td>
+<td><code>${str/#error/access}</code> → &ldquo;access.log&rdquo;</td>
+</tr>
+<tr>
+<td><code>${str/%suffix/new}</code></td>
+<td>替换结尾的 <code>suffix</code></td>
+<td><code>${str/%.log/.txt}</code> → &ldquo;error.txt&rdquo;</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h4 id="4-字符串查找"><strong>4. 字符串查找</strong></h4>
+<h5 id="41-查找子字符串位置"><strong>4.1 查找子字符串位置</strong></h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nv">str</span><span class="o">=</span><span class="s2">&#34;abcdefg&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">index</span><span class="o">=</span><span class="k">$(</span>expr index <span class="s2">&#34;</span><span class="nv">$str</span><span class="s2">&#34;</span> <span class="s2">&#34;cde&#34;</span><span class="k">)</span>  <span class="c1"># 查找子串起始位置</span>
+</span></span><span class="line"><span class="cl"><span class="nb">echo</span> <span class="nv">$index</span>  <span class="c1"># 输出: 3（位置从1开始计数）</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h5 id="42-检查是否包含子串"><strong>4.2 检查是否包含子串</strong></h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nv">str</span><span class="o">=</span><span class="s2">&#34;hello world&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="o">[[</span> <span class="nv">$str</span> <span class="o">==</span> *<span class="s2">&#34;world&#34;</span>* <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">echo</span> <span class="s2">&#34;包含 &#39;world&#39;&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="k">fi</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><hr>
+<h4 id="5-字符串分割为数组"><strong>5. 字符串分割为数组</strong></h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nv">csv</span><span class="o">=</span><span class="s2">&#34;apple,banana,orange&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">IFS</span><span class="o">=</span><span class="s1">&#39;,&#39;</span> <span class="nb">read</span> -ra arr <span class="o">&lt;&lt;&lt;</span> <span class="s2">&#34;</span><span class="nv">$csv</span><span class="s2">&#34;</span>  <span class="c1"># 按逗号分割</span>
+</span></span><span class="line"><span class="cl"><span class="nb">echo</span> <span class="s2">&#34;</span><span class="si">${</span><span class="nv">arr</span><span class="p">[1]</span><span class="si">}</span><span class="s2">&#34;</span>  <span class="c1"># 输出: banana</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><hr>
+<h4 id="6-字符串比较"><strong>6. 字符串比较</strong></h4>
+<table>
+<thead>
+<tr>
+<th>操作符</th>
+<th>描述</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>==</code> 或 <code>=</code></td>
+<td>相等</td>
+<td><code>[[ &quot;abc&quot; == &quot;abc&quot; ]]</code> → true</td>
+</tr>
+<tr>
+<td><code>!=</code></td>
+<td>不相等</td>
+<td><code>[[ &quot;abc&quot; != &quot;def&quot; ]]</code> → true</td>
+</tr>
+<tr>
+<td><code>&gt;</code> 或 <code>&lt;</code></td>
+<td>按字典序比较</td>
+<td><code>[[ &quot;apple&quot; &lt; &quot;banana&quot; ]]</code> → true</td>
+</tr>
+<tr>
+<td><code>-z</code></td>
+<td>字符串为空</td>
+<td><code>[[ -z &quot;&quot; ]]</code> → true</td>
+</tr>
+<tr>
+<td><code>-n</code></td>
+<td>字符串非空</td>
+<td><code>[[ -n &quot;abc&quot; ]]</code> → true</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h4 id="7-正则表达式匹配"><strong>7. 正则表达式匹配</strong></h4>
+<h5 id="71-使用--操作符"><strong>7.1 使用 <code>=~</code> 操作符</strong></h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nv">email</span><span class="o">=</span><span class="s2">&#34;user@example.com&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="o">[[</span> <span class="nv">$email</span> <span class="o">=</span>~ ^<span class="o">[</span>A-Za-z0-9._%+-<span class="o">]</span>+@<span class="o">[</span>A-Za-z0-9.-<span class="o">]</span>+<span class="se">\.</span><span class="o">[</span>A-Za-z<span class="o">]{</span>2,<span class="o">}</span>$ <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">echo</span> <span class="s2">&#34;有效邮箱地址&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="k">fi</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h5 id="72-提取匹配组"><strong>7.2 提取匹配组</strong></h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nv">str</span><span class="o">=</span><span class="s2">&#34;Date: 2023-10-10&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="o">[[</span> <span class="nv">$str</span> <span class="o">=</span>~ <span class="o">([</span>0-9<span class="o">]{</span>4<span class="o">}</span>-<span class="o">[</span>0-9<span class="o">]{</span>2<span class="o">}</span>-<span class="o">[</span>0-9<span class="o">]{</span>2<span class="o">})</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">echo</span> <span class="s2">&#34;日期: </span><span class="si">${</span><span class="nv">BASH_REMATCH</span><span class="p">[1]</span><span class="si">}</span><span class="s2">&#34;</span>  <span class="c1"># 输出: 日期: 2023-10-10</span>
+</span></span><span class="line"><span class="cl"><span class="k">fi</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><hr>
+<h4 id="8-高级技巧"><strong>8. 高级技巧</strong></h4>
+<h5 id="81-处理带空格的字符串"><strong>8.1 处理带空格的字符串</strong></h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nv">file_path</span><span class="o">=</span><span class="s2">&#34;/path/with spaces/file.txt&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 双引号保护空格</span>
+</span></span><span class="line"><span class="cl">cp <span class="s2">&#34;</span><span class="nv">$file_path</span><span class="s2">&#34;</span> /backup/  
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 数组存储带空格字符串</span>
+</span></span><span class="line"><span class="cl"><span class="nv">files</span><span class="o">=(</span><span class="s2">&#34;file1.txt&#34;</span> <span class="s2">&#34;file two.txt&#34;</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> file in <span class="s2">&#34;</span><span class="si">${</span><span class="nv">files</span><span class="p">[@]</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">;</span> <span class="k">do</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">echo</span> <span class="s2">&#34;</span><span class="nv">$file</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="k">done</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h5 id="82-使用-heredoc-定义多行字符串"><strong>8.2 使用 <code>heredoc</code> 定义多行字符串</strong></h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">cat <span class="s">&lt;&lt;EOF
+</span></span></span><span class="line"><span class="cl"><span class="s">第一行
+</span></span></span><span class="line"><span class="cl"><span class="s">第二行
+</span></span></span><span class="line"><span class="cl"><span class="s">变量替换: $USER
+</span></span></span><span class="line"><span class="cl"><span class="s">EOF</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h5 id="83-颜色和格式输出"><strong>8.3 颜色和格式输出</strong></h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nv">RED</span><span class="o">=</span><span class="s1">&#39;\033[0;31m&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">NC</span><span class="o">=</span><span class="s1">&#39;\033[0m&#39;</span>  <span class="c1"># 重置颜色</span>
+</span></span><span class="line"><span class="cl"><span class="nb">echo</span> -e <span class="s2">&#34;</span><span class="si">${</span><span class="nv">RED</span><span class="si">}</span><span class="s2">错误信息</span><span class="si">${</span><span class="nv">NC</span><span class="si">}</span><span class="s2">&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><hr>
+<h4 id="9-实用示例"><strong>9. 实用示例</strong></h4>
+<h5 id="91-获取文件名和扩展名"><strong>9.1 获取文件名和扩展名</strong></h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nv">file</span><span class="o">=</span><span class="s2">&#34;image.jpg&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">filename</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">file</span><span class="p">%.*</span><span class="si">}</span><span class="s2">&#34;</span>  <span class="c1"># image</span>
+</span></span><span class="line"><span class="cl"><span class="nv">extension</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">file</span><span class="p">##*.</span><span class="si">}</span><span class="s2">&#34;</span>  <span class="c1"># jpg</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h5 id="92-路径处理"><strong>9.2 路径处理</strong></h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nv">path</span><span class="o">=</span><span class="s2">&#34;/var/log/app.log&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">dirname</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">path</span><span class="p">%/*</span><span class="si">}</span><span class="s2">&#34;</span>   <span class="c1"># /var/log</span>
+</span></span><span class="line"><span class="cl"><span class="nv">basename</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">path</span><span class="p">##*/</span><span class="si">}</span><span class="s2">&#34;</span>  <span class="c1"># app.log</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><hr>
+<h3 id="总结"><strong>总结</strong></h3>
+<ul>
+<li><strong>核心操作</strong>：截取 (<code>${var:start:len}</code>)、替换 (<code>${var/old/new}</code>)、模式删除 (<code>${var#pattern}</code>)</li>
+<li><strong>关键技巧</strong>：
+<ul>
+<li>使用 <code>[[ ]]</code> 进行字符串比较和正则匹配</li>
+<li>用双引号保护含空格的字符串</li>
+<li>灵活使用 <code>IFS</code> 分割字符串为数组</li>
+</ul>
+</li>
+<li><strong>注意</strong>：
+<ul>
+<li>Bash 字符串索引从 0 开始，但 <code>${str:start}</code> 的 <code>start</code> 从 0 开始</li>
+<li>避免在 <code>[ ]</code> 中使用 <code>==</code>（推荐用 <code>[[ ]]</code>）</li>
+</ul>
+</li>
+</ul>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2024-06-26</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://lushuan.gihub.io/ch19_%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C%E8%AF%A6%E8%A7%A3/" data-title="shell 字符串详解" data-via="xxxx" data-hashtags="Shell"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://lushuan.gihub.io/ch19_%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C%E8%AF%A6%E8%A7%A3/" data-hashtag="Shell"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="https://lushuan.gihub.io/ch19_%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C%E8%AF%A6%E8%A7%A3/" data-title="shell 字符串详解"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="https://lushuan.gihub.io/ch19_%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C%E8%AF%A6%E8%A7%A3/" data-title="shell 字符串详解"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://lushuan.gihub.io/ch19_%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C%E8%AF%A6%E8%A7%A3/" data-title="shell 字符串详解"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/shell/">Shell</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/ch5_%E5%BE%AA%E7%8E%AF/" class="prev" rel="prev" title="shell 循环"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>shell 循环</a>
+            <a href="/ch4_%E6%9D%A1%E4%BB%B6%E5%88%86%E6%94%AF/" class="next" rel="next" title="shell 条件分支">shell 条件分支<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+<div id="comments"><div id="gitalk" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://github.com/gitalk/gitalk"></a>Gitalk</a>.
+            </noscript><div id="giscus" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://giscus.app">Giscus</a>.
+            </noscript></div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">我是有底线的</div><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.114.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2025</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">lushuan</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/gitalk/gitalk.min.css"><link rel="stylesheet" href="/lib/lightgallery/css/lightgallery-bundle.min.css"><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/gitalk/gitalk.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/lightgallery/lightgallery.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/zoom/lg-zoom.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{"giscus":{"category":"Announcements","categoryId":"DIC_kwDOMOWcic4Coqlk","darkTheme":"dark","emitMetadata":"0","inputPosition":"bottom","lang":"zh-CN","lazyLoading":false,"lightTheme":"light","mapping":"pathname","reactionsEnabled":"1","repo":"lushuan/lushuan.github.io","repoId":"R_kgDOMOWciQ"},"gitalk":{"admin":["lushuan"],"clientID":"Ov23liSh0yG2wy6B7XP1","clientSecret":"7184a8df973267af95c92ddeb27789417ba82469","id":"2020-04-25T12:06:37+08:00","owner":"lushuan","repo":"lushuan.github.io","title":"shell 字符串详解"}},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"lightgallery":true,"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
