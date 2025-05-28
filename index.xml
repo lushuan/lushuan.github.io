@@ -4,9 +4,17 @@
         <link>https://lushuan.gihub.io/</link>
         <description>晚来天欲雪,能饮一杯无?</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
-            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Tue, 19 Nov 2024 12:06:37 &#43;0800</lastBuildDate>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Sat, 11 Jan 2025 12:06:37 &#43;0800</lastBuildDate>
             <atom:link href="https://lushuan.gihub.io/index.xml" rel="self" type="application/rss+xml" />
         <item>
+    <title>Linux系统Nvidia驱动部署</title>
+    <link>https://lushuan.gihub.io/linux%E7%B3%BB%E7%BB%9Fnvidia%E9%A9%B1%E5%8A%A8%E9%83%A8%E7%BD%B2/</link>
+    <pubDate>Sat, 11 Jan 2025 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>https://lushuan.gihub.io/linux%E7%B3%BB%E7%BB%9Fnvidia%E9%A9%B1%E5%8A%A8%E9%83%A8%E7%BD%B2/</guid>
+    <description><![CDATA[背景 部署通义千问大模型qwen2.5-7b-awq基础环境预安装 服务器配置 操作环境：openEuler 22.03 (欧拉-LTS-SP1) cpu: 40c memory: 186G disk: 2T]]></description>
+</item>
+<item>
     <title>Linux 防火墙iptables详解</title>
     <link>https://lushuan.gihub.io/linux%E9%98%B2%E7%81%AB%E5%A2%99iptables%E8%AF%A6%E8%A7%A3/</link>
     <pubDate>Tue, 19 Nov 2024 12:06:37 &#43;0800</pubDate>
@@ -79,14 +87,6 @@ Enter the realm of free and open-source tools – a goldmine for DevOps practiti
     <author>lushuan</author>
     <guid>https://lushuan.gihub.io/k8s-%E5%B8%B8%E8%A7%81%E6%95%85%E9%9A%9C%E5%92%8C%E8%A7%A3%E5%86%B3%E6%80%9D%E8%B7%AF%E5%8F%8A%E6%96%B9%E6%B3%95/</guid>
     <description><![CDATA[K8S 之连接异常——【集群故障】 Pod问题思考思路 Kubernetes集群中Pod一般哪些方面容易出现问题呢？ Kubernetes资源配置错误：]]></description>
-</item>
-<item>
-    <title>Kubernetes 技能图谱</title>
-    <link>https://lushuan.gihub.io/kubernetes-%E6%8A%80%E8%83%BD%E5%9B%BE%E8%B0%B1/</link>
-    <pubDate>Fri, 13 Oct 2023 12:06:37 &#43;0800</pubDate>
-    <author>lushuan</author>
-    <guid>https://lushuan.gihub.io/kubernetes-%E6%8A%80%E8%83%BD%E5%9B%BE%E8%B0%B1/</guid>
-    <description><![CDATA[Kubernetes 技能图谱]]></description>
 </item>
 </channel>
 </rss>

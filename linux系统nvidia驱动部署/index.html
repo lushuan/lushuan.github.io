@@ -1,0 +1,1617 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>Linux系统Nvidia驱动部署 - Less is more</title><meta name="Description" content="晚来天欲雪,能饮一杯无?"><meta property="og:title" content="Linux系统Nvidia驱动部署" />
+<meta property="og:description" content="背景 部署通义千问大模型qwen2.5-7b-awq基础环境预安装 服务器配置 操作环境：openEuler 22.03 (欧拉-LTS-SP1) cpu: 40c memory: 186G disk: 2T" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://lushuan.gihub.io/linux%E7%B3%BB%E7%BB%9Fnvidia%E9%A9%B1%E5%8A%A8%E9%83%A8%E7%BD%B2/" /><meta property="og:image" content="https://lushuan.gihub.io/images/avatar.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2025-01-11T12:06:37+08:00" />
+<meta property="article:modified_time" content="2025-06-26T12:06:37+08:00" /><meta property="og:site_name" content="我的网站" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://lushuan.gihub.io/images/avatar.png"/>
+
+<meta name="twitter:title" content="Linux系统Nvidia驱动部署"/>
+<meta name="twitter:description" content="背景 部署通义千问大模型qwen2.5-7b-awq基础环境预安装 服务器配置 操作环境：openEuler 22.03 (欧拉-LTS-SP1) cpu: 40c memory: 186G disk: 2T"/>
+<meta name="application-name" content="我的网站">
+<meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/images/avatar.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://lushuan.gihub.io/linux%E7%B3%BB%E7%BB%9Fnvidia%E9%A9%B1%E5%8A%A8%E9%83%A8%E7%BD%B2/" /><link rel="prev" href="https://lushuan.gihub.io/linux%E9%98%B2%E7%81%AB%E5%A2%99iptables%E8%AF%A6%E8%A7%A3/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Linux系统Nvidia驱动部署",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/lushuan.gihub.io\/linux%E7%B3%BB%E7%BB%9Fnvidia%E9%A9%B1%E5%8A%A8%E9%83%A8%E7%BD%B2\/"
+        },"genre": "posts","keywords": "GPU","wordcount":  7557 ,
+        "url": "https:\/\/lushuan.gihub.io\/linux%E7%B3%BB%E7%BB%9Fnvidia%E9%A9%B1%E5%8A%A8%E9%83%A8%E7%BD%B2\/","datePublished": "2025-01-11T12:06:37+08:00","dateModified": "2025-06-26T12:06:37+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "lushuan"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Less is more"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Less is more</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 归档 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/" title="About"> 关于 </a><a class="menu-item" href="/friends/" title="friends"> 友链 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Less is more"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Less is more</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">归档</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="About">关于</a><a class="menu-item" href="/friends/" title="friends">友链</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content always-active" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Linux系统Nvidia驱动部署</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/gpu/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>GPU</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2025-01-11">2025-01-11</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 7557 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 16 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#背景">背景</a></li>
+    <li><a href="#服务器配置">服务器配置</a>
+      <ul>
+        <li><a href="#检测主机是否为虚拟化环境">检测主机是否为虚拟化环境</a></li>
+      </ul>
+    </li>
+    <li><a href="#1-检查仓库源">1. 检查仓库源</a>
+      <ul>
+        <li><a href="#内核版本检查">内核版本检查</a></li>
+      </ul>
+    </li>
+    <li><a href="#2-检查显卡">2. 检查显卡</a></li>
+    <li><a href="#3-安装">3. 安装</a>
+      <ul>
+        <li><a href="#nouveau开源图形驱动禁用">Nouveau开源图形驱动禁用</a></li>
+        <li><a href="#安装nvidia驱动">安装Nvidia驱动</a>
+          <ul>
+            <li><a href="#处理-secure-boot可选">处理 Secure Boot（可选）</a>
+              <ul>
+                <li><a href="#禁用-secure-boot">禁用 Secure Boot</a></li>
+              </ul>
+            </li>
+            <li><a href="#安装驱动后缀分为run和rpm">安装驱动后缀分为.run和.rpm</a></li>
+          </ul>
+        </li>
+        <li><a href="#安装报错">安装报错</a></li>
+        <li><a href="#验证安装">验证安装</a></li>
+        <li><a href="#安装-cuda可选">安装 CUDA（可选）</a>
+          <ul>
+            <li><a href="#驱动程序和-cuda-的关系">驱动程序和 CUDA 的关系：</a></li>
+            <li><a href="#是否需要安装-cuda取决于你的需求">是否需要安装 CUDA？取决于你的需求</a></li>
+            <li><a href="#驱动和-cuda-的版本依赖关系">驱动和 CUDA 的版本依赖关系</a></li>
+            <li><a href="#如何安装-cuda">如何安装 CUDA？</a></li>
+            <li><a href="#总结">总结</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#安装-nvidia-container-toolkit-配套工具">安装 NVIDIA container toolkit 配套工具</a></li>
+    <li><a href="#容器运行时配置">容器运行时配置</a>
+      <ul>
+        <li><a href="#docker-配置">Docker 配置</a></li>
+        <li><a href="#在-docker-composeyml-中添加支持-gpu">在 docker-compose.yml 中添加支持 GPU</a></li>
+        <li><a href="#containerd-配置">Containerd 配置</a></li>
+        <li><a href="#在线或者离线使用国外代理">在线或者离线使用国外代理</a></li>
+        <li><a href="#nvidia-docker-nvidia-docker2-nvidia-container-toolkits区别">nvidia docker, nvidia docker2, nvidia container toolkits区别</a>
+          <ul>
+            <li><a href="#nvidia-docker不推荐">nvidia docker(不推荐)</a></li>
+            <li><a href="#nvidia-docker2不推荐">nvidia docker2(不推荐)</a></li>
+            <li><a href="#nvidia-container-toolkits推荐">nvidia-container-toolkits(推荐)</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#k8s-部署nvidia设备插件扩展">k8s 部署nvidia设备插件(扩展)</a>
+      <ul>
+        <li><a href="#k8s-调度gpu-任务测试">k8s 调度GPU 任务测试</a></li>
+      </ul>
+    </li>
+    <li><a href="#排错答疑">排错答疑</a></li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="背景">背景</h2>
+<p>部署通义千问大模型<code>qwen2.5-7b-awq</code>基础环境预安装</p>
+<h2 id="服务器配置">服务器配置</h2>
+<ul>
+<li>操作环境：openEuler 22.03 (欧拉-LTS-SP1)</li>
+<li>cpu: 40c        memory: 186G  disk: 2T</li>
+<li>GPU物理机，显卡型号为NVIDIA Tesla T4 (Tesla T4 被广泛应用于云端推理服务、虚拟桌面基础设施(VDI)、视频转码等领域)</li>
+</ul>
+<p>查看 GPU 型号</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ ls  /proc/driver/nvidia/gpus/ 
+</span></span><span class="line"><span class="cl">0000:3b:00.0
+</span></span><span class="line"><span class="cl">$ cat 0000\:3b\:00.0/information 
+</span></span><span class="line"><span class="cl">Model:           Tesla T4
+</span></span><span class="line"><span class="cl">IRQ:             218
+</span></span><span class="line"><span class="cl">GPU UUID:        GPU-e42994d9-5240-0163-fbf5-deb9d57a348c
+</span></span><span class="line"><span class="cl">Video BIOS:      90.04.38.00.03
+</span></span><span class="line"><span class="cl">Bus Type:        PCIe
+</span></span><span class="line"><span class="cl">DMA Size:        47 bits
+</span></span><span class="line"><span class="cl">DMA Mask:        0x7fffffffffff
+</span></span><span class="line"><span class="cl">Bus Location:    0000:3b:00.0
+</span></span><span class="line"><span class="cl">Device Minor:    0
+</span></span><span class="line"><span class="cl">GPU Firmware:    570.124.06
+</span></span><span class="line"><span class="cl">GPU Excluded:    No
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="检测主机是否为虚拟化环境">检测主机是否为虚拟化环境</h3>
+<p><code>systemd-detect-virt</code> 是一个专门用于检测虚拟化环境的工具。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">systemd-detect-virt
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>如果是物理机，输出为：</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">none
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>如果是虚拟机，输出可能是：</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">kvm
+</span></span><span class="line"><span class="cl">vmware
+</span></span><span class="line"><span class="cl">virtualbox
+</span></span><span class="line"><span class="cl">xen
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="1-检查仓库源">1. 检查仓库源</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># debian
+</span></span><span class="line"><span class="cl">$ sudo apt install -y g++ gcc gcc-c++ make build-essential pciutils  bzip2 dkms
+</span></span><span class="line"><span class="cl"># redhat
+</span></span><span class="line"><span class="cl">$ sudo yum install -y g++ gcc gcc-c++  make  pciutils  bzip2 dkms
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>查看是否已安装gcc和picutils</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># 验证系统是否有GCC编译环境
+</span></span><span class="line"><span class="cl">$ gcc --version
+</span></span><span class="line"><span class="cl">$ lspci
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>查看内核版本和GPU</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ uname -a
+</span></span><span class="line"><span class="cl"># 查找与 NVIDIA 相关的硬件设备显卡
+</span></span><span class="line"><span class="cl">$ lspci | grep -i nvidia
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="内核版本检查">内核版本检查</h3>
+<p>Redhat</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ uname -r
+</span></span><span class="line"><span class="cl">3.10.0-1160.119.1.el7.x86_64
+</span></span><span class="line"><span class="cl">$ yum list installed|grep kernel
+</span></span><span class="line"><span class="cl">kernel-headers-3.10.0-1160.108.1.el7.x86_64
+</span></span><span class="line"><span class="cl">kernel-devel-3.10.0-1160.71.1.el7.x86_64
+</span></span><span class="line"><span class="cl">kernel-3.10.0-1160.119.1.el7.x86_64
+</span></span><span class="line"><span class="cl">kernel-3.10.0-1160.el7.x86_64
+</span></span><span class="line"><span class="cl">kernel-tools-libs-3.10.0-1160.119.1.el7.x86_64
+</span></span><span class="line"><span class="cl">kernel-tools-3.10.0-1160.119.1.el7.x86_64
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="details admonition note open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-pencil-alt fa-fw" aria-hidden="true"></i>注意<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content">查看内核版本是否匹配，如果匹配则跳过重新安装，不匹配需要重新安装进行匹配</div>
+        </div>
+    </div>
+<p>在线安装</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># optional可选
+</span></span><span class="line"><span class="cl">sudo yum remove kernel-devel-$(uname -r) kernel-headers-$(uname -r)
+</span></span><span class="line"><span class="cl"># 安装
+</span></span><span class="line"><span class="cl">sudo yum install kernel-devel-$(uname -r) kernel-headers-$(uname -r)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>离线安装下载centos源码包</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">devel地址：http://rpmfind.net/linux/rpm2html/search.php?query=kernel-devel
+</span></span><span class="line"><span class="cl">headers地址：http://rpmfind.net/linux/rpm2html/search.php?query=kernel-headers
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>安装</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ rpm -ivh kernel-devel-3.10.0-1160.119.1.el7.x86_64.rpm --nodeps --force
+</span></span><span class="line"><span class="cl">$ rpm -ivh kernel-rpm -ivh kernel-headers-3.10.0-1160.119.1.el7.x86_64.rpm --force
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="2-检查显卡">2. 检查显卡</h2>
+<p>查看显卡信息和驱动信息</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># 查看主显卡是哪一个
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># 为了查看nvidia 显卡，可以安装nvidia-detect,并运行此软件
+</span></span><span class="line"><span class="cl"># debian
+</span></span><span class="line"><span class="cl">$ apt-get install nvidia-detect
+</span></span><span class="line"><span class="cl"># Redhat
+</span></span><span class="line"><span class="cl">$ lspci |grep -i vga
+</span></span><span class="line"><span class="cl">03:00.0 VGA compatible controller: ASPEED Technology, Inc. ASPEED Graphics Family (rev 41)
+</span></span><span class="line"><span class="cl"># 查找与 VGA（视频图形阵列）兼容的显示控制器的信息
+</span></span><span class="line"><span class="cl">$ lspci -s 03:00.0 -v
+</span></span><span class="line"><span class="cl">03:00.0 VGA compatible controller: ASPEED Technology, Inc. ASPEED Graphics Family (rev 41) (prog-if 00 [VGA controller])
+</span></span><span class="line"><span class="cl">        DeviceName:  Onboard IGD
+</span></span><span class="line"><span class="cl">        Subsystem: ASPEED Technology, Inc. ASPEED Graphics Family
+</span></span><span class="line"><span class="cl">        Flags: bus master, medium devsel, latency 0, IRQ 17, NUMA node 0
+</span></span><span class="line"><span class="cl">        Memory at 98000000 (32-bit, non-prefetchable) [size=64M]
+</span></span><span class="line"><span class="cl">        Memory at 9c000000 (32-bit, non-prefetchable) [size=128K]
+</span></span><span class="line"><span class="cl">        I/O ports at 2000 [size=128]
+</span></span><span class="line"><span class="cl">        Expansion ROM at 000c0000 [virtual] [disabled] [size=128K]
+</span></span><span class="line"><span class="cl">        Capabilities: [40] Power Management version 3
+</span></span><span class="line"><span class="cl">        Capabilities: [50] MSI: Enable- Count=1/2 Maskable- 64bit+
+</span></span><span class="line"><span class="cl">        Kernel driver in use: ast
+</span></span><span class="line"><span class="cl">        Kernel modules: ast
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="3-安装">3. 安装</h2>
+<p>安装先检查有没有 cuda 支持的GPU</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ lspci | grep -i nvidia
+</span></span><span class="line"><span class="cl">3b:00.0 3D controller: NVIDIA Corporation TU104GL [Tesla T4] (rev a1)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="nouveau开源图形驱动禁用">Nouveau开源图形驱动禁用</h3>
+<p>后面安装时的告警信息，提前预知</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">WARNING: The Nouveau kernel driver is currently in use by your system.  This driver is incompatible with
+</span></span><span class="line"><span class="cl">the NVIDIA driver，and must be disabled before proceeding.
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>警告：您的系统当前正在使用Nouveau内核驱动程序。此驱动程序与NVIDIA驱动程序不兼容，必须先禁用才能继续。</p>
+<p>解释：<br>
+Nouveau是由第三方为NVIDIA显卡提供的开源图形驱动，但它与NVIDIA官方提供的驱动可能不兼容，尤其在运行特定的游戏或应用程序时可能会出现性能问题。如果系统报告Nouveau驱动正在使用中，可能意味着你的系统没有使用NVIDIA官方提供的驱动，这可能会降低图形性能或者导致系统不稳定。</p>
+<p>解决方法：</p>
+<ol>
+<li>禁用Nouveau驱动：<br>
+Nouveau 是一个开源的图形驱动程序，用于支持 NVIDIA 显卡在 Linux 系统上的使用。它是由社区开发的，旨在提供对 NVIDIA 显卡的开源驱动支持，以便在 Linux 系统上实现图形加速和其他相关功能。在安装专有的 NVIDIA 驱动之前，通常需要禁用 Nouveau 驱动</li>
+</ol>
+<p>创建文件/etc/modprobe.d/blacklist-nouveau.conf，并添加以下内容：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># 查看nouveau 是否被禁用，如果没有任何输出，则说明 Nouveau 已被成功禁用
+</span></span><span class="line"><span class="cl">$ lsmod | grep nouveau 
+</span></span><span class="line"><span class="cl">nouveau              2424832  0
+</span></span><span class="line"><span class="cl">mxm_wmi                16384  1 nouveau
+</span></span><span class="line"><span class="cl">video                  61440  1 nouveau
+</span></span><span class="line"><span class="cl">ttm                   118784  3 drm_vram_helper,drm_ttm_helper,nouveau
+</span></span><span class="line"><span class="cl">drm_kms_helper        286720  5 drm_vram_helper,ast,nouveau
+</span></span><span class="line"><span class="cl">drm                   638976  7 drm_kms_helper,drm_vram_helper,ast,drm_ttm_helper,ttm,nouveau
+</span></span><span class="line"><span class="cl">i2c_algo_bit           16384  3 igb,ast,nouveau
+</span></span><span class="line"><span class="cl">wmi                    36864  2 mxm_wmi,nouveau
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># 从未手动禁用 Nouveau 驱动程序（开源的 NVIDIA 显卡驱动），则该文件不会存在，直接添加配置内容即可
+</span></span><span class="line"><span class="cl">$ sudo vi /etc/modprobe.d/blacklist-nouveau.conf
+</span></span><span class="line"><span class="cl">#将nvidiafb注释掉:
+</span></span><span class="line"><span class="cl">#blacklist nvidiafb
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># 添加以下内容
+</span></span><span class="line"><span class="cl">blacklist nouveau
+</span></span><span class="line"><span class="cl">options nouveau modeset=0
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>禁用Nouveau驱动后更新initramfs：</p>
+<p>修改模块黑名单后，需要更新 initramfs 以确保更改生效</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># debian
+</span></span><span class="line"><span class="cl">sudo update-initramfs -u
+</span></span><span class="line"><span class="cl"># redhat
+</span></span><span class="line"><span class="cl">sudo dracut --force
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>备份当前的镜像并建立新的镜像</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">#备份当前的镜像
+</span></span><span class="line"><span class="cl">$ sudo mv /boot/initramfs-$(uname -r).img /boot/initramfs-$(uname -r).img.bak
+</span></span><span class="line"><span class="cl">#建立新的镜像
+</span></span><span class="line"><span class="cl">$ sudo dracut /boot/initramfs-$(uname -r).img $(uname -r)
+</span></span><span class="line"><span class="cl"># 重启,不重启 Nouveau 模块可能仍然被加载到内核中，影响nvidia 驱动的安装
+</span></span><span class="line"><span class="cl">$ sudo reboot
+</span></span><span class="line"><span class="cl">#最后输入上面的命令验证
+</span></span><span class="line"><span class="cl">$ lsmod | grep nouveau
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="2">
+<li>要卸载nouveau驱动并清除相关配置文件，请执行以下命令：(可选)
+禁用掉即可</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># debian
+</span></span><span class="line"><span class="cl">sudo apt-get remove --purge nouveau
+</span></span><span class="line"><span class="cl"># redhat
+</span></span><span class="line"><span class="cl">sudo yum t remove --purge nouveau
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="安装nvidia驱动">安装Nvidia驱动</h3>
+<p>GPU 云服务器正常工作需安装正确的基础设施软件，对 NVIDIA 系列 GPU 而言，有两个层次的软件包需要安装：</p>
+<ul>
+<li>驱动 GPU 工作的硬件驱动程序。</li>
+<li>上层应用程序所需要的库。
+若把 NVIDIA GPU 用作通用计算，需要安装 GeForce Driver + CUDA。</li>
+</ul>
+<h4 id="处理-secure-boot可选">处理 Secure Boot（可选）</h4>
+<p>若系统启用 Secure Boot，需为 NVIDIA 内核模块签名或禁用 Secure Boot（需进入 BIOS 设置）。</p>
+<p>禁用 Secure Boot 会降低系统对恶意内核代码的防护能力，但允许加载未签名的驱动（如 NVIDIA 驱动）</p>
+<p><strong>方法1. 检查是否启用 Secure Boot</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># 安装 mokutil（如果未安装）</span>
+</span></span><span class="line"><span class="cl">$ sudo yum install mokutil -y
+</span></span><span class="line"><span class="cl"><span class="c1"># 查看 Secure Boot 状态</span>
+</span></span><span class="line"><span class="cl">$ sudo mokutil --sb-state
+</span></span><span class="line"><span class="cl">SecureBoot disabled
+</span></span><span class="line"><span class="cl">Platform is in Setup Mode
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>输出结果：
+<ul>
+<li><strong><code>SecureBoot enabled</code></strong> 表示已启用。</li>
+<li><strong><code>SecureBoot disabled</code></strong> 表示已禁用。</li>
+</ul>
+</li>
+</ul>
+<p><strong>方法2.检查 UEFI 变量文件</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 确认系统使用 UEFI 启动（非传统 BIOS）</span>
+</span></span><span class="line"><span class="cl">ls /sys/firmware/efi
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 查看 Secure Boot 状态</span>
+</span></span><span class="line"><span class="cl">cat /sys/firmware/efi/efivars/SecureBoot-* 2&gt;/dev/null
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>输出 <strong><code>1</code></strong> 表示启用，<strong><code>0</code></strong> 表示禁用。</li>
+</ul>
+<h5 id="禁用-secure-boot">禁用 Secure Boot</h5>
+<p>Secure Boot 是 UEFI 固件的功能，禁用需进入主板的 <strong>BIOS/UEFI 设置界面</strong>。以下是通用步骤：</p>
+<p><strong>步骤 1：重启并进入 BIOS/UEFI 设置</strong></p>
+<ol>
+<li>重启计算机，在开机自检界面按下 <strong>特定按键</strong>（常见按键：<code>F2</code>、<code>F10</code>、<code>Del</code>、<code>Esc</code>，具体取决于主板型号）。
+<ul>
+<li>对于虚拟机（如 VMware/VirtualBox），需在启动时按 <strong><code>Esc</code> 或 <code>F2</code></strong> 进入设置。</li>
+</ul>
+</li>
+</ol>
+<p>** 步骤 2：找到 Secure Boot 选项**</p>
+<ol>
+<li>在 BIOS/UEFI 界面中，导航到 <strong><code>Security</code></strong> 或 <strong><code>Boot</code></strong> 选项卡。</li>
+<li>查找 <strong><code>Secure Boot</code></strong> 选项（可能位于 <code>Advanced</code> 或 <code>Authentication</code> 子菜单中）。</li>
+</ol>
+<p><strong>步骤 3：禁用 Secure Boot</strong></p>
+<ol>
+<li>将 <strong><code>Secure Boot</code></strong> 设为 <strong><code>Disabled</code></strong>。</li>
+<li>保存设置并退出（通常按 <strong><code>F10</code></strong> 或选择 <strong><code>Save &amp; Exit</code></strong>）。</li>
+</ol>
+<p><strong>步骤 4：验证禁用结果</strong>
+重启后回到 CentOS 7，再次运行检查命令（如 <code>sudo mokutil --sb-state</code>），确认输出为 <strong><code>SecureBoot disabled</code></strong>。</p>
+<h4 id="安装驱动后缀分为run和rpm">安装驱动后缀分为.run和.rpm</h4>
+<p>1.打开 NVIDIA 驱动下载链接 <a href="https://www.nvidia.cn/drivers/lookup/" target="_blank" rel="noopener noreffer ">Advanced Driver Search | NVIDIA</a> 。</p>
+<p>2.选择支持 RPM 或者RUN的操作系统，并获取该包的下载链接。例如：选择 CentOS 7.x， 得到下载链接：<a href="https://www.nvidia.cn/geforce/drivers/" target="_blank" rel="noopener noreffer ">Download NVIDIA, GeForce, Quadro, and Tesla Drivers</a> 可选安装</p>
+<ol start="3">
+<li>安装NVIDIA官方驱动
+关闭图形界面以避免冲突：</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">sudo systemctl isolate multi-user.target
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>运行安装脚本：</p>
+<p>确定你的显卡型号。
+从NVIDIA官网下载对应显卡的驱动程序。
+安装驱动请查看以下文章：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="err">$</span> <span class="nx">chmod</span> <span class="o">+</span><span class="nx">x</span> <span class="nx">NVIDIA</span><span class="o">-</span><span class="nx">Linux</span><span class="o">-</span><span class="nx">x86_64</span><span class="o">-</span><span class="p">(</span><span class="err">版本号</span><span class="p">).</span><span class="nx">run</span>
+</span></span><span class="line"><span class="cl"><span class="err">$</span> <span class="nx">sudo</span> <span class="p">.</span><span class="o">/</span><span class="nx">NVIDIA</span><span class="o">-</span><span class="nx">Linux</span><span class="o">-</span><span class="nx">x86_64</span><span class="o">-</span><span class="mf">570.124.06</span><span class="p">.</span><span class="nx">run</span>
+</span></span><span class="line"><span class="cl"><span class="mi">1</span><span class="p">:</span> <span class="nx">Multiple</span> <span class="nx">kernel</span> <span class="nx">module</span> <span class="nx">types</span> <span class="nx">are</span> <span class="nx">available</span> <span class="k">for</span> <span class="nx">this</span> <span class="nx">system</span><span class="p">.</span> <span class="nx">Which</span> <span class="nx">would</span> <span class="nx">you</span> <span class="nx">like</span> <span class="nx">to</span> <span class="nx">use</span><span class="err">?</span> <span class="o">-</span> <span class="err">选择</span> <span class="nx">NVIDIA</span> <span class="nx">Proprietary</span>
+</span></span><span class="line"><span class="cl"><span class="mf">2.</span> <span class="nx">Building</span> <span class="nx">kernel</span> <span class="nx">modules</span>  <span class="err">进度条</span><span class="o">...</span>
+</span></span><span class="line"><span class="cl"><span class="mf">3.</span> <span class="nx">WARNING</span><span class="p">:</span> <span class="nx">nvidia</span><span class="o">-</span><span class="nx">installer</span> <span class="nx">was</span> <span class="nx">forced</span> <span class="nx">to</span> <span class="nx">guess</span> <span class="nx">the</span> <span class="nx">X</span> <span class="nx">library</span> <span class="nx">path</span> <span class="err">&#39;</span><span class="o">/</span><span class="nx">usr</span><span class="o">/</span><span class="nx">lib64</span><span class="err">&#39;</span> <span class="nx">and</span> <span class="nx">X</span> <span class="nx">module</span> <span class="nx">path</span> <span class="err">&#39;</span><span class="o">/</span><span class="nx">usr</span><span class="o">/</span><span class="nx">lib64</span><span class="o">/</span><span class="nx">xorg</span><span class="o">/</span><span class="nx">modules</span><span class="err">&#39;</span><span class="p">;</span> <span class="nx">these</span> <span class="nx">paths</span> <span class="nx">were</span> <span class="nx">not</span> <span class="nx">queryable</span> <span class="nx">from</span> <span class="nx">the</span> <span class="nx">system</span><span class="p">.</span>  <span class="nx">If</span> <span class="nx">X</span> <span class="nx">fails</span>
+</span></span><span class="line"><span class="cl">   <span class="nx">to</span> <span class="nx">find</span> <span class="nx">the</span> <span class="nx">NVIDIA</span> <span class="nx">X</span> <span class="nx">driver</span> <span class="nx">module</span><span class="p">,</span> <span class="nx">please</span> <span class="nx">install</span> <span class="nx">the</span> <span class="s">`pkg-config`</span> <span class="nx">utility</span> <span class="nx">and</span> <span class="nx">the</span> <span class="nx">X</span><span class="p">.</span><span class="nx">Org</span> <span class="nx">SDK</span><span class="o">/</span><span class="nx">development</span> <span class="kn">package</span> <span class="k">for</span> <span class="nx">your</span> <span class="nx">distribution</span> <span class="nx">and</span> <span class="nx">reinstall</span> <span class="nx">the</span> <span class="nx">driver</span><span class="p">.</span> <span class="err">警告可以忽略</span>
+</span></span><span class="line"><span class="cl"><span class="mf">4.</span> <span class="nx">Install</span> <span class="nx">NVIDIA</span><span class="err">&#39;</span><span class="nx">s</span> <span class="mi">32</span><span class="o">-</span><span class="nx">bit</span> <span class="nx">compatibility</span> <span class="nx">libraries</span><span class="err">?</span> <span class="err">根据需要自行选择</span><span class="p">,</span><span class="err">这里选择兼容</span>
+</span></span><span class="line"><span class="cl"><span class="mf">5.</span>  <span class="nx">Would</span> <span class="nx">you</span> <span class="nx">like</span> <span class="nx">to</span> <span class="nx">register</span> <span class="nx">the</span> <span class="nx">kernel</span> <span class="nx">module</span> <span class="nx">sources</span> <span class="nx">with</span> <span class="nx">DKMS</span><span class="err">?</span> <span class="nx">This</span> <span class="nx">will</span> <span class="nx">allow</span> <span class="nx">DKMS</span> <span class="nx">to</span> <span class="nx">automatically</span> <span class="nx">build</span> <span class="nx">a</span> <span class="nx">new</span> <span class="nx">module</span><span class="p">,</span> <span class="k">if</span> <span class="nx">your</span> <span class="nx">kernel</span> <span class="nx">changes</span> <span class="nx">later</span><span class="p">.</span> <span class="err">选择</span><span class="nx">YES</span>
+</span></span><span class="line"><span class="cl"><span class="mf">6.</span> <span class="nx">Registering</span> <span class="nx">the</span> <span class="nx">kernel</span> <span class="nx">modules</span> <span class="nx">with</span> <span class="nx">DKMS</span><span class="p">:</span> <span class="err">进度条</span><span class="o">...</span>
+</span></span><span class="line"><span class="cl"><span class="mf">7.</span> <span class="nx">Installation</span> <span class="nx">of</span> <span class="nx">the</span> <span class="nx">NVIDIA</span> <span class="nx">Accelerated</span> <span class="nx">Graphics</span> <span class="nx">Driver</span> <span class="k">for</span> <span class="nx">Linux</span><span class="o">-</span><span class="nf">x86_64</span> <span class="p">(</span><span class="nx">version</span><span class="p">:</span> <span class="mf">570.124.06</span><span class="p">)</span> <span class="nx">is</span> <span class="nx">now</span> <span class="nx">complete</span><span class="p">.</span>  <span class="err">安装完成</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>按提示操作，选择以下选项：
+<ul>
+<li><code>Yes</code> 安装 DKMS（需提前安装 <code>dkms</code> 包）。前面步骤已经提前预安装</li>
+<li><code>Yes</code> 覆盖已有的 Nouveau 配置。</li>
+<li><code>Yes</code> 安装 32 位兼容库（如需）。</li>
+</ul>
+</li>
+</ul>
+<p>备注：</p>
+<ol>
+<li>DKMS:
+DKMS（Dynamic Kernel Module Support）是一个框架，用于在内核更新时自动重新编译和安装内核模块。</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-v" data-lang="v"><span class="line"><span class="cl"><span class="nc">Would</span> <span class="nv">you</span> <span class="nv">like</span> <span class="nv">to</span> <span class="nv">register</span> <span class="nv">the</span> <span class="nv">kernel</span> <span class="kn">module</span> <span class="nv">sources</span> <span class="nv">with</span> <span class="nc">DKMS</span><span class="kd">?</span> <span class="nc">This</span> <span class="nv">will</span> <span class="nv">allow</span> <span class="nc">DKMS</span> <span class="nv">to</span> <span class="nv">automatically</span> <span class="nv">build</span> <span class="nv">a</span> <span class="nv">new</span> <span class="kn">module</span> <span class="nv">when</span> <span class="nv">a</span> <span class="nv">new</span> <span class="nv">kernel</span> <span class="k">is</span> <span class="nv">installed</span><span class="p">.</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>这是询问您是否希望将 NVIDIA 驱动模块注册到 DKMS（Dynamic Kernel Module Support）中。</li>
+<li>如果选择“是”，DKMS 将自动为未来的内核版本重新编译和安装 NVIDIA 驱动模块。</li>
+</ul>
+<ol start="2">
+<li>X.Org
+是否修改 X.Org 配置文件</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Would you like to run the nvidia-xconfig utility to automatically update your X configuration file so that the NVIDIA X driver is used when you restart X?
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>如果您计划使用图形界面，建议选择“是”。这将确保 X Server 启动时使用 NVIDIA 驱动。</li>
+</ul>
+<ol start="3">
+<li>32位兼容库
+如果您在一个 64 位系统上安装驱动，安装程序可能会询问是否安装 32 位兼容库：</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Install NVIDIA&#39;s 32-bit compatibility libraries?
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>如果您需要运行 32 位应用程序（例如某些游戏或旧版软件），请选择“是”。</p>
+<h3 id="安装报错">安装报错</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">ERROR: Unable to find the kernel source tree for the currently running kernel.  Please make sure you have installed the kernel source files for your kernel and that they are properly  
+</span></span><span class="line"><span class="cl">  configured; on Red Hat Linux systems, for example, be sure you have the &#39;kernel-source&#39; or &#39;kernel-devel&#39; RPM installed.  If you know the correct kernel source files are 
+</span></span><span class="line"><span class="cl">  installed, you may specify the kernel source path with the &#39;--kernel-source-path&#39; command line option.
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>查看一下内核版本是否一致</p>
+<h3 id="验证安装">验证安装</h3>
+<p>重新启动系统</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ sudo reboot
+</span></span><span class="line"><span class="cl"># 查看显卡信息，验证驱动是否已成功安装
+</span></span><span class="line"><span class="cl"># 检查主机 GPU 和 NVIDIA 驱动是否正常工作，返回 GPU 的详细信息（如型号、驱动版本、显存使用情况等），说明驱动安装成功
+</span></span><span class="line"><span class="cl">$ nvidia-smi # 显示 GPU 状态
+</span></span><span class="line"><span class="cl">Tue Mar 25 16:23:30 2025       
+</span></span><span class="line"><span class="cl">+-----------------------------------------------------------------------------------------+
+</span></span><span class="line"><span class="cl">| NVIDIA-SMI 570.124.06             Driver Version: 570.124.06     CUDA Version: 12.8     |
+</span></span><span class="line"><span class="cl">|-----------------------------------------+------------------------+----------------------+
+</span></span><span class="line"><span class="cl">| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+</span></span><span class="line"><span class="cl">| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+</span></span><span class="line"><span class="cl">|                                         |                        |               MIG M. |
+</span></span><span class="line"><span class="cl">|=========================================+========================+======================|
+</span></span><span class="line"><span class="cl">|   0  Tesla T4                       Off |   00000000:3B:00.0 Off |                    0 |
+</span></span><span class="line"><span class="cl">| N/A   70C    P0             32W /   70W |       1MiB /  15360MiB |      4%      Default |
+</span></span><span class="line"><span class="cl">|                                         |                        |                  N/A |
+</span></span><span class="line"><span class="cl">+-----------------------------------------+------------------------+----------------------+
+</span></span><span class="line"><span class="cl">                                                                                         
+</span></span><span class="line"><span class="cl">+-----------------------------------------------------------------------------------------+
+</span></span><span class="line"><span class="cl">| Processes:                                                                              |
+</span></span><span class="line"><span class="cl">|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+</span></span><span class="line"><span class="cl">|        ID   ID                                                               Usage      |
+</span></span><span class="line"><span class="cl">|=========================================================================================|
+</span></span><span class="line"><span class="cl">|  No running processes found                                                             |
+</span></span><span class="line"><span class="cl">+-----------------------------------------------------------------------------------------+
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># 检查 NVIDIA 模块是否加载
+</span></span><span class="line"><span class="cl">$ lsmod | grep nvidia  # 确认模块已加载
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># 查看 GPU 资源的使用情况
+</span></span><span class="line"><span class="cl">$ nvidia-smi pmon -s u -d 1
+</span></span><span class="line"><span class="cl"># gpu         pid   type     sm    mem    enc    dec    jpg    ofa    command 
+</span></span><span class="line"><span class="cl"># Idx           #    C/G      %      %      %      %      %      %    name 
+</span></span><span class="line"><span class="cl">    0      43043     C      0      0      -      -      -      -    funasr-wss-serv
+</span></span><span class="line"><span class="cl">    0      43043     C      0      0      -      -      -      -    funasr-wss-serv
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="details admonition note open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-pencil-alt fa-fw" aria-hidden="true"></i>注意<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content">需要注意的是，第一次安装显卡驱动的话，是不用重启服务器的，后续更新驱动版本的话，则是需要的。但是建议第一次安装驱动之后，最好还是重启下，防止意外情况的出现和发生。</div>
+        </div>
+    </div>
+<h3 id="安装-cuda可选">安装 CUDA（可选）</h3>
+<p>CUDA (Compute Unified Device Architecture) 是显卡厂商 NVIDIA 推出的运算平台。 CUDA™ 是一种由 NVIDIA 推出的通用并行计算架构，该架构使 GPU 能够解决复杂的计算问题。 它包含了 CUDA 指令集架构（ISA）以及 GPU 内部的并行计算引擎。 开发人员现在可以使用 C 语言, C++ , FORTRAN 来为 CUDA™ 架构编写程序，所编写出的程序可以在支持 CUDA™ 的处理器上以超高性能运行。
+GPU 云服务器采用 NVIDIA 显卡，需要安装 CUDA 开发运行环境。</p>
+<p>1.<a href="https://developer.nvidia.com/cuda-75-downloads-arch" target="_blank" rel="noopener noreffer ">CUDA驱动下载</a>
+2.选择操作系统和安装包，以CentOS 7为例</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Installation Instructions:
+</span></span><span class="line"><span class="cl">`sudo rpm -i cuda-repo-rhel7-7-5-local-7.5-18.x86_64.rpm`
+</span></span><span class="line"><span class="cl">`sudo yum clean all`
+</span></span><span class="line"><span class="cl">`sudo yum install cuda`
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在/usr/local/cuda/samples/1_Utilities/deviceQuery目录下，执行make命令，可以编译出deviceQuery程序。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ cd /usr/local/cuda/samples/1_Utilities/deviceQuery
+</span></span><span class="line"><span class="cl">$ make 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>执行deviceQuery正常显示设备信息，此刻认为CUDA安装正确。</p>
+<div class="details admonition note open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-pencil-alt fa-fw" aria-hidden="true"></i>注意<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content">如果使用rpm文件报错，则考虑使用run文件进行安装(runfile(local))</div>
+        </div>
+    </div>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># 下载run文件进行安装
+</span></span><span class="line"><span class="cl">sh cuda_*.run
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>建议最好不要使用GUI图形化界面操作，容易报错。</p>
+<h4 id="驱动程序和-cuda-的关系">驱动程序和 CUDA 的关系：</h4>
+<p>可以把 <strong>驱动程序（Driver）</strong> 和 <strong>CUDA</strong> 想象成 <strong>“汽车引擎”</strong> 和 <strong>“赛车配件包”</strong> 的关系：</p>
+<ul>
+<li>
+<p><strong>驱动程序（Driver）</strong>：<br>
+就像汽车的 <strong>引擎</strong>，它让 GPU 硬件能够被操作系统识别并基础运行（如显示画面、基础计算）。没有引擎，汽车根本无法启动。</p>
+</li>
+<li>
+<p><strong>CUDA</strong>：<br>
+则像一套 <strong>赛车专用配件包</strong>（如涡轮增压、高性能变速箱、赛用轮胎等），它提供了开发高性能计算程序所需的工具和接口（如并行计算库、编译器）。只有安装了 CUDA，你才能利用 GPU 的算力做深度学习、科学计算等复杂任务。</p>
+</li>
+</ul>
+<hr>
+<h4 id="是否需要安装-cuda取决于你的需求">是否需要安装 CUDA？取决于你的需求</h4>
+<ol>
+<li>
+<p><strong>如果只用 GPU 显示图形（如日常办公、游戏）</strong>：<br>
+安装驱动程序就够了，不需要 CUDA。</p>
+</li>
+<li>
+<p><strong>如果要做 GPU 计算（如深度学习、科学计算）</strong>：<br>
+必须安装 CUDA，因为：</p>
+<ul>
+<li>深度学习框架（PyTorch、TensorFlow）依赖 CUDA 调用 GPU 算力。</li>
+<li>CUDA 提供了 <code>nvcc</code> 编译器、<code>cuBLAS</code> 等加速库，是开发 GPU 程序的基石。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h4 id="驱动和-cuda-的版本依赖关系">驱动和 CUDA 的版本依赖关系</h4>
+<ul>
+<li>
+<p><strong>CUDA 版本依赖驱动程序版本</strong>：<br>
+每个 CUDA 版本需要 <strong>最低版本的驱动程序</strong> 支持（见 <a href="https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/index.html" target="_blank" rel="noopener noreffer ">NVIDIA CUDA 文档</a>）。例如：</p>
+<ul>
+<li>CUDA 12.x 需要驱动版本 ≥ 525.60.13</li>
+<li>CUDA 11.x 需要驱动版本 ≥ 450.80.02</li>
+</ul>
+<p>你安装的驱动版本 <strong>570.124.06</strong> 支持大部分 CUDA 版本（具体需查兼容性表）。</p>
+</li>
+<li>
+<p><strong>建议安装方式</strong>：</p>
+<ol>
+<li>先安装驱动（已装好）。</li>
+<li>再根据需求安装 <strong>CUDA Toolkit</strong>（例如通过 NVIDIA 官网或包管理器）。</li>
+</ol>
+</li>
+</ul>
+<hr>
+<h4 id="如何安装-cuda">如何安装 CUDA？</h4>
+<ol>
+<li>
+<p><strong>查看驱动支持的 CUDA 版本</strong>：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">nvidia-smi  <span class="c1"># 输出顶部会显示支持的 CUDA 版本（例如：CUDA Version: 12.2）</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p><strong>从 NVIDIA 官网下载对应 CUDA Toolkit</strong>：<br>
+<a href="https://developer.nvidia.com/cuda-toolkit-archive" target="_blank" rel="noopener noreffer ">CUDA Toolkit 下载页面</a><br>
+选择与驱动兼容的版本，按官方文档安装（通常用 <code>runfile</code> 或包管理器）。</p>
+</li>
+<li>
+<p><strong>验证安装</strong>：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">nvcc --version  <span class="c1"># 查看 CUDA 编译器版本</span>
+</span></span><span class="line"><span class="cl">nvidia-smi      <span class="c1"># 确认驱动和 CUDA 版本兼容</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ol>
+<hr>
+<h4 id="总结">总结</h4>
+<ul>
+<li><strong>驱动程序</strong>：让 GPU 能被系统使用（基础运行）。</li>
+<li><strong>CUDA</strong>：让开发者能利用 GPU 做高性能计算（功能扩展）。</li>
+<li><strong>关系</strong>：驱动是“汽油”，CUDA 是“赛车改装套件”——想飙车？两者缺一不可！</li>
+</ul>
+<h2 id="安装-nvidia-container-toolkit-配套工具">安装 NVIDIA container toolkit 配套工具</h2>
+<p><strong>NVIDIA Container Toolkit介绍：</strong>
+NVIDIA Container Toolkit(容器工具包)使用户能够构建和运行 GPU 加速的容器，该工具包括一个容器运行时库和实用程序，用于自动配置容器以利用 NVIDIA GPU。</p>
+<p><strong>使用背景</strong>
+在使用大模型的时候，很多情况需要经常更新模型或者使用平台，所以时常更新代码或环境。
+但是若在实体机更新导致环境混乱，维护不便，所以使用 docker 环境进行更新。
+使用 docker 运行模型的时候要让其支持 GPU 需要使用 nvidia-container-toolkit 工具。</p>
+<p>NVIDIA Container Toolkit 为容器化 GPU 加速工作提供了高效且便捷的解决方案，是深度学习和科学计算等场景的核心工具之一。</p>
+<p><strong>核心功能</strong></p>
+<ol>
+<li>GPU 加速支持：</li>
+</ol>
+<ul>
+<li>将主机的 NVIDIA GPU 映射到容器中，使得容器能够直接访问 GPU 资源。</li>
+</ul>
+<ol start="2">
+<li>轻松管理 CUDA 环境：</li>
+</ol>
+<ul>
+<li>自动加载必要的 NVIDIA 驱动程序、CUDA 库和运行时，简化环境配置。</li>
+</ul>
+<ol start="3">
+<li>与容器平台集成：</li>
+</ol>
+<ul>
+<li>支持 Docker 和其他容器运行时（如 containerd）。</li>
+</ul>
+<ol start="4">
+<li>灵活的 GPU 分配：</li>
+</ol>
+<ul>
+<li>允许用户指定容器可以访问的 GPU 数量或特定 GPU。</li>
+</ul>
+<p><strong>组件结构</strong></p>
+<ol>
+<li>NVIDIA Container Runtime：</li>
+</ol>
+<ul>
+<li>Docker 运行时的扩展，用于在容器中加载 GPU 相关组件。</li>
+</ul>
+<ol start="2">
+<li>NVIDIA Container CLI：</li>
+</ol>
+<ul>
+<li>提供了命令行工具 nvidia-container-cli，可以用于调试和管理 GPU 映射。</li>
+</ul>
+<ol start="3">
+<li>支持的库和工具：</li>
+</ol>
+<ul>
+<li>自动为容器挂载 libcuda.so 和其他相关库，使其支持 GPU 加速。</li>
+</ul>
+<p><strong>前提条件</strong></p>
+<ul>
+<li>NVIDIA 驱动程序：确保主机已安装支持的 NVIDIA 驱动程序。</li>
+<li>Docker：安装 Docker，版本需为 19.03 或更高。</li>
+</ul>
+<p>检查<code>nvidia-container-toolkit</code>  NVIDIA 容器工具包是否安装</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># debian
+</span></span><span class="line"><span class="cl">$ dpkg -l | grep nvidia-container-toolkit
+</span></span><span class="line"><span class="cl"># redhat
+</span></span><span class="line"><span class="cl">$ rpm -l | grep nvidia-container-toolkit
+</span></span><span class="line"><span class="cl"># 添加 NVIDIA 容器运行时的官方存储库
+</span></span><span class="line"><span class="cl">curl -s -L https://nvidia.github.io/libnvidia-container/stable/rpm/nvidia-container-toolkit.repo | sudo tee /etc/yum.repos.d/nvidia-container-toolkit.repo
+</span></span><span class="line"><span class="cl"># 在线安装，在线安装异常可以尝试离线安装
+</span></span><span class="line"><span class="cl">sudo yum install -y nvidia-container-toolkit
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>离线下载安装</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ wget https://nvidia.github.io/libnvidia-container/stable/rpm/x86_64/libnvidia-container1-1.14.6-1.x86_64.rpm
+</span></span><span class="line"><span class="cl">$ wget https://nvidia.github.io/libnvidia-container/stable/rpm/x86_64/libnvidia-container-tools-1.14.6-1.x86_64.rpm
+</span></span><span class="line"><span class="cl">$ wget https://nvidia.github.io/libnvidia-container/stable/rpm/x86_64/nvidia-container-toolkit-base-1.14.6-1.x86_64.rpm
+</span></span><span class="line"><span class="cl">$ wget https://nvidia.github.io/libnvidia-container/stable/rpm/x86_64/nvidia-container-toolkit-1.14.6-1.x86_64.rpm
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#手动安装 RPM 包,如果您是手动安装 .rpm 文件，确保版本匹配后执行以下命令：</span>
+</span></span><span class="line"><span class="cl">$ sudo rpm -ivh libnvidia-container1-1.14.6-1.x86_64.rpm
+</span></span><span class="line"><span class="cl">$ sudo rpm -ivh libnvidia-container-tools-1.14.6-1.x86_64.rpm
+</span></span><span class="line"><span class="cl">$ sudo rpm -ivh nvidia-container-toolkit-base-1.14.6-1.x86_64.rpm
+</span></span><span class="line"><span class="cl">$ sudo rpm -ivh nvidia-container-toolkit-1.14.6-1.x86_64.rpm
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>测试</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ nvidia-ctk --version
+</span></span><span class="line"><span class="cl">NVIDIA Container Toolkit CLI version 1.14.6
+</span></span><span class="line"><span class="cl">commit: 5605d191332dcfeea802c4497360d60a65c7887e
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">$ nvidia-container-cli --version
+</span></span><span class="line"><span class="cl">cli-version: 1.14.6
+</span></span><span class="line"><span class="cl">lib-version: 1.14.6
+</span></span><span class="line"><span class="cl">build date: 2024-02-27T20:52+0000
+</span></span><span class="line"><span class="cl">build revision: d2eb0afe86f0b643e33624ee64f065dd60e952d4
+</span></span><span class="line"><span class="cl">build compiler: gcc 4.8.5 20150623 (Red Hat 4.8.5-44)
+</span></span><span class="line"><span class="cl">build platform: x86_64
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">build flags: -D_GNU_SOURCE -D_FORTIFY_SOURCE=2 -DNDEBUG -std=gnu11 -O2 -g -fdata-sections -ffunction-sections -fplan9-extensions -fstack-protector -fno-strict-aliasing -fvisibility=hidden -Wall -Wextra -Wcast-align -Wpointer-arith -Wmissing-prototypes -Wnonnull -Wwrite-strings -Wlogical-op -Wformat=2 -Wmissing-format-attribute -Winit-self -Wshadow -Wstrict-prototypes -Wunreachable-code -Wconversion -Wsign-conversion -Wno-unknown-warning-option -Wno-format-extra-args -Wno-gnu-alignof-expression -Wl,-zrelro -Wl,-znow -Wl,-zdefs -Wl,--gc-sections
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># 查看nvidia-container-toolkit版本
+</span></span><span class="line"><span class="cl">$ nvidia-container-runtime --version
+</span></span><span class="line"><span class="cl">NVIDIA Container Runtime version 1.14.6
+</span></span><span class="line"><span class="cl">commit: 5605d191332dcfeea802c4497360d60a65c7887e
+</span></span><span class="line"><span class="cl">spec: 1.2.0
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">runc version 1.1.12
+</span></span><span class="line"><span class="cl">commit: v1.1.12-0-g51d5e94
+</span></span><span class="line"><span class="cl">spec: 1.0.2-dev
+</span></span><span class="line"><span class="cl">go: go1.21.11
+</span></span><span class="line"><span class="cl">libseccomp: 2.5.3
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">$ nvidia-container-toolkit --version
+</span></span><span class="line"><span class="cl">NVIDIA Container Runtime Hook version 1.14.6
+</span></span><span class="line"><span class="cl">commit: 5605d191332dcfeea802c4497360d60a65c7887e
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="details admonition note open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-pencil-alt fa-fw" aria-hidden="true"></i>注意<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content"><ul>
+<li>docker v20+ 以上用 nvidia-container-toolkit 代替 nvidia-docker2</li>
+<li>nvidia-container-runtime现在叫 nvidia-container-toolkit</li>
+</ul>
+</div>
+        </div>
+    </div>
+<h2 id="容器运行时配置">容器运行时配置</h2>
+<h3 id="docker-配置">Docker 配置</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ nvidia-ctk runtime configure --runtime<span class="o">=</span>docker
+</span></span><span class="line"><span class="cl">INFO<span class="o">[</span>0000<span class="o">]</span> Loading config from /etc/docker/daemon.json  
+</span></span><span class="line"><span class="cl">INFO<span class="o">[</span>0000<span class="o">]</span> Wrote updated config to /etc/docker/daemon.json 
+</span></span><span class="line"><span class="cl">INFO<span class="o">[</span>0000<span class="o">]</span> It is recommended that docker daemon be restarted. 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这个命令实际上是对 docker 的配置文件/etc/docker/daemon.json进行修改，内容如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># 新增配置：
+</span></span><span class="line"><span class="cl">{
+</span></span><span class="line"><span class="cl">  ...
+</span></span><span class="line"><span class="cl">  &#34;storage-driver&#34;: &#34;overlay2&#34;,
+</span></span><span class="line"><span class="cl">  &#34;default-runtime&#34;: &#34;nvidia&#34;,
+</span></span><span class="line"><span class="cl">  &#34;runtimes&#34;: {
+</span></span><span class="line"><span class="cl">    &#34;nvidia&#34;: {
+</span></span><span class="line"><span class="cl">      &#34;path&#34;: &#34;nvidia-container-runtime&#34;,
+</span></span><span class="line"><span class="cl">      &#34;runtimeArgs&#34;: []
+</span></span><span class="line"><span class="cl">    }
+</span></span><span class="line"><span class="cl">  }
+</span></span><span class="line"><span class="cl">  ...
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>修改后重启docker</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ sudo systemctl daemon-reload 
+</span></span><span class="line"><span class="cl">$ systemctl restart docker containerd
+</span></span><span class="line"><span class="cl"># 验证容器运行时
+</span></span><span class="line"><span class="cl">$ docker info | grep &#34;Runtimes&#34;
+</span></span><span class="line"><span class="cl"> Runtimes: io.containerd.runc.v2 io.containerd.runtime.v1.linux nvidia runc
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="在-docker-composeyml-中添加支持-gpu">在 docker-compose.yml 中添加支持 GPU</h3>
+<p>仅供参考</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">services:
+</span></span><span class="line"><span class="cl">  ollama:
+</span></span><span class="line"><span class="cl">    image: ollama/ollama:0.5.4
+</span></span><span class="line"><span class="cl">    container_name: ${CONTAINER_NAME}
+</span></span><span class="line"><span class="cl">    restart: unless-stopped
+</span></span><span class="line"><span class="cl">    ports:
+</span></span><span class="line"><span class="cl">      - ${PANEL_APP_PORT_HTTP}:11434
+</span></span><span class="line"><span class="cl">    networks:
+</span></span><span class="line"><span class="cl">      - 1panel-network
+</span></span><span class="line"><span class="cl">    tty: true
+</span></span><span class="line"><span class="cl">    privileged: true
+</span></span><span class="line"><span class="cl">    volumes:
+</span></span><span class="line"><span class="cl">      - ./data:/root/.ollama
+</span></span><span class="line"><span class="cl">    labels:
+</span></span><span class="line"><span class="cl">      createdBy: &#34;Apps&#34;
+</span></span><span class="line"><span class="cl">    # 添加 GPU 支持
+</span></span><span class="line"><span class="cl">    deploy:
+</span></span><span class="line"><span class="cl">      resources:
+</span></span><span class="line"><span class="cl">        reservations:
+</span></span><span class="line"><span class="cl">          devices:
+</span></span><span class="line"><span class="cl">            - capabilities: [gpu]
+</span></span><span class="line"><span class="cl">    # 如果使用 NVIDIA Container Toolkit，可以添加以下环境变量
+</span></span><span class="line"><span class="cl">    environment:
+</span></span><span class="line"><span class="cl">      NVIDIA_VISIBLE_DEVICES: all
+</span></span><span class="line"><span class="cl">      NVIDIA_DRIVER_CAPABILITIES: &#34;compute,utility&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">networks:
+</span></span><span class="line"><span class="cl">  1panel-network:
+</span></span><span class="line"><span class="cl">    external: true
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="containerd-配置">Containerd 配置</h3>
+<p><code># nvidia-ctk runtime configure --runtime=containerd</code></p>
+<p>这个命令实际上是对 containerd 的配置文件 /etc/containerd/config.toml 进行修改，内容如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">version = 2
+</span></span><span class="line"><span class="cl">[plugins]
+</span></span><span class="line"><span class="cl">  [plugins.&#34;io.containerd.grpc.v1.cri&#34;]
+</span></span><span class="line"><span class="cl">    [plugins.&#34;io.containerd.grpc.v1.cri&#34;.containerd]
+</span></span><span class="line"><span class="cl">      default_runtime_name = &#34;nvidia&#34;
+</span></span><span class="line"><span class="cl">      [plugins.&#34;io.containerd.grpc.v1.cri&#34;.containerd.runtimes]
+</span></span><span class="line"><span class="cl">        [plugins.&#34;io.containerd.grpc.v1.cri&#34;.containerd.runtimes.nvidia]
+</span></span><span class="line"><span class="cl">          privileged_without_host_devices = false
+</span></span><span class="line"><span class="cl">          runtime_engine = &#34;&#34;
+</span></span><span class="line"><span class="cl">          runtime_root = &#34;&#34;
+</span></span><span class="line"><span class="cl">          runtime_type = &#34;io.containerd.runc.v2&#34;
+</span></span><span class="line"><span class="cl">          [plugins.&#34;io.containerd.grpc.v1.cri&#34;.containerd.runtimes.nvidia.options]
+</span></span><span class="line"><span class="cl">            BinaryName = &#34;/usr/bin/nvidia-container-runtime&#34;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="在线或者离线使用国外代理">在线或者离线使用国外代理</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># 在线</span>
+</span></span><span class="line"><span class="cl"><span class="nb">cd</span> /etc/yum.repos.d/
+</span></span><span class="line"><span class="cl">wget https://mirrors.ustc.edu.cn/libnvidia-container/stable/rpm/nvidia-container-toolkit.repo
+</span></span><span class="line"><span class="cl">sed -i  <span class="s1">&#39;s#nvidia.github.io#mirrors.ustc.edu.cn#g&#39;</span> nvidia-container-toolkit.repo
+</span></span><span class="line"><span class="cl">yum makecache
+</span></span><span class="line"><span class="cl">yum install -y nvidia-container-toolkit
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 离线</span>
+</span></span><span class="line"><span class="cl">$ cat &gt;&gt;nvidia-container-toolkit.repo<span class="s">&lt;&lt;EOF
+</span></span></span><span class="line"><span class="cl"><span class="s">[nvidia-container-toolkit]
+</span></span></span><span class="line"><span class="cl"><span class="s">name=nvidia-container-toolkit
+</span></span></span><span class="line"><span class="cl"><span class="s">baseurl=https://mirrors.ustc.edu.cn/libnvidia-container/stable/rpm/\$basearch
+</span></span></span><span class="line"><span class="cl"><span class="s">repo_gpgcheck=1
+</span></span></span><span class="line"><span class="cl"><span class="s">gpgcheck=0
+</span></span></span><span class="line"><span class="cl"><span class="s">enabled=1
+</span></span></span><span class="line"><span class="cl"><span class="s">gpgkey=https://mirrors.ustc.edu.cn/libnvidia-container/gpgkey
+</span></span></span><span class="line"><span class="cl"><span class="s">sslverify=1
+</span></span></span><span class="line"><span class="cl"><span class="s">sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+</span></span></span><span class="line"><span class="cl"><span class="s">
+</span></span></span><span class="line"><span class="cl"><span class="s">[nvidia-container-toolkit-experimental]
+</span></span></span><span class="line"><span class="cl"><span class="s">name=nvidia-container-toolkit-experimental
+</span></span></span><span class="line"><span class="cl"><span class="s">baseurl=https://mirrors.ustc.edu.cn/libnvidia-container/experimental/rpm/$basearch
+</span></span></span><span class="line"><span class="cl"><span class="s">repo_gpgcheck=1
+</span></span></span><span class="line"><span class="cl"><span class="s">gpgcheck=0
+</span></span></span><span class="line"><span class="cl"><span class="s">enabled=0
+</span></span></span><span class="line"><span class="cl"><span class="s">gpgkey=https://mirrors.ustc.edu.cn/libnvidia-container/gpgkey
+</span></span></span><span class="line"><span class="cl"><span class="s">sslverify=1
+</span></span></span><span class="line"><span class="cl"><span class="s">sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+</span></span></span><span class="line"><span class="cl"><span class="s">EOF</span>
+</span></span><span class="line"><span class="cl">yum install -y nvidia-container-toolkit
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="nvidia-docker-nvidia-docker2-nvidia-container-toolkits区别">nvidia docker, nvidia docker2, nvidia container toolkits区别</h3>
+<p>在docker容器中用GPU时，查阅了网上许多教程，教程之间概念模糊不清，相互矛盾，过时的教程和新的教程混杂在一起。主要原因是Nvidia为docker容器的支持发生了好几代变更，api发生了不少变化。</p>
+<p><strong>省流版总结</strong><br>
+凡是使用了命令nvidia docker或者在docker中引入了&ndash;runtime=nvidia参数的都是过时教程，最新方法只需要下载nvidia-container-toolkits，在docker中引入&ndash;gpus参数即可。</p>
+<h4 id="nvidia-docker不推荐">nvidia docker(不推荐)</h4>
+<p>nvidia docker是NVIDIA第一代支持docker容器内使用GPU资源的项目。运行时用nvidia-docker命令。</p>
+<p>根据nvidia docker在github ( <a href="https://github.com/NVIDIA/nvidia-docker" target="_blank" rel="noopener noreffer ">https://github.com/NVIDIA/nvidia-docker</a> )上的描述，已经不再使用了</p>
+<h4 id="nvidia-docker2不推荐">nvidia docker2(不推荐)</h4>
+<p>nvidia docker2是NVIDIA第二代支持docker容器内使用GPU资源的项目。运行时用nvidia-docker命令，且需要指定参数&ndash;runtime=nvidia.</p>
+<p>根据 github (<a href="https://github.com/NVIDIA/nvidia-docker#backward-compatibility" target="_blank" rel="noopener noreffer ">https://github.com/NVIDIA/nvidia-docker#backward-compatibility</a>) 的描述，一代和二代之间有如下兼容性。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Backward compatibility To help transitioning code from 1.0 to 2.0, a bash script is provided in /usr/bin/nvidia-docker for backward compatibility. It will automatically inject the --runtime=nvidia argument and convert NV_GPU to NVIDIA_VISIBLE_DEVICES.
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>也就是说，在二代中，既可以使用nvidia docker命令，这会自动引入参数&ndash;runtime=nvidia也可以使用docker命令，手动指定参数&ndash;runtime=nvidia</p>
+<h4 id="nvidia-container-toolkits推荐">nvidia-container-toolkits(推荐)</h4>
+<p>根据github这是最新的支持方案，如帖子描述，nvidia docker2 被Nvidia container toolkits取代，无需指定&ndash;runtime参数，只需要传递&ndash;gpus参数</p>
+<h2 id="k8s-部署nvidia设备插件扩展">k8s 部署nvidia设备插件(扩展)</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ kubectl apply -f https://raw.githubusercontent.com/NVIDIA/k8s-device-plugin/1.0.0-beta4/nvidia-device-plugin.yml
+</span></span><span class="line"><span class="cl"># 或者安装 NVIDIA GPU Operator，适用K8S版本 1.23版本以上
+</span></span><span class="line"><span class="cl"># 添加 NVIDIA Helm repository
+</span></span><span class="line"><span class="cl">$ helm repo add nvidia https://helm.ngc.nvidia.com/nvidia &amp;&amp; helm repo update
+</span></span><span class="line"><span class="cl">$ helm install -n gpu-operator --create-namespace gpu-operator nvidia/gpu-operator \
+</span></span><span class="line"><span class="cl">  --set driver.enabled=false \
+</span></span><span class="line"><span class="cl">  --set dcgmExporter.enabled=true \
+</span></span><span class="line"><span class="cl">  --set migManager.enabled=true \
+</span></span><span class="line"><span class="cl">  --set driver.vgpu.enabled=true \
+</span></span><span class="line"><span class="cl">  --set migStrategy=mixed
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="k8s-调度gpu-任务测试">k8s 调度GPU 任务测试</h3>
+<p><strong>测试一<code>gpu.yaml</code></strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">apiVersion: v1
+</span></span><span class="line"><span class="cl">kind: Pod
+</span></span><span class="line"><span class="cl">metadata:
+</span></span><span class="line"><span class="cl">  name: tf-pod
+</span></span><span class="line"><span class="cl">spec:
+</span></span><span class="line"><span class="cl">  containers:
+</span></span><span class="line"><span class="cl">  - name: tf-container
+</span></span><span class="line"><span class="cl">    image: tensorflow/tensorflow:2.14.0-gpu
+</span></span><span class="line"><span class="cl">    command: [ &#34;/bin/sh&#34; ]
+</span></span><span class="line"><span class="cl">    args: [ &#34;-c&#34;, &#34;tail -f&#34; ]
+</span></span><span class="line"><span class="cl">    resources:
+</span></span><span class="line"><span class="cl">      limits:
+</span></span><span class="line"><span class="cl">      cpu: 200m
+</span></span><span class="line"><span class="cl">      memory: 512Mi
+</span></span><span class="line"><span class="cl">      nvidia.com/gpu: 1 # requesting 1 GPU
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>测试二 <code>cat cuda-vectoradd.yaml</code></strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">apiVersion: v1
+</span></span><span class="line"><span class="cl">kind: Pod
+</span></span><span class="line"><span class="cl">metadata:
+</span></span><span class="line"><span class="cl">  name: cuda-vectoradd
+</span></span><span class="line"><span class="cl">spec:
+</span></span><span class="line"><span class="cl">  restartPolicy: OnFailure
+</span></span><span class="line"><span class="cl">  containers:
+</span></span><span class="line"><span class="cl">  - name: cuda-vectoradd
+</span></span><span class="line"><span class="cl">    image: &#34;nvcr.io/nvidia/k8s/cuda-sample:vectoradd-cuda11.7.1-ubuntu20.04&#34;
+</span></span><span class="line"><span class="cl">    resources:
+</span></span><span class="line"><span class="cl">       limits:
+</span></span><span class="line"><span class="cl">         nvidia.com/gpu: 1  # requesting 1 GPU
+</span></span><span class="line"><span class="cl">  nodeSelector:
+</span></span><span class="line"><span class="cl">    accekerator: nvidia-rtx4090
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>测试三</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ docker run -d  --gpus all--name pytorch  swr.cn-south-1.myhuaweicloud.com/myj-prod-local-cluster-repository/pytorch:cuda11.8
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>docker exec -it pytorch  bash  执行 python3,调用cuda 计算显卡</code></p>
+<p><strong>测试四</strong>
+进pod 里面执行nvida-smi 是否有输出，有输出说明成功了</p>
+<h2 id="排错答疑">排错答疑</h2>
+<div class="details admonition question open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-question-circle fa-fw" aria-hidden="true"></i>问题<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content"><ol>
+<li><code>could not select device driver &quot;&quot; with capabilities: [[gpu]]</code></li>
+</ol>
+<ul>
+<li>通常是由于 Docker 没有正确识别到 GPU，或者 NVIDIA Docker 配置不正确。可能是 <code>nvidia-container-toolkit</code> 工具包没有安装，docker配置文件中的默认运行时没有添加nvidia配置</li>
+</ul>
+<ol start="2">
+<li><code>Is there a difference between: nvidia-docker run and docker run --runtime=nvidia ?</code></li>
+</ol>
+<ul>
+<li><code>docker run --runtime=nvidia is only available since nvidia-docker v2.</code></li>
+</ul>
+</div>
+        </div>
+    </div>
+<h2 id="参考">参考</h2>
+<ol>
+<li><a href="https://www.nvidia.cn/Download/index.aspx?lang=cn" target="_blank" rel="noopener noreffer ">下载安装NVIDIA驱动程序</a></li>
+<li><a href="https://rpmfind.net/linux/rpm2html/search.php?query=kernel-devel" target="_blank" rel="noopener noreffer ">kernel 内核源码包</a></li>
+<li><a href="https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html" target="_blank" rel="noopener noreffer ">Installation Guide Linux :: CUDA Toolkit Documentation</a> 这里查看受支持的Linux版本</li>
+<li><a href="https://blog.csdn.net/gs80140/article/details/144581141" target="_blank" rel="noopener noreffer ">NVIDIA Container Toolkit 介绍及安装 by Unbuntu </a></li>
+<li><a href="https://www.cnblogs.com/boradviews/p/18567780" target="_blank" rel="noopener noreffer ">欧拉openEuler 22.03 (LTS-SP1)安装NVIDIA Driver</a></li>
+<li><a href="https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html" target="_blank" rel="noopener noreffer ">Installing the NVIDIA Container Toolkit 官网</a></li>
+<li><a href="https://docs.openeuler.org/zh/docs/22.03_LTS_SP4/docs/AI/AI%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%9C%8D%E5%8A%A1%E9%95%9C%E5%83%8F%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97.html" target="_blank" rel="noopener noreffer ">Openeuler v22.03 AI 大模型服务镜像使用指南</a></li>
+<li><a href="https://github.com/NVIDIA/nvidia-container-toolkit" target="_blank" rel="noopener noreffer ">nvidia-container-toolkit github</a></li>
+<li><a href="https://mirrors.ustc.edu.cn/help/libnvidia-container.html" target="_blank" rel="noopener noreffer ">NVIDIA Container 运行时库 USTC 中科大官方镜像</a></li>
+<li><a href="https://docs.nvidia.com/deploy/cuda-compatibility/" target="_blank" rel="noopener noreffer ">CUDA  和GPU 驱动型兼容性</a></li>
+</ol>
+<div class="details admonition info open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-info-circle fa-fw" aria-hidden="true"></i>信息<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content">本文档所提供的指引和参考主要基于特定实践设备的操作经验。由于不同设备在硬件配置、软件版本、使用场景等方面可能存在差异，因此，当您在使用其他设备时，所遇到的问题可能与此文档所述有所不同。尽管如此，大部分设备的安装方法和基本步骤仍然保持相似。</div>
+        </div>
+    </div>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2025-06-26</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://lushuan.gihub.io/linux%E7%B3%BB%E7%BB%9Fnvidia%E9%A9%B1%E5%8A%A8%E9%83%A8%E7%BD%B2/" data-title="Linux系统Nvidia驱动部署" data-via="xxxx" data-hashtags="GPU"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://lushuan.gihub.io/linux%E7%B3%BB%E7%BB%9Fnvidia%E9%A9%B1%E5%8A%A8%E9%83%A8%E7%BD%B2/" data-hashtag="GPU"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="https://lushuan.gihub.io/linux%E7%B3%BB%E7%BB%9Fnvidia%E9%A9%B1%E5%8A%A8%E9%83%A8%E7%BD%B2/" data-title="Linux系统Nvidia驱动部署"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="https://lushuan.gihub.io/linux%E7%B3%BB%E7%BB%9Fnvidia%E9%A9%B1%E5%8A%A8%E9%83%A8%E7%BD%B2/" data-title="Linux系统Nvidia驱动部署"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://lushuan.gihub.io/linux%E7%B3%BB%E7%BB%9Fnvidia%E9%A9%B1%E5%8A%A8%E9%83%A8%E7%BD%B2/" data-title="Linux系统Nvidia驱动部署"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/gpu/">GPU</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/linux%E9%98%B2%E7%81%AB%E5%A2%99iptables%E8%AF%A6%E8%A7%A3/" class="prev" rel="prev" title="Linux 防火墙iptables详解"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Linux 防火墙iptables详解</a></div>
+</div>
+<div id="comments"><div id="gitalk" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://github.com/gitalk/gitalk"></a>Gitalk</a>.
+            </noscript><div id="giscus" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://giscus.app">Giscus</a>.
+            </noscript></div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">我是有底线的</div><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.114.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2025</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">lushuan</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/gitalk/gitalk.min.css"><link rel="stylesheet" href="/lib/lightgallery/css/lightgallery-bundle.min.css"><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/gitalk/gitalk.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/lightgallery/lightgallery.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/zoom/lg-zoom.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{"giscus":{"category":"Announcements","categoryId":"DIC_kwDOMOWcic4Coqlk","darkTheme":"dark","emitMetadata":"0","inputPosition":"bottom","lang":"zh-CN","lazyLoading":false,"lightTheme":"light","mapping":"pathname","reactionsEnabled":"1","repo":"lushuan/lushuan.github.io","repoId":"R_kgDOMOWciQ"},"gitalk":{"admin":["lushuan"],"clientID":"Ov23liSh0yG2wy6B7XP1","clientSecret":"7184a8df973267af95c92ddeb27789417ba82469","id":"2025-01-11T12:06:37+08:00","owner":"lushuan","repo":"lushuan.github.io","title":"Linux系统Nvidia驱动部署"}},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"lightgallery":true,"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
