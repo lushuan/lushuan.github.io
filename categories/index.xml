@@ -4,7 +4,15 @@
         <link>https://lushuan.gihub.io/categories/</link>
         <description>Categories - 分类 - Less is more</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
-            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Sat, 11 Jan 2025 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/categories/" rel="self" type="application/rss+xml" /><item>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Fri, 21 Feb 2025 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/categories/" rel="self" type="application/rss+xml" /><item>
+    <title>OpenSSH</title>
+    <link>https://lushuan.gihub.io/categories/openssh/</link>
+    <pubDate>Fri, 21 Feb 2025 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>https://lushuan.gihub.io/categories/openssh/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
     <title>GPU</title>
     <link>https://lushuan.gihub.io/categories/gpu/</link>
     <pubDate>Sat, 11 Jan 2025 12:06:37 &#43;0800</pubDate>
@@ -74,14 +82,6 @@
     <pubDate>Mon, 26 Jun 2023 16:25:58 &#43;0800</pubDate>
     <author>lushuan</author>
     <guid>https://lushuan.gihub.io/categories/docker/</guid>
-    <description><![CDATA[]]></description>
-</item>
-<item>
-    <title>Jenkins</title>
-    <link>https://lushuan.gihub.io/categories/jenkins/</link>
-    <pubDate>Tue, 18 Apr 2023 12:06:37 &#43;0800</pubDate>
-    <author>lushuan</author>
-    <guid>https://lushuan.gihub.io/categories/jenkins/</guid>
     <description><![CDATA[]]></description>
 </item>
 </channel>

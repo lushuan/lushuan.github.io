@@ -1,0 +1,16 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>OpenSSH - 分类 - Less is more</title>
+        <link>https://lushuan.gihub.io/categories/openssh/</link>
+        <description>OpenSSH - 分类 - Less is more</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Fri, 21 Feb 2025 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/categories/openssh/" rel="self" type="application/rss+xml" /><item>
+    <title>OpenSSH v9.9p2源码离线一键升级</title>
+    <link>https://lushuan.gihub.io/openssh_v9.9p2%E6%BA%90%E7%A0%81%E7%A6%BB%E7%BA%BF%E4%B8%80%E9%94%AE%E5%8D%87%E7%BA%A7/</link>
+    <pubDate>Fri, 21 Feb 2025 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>https://lushuan.gihub.io/openssh_v9.9p2%E6%BA%90%E7%A0%81%E7%A6%BB%E7%BA%BF%E4%B8%80%E9%94%AE%E5%8D%87%E7%BA%A7/</guid>
+    <description><![CDATA[背景 Linux操作系统环境：CentOS 7.x 前言 由于安全扫描不同主机的 OpenSSH 版本不一，有些版本存在安全漏洞问题，现将 OpenSSH 统一升级至v9.9p2 版本，]]></description>
+</item>
+</channel>
+</rss>
