@@ -18,7 +18,7 @@ tags: ["GPU"]
 - cpu: 40c        memory: 186G  disk: 2T
 - GPU物理机，显卡型号为NVIDIA Tesla T4 (Tesla T4 被广泛应用于云端推理服务、虚拟桌面基础设施(VDI)、视频转码等领域)
 
-查看GPU 型号
+查看 GPU 型号
 ```
 $ ls  /proc/driver/nvidia/gpus/ 
 0000:3b:00.0
