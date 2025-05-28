@@ -16,7 +16,7 @@
 
 新建一篇文章,在content目录下创建一个post目录： hugo new post/my-first-blog.md
 
-生成静态文件： hugo -t even
+生成静态文件： hugo -t LoveIt
 
 启动服务器： hugo server
 
@@ -28,7 +28,7 @@
 ```yaml
 hugo
 # or
-hugo -D   #编译静态网站文件
+hugo -D   #编译静态网站文件, -D include content marked as draft
 ```
 会生成一个 public 目录, 其中包含你网站的所有静态内容和资源. 现在可以将其部署在任何 Web 服务器上.
 

@@ -221,11 +221,14 @@ $ modprobe -- ip_vs_sh
 $ modprobe -- nf_conntrack
 ```
 #### 1.3.7 关闭SWAP分区
+k8s 集群所有节点
 ```shell
 # 临时关闭
 $ swapoff -a
 # 永久关闭
 $ sed  -i '/swap/ s/^\(.*\)$/#\1/g' /etc/fstab
+# 验证是否禁用成功
+swapon -s # 没有输出表示禁用成功
 ```
 #### 1.3.8 所有设备允许 root 用户
 ```shell
@@ -291,9 +294,10 @@ sudo apt-get install -y apt-transport-https ca-certificates curl gpg
 # k8s 集群软件安装
 # 3.2.1 更新 apt 包索引，安装 kubelet、kubeadm 和 kubectl，并锁定其版本(防止自动更新)：
 $ sudo apt-get update
-$ apt-get install -y kubelet kubeadm kubectl
-# 并锁定其版本(防止自动更新)
+$ apt-get install -y kubelet=1.28.11-00 kubeadm=1.28.11-00 kubectl=1.28.11-00
+# 查看支持的版本，目前是每年会更新4个版本
 $ apt-cache madison kubeadm
+# 并锁定其版本(防止自动更新)
 $ sudo apt-mark hold kubelet kubeadm kubectl
 
 ```
@@ -332,7 +336,7 @@ EOF
 3. 提前下载需要的镜像信息
 ```shell
 # 查看kubeadm 所需要的镜像列表
-$ kubeadm config images list
+$ kubeadm config images list --kubernetes-version=v1.28.11
 # 提前下载镜像,使用中国区镜像加速
 $ kubeadm config images pull --image-repository registry.aliyuncs.com/google_containers
 # 查看下载的镜像，镜像保存在k8s.io namesapce 下
@@ -365,7 +369,7 @@ Then you can join any number of worker nodes by running the following on each as
 kubeadm join 192.168.1.11:6443 --token abcdef.0123456789abcdef \
         --discovery-token-ca-cert-hash sha256:fb0b8abf6780b7dff4f155edd2ed74a80a085081e25bb5469b906410a7a80398
 ```
-4. 执行成功后
+5. 执行成功后
 根据提示还需要再执行以下命令
 ```shell
 mkdir -p $HOME/.kube

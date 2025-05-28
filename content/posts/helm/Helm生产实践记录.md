@@ -16,10 +16,73 @@ Helm 可以帮助我们管理 Kubernetes 应用程序 - Helm Charts 可以定义
 
 Helm 对于 Kubernetes 来说就相当于 yum 对于 Centos 来说，如果没有 yum 的话，我们在 Centos 下面要安装一些应用程序是极度麻烦的，同样的，对于越来越复杂的 Kubernetes 应用程序来说，如果单纯依靠我们去手动维护应用程序的 YAML 资源清单文件来说，成本也是巨大的。
 
+## Helm 与 Kubernetes 版本兼容性对照
+
+### Helm 3 版本与 Kubernetes 兼容性
+
+| Helm 版本 | 支持的 Kubernetes 版本范围 | 重要说明 |
+|-----------|---------------------------|----------|
+| Helm 3.13.x | 1.25 - 1.28 | 最新稳定版 |
+| Helm 3.12.x | 1.24 - 1.27 | |
+| Helm 3.11.x | 1.23 - 1.26 | |
+| Helm 3.10.x | 1.22 - 1.25 | |
+| Helm 3.9.x  | 1.21 - 1.24 | |
+| Helm 3.8.x  | 1.20 - 1.23 | |
+| Helm 3.7.x  | 1.19 - 1.22 | |
+| Helm 3.6.x  | 1.18 - 1.21 | |
+| Helm 3.5.x  | 1.17 - 1.20 | |
+| Helm 3.4.x  | 1.16 - 1.19 | |
+| Helm 3.3.x  | 1.15 - 1.18 | |
+| Helm 3.2.x  | 1.14 - 1.17 | |
+| Helm 3.1.x  | 1.13 - 1.16 | |
+| Helm 3.0.x  | 1.13 - 1.16 | 初始 Helm 3 版本 |
+
+### Helm 2 版本与 Kubernetes 兼容性 (已弃用)
+
+| Helm 版本 | 支持的 Kubernetes 版本范围 | 状态 |
+|-----------|---------------------------|------|
+| Helm 2.17.x | 1.14 - 1.17 | 已弃用 |
+| Helm 2.16.x | 1.13 - 1.16 | 已弃用 |
+| ... | ... | 已弃用 |
+
+### 重要说明
+
+1. **向后兼容性**：Helm 通常支持当前版本和之前几个版本的 Kubernetes。例如，Helm 3.13.x 支持 Kubernetes 1.25-1.28。
+
+2. **向前兼容性**：较新版本的 Helm 可能不支持非常旧的 Kubernetes 集群。
+
+3. **最佳实践**：
+   - 尽量使用 Helm 和 Kubernetes 的最新稳定版本
+   - 保持 Helm 版本与 Kubernetes 版本差距不超过 2-3 个小版本
+   - 生产环境避免使用边缘版本组合
+
+4. **检查方法**：
+   ```bash
+   helm version
+   kubectl version
+   ```
+
+5. **升级建议**：升级 Kubernetes 集群时，应考虑同时升级 Helm 到兼容版本。
+
+请注意，具体 Chart 可能对 Kubernetes 版本有额外要求，建议查看 Chart 的文档或 `requirements.yaml` 文件。
+
 ## 安装
 由于 Helm V2 版本必须在 Kubernetes 集群中安装一个 Tiller 服务进行通信，这样大大降低了其安全性和可用性，所以在 V3 版本中移除了服务端，采用了通用的 Kubernetes CRD 资源来进行管理，这样就只需要连接上 Kubernetes 即可，而且 V3 版本已经发布了稳定版
 
-这里使用的是helm v3版本
+这里使用的是helm v3版本,[链接](https://github.com/helm/helm/releases)
+
+根据kubernetes 版本选择安装合适的helm 版本，这里使用二进制的方式进行安装，安装v3.10.0 版本
+```shell
+# 1. 下载安装包
+$ wget https://get.helm.sh/helm-v3.10.0-linux-amd64.tar.gz
+# 2. 解压
+$ tar -zxvf helm-v3.10.0-linux-amd64.tar.gz
+# 3. move
+$ mv linux-amd64/helm /usr/local/bin/helm
+
+```
+
+
 ## 示例
 Helm 其实就是读取的 kubeconfig 文件来访问集群的。
 
@@ -27,7 +90,7 @@ Helm 其实就是读取的 kubeconfig 文件来访问集群的。
 ```shell
 # 查看版本
 $ helm version
-version.BuildInfo{Version:"v3.8.1", GitCommit:"5cb9af4b1b271d11d7a97a71df3ac337dd94ad37", GitTreeState:"clean", GoVersion:"go1.17.5"}
+version.BuildInfo{Version:"v3.10.0", GitCommit:"ce66412a723e4d89555dc67217607c6579ffcb21", GitTreeState:"clean", GoVersion:"go1.18.6"}
 # 添加一个 chart 仓库
 $ helm repo add stable http://mirror.azure.cn/kubernetes/charts/
 "stable" has been added to your repositories
