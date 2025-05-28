@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>OpenSSH v9.9p2源码离线一键升级 - Less is more</title><meta name="Description" content="晚来天欲雪,能饮一杯无?"><meta property="og:title" content="OpenSSH v9.9p2源码离线一键升级" />
+<meta property="og:description" content="背景 Linux操作系统环境：CentOS 7.x 前言 由于安全扫描不同主机的 OpenSSH 版本不一，有些版本存在安全漏洞问题，现将 OpenSSH 统一升级至v9.9p2 版本，" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://lushuan.gihub.io/openssh_v9.9p2%E6%BA%90%E7%A0%81%E7%A6%BB%E7%BA%BF%E4%B8%80%E9%94%AE%E5%8D%87%E7%BA%A7/" /><meta property="og:image" content="https://lushuan.gihub.io/images/avatar.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2025-02-21T12:06:37+08:00" />
+<meta property="article:modified_time" content="2025-06-26T12:06:37+08:00" /><meta property="og:site_name" content="我的网站" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://lushuan.gihub.io/images/avatar.png"/>
+
+<meta name="twitter:title" content="OpenSSH v9.9p2源码离线一键升级"/>
+<meta name="twitter:description" content="背景 Linux操作系统环境：CentOS 7.x 前言 由于安全扫描不同主机的 OpenSSH 版本不一，有些版本存在安全漏洞问题，现将 OpenSSH 统一升级至v9.9p2 版本，"/>
+<meta name="application-name" content="我的网站">
+<meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/images/avatar.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://lushuan.gihub.io/openssh_v9.9p2%E6%BA%90%E7%A0%81%E7%A6%BB%E7%BA%BF%E4%B8%80%E9%94%AE%E5%8D%87%E7%BA%A7/" /><link rel="prev" href="https://lushuan.gihub.io/linux%E7%B3%BB%E7%BB%9Fnvidia%E9%A9%B1%E5%8A%A8%E9%83%A8%E7%BD%B2/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "OpenSSH v9.9p2源码离线一键升级",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/lushuan.gihub.io\/openssh_v9.9p2%E6%BA%90%E7%A0%81%E7%A6%BB%E7%BA%BF%E4%B8%80%E9%94%AE%E5%8D%87%E7%BA%A7\/"
+        },"genre": "posts","keywords": "OpenSSH","wordcount":  1995 ,
+        "url": "https:\/\/lushuan.gihub.io\/openssh_v9.9p2%E6%BA%90%E7%A0%81%E7%A6%BB%E7%BA%BF%E4%B8%80%E9%94%AE%E5%8D%87%E7%BA%A7\/","datePublished": "2025-02-21T12:06:37+08:00","dateModified": "2025-06-26T12:06:37+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "lushuan"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Less is more"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Less is more</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 归档 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/" title="About"> 关于 </a><a class="menu-item" href="/friends/" title="friends"> 友链 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Less is more"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Less is more</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">归档</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="About">关于</a><a class="menu-item" href="/friends/" title="friends">友链</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content always-active" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">OpenSSH v9.9p2源码离线一键升级</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/openssh/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>OpenSSH</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2025-02-21">2025-02-21</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 1995 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 4 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#背景">背景</a></li>
+    <li><a href="#相关安装包">相关安装包</a></li>
+    <li><a href="#升级-openssl">升级 OpenSSL</a>
+      <ul>
+        <li><a href="#卸载旧版本-openssl可选">卸载旧版本 OpenSSL(可选)</a></li>
+        <li><a href="#安装-openssl-v111w">安装 OpenSSL v1.1.1w</a></li>
+        <li><a href="#验证">验证</a></li>
+      </ul>
+    </li>
+    <li><a href="#升级-openssh-至-v99p2">升级 OpenSSH 至 v9.9p2</a>
+      <ul>
+        <li><a href="#查看当前版本">查看当前版本</a></li>
+        <li><a href="#升级前先备份">升级前先备份</a></li>
+        <li><a href="#卸载旧版openssh">卸载旧版OpenSSH</a></li>
+        <li><a href="#openssh-离线升级一键脚本v99p2">OpenSSH 离线升级一键脚本（v9.9p2）</a></li>
+        <li><a href="#执行">执行</a></li>
+        <li><a href="#验证-1">验证</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="背景">背景</h2>
+<ul>
+<li>Linux操作系统环境：CentOS 7.x</li>
+</ul>
+<div class="details admonition info open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-info-circle fa-fw" aria-hidden="true"></i>前言<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content"><p>由于安全扫描不同主机的 OpenSSH 版本不一，有些版本存在安全漏洞问题，现将 OpenSSH 统一升级至v9.9p2 版本，这里记录下整个操作的过程。</p>
+<p>如果 OpenSSL 相对版本较低，这里建议先将OpenSS版本升级至OpenSSL 1.1.1w  11 Sep 2023，然后再升级 OpenSSH v9.9p2,如果你的主机当前的OpenSSH 版本为v9.9p1，则同样建议升级至v9.9p2，因为v9.9p1 含有两个中危漏洞，OpenSSH 安全漏洞(CVE-2025-26465 ) 和 OpenSSH 资源管理错误漏洞(CVE-2025-26466 )，此漏洞同样在 v9.9p2 版本进行了修复。</p>
+</div>
+        </div>
+    </div>
+<h2 id="相关安装包">相关安装包</h2>
+<div class="details admonition quote open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-quote-right fa-fw" aria-hidden="true"></i>地址<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content">openssh下载地址：http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/<br>
+openssl下载地址：https://www.openssl.org/source/<br>
+zlib下载地址：http://www.zlib.net/<br>
+openssl-1.1.1w: <a href="https://www.openssl.org/source/openssl-1.1.1w.tar.gz" target="_blank" rel="noopener noreffer ">https://www.openssl.org/source/openssl-1.1.1w.tar.gz</a></div>
+        </div>
+    </div>
+<h2 id="升级-openssl">升级 OpenSSL</h2>
+<p>查找openssl相关目录，然后备份</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ whereis openssl
+</span></span><span class="line"><span class="cl"><span class="c1">#openssl: /usr/bin/openssl /usr/lib64/openssl /usr/include/openssl /usr/share/man/man1/openssl.1ssl.gz</span>
+</span></span><span class="line"><span class="cl">$ cp -rp /usr/bin/openssl  /usr/bin/openssl<span class="sb">`</span>date <span class="s1">&#39;+%Y%m%d&#39;</span><span class="sb">`</span>
+</span></span><span class="line"><span class="cl">$ cp -rp /usr/lib64/openssl /usr/lib64/openssl<span class="sb">`</span>date <span class="s1">&#39;+%Y%m%d&#39;</span><span class="sb">`</span>
+</span></span><span class="line"><span class="cl">$ cp -rp /usr/include/openssl /usr/include/openssl<span class="sb">`</span>date <span class="s1">&#39;+%Y%m%d&#39;</span><span class="sb">`</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="卸载旧版本-openssl可选">卸载旧版本 OpenSSL(可选)</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ yum -y remove openssl
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="安装-openssl-v111w">安装 OpenSSL v1.1.1w</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ wget --inet4-only  https://www.openssl.org/source/openssl-1.1.1w.tar.gz
+</span></span><span class="line"><span class="cl">$ tar -xzvf openssl-1.1.1w.tar.gz
+</span></span><span class="line"><span class="cl">$ cd openssl-1.1.1w/
+</span></span><span class="line"><span class="cl">#目录选择/usr，因为系统最初始的openssl的目录就是/usr，这样可以省去软连接、更新链接库的问题
+</span></span><span class="line"><span class="cl">$ ./config --prefix=/usr
+</span></span><span class="line"><span class="cl">#如果不加prefix ,openssl的默认路径如下
+</span></span><span class="line"><span class="cl">#Bin：  /usr/local/bin/openssl
+</span></span><span class="line"><span class="cl">#include库  ：/usr/local/include/openssl
+</span></span><span class="line"><span class="cl">#lib库：/usr/local/lib64/
+</span></span><span class="line"><span class="cl">#engine库：/usr/lib64/openssl/engines
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">#编译安装,这两步相对会耗费点时间
+</span></span><span class="line"><span class="cl">$ make
+</span></span><span class="line"><span class="cl">$ make install
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="验证">验证</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ whereis openssl
+</span></span><span class="line"><span class="cl">openssl: /usr/bin/openssl /usr/include/openssl /usr/local/openssl /usr/share/man/man1/openssl.1ssl.gz /usr/share/man/man1/openssl.1ossl3.gz /usr/share/man/man1/openssl.1
+</span></span><span class="line"><span class="cl">$ openssl version
+</span></span><span class="line"><span class="cl">OpenSSL 1.1.1w  11 Sep 2023
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="升级-openssh-至-v99p2">升级 OpenSSH 至 v9.9p2</h2>
+<h3 id="查看当前版本">查看当前版本</h3>
+<p>不同环境的ssh 版本会有所不同</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ ssh -V
+</span></span><span class="line"><span class="cl">OpenSSH_8.0p1, OpenSSL 1.1.1k  FIPS <span class="m">25</span> Mar <span class="m">2021</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="升级前先备份">升级前先备份</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">#通过whereis ssh sshd找出bin文件、源文件，然后备份(man手册不需要备份)
+</span></span><span class="line"><span class="cl">$ whereis ssh sshd
+</span></span><span class="line"><span class="cl">#ssh: /usr/bin/ssh /etc/ssh /usr/share/man/man1/ssh.1.gz
+</span></span><span class="line"><span class="cl">#sshd: /usr/sbin/sshd /usr/share/man/man8/sshd.8.gz
+</span></span><span class="line"><span class="cl">#cp -rp /etc/ssh /etc/ssh`date &#39;+%Y%m%d%H%M%S&#39;`
+</span></span><span class="line"><span class="cl">$ cp -rp /etc/ssh /etc/ssh`date &#39;+%Y%m%d&#39;`
+</span></span><span class="line"><span class="cl">$ cp -p /usr/bin/ssh /usr/bin/ssh`date &#39;+%Y%m%d&#39;`
+</span></span><span class="line"><span class="cl">$ cp -p /usr/sbin/sshd /usr/sbin/sshd`date &#39;+%Y%m%d%&#39;`
+</span></span><span class="line"><span class="cl">$ cp -p /etc/ssh/sshd_config /etc/ssh/sshd_config`date &#39;+%Y%m%d&#39;`
+</span></span><span class="line"><span class="cl">#备份pam验证文件
+</span></span><span class="line"><span class="cl">$ cp -p /etc/pam.d/sshd /etc/pam.d/sshd`date &#39;+%Y%m%d&#39;`
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="卸载旧版openssh">卸载旧版OpenSSH</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">yum -y remove openssh
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="openssh-离线升级一键脚本v99p2">OpenSSH 离线升级一键脚本（v9.9p2）</h3>
+<p><code>vi upgrade_openssh.sh</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span><span class="lnt">123
+</span><span class="lnt">124
+</span><span class="lnt">125
+</span><span class="lnt">126
+</span><span class="lnt">127
+</span><span class="lnt">128
+</span><span class="lnt">129
+</span><span class="lnt">130
+</span><span class="lnt">131
+</span><span class="lnt">132
+</span><span class="lnt">133
+</span><span class="lnt">134
+</span><span class="lnt">135
+</span><span class="lnt">136
+</span><span class="lnt">137
+</span><span class="lnt">138
+</span><span class="lnt">139
+</span><span class="lnt">140
+</span><span class="lnt">141
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="cp">#!/bin/bash
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="c1"># OpenSSH 离线升级一键脚本（v9.9p2）</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 检查执行权限</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="o">[[</span> <span class="s2">&#34;</span><span class="k">$(</span>whoami<span class="k">)</span><span class="s2">&#34;</span> !<span class="o">=</span> <span class="s2">&#34;root&#34;</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">echo</span> -e <span class="s2">&#34;\033[31m错误：必须使用 root 用户执行此脚本！\033[0m&#34;</span> &gt;<span class="p">&amp;</span><span class="m">2</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">exit</span> <span class="m">1</span>
+</span></span><span class="line"><span class="cl"><span class="k">fi</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 环境检查,可自行调整，并非CentOS Linux 7.x 皆可</span>
+</span></span><span class="line"><span class="cl">check_environment<span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">echo</span> -e <span class="s2">&#34;\n\033[34m[1/7] 正在检查系统环境...\033[0m&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> ! grep -q <span class="s2">&#34;CentOS Linux release 7.9&#34;</span> /etc/redhat-release<span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">echo</span> -e <span class="s2">&#34;\033[31m错误：仅支持 CentOS 7 操作系统！\033[0m&#34;</span>
+</span></span><span class="line"><span class="cl">       <span class="c1"># exit 1</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">[</span> <span class="s2">&#34;</span><span class="k">$(</span>uname -m<span class="k">)</span><span class="s2">&#34;</span> !<span class="o">=</span> <span class="s2">&#34;x86_64&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">echo</span> -e <span class="s2">&#34;\033[31m错误：仅支持 64 位系统！\033[0m&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">exit</span> <span class="m">1</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">echo</span> -e <span class="s2">&#34;\033[32m环境检查通过\033[0m&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 安装依赖包</span>
+</span></span><span class="line"><span class="cl">install_dependencies<span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">echo</span> -e <span class="s2">&#34;\n\033[34m[3/7] 安装基础依赖...\033[0m&#34;</span>
+</span></span><span class="line"><span class="cl">    mkdir  /opt/yilai
+</span></span><span class="line"><span class="cl">    <span class="nb">cd</span> /opt/yilai
+</span></span><span class="line"><span class="cl">    tar -xvf yilai.tar.gz
+</span></span><span class="line"><span class="cl">    <span class="nb">cd</span> yilai
+</span></span><span class="line"><span class="cl">    rpm -ivh *.rpm --nodeps --force
+</span></span><span class="line"><span class="cl">    <span class="nb">echo</span> -e <span class="s2">&#34;\033[32m依赖包安装完成\033[0m&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 编译安装 zlib</span>
+</span></span><span class="line"><span class="cl">build_zlib<span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">echo</span> -e <span class="s2">&#34;\n\033[34m[4/7] 编译安装 zlib...\033[0m&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">cd</span> /opt
+</span></span><span class="line"><span class="cl">    tar -xvf zlib-1.3.1.tar.gz
+</span></span><span class="line"><span class="cl">    <span class="nb">cd</span> zlib-1.3.1
+</span></span><span class="line"><span class="cl">    ./configure --prefix<span class="o">=</span>/usr/local/zlib
+</span></span><span class="line"><span class="cl">    make <span class="o">&amp;&amp;</span> make install
+</span></span><span class="line"><span class="cl">    <span class="nb">echo</span> <span class="s1">&#39;/usr/local/zlib/lib&#39;</span> &gt;&gt; /etc/ld.so.conf
+</span></span><span class="line"><span class="cl">    ldconfig -v
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 编译安装 OpenSSL</span>
+</span></span><span class="line"><span class="cl">build_openssl<span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">echo</span> -e <span class="s2">&#34;\n\033[34m[5/7] 编译安装 OpenSSL...\033[0m&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">cd</span> /opt
+</span></span><span class="line"><span class="cl">    tar -xvf openssl-1.1.1o.tar.gz
+</span></span><span class="line"><span class="cl">    <span class="nb">cd</span> openssl-1.1.1o
+</span></span><span class="line"><span class="cl">    ./config --prefix<span class="o">=</span>/usr/local/ssl -d shared
+</span></span><span class="line"><span class="cl">    make <span class="o">&amp;&amp;</span> make install
+</span></span><span class="line"><span class="cl">    echo<span class="s1">&#39;/usr/local/ssl/lib&#39;</span> &gt;&gt; /etc/ld.so.conf
+</span></span><span class="line"><span class="cl">    ldconfig -v
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 安装 OpenSSH</span>
+</span></span><span class="line"><span class="cl">install_openssh<span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">echo</span> -e <span class="s2">&#34;\n\033[34m[6/7] 升级 OpenSSH 到 v9.9p2...\033[0m&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 卸载旧版本</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># rpm -e --nodeps openssh-server openssh openssh-clients 2&gt;/dev/null</span>
+</span></span><span class="line"><span class="cl">    yum -y remove openssh
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># 编译安装</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">cd</span> /opt
+</span></span><span class="line"><span class="cl">    wget --inet4-only  https://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-9.9p2.tar.gz
+</span></span><span class="line"><span class="cl">    tar -xvf openssh-9.9p2.tar.gz
+</span></span><span class="line"><span class="cl">    <span class="nb">cd</span> openssh-9.9p2
+</span></span><span class="line"><span class="cl">    ./configure --prefix<span class="o">=</span>/usr/local/openssh <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>        --with-zlib<span class="o">=</span>/usr/local/zlib <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>        --with-ssl-dir<span class="o">=</span>/usr/local/ssl <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>        --without-openssl-header-check
+</span></span><span class="line"><span class="cl">    make <span class="o">&amp;&amp;</span> make install
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 配置文件</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#检查是否有PasswordAuthentication yes，若没有则需进行添加</span>
+</span></span><span class="line"><span class="cl">	cat /etc/ssh/sshd_config <span class="p">|</span> grep PasswordAuthentication
+</span></span><span class="line"><span class="cl">    <span class="nb">echo</span> <span class="s1">&#39;PermitRootLogin yes&#39;</span> &gt;&gt; /usr/local/openssh/etc/sshd_config
+</span></span><span class="line"><span class="cl">    <span class="nb">echo</span> <span class="s1">&#39;PubkeyAuthentication yes&#39;</span> &gt;&gt; /usr/local/openssh/etc/sshd_config
+</span></span><span class="line"><span class="cl">    <span class="nb">echo</span> <span class="s1">&#39;PasswordAuthentication yes&#39;</span> &gt;&gt; /usr/local/openssh/etc/sshd_config
+</span></span><span class="line"><span class="cl">    <span class="nb">echo</span> <span class="s1">&#39;UsePAM yes&#39;</span> &gt;&gt; /usr/local/openssh/etc/sshd_config
+</span></span><span class="line"><span class="cl">   
+</span></span><span class="line"><span class="cl">    <span class="nb">echo</span> <span class="s1">&#39;HostKeyAlgorithms ssh-rsa,ssh-dss &#39;</span> &gt;&gt; /etc/ssh/sshd_config
+</span></span><span class="line"><span class="cl">    cp /usr/local/openssh/etc/sshd_config /etc/ssh/sshd_config
+</span></span><span class="line"><span class="cl">    <span class="c1"># 还原备份的sshd_config(二选一)</span>
+</span></span><span class="line"><span class="cl">	<span class="c1"># /usr/bin/cp -fp  /etc/ssh/sshd_config`date &#39;+%Y%m%d&#39;` /etc/ssh/sshd_config</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># 替换系统命令（修复关键点）</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">[</span> -f /usr/sbin/sshd <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">        mv /usr/sbin/sshd /usr/sbin/sshd.bak
+</span></span><span class="line"><span class="cl">    <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">    cp -f /usr/local/openssh/sbin/sshd /usr/sbin/sshd  <span class="c1"># 使用新编译的二进制文件</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 修复权限</span>
+</span></span><span class="line"><span class="cl">    chmod <span class="m">755</span> /usr/sbin/sshd
+</span></span><span class="line"><span class="cl">    cp /usr/local/openssh/bin/ssh-keygen /usr/bin/ssh-keygen
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 复制 ssh 命令</span>
+</span></span><span class="line"><span class="cl">    cp /usr/local/openssh/bin/ssh /usr/bin/ssh
+</span></span><span class="line"><span class="cl">    chmod <span class="m">755</span> /usr/bin/ssh
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 启动脚本</span>
+</span></span><span class="line"><span class="cl">    cp -p contrib/redhat/sshd.init /etc/init.d/sshd
+</span></span><span class="line"><span class="cl">    chmod +x /etc/init.d/sshd
+</span></span><span class="line"><span class="cl">    chkconfig --add sshd
+</span></span><span class="line"><span class="cl">    chkconfig sshd on
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 最终验证</span>
+</span></span><span class="line"><span class="cl">final_check<span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">echo</span> -e <span class="s2">&#34;\n\033[34m[7/7] 执行最终检查...\033[0m&#34;</span>
+</span></span><span class="line"><span class="cl">    systemctl daemon-reload
+</span></span><span class="line"><span class="cl">    systemctl restart sshd
+</span></span><span class="line"><span class="cl">    ssh -V 2&gt;<span class="p">&amp;</span><span class="m">1</span> <span class="p">|</span> grep -q <span class="s2">&#34;OpenSSH_9.9p2&#34;</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">[</span> <span class="nv">$?</span> -eq <span class="m">0</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">echo</span> -e <span class="s2">&#34;\033[32m升级成功！当前SSH版本：</span><span class="k">$(</span>ssh -V 2&gt;<span class="p">&amp;</span>1<span class="k">)</span><span class="s2">\033[0m&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">echo</span> -e <span class="s2">&#34;\033[33m警告：请通过新SSH端口连接确认无误后，再关闭Telnet服务！\033[0m&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">echo</span> -e <span class="s2">&#34;\033[31m错误：升级失败，请检查日志！\033[0m&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">exit</span> <span class="m">1</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fi</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 主执行流程,建议分步执行</span>
+</span></span><span class="line"><span class="cl">main<span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    check_environment
+</span></span><span class="line"><span class="cl">    install_dependencies
+</span></span><span class="line"><span class="cl">    build_zlib
+</span></span><span class="line"><span class="cl">    build_openssl
+</span></span><span class="line"><span class="cl">    install_openssh
+</span></span><span class="line"><span class="cl">    final_check
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 执行主函数</span>
+</span></span><span class="line"><span class="cl">main
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="执行">执行</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ chmod +x upgrade_openssh.sh
+</span></span><span class="line"><span class="cl">$ ./upgrade_openssh.sh
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="验证-1">验证</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ ssh -V  # 应显示 &#34;OpenSSH_9.9p2&#34;
+</span></span><span class="line"><span class="cl">OpenSSH_9.9p2, OpenSSL 1.1.1j  16 Feb 2021
+</span></span><span class="line"><span class="cl">$ systemctl status sshd
+</span></span></code></pre></td></tr></table>
+</div>
+</div></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2025-06-26</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://lushuan.gihub.io/openssh_v9.9p2%E6%BA%90%E7%A0%81%E7%A6%BB%E7%BA%BF%E4%B8%80%E9%94%AE%E5%8D%87%E7%BA%A7/" data-title="OpenSSH v9.9p2源码离线一键升级" data-via="xxxx" data-hashtags="OpenSSH"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://lushuan.gihub.io/openssh_v9.9p2%E6%BA%90%E7%A0%81%E7%A6%BB%E7%BA%BF%E4%B8%80%E9%94%AE%E5%8D%87%E7%BA%A7/" data-hashtag="OpenSSH"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="https://lushuan.gihub.io/openssh_v9.9p2%E6%BA%90%E7%A0%81%E7%A6%BB%E7%BA%BF%E4%B8%80%E9%94%AE%E5%8D%87%E7%BA%A7/" data-title="OpenSSH v9.9p2源码离线一键升级"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="https://lushuan.gihub.io/openssh_v9.9p2%E6%BA%90%E7%A0%81%E7%A6%BB%E7%BA%BF%E4%B8%80%E9%94%AE%E5%8D%87%E7%BA%A7/" data-title="OpenSSH v9.9p2源码离线一键升级"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://lushuan.gihub.io/openssh_v9.9p2%E6%BA%90%E7%A0%81%E7%A6%BB%E7%BA%BF%E4%B8%80%E9%94%AE%E5%8D%87%E7%BA%A7/" data-title="OpenSSH v9.9p2源码离线一键升级"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/openssh/">OpenSSH</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/linux%E7%B3%BB%E7%BB%9Fnvidia%E9%A9%B1%E5%8A%A8%E9%83%A8%E7%BD%B2/" class="prev" rel="prev" title="Linux系统Nvidia驱动部署"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Linux系统Nvidia驱动部署</a></div>
+</div>
+<div id="comments"><div id="gitalk" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://github.com/gitalk/gitalk"></a>Gitalk</a>.
+            </noscript><div id="giscus" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://giscus.app">Giscus</a>.
+            </noscript></div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">我是有底线的</div><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.114.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2025</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">lushuan</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/gitalk/gitalk.min.css"><link rel="stylesheet" href="/lib/lightgallery/css/lightgallery-bundle.min.css"><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/gitalk/gitalk.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/lightgallery/lightgallery.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/zoom/lg-zoom.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{"giscus":{"category":"Announcements","categoryId":"DIC_kwDOMOWcic4Coqlk","darkTheme":"dark","emitMetadata":"0","inputPosition":"bottom","lang":"zh-CN","lazyLoading":false,"lightTheme":"light","mapping":"pathname","reactionsEnabled":"1","repo":"lushuan/lushuan.github.io","repoId":"R_kgDOMOWciQ"},"gitalk":{"admin":["lushuan"],"clientID":"Ov23liSh0yG2wy6B7XP1","clientSecret":"7184a8df973267af95c92ddeb27789417ba82469","id":"2025-02-21T12:06:37+08:00","owner":"lushuan","repo":"lushuan.github.io","title":"OpenSSH v9.9p2源码离线一键升级"}},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"lightgallery":true,"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
