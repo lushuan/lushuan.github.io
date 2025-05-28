@@ -4,7 +4,15 @@
         <link>https://lushuan.gihub.io/tags/</link>
         <description>Tags - 标签 - Less is more</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
-            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Tue, 19 Nov 2024 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/tags/" rel="self" type="application/rss+xml" /><item>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Sat, 11 Jan 2025 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/tags/" rel="self" type="application/rss+xml" /><item>
+    <title>GPU</title>
+    <link>https://lushuan.gihub.io/tags/gpu/</link>
+    <pubDate>Sat, 11 Jan 2025 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>https://lushuan.gihub.io/tags/gpu/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
     <title>linux</title>
     <link>https://lushuan.gihub.io/tags/linux/</link>
     <pubDate>Tue, 19 Nov 2024 12:06:37 &#43;0800</pubDate>
@@ -74,14 +82,6 @@
     <pubDate>Sat, 17 Feb 2024 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
     <guid>https://lushuan.gihub.io/tags/english-article/</guid>
-    <description><![CDATA[]]></description>
-</item>
-<item>
-    <title>Kubernetes排障</title>
-    <link>https://lushuan.gihub.io/tags/kubernetes%E6%8E%92%E9%9A%9C/</link>
-    <pubDate>Sat, 13 Jan 2024 12:06:37 &#43;0800</pubDate>
-    <author>lushuan</author>
-    <guid>https://lushuan.gihub.io/tags/kubernetes%E6%8E%92%E9%9A%9C/</guid>
     <description><![CDATA[]]></description>
 </item>
 </channel>

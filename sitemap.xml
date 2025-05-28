@@ -2,13 +2,16 @@
     xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
     xmlns:xhtml="http://www.w3.org/1999/xhtml"
     ><url>
-            <loc>https://lushuan.gihub.io/categories/</loc><lastmod>2024-12-26T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
-            <loc>https://lushuan.gihub.io/</loc><lastmod>2024-12-26T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
+            <loc>https://lushuan.gihub.io/categories/</loc><lastmod>2025-06-26T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1.4</priority></url><url>
+            <loc>https://lushuan.gihub.io/tags/gpu/</loc><lastmod>2025-06-26T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1.4</priority></url><url>
+            <loc>https://lushuan.gihub.io/categories/gpu/</loc><lastmod>2025-06-26T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1.4</priority></url><url>
+            <loc>https://lushuan.gihub.io/</loc><lastmod>2025-06-26T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1.4</priority></url><url>
+            <loc>https://lushuan.gihub.io/linux%E7%B3%BB%E7%BB%9Fnvidia%E9%A9%B1%E5%8A%A8%E9%83%A8%E7%BD%B2/</loc><lastmod>2025-06-26T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1.4</priority></url><url>
+            <loc>https://lushuan.gihub.io/posts/</loc><lastmod>2025-06-26T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1.4</priority></url><url>
+            <loc>https://lushuan.gihub.io/tags/</loc><lastmod>2025-06-26T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1.4</priority></url><url>
             <loc>https://lushuan.gihub.io/tags/linux/</loc><lastmod>2024-11-20T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>https://lushuan.gihub.io/categories/linux/</loc><lastmod>2024-11-20T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>https://lushuan.gihub.io/linux%E9%98%B2%E7%81%AB%E5%A2%99iptables%E8%AF%A6%E8%A7%A3/</loc><lastmod>2024-11-20T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
-            <loc>https://lushuan.gihub.io/posts/</loc><lastmod>2024-12-26T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
-            <loc>https://lushuan.gihub.io/tags/</loc><lastmod>2024-12-26T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>https://lushuan.gihub.io/tags/%E9%98%B2%E7%81%AB%E5%A2%99/</loc><lastmod>2024-11-20T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>https://lushuan.gihub.io/tags/mysql/</loc><lastmod>2024-10-26T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>https://lushuan.gihub.io/categories/mysql/</loc><lastmod>2024-10-26T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
