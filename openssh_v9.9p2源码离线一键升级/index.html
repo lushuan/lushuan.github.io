@@ -27,7 +27,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/lushuan.gihub.io\/openssh_v9.9p2%E6%BA%90%E7%A0%81%E7%A6%BB%E7%BA%BF%E4%B8%80%E9%94%AE%E5%8D%87%E7%BA%A7\/"
-        },"genre": "posts","keywords": "OpenSSH","wordcount":  1992 ,
+        },"genre": "posts","keywords": "OpenSSH","wordcount":  1995 ,
         "url": "https:\/\/lushuan.gihub.io\/openssh_v9.9p2%E6%BA%90%E7%A0%81%E7%A6%BB%E7%BA%BF%E4%B8%80%E9%94%AE%E5%8D%87%E7%BA%A7\/","datePublished": "2025-02-21T12:06:37+08:00","dateModified": "2025-06-26T12:06:37+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -115,7 +115,7 @@
             <div class="toc-content always-active" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">OpenSSH v9.9p2源码离线一键升级</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/openssh/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>OpenSSH</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2025-02-21">2025-02-21</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 1992 字&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2025-02-21">2025-02-21</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 1995 字&nbsp;
                 <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 4 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  data-kept="">
                 <div class="details-summary toc-title">
@@ -126,8 +126,13 @@
   <ul>
     <li><a href="#背景">背景</a></li>
     <li><a href="#相关安装包">相关安装包</a></li>
-    <li><a href="#升级-openssl">升级 OpenSSL</a></li>
-    <li><a href="#卸载-openssl可选">卸载 OpenSSL(可选)</a></li>
+    <li><a href="#升级-openssl">升级 OpenSSL</a>
+      <ul>
+        <li><a href="#卸载旧版本-openssl可选">卸载旧版本 OpenSSL(可选)</a></li>
+        <li><a href="#安装-openssl-v111w">安装 OpenSSL v1.1.1w</a></li>
+        <li><a href="#验证">验证</a></li>
+      </ul>
+    </li>
     <li><a href="#升级-openssh-至-v99p2">升级 OpenSSH 至 v9.9p2</a>
       <ul>
         <li><a href="#查看当前版本">查看当前版本</a></li>
@@ -135,7 +140,7 @@
         <li><a href="#卸载旧版openssh">卸载旧版OpenSSH</a></li>
         <li><a href="#openssh-离线升级一键脚本v99p2">OpenSSH 离线升级一键脚本（v9.9p2）</a></li>
         <li><a href="#执行">执行</a></li>
-        <li><a href="#验证">验证</a></li>
+        <li><a href="#验证-1">验证</a></li>
       </ul>
     </li>
   </ul>
@@ -184,7 +189,7 @@ openssl-1.1.1w: <a href="https://www.openssl.org/source/openssl-1.1.1w.tar.gz" t
 </span></span><span class="line"><span class="cl">$ cp -rp /usr/include/openssl /usr/include/openssl<span class="sb">`</span>date <span class="s1">&#39;+%Y%m%d&#39;</span><span class="sb">`</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="卸载-openssl可选">卸载 OpenSSL(可选)</h2>
+</div><h3 id="卸载旧版本-openssl可选">卸载旧版本 OpenSSL(可选)</h3>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -193,7 +198,7 @@ openssl-1.1.1w: <a href="https://www.openssl.org/source/openssl-1.1.1w.tar.gz" t
 <pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ yum -y remove openssl
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>安装 OpenSSL v1.1.1w</p>
+</div><h3 id="安装-openssl-v111w">安装 OpenSSL v1.1.1w</h3>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -228,7 +233,7 @@ openssl-1.1.1w: <a href="https://www.openssl.org/source/openssl-1.1.1w.tar.gz" t
 </span></span><span class="line"><span class="cl">$ make install
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>验证</p>
+</div><h3 id="验证">验证</h3>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -595,7 +600,7 @@ openssl-1.1.1w: <a href="https://www.openssl.org/source/openssl-1.1.1w.tar.gz" t
 </span></span><span class="line"><span class="cl">$ ./upgrade_openssh.sh
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="验证">验证</h3>
+</div><h3 id="验证-1">验证</h3>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
