@@ -21,6 +21,22 @@
     <description><![CDATA[]]></description>
 </item>
 <item>
+    <title>MySQL</title>
+    <link>https://lushuan.gihub.io/tags/mysql/</link>
+    <pubDate>Tue, 17 Dec 2024 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>https://lushuan.gihub.io/tags/mysql/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
+    <title>XtraBackup</title>
+    <link>https://lushuan.gihub.io/tags/xtrabackup/</link>
+    <pubDate>Tue, 17 Dec 2024 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>https://lushuan.gihub.io/tags/xtrabackup/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
     <title>linux</title>
     <link>https://lushuan.gihub.io/tags/linux/</link>
     <pubDate>Tue, 19 Nov 2024 12:06:37 &#43;0800</pubDate>
@@ -34,14 +50,6 @@
     <pubDate>Tue, 19 Nov 2024 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
     <guid>https://lushuan.gihub.io/tags/%E9%98%B2%E7%81%AB%E5%A2%99/</guid>
-    <description><![CDATA[]]></description>
-</item>
-<item>
-    <title>MySQL</title>
-    <link>https://lushuan.gihub.io/tags/mysql/</link>
-    <pubDate>Wed, 16 Oct 2024 12:06:37 &#43;0800</pubDate>
-    <author>lushuan</author>
-    <guid>https://lushuan.gihub.io/tags/mysql/</guid>
     <description><![CDATA[]]></description>
 </item>
 <item>
@@ -74,14 +82,6 @@
     <pubDate>Thu, 20 Jun 2024 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
     <guid>https://lushuan.gihub.io/tags/kubernetes/</guid>
-    <description><![CDATA[]]></description>
-</item>
-<item>
-    <title>DevOps</title>
-    <link>https://lushuan.gihub.io/tags/devops/</link>
-    <pubDate>Sat, 17 Feb 2024 12:06:37 &#43;0800</pubDate>
-    <author>lushuan</author>
-    <guid>https://lushuan.gihub.io/tags/devops/</guid>
     <description><![CDATA[]]></description>
 </item>
 </channel>

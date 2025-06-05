@@ -23,6 +23,14 @@
     <description><![CDATA[背景 部署通义千问大模型qwen2.5-7b-awq基础环境预安装 服务器配置 操作环境：openEuler 22.03 (欧拉-LTS-SP1) cpu: 40c memory: 186G disk: 2T]]></description>
 </item>
 <item>
+    <title>XtraDB Backup（Percona XtraBackup）备份MySQL详细介绍</title>
+    <link>https://lushuan.gihub.io/xtrabackup/</link>
+    <pubDate>Tue, 17 Dec 2024 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>https://lushuan.gihub.io/xtrabackup/</guid>
+    <description><![CDATA[一、XtraDB Backup（Percona XtraBackup）介绍 MySQL冷备、mysqldump、MySQL热拷贝都无法实现对数据库]]></description>
+</item>
+<item>
     <title>Linux 防火墙iptables详解</title>
     <link>https://lushuan.gihub.io/linux%E9%98%B2%E7%81%AB%E5%A2%99iptables%E8%AF%A6%E8%A7%A3/</link>
     <pubDate>Tue, 19 Nov 2024 12:06:37 &#43;0800</pubDate>
@@ -77,16 +85,6 @@
     <author>lushuan</author>
     <guid>https://lushuan.gihub.io/%E4%B8%80%E6%96%87%E4%BA%86%E8%A7%A3kubernetes-rbac/</guid>
     <description><![CDATA[前言 在了解RBAC 之前先了解一下Kubernetes API 对象，RBAC 最终操作的对象还是Kubernetes API 对象，本质还是对Kubernet]]></description>
-</item>
-<item>
-    <title>10 Must-Know Free DevOps Tools for Professional Success</title>
-    <link>https://lushuan.gihub.io/10-must-know-free-devops-tools-for-professional-success/</link>
-    <pubDate>Sat, 17 Feb 2024 12:06:37 &#43;0800</pubDate>
-    <author>lushuan</author>
-    <guid>https://lushuan.gihub.io/10-must-know-free-devops-tools-for-professional-success/</guid>
-    <description><![CDATA[devopsIn recent years, DevOps has emerged as a critical discipline that merges software development (Dev) with IT operations (Ops). It aims to shorten the development lifecycle and provide continuous delivery with high software quality.
-As the demand for faster development cycles and more reliable software increases, professionals in the field constantly seek tools and practices to enhance their efficiency and effectiveness.
-Enter the realm of free and open-source tools – a goldmine for DevOps practitioners looking to stay ahead of the curve.]]></description>
 </item>
 </channel>
 </rss>
