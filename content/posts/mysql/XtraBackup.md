@@ -503,4 +503,5 @@ $ source /etc/profile
 1. [XtraDB Backup 官网](https://www.percona.com/mysql/software/percona-xtrabackup)
 2. [Percona Operator for MySQL based on Percona Server for MySQL](https://docs.percona.com/percona-server/5.7/)
 3. [XtraDB Backup 下载](https://www.percona.com/downloads)
-4. [autoxtrabackup](https://github.com/gstorme/autoxtrabackup/tree/master) 开源的xtrabackup自动备份脚本
+4. [github autoxtrabackup script](https://github.com/gstorme/autoxtrabackup/tree/master) 
+5. [gitee autoxtrabackup script](https://gitee.com/lu_shuan/autoxtrabackup) 
