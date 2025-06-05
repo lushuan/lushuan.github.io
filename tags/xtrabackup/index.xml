@@ -1,0 +1,16 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>XtraBackup - 标签 - Less is more</title>
+        <link>https://lushuan.gihub.io/tags/xtrabackup/</link>
+        <description>XtraBackup - 标签 - Less is more</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Tue, 17 Dec 2024 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/tags/xtrabackup/" rel="self" type="application/rss+xml" /><item>
+    <title>XtraDB Backup（Percona XtraBackup）备份MySQL详细介绍</title>
+    <link>https://lushuan.gihub.io/xtrabackup/</link>
+    <pubDate>Tue, 17 Dec 2024 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>https://lushuan.gihub.io/xtrabackup/</guid>
+    <description><![CDATA[一、XtraDB Backup（Percona XtraBackup）介绍 MySQL冷备、mysqldump、MySQL热拷贝都无法实现对数据库]]></description>
+</item>
+</channel>
+</rss>

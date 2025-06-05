@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>XtraDB Backup（Percona XtraBackup）备份MySQL详细介绍 - Less is more</title><meta name="Description" content="晚来天欲雪,能饮一杯无?"><meta property="og:title" content="XtraDB Backup（Percona XtraBackup）备份MySQL详细介绍" />
+<meta property="og:description" content="一、XtraDB Backup（Percona XtraBackup）介绍 MySQL冷备、mysqldump、MySQL热拷贝都无法实现对数据库" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://lushuan.gihub.io/xtrabackup/" /><meta property="og:image" content="https://lushuan.gihub.io/images/avatar.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-12-17T12:06:37+08:00" />
+<meta property="article:modified_time" content="2025-01-26T12:06:37+08:00" /><meta property="og:site_name" content="我的网站" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://lushuan.gihub.io/images/avatar.png"/>
+
+<meta name="twitter:title" content="XtraDB Backup（Percona XtraBackup）备份MySQL详细介绍"/>
+<meta name="twitter:description" content="一、XtraDB Backup（Percona XtraBackup）介绍 MySQL冷备、mysqldump、MySQL热拷贝都无法实现对数据库"/>
+<meta name="application-name" content="我的网站">
+<meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/images/avatar.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://lushuan.gihub.io/xtrabackup/" /><link rel="prev" href="https://lushuan.gihub.io/linux%E9%98%B2%E7%81%AB%E5%A2%99iptables%E8%AF%A6%E8%A7%A3/" /><link rel="next" href="https://lushuan.gihub.io/linux%E7%B3%BB%E7%BB%9Fnvidia%E9%A9%B1%E5%8A%A8%E9%83%A8%E7%BD%B2/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "XtraDB Backup（Percona XtraBackup）备份MySQL详细介绍",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/lushuan.gihub.io\/xtrabackup\/"
+        },"genre": "posts","keywords": "MySQL, XtraBackup","wordcount":  5429 ,
+        "url": "https:\/\/lushuan.gihub.io\/xtrabackup\/","datePublished": "2024-12-17T12:06:37+08:00","dateModified": "2025-01-26T12:06:37+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "lushuan"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Less is more"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Less is more</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 归档 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/" title="About"> 关于 </a><a class="menu-item" href="/friends/" title="friends"> 友链 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Less is more"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Less is more</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">归档</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="About">关于</a><a class="menu-item" href="/friends/" title="friends">友链</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content always-active" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">XtraDB Backup（Percona XtraBackup）备份MySQL详细介绍</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/mysql/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>MySQL</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2024-12-17">2024-12-17</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 5429 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 11 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#一xtradb-backuppercona-xtrabackup介绍">一、XtraDB Backup（Percona XtraBackup）介绍</a>
+      <ul>
+        <li><a href="#xtrabackup-工具介绍">XtraBackup 工具介绍</a></li>
+        <li><a href="#xtrabackup备份流程图">xtrabackup备份流程图</a></li>
+      </ul>
+    </li>
+    <li><a href="#二xtrabackup-与-mysql-的版本对应规则">二、XtraBackup 与 MySQL 的版本对应规则</a>
+      <ul>
+        <li><a href="#1-匹配规则">1. 匹配规则</a>
+          <ul>
+            <li><a href="#关键注意事项">关键注意事项：</a></li>
+          </ul>
+        </li>
+        <li><a href="#2-版本升级与降级策略">2. 版本升级与降级策略</a>
+          <ul>
+            <li><a href="#1-mysql-升级如-57--80">1. MySQL 升级（如 5.7 → 8.0）</a></li>
+            <li><a href="#2-xtrabackup-降级">2. XtraBackup 降级</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#三安装-xtrabackup">三、安装 XtraBackup</a>
+      <ul>
+        <li><a href="#1-安装-xtrabackup">1. 安装 XtraBackup</a>
+          <ul>
+            <li><a href="#1-添加-percona-官方仓库">1. 添加 Percona 官方仓库</a></li>
+            <li><a href="#2-查看可安装的-xtrabackup-版本">2. 查看可安装的 XtraBackup 版本</a></li>
+            <li><a href="#3-安装指定版本">3. 安装指定版本</a></li>
+            <li><a href="#4-验证安装版本">4. 验证安装版本</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#三使用-xtrabackup-进行增量备份及还原">三、使用 XtraBackup 进行增量备份及还原</a>
+      <ul>
+        <li><a href="#1-全量备份">1. 全量备份</a></li>
+        <li><a href="#2-执行全量备份">2. 执行全量备份</a>
+          <ul>
+            <li><a href="#2-备份文件结构">2. 备份文件结构</a></li>
+          </ul>
+        </li>
+        <li><a href="#2-还原全量备份">2. 还原全量备份</a>
+          <ul>
+            <li><a href="#1-预整理">1. 预整理</a></li>
+            <li><a href="#2-最终准备并恢复数据">2. 最终准备并恢复数据</a></li>
+            <li><a href="#3复制到数据库目录">3.复制到数据库目录</a></li>
+            <li><a href="#4还原属性">4.还原属性</a></li>
+            <li><a href="#5启动服务">5.启动服务</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#mysql-增量备份">MySQL 增量备份</a>
+      <ul>
+        <li><a href="#mysql-增量备份基于-xtrabackup">MySQL 增量备份（基于 xtrabackup）</a>
+          <ul>
+            <li><a href="#1-基于-lsn-的增量备份">1. 基于 LSN 的增量备份</a></li>
+          </ul>
+        </li>
+        <li><a href="#mysql-增量备份基于-xtrabackup还原">MySQL 增量备份（基于 xtrabackup）还原</a>
+          <ul>
+            <li><a href="#1-准备全量备份">1. 准备全量备份</a></li>
+            <li><a href="#2-还原合并增量备份">2. 还原合并增量备份</a></li>
+            <li><a href="#3复制到数据库目录-1">3.复制到数据库目录</a></li>
+            <li><a href="#4还原属性-1">4.还原属性</a></li>
+            <li><a href="#5启动服务-1">5.启动服务</a></li>
+          </ul>
+        </li>
+        <li><a href="#mysql-增量备份基于-binlog">MySQL 增量备份（基于 Binlog）</a></li>
+        <li><a href="#1-启用-binlog">1. 启用 Binlog</a></li>
+        <li><a href="#2-定期备份-binlog">2. 定期备份 Binlog</a></li>
+        <li><a href="#3-使用-binlog-恢复数据">3. 使用 Binlog 恢复数据</a></li>
+      </ul>
+    </li>
+    <li><a href="#五方案对比与选择">五、方案对比与选择</a></li>
+    <li><a href="#六-xtrabackup-24-常用参数">六、 XtraBackup 2.4 常用参数</a>
+      <ul>
+        <li><a href="#xtrabackup-24-核心参数表">XtraBackup 2.4 核心参数表</a></li>
+        <li><a href="#关键参数使用示例">关键参数使用示例</a>
+          <ul>
+            <li><a href="#1-全量备份--压缩--加密">1. 全量备份 + 压缩 + 加密</a></li>
+            <li><a href="#2-增量备份">2. 增量备份</a></li>
+            <li><a href="#3-准备备份并解压">3. 准备备份并解压</a></li>
+            <li><a href="#补充-安装-qpress-解压缩">补充 安装 qpress 解压缩</a></li>
+          </ul>
+        </li>
+        <li><a href="#注意事项">注意事项</a></li>
+      </ul>
+    </li>
+    <li><a href="#七生产环境数据库备份策略">七、生产环境数据库备份策略</a>
+      <ul>
+        <li><a href="#一备份频率建议">一、备份频率建议</a>
+          <ul>
+            <li><a href="#1-全量备份频率">1. 全量备份频率</a></li>
+            <li><a href="#2-增量备份频率">2. 增量备份频率</a></li>
+          </ul>
+        </li>
+        <li><a href="#二备份策略示例">二、备份策略示例</a></li>
+        <li><a href="#三关键注意事项">三、关键注意事项</a>
+          <ul>
+            <li><a href="#1-备份保留策略">1. 备份保留策略</a></li>
+            <li><a href="#2-恢复时间优化">2. 恢复时间优化</a></li>
+            <li><a href="#3-结合-binlog-实现精细化恢复">3. 结合 Binlog 实现精细化恢复</a></li>
+            <li><a href="#4-监控与验证">4. 监控与验证</a></li>
+          </ul>
+        </li>
+        <li><a href="#四典型场景调整建议">四、典型场景调整建议</a></li>
+        <li><a href="#总结">总结</a></li>
+      </ul>
+    </li>
+    <li><a href="#八关键注意事项">八、关键注意事项</a></li>
+    <li><a href="#九最佳实践">九、最佳实践</a></li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="一xtradb-backuppercona-xtrabackup介绍">一、XtraDB Backup（Percona XtraBackup）介绍</h2>
+<p>MySQL冷备、mysqldump、MySQL热拷贝都无法实现对数据库进行增量备份。在实际生产环境中增量备份是非常实用的，如果数据大于50G或100G，存储空间足够的情况下，可以每天进行完整备份，如果每天产生的数据量较大，需要定制数据备份策略。例如每周实用完整备份，周一到周六实用增量备份。而Percona-Xtrabackup就是为了实现增量备份而出现的一款主流备份工具，xtrabakackup有2个工具，分别是xtrabakup、innobakupe。</p>
+<p><strong>XtraBackup</strong> 是由 Percona 开发的开源工具，专门用于 MySQL 及兼容数据库（如 MariaDB、Percona Server）的<strong>在线热备份</strong>。它支持 InnoDB/XtraDB 存储引擎的高效备份，具有以下核心特性：</p>
+<ol>
+<li><strong>非阻塞备份</strong>：备份过程中不阻塞数据库的读写操作。</li>
+<li><strong>增量备份</strong>：仅备份自上次备份以来更改的数据，节省时间和存储。</li>
+<li><strong>快速恢复</strong>：支持通过全量+增量备份链快速恢复数据。</li>
+<li><strong>备份压缩与加密</strong>：可选压缩（如 <code>--compress</code>）和加密功能，优化存储安全。</li>
+<li><strong>自动实现备份检验</strong></li>
+<li><strong>开源，免费</strong></li>
+</ol>
+<h3 id="xtrabackup-工具介绍">XtraBackup 工具介绍</h3>
+<p>xtrabackup工具文件组成:</p>
+<ul>
+<li>Xtrabackup2.2 版之前包括4个可执行文件:</li>
+<li>innobackupex: Perl 脚本</li>
+<li>xtrabackup: C/C++，编译的二进制程序</li>
+<li>xbcrypt: 加解密</li>
+<li>xbstream: 支持并发写的流文件格式</li>
+</ul>
+<p>xtrabackup 是用来备份 InnoDB 表的，不能备份非InnoDB 表，和 MySQLServer 没有交互</p>
+<p>innobackupex 脚本用来备份非InnoDB 表，同时会调用 xtrabackup 命令来备份 InnoDB 表，还会和 MySQLServer 发送命令进行交互，如加全局读锁(FTWRL)、获取位点(SHOW SLAVESTATUS)等。即innobackupex是在 xtrabackup 之上做了一层封装实现的</p>
+<p><strong>xtrabackup的新版变化</strong></p>
+<p>xtrabackup版本升级到2.4后，相比之前的2.1有了比较大的变化:innobackupex 功能全部集成到 xtrabackup 里面，只有一个 binary程序，另外为了兼容考虑，innobackupex作为xtrabackup的软链接，即xtrabackup现在支持非Innodb表备份，并且Innobackupex在下一版本中移除，建议通过xtrabackup替换innobackupex</p>
+<h3 id="xtrabackup备份流程图">xtrabackup备份流程图</h3>
+<p><figure><a class="lightgallery" href="/images/mysql/xtrabackup-backup-process.png" title="xtrabackup-backup-process" data-thumbnail="/images/mysql/xtrabackup-backup-process.png" data-sub-html="<h2>xtrabackup备份流程图</h2><p>xtrabackup-backup-process</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/mysql/xtrabackup-backup-process.png"
+            data-srcset="/images/mysql/xtrabackup-backup-process.png, /images/mysql/xtrabackup-backup-process.png 1.5x, /images/mysql/xtrabackup-backup-process.png 2x"
+            data-sizes="auto"
+            alt="/images/mysql/xtrabackup-backup-process.png" />
+    </a><figcaption class="image-caption">xtrabackup备份流程图</figcaption>
+    </figure></p>
+<hr>
+<h2 id="二xtrabackup-与-mysql-的版本对应规则">二、XtraBackup 与 MySQL 的版本对应规则</h2>
+<h3 id="1-匹配规则">1. 匹配规则</h3>
+<table>
+<thead>
+<tr>
+<th><strong>XtraBackup 版本</strong></th>
+<th><strong>兼容的 MySQL 版本</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>8.0.x</strong></td>
+<td>MySQL 8.0、Percona Server 8.0</td>
+<td>支持 MySQL 8.0 的新特性（如 REDO/UNDO 日志格式变更、数据字典优化）</td>
+</tr>
+<tr>
+<td><strong>2.4.x</strong></td>
+<td>MySQL 5.6、5.7、Percona 5.7</td>
+<td>支持 MySQL 5.6/5.7，<strong>不兼容 MySQL 8.0</strong></td>
+</tr>
+<tr>
+<td><strong>2.3.x 及以下</strong></td>
+<td>MySQL 5.5 或更早版本</td>
+<td>已逐渐淘汰</td>
+</tr>
+</tbody>
+</table>
+<h4 id="关键注意事项">关键注意事项：</h4>
+<ol>
+<li><strong>MySQL 8.0 必须使用 XtraBackup 8.0+</strong>，否则备份会直接报错（例如 <code>Unsupported redo log format</code>）。</li>
+<li><strong>MySQL 5.7 建议使用 XtraBackup 2.4.x</strong>，部分 8.0 版本可能兼容但需验证。</li>
+<li><strong>Percona Server 需与 XtraBackup 版本对齐</strong>（如 Percona Server 5.7 → XtraBackup 2.4）。</li>
+</ol>
+<p><figure><a class="lightgallery" href="/images/mysql/xtrabackup-version-match-1.png" title="xtrabackup-version-match-1" data-thumbnail="/images/mysql/xtrabackup-version-match-1.png" data-sub-html="<h2>xtrabackup-version-match-1</h2><p>xtrabackup-version-match-1</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/mysql/xtrabackup-version-match-1.png"
+            data-srcset="/images/mysql/xtrabackup-version-match-1.png, /images/mysql/xtrabackup-version-match-1.png 1.5x, /images/mysql/xtrabackup-version-match-1.png 2x"
+            data-sizes="auto"
+            alt="/images/mysql/xtrabackup-version-match-1.png" />
+    </a><figcaption class="image-caption">xtrabackup-version-match-1</figcaption>
+    </figure>
+<figure><a class="lightgallery" href="/images/mysql/xtrabackup-version-match-2.png" title="xtrabackup-version-match-2" data-thumbnail="/images/mysql/xtrabackup-version-match-2.png" data-sub-html="<h2>xtrabackup-version-match-2</h2><p>xtrabackup-version-match-2</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/mysql/xtrabackup-version-match-2.png"
+            data-srcset="/images/mysql/xtrabackup-version-match-2.png, /images/mysql/xtrabackup-version-match-2.png 1.5x, /images/mysql/xtrabackup-version-match-2.png 2x"
+            data-sizes="auto"
+            alt="/images/mysql/xtrabackup-version-match-2.png" />
+    </a><figcaption class="image-caption">xtrabackup-version-match-2</figcaption>
+    </figure></p>
+<h3 id="2-版本升级与降级策略">2. 版本升级与降级策略</h3>
+<h4 id="1-mysql-升级如-57--80">1. MySQL 升级（如 5.7 → 8.0）</h4>
+<ul>
+<li><strong>步骤</strong>：
+<ol>
+<li>升级 XtraBackup 到 8.0+。</li>
+<li>创建新备份（旧备份可能无法直接恢复至 MySQL 8.0）。</li>
+</ol>
+</li>
+</ul>
+<h4 id="2-xtrabackup-降级">2. XtraBackup 降级</h4>
+<ul>
+<li><strong>步骤</strong>：
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 卸载当前版本</span>
+</span></span><span class="line"><span class="cl">sudo yum remove percona-xtrabackup-80
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 安装旧版本</span>
+</span></span><span class="line"><span class="cl">sudo yum install percona-xtrabackup-24
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+<h2 id="三安装-xtrabackup">三、安装 XtraBackup</h2>
+<h3 id="1-安装-xtrabackup">1. 安装 XtraBackup</h3>
+<h4 id="1-添加-percona-官方仓库">1. 添加 Percona 官方仓库</h4>
+<p>避免使用默认仓库（可能版本过旧），优先通过 Percona 仓库安装：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 安装 Percona 仓库</span>
+</span></span><span class="line"><span class="cl">sudo yum install https://repo.percona.com/yum/percona-release-latest.noarch.rpm
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 启用仓库</span>
+</span></span><span class="line"><span class="cl">sudo percona-release setup ps80  <span class="c1"># 若需 MySQL 8.0 对应工具</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 或</span>
+</span></span><span class="line"><span class="cl">sudo percona-release setup ps57  <span class="c1"># 若需 MySQL 5.7 对应工具</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="2-查看可安装的-xtrabackup-版本">2. 查看可安装的 XtraBackup 版本</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo yum list percona-xtrabackup-*
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 示例输出：</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># percona-xtrabackup-80.x86_64   8.0.33-28.1.el7   percona-release-x86_64</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># percona-xtrabackup-24.x86_64   2.4.28-1.el7      percona-release-x86_64</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="3-安装指定版本">3. 安装指定版本</h4>
+<p>根据 MySQL 版本选择对应的包：</p>
+<ul>
+<li><strong>MySQL 8.0</strong>：
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo yum install percona-xtrabackup-80
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li><strong>MySQL 5.6/5.7</strong>：
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo yum install percona-xtrabackup-24
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li><strong>离线安装指定的版本</strong>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"> <span class="c1"># In RPM-based distribution (like CentOS 7), you need to:</span>
+</span></span><span class="line"><span class="cl"> sudo yum install cmake gcc gcc-c++ libaio libaio-devel bison ncurses-devel <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  libgcrypt-devel libcurl-devel libev-devel python-sphinx vim-common
+</span></span><span class="line"><span class="cl"> <span class="c1"># 或者直接通过 yum 安装来解决依赖的问题</span>
+</span></span><span class="line"><span class="cl"> sudo yum install -y percona-xtrabackup-24-2.4.20-1.el7.x86_64.rpm
+</span></span><span class="line"><span class="cl"> sudo rpm -qa <span class="p">|</span>grep xtrabackup
+</span></span><span class="line"><span class="cl"> percona-xtrabackup-24-2.4.20-1.el7.x86_64
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+<h4 id="4-验证安装版本">4. 验证安装版本</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># xtrabackup会自动读取mysql配置</span>
+</span></span><span class="line"><span class="cl">xtrabackup --version
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 输出示例：</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># xtrabackup version 2.4.20 based on MySQL server 5.7.26 Linux (x86_64) (revision id: c8b4056)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="details admonition note open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-pencil-alt fa-fw" aria-hidden="true"></i>注意<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content">xtrabackup 和 mysql 数据库版本是有对应关系的</div>
+        </div>
+    </div>
+<h2 id="三使用-xtrabackup-进行增量备份及还原">三、使用 XtraBackup 进行增量备份及还原</h2>
+<h3 id="1-全量备份">1. 全量备份</h3>
+<h3 id="2-执行全量备份">2. 执行全量备份</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">mkdir -p /path/to/full_backup
+</span></span><span class="line"><span class="cl">xtrabackup --backup --target-dir<span class="o">=</span>/path/to/full_backup <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>           --user<span class="o">=</span>&lt;mysql_user&gt; --password<span class="o">=</span>&lt;mysql_password&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>--target-dir</code>：指定备份文件存储目录，目录不需要提前创建</li>
+<li>备份完成后，输出提示 <code>completed OK!</code> 表示成功。</li>
+<li>全量备份可以一周或者一天执行一次</li>
+</ul>
+<p>查看备份信息</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">cat /path/to/full_backup/xtrabackup_checkpoints
+</span></span><span class="line"><span class="cl">cat /path/to/full_backup/xtrabackup_info
+</span></span><span class="line"><span class="cl">cat /path/to/full_backup/backup-my.cnf
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="2-备份文件结构">2. 备份文件结构</h4>
+<ul>
+<li>全量备份：包含所有数据文件。</li>
+<li>增量备份：仅含变化的数据页（文件后缀 <code>.delta</code> 和 <code>.meta</code>）。</li>
+</ul>
+<hr>
+<h3 id="2-还原全量备份">2. 还原全量备份</h3>
+<ul>
+<li>还原前需要停掉MySQL 服务</li>
+<li>确保MySQL 数据目录是清空状态</li>
+</ul>
+<h4 id="1-预整理">1. 预整理</h4>
+<p>预整理，目的是将未完成的事务进行回滚</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">xtrabackup --prepare  --target-dir<span class="o">=</span>/path/to/full_backup
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="details admonition note open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-pencil-alt fa-fw" aria-hidden="true"></i>注意<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content">适合单纯地进行全量备份的恢复，并且没有打算在其上应用任何增量备份</div>
+        </div>
+    </div>
+<h4 id="2-最终准备并恢复数据">2. 最终准备并恢复数据</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">xtrabackup --prepare --target-dir<span class="o">=</span>/path/to/full_backup
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>停止 MySQL 服务，清空数据目录，将备份文件复制回数据目录：</p>
+<h4 id="3复制到数据库目录">3.复制到数据库目录</h4>
+<p>例如数据库主机宕机或者挂掉了，将备份的数据拷贝到新的主机或者修复的数据库主机目录下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">xtrabackup --copy-back --target-dir<span class="o">=</span>/path/to/full_backup
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="4还原属性">4.还原属性</h4>
+<p>修改所属者和所属组</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">chown -R mysql:mysql /var/lib/mysql
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>/var/lib/mysql</code> 是默认目录，可通过<code>/etc/my.cnf</code>来进行查看，如有修改动态调整</li>
+</ul>
+<h4 id="5启动服务">5.启动服务</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">systemctl start mysqld
+</span></span></code></pre></td></tr></table>
+</div>
+</div><hr>
+<h2 id="mysql-增量备份">MySQL 增量备份</h2>
+<h3 id="mysql-增量备份基于-xtrabackup">MySQL 增量备份（基于 xtrabackup）</h3>
+<h4 id="1-基于-lsn-的增量备份">1. 基于 LSN 的增量备份</h4>
+<p>XtraBackup 通过 LSN（Log Sequence Number）追踪数据页变化，增量备份需基于上一次全量或增量备份：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 第一次修改后增量备份</span>
+</span></span><span class="line"><span class="cl">xtrabackup --backup --target-dir<span class="o">=</span>/path/to/inc_backup_1 <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>           --incremental-basedir<span class="o">=</span>/path/to/full_backup <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>           --user<span class="o">=</span>&lt;mysql_user&gt; --password<span class="o">=</span>&lt;mysql_password&gt;
+</span></span><span class="line"><span class="cl"><span class="c1"># 第二次修改后增量备份   </span>
+</span></span><span class="line"><span class="cl">xtrabackup --backup --target-dir<span class="o">=</span>/path/to/inc_backup_2 <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>           --incremental-basedir<span class="o">=</span>/path/to/inc_backup_1 <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>           --user<span class="o">=</span>&lt;mysql_user&gt; --password<span class="o">=</span>&lt;mysql_password&gt;
+</span></span><span class="line"><span class="cl">          
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>--incremental-basedir</code>：指向上次备份的目录（全量或增量）。</li>
+<li>备份生成三个备份目录<code>/path/to/{full_backup,inc_backup_1,inc_backup_2}</code></li>
+</ul>
+<h3 id="mysql-增量备份基于-xtrabackup还原">MySQL 增量备份（基于 xtrabackup）还原</h3>
+<ul>
+<li>还原前需要停掉MySQL 服务</li>
+<li>确保MySQL 数据目录是清空状态</li>
+</ul>
+<h4 id="1-准备全量备份">1. 准备全量备份</h4>
+<p>预准备：确保数据一致，阻止回滚未完成的事务</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">xtrabackup --prepare --apply-log-only --target-dir<span class="o">=</span>/path/to/full_backup
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>&ndash;apply-log-only阻止回滚未完成的事务，它仅执行redo日志的应用而不执行undo操作。这意味着事务不会被回滚。</li>
+</ul>
+<p><strong>适用场景</strong>：当计划应用增量备份（Incremental Backup）到全量备份时，需要先使用这个命令来准备全量备份。这样做是为了确保后续的增量备份可以正确地应用到基础备份上。 也就是说你的恢复策略包括先做一次全量备份，然后在此基础上应用一个或多个增量备份，则首先需要使用第一个命令（带&ndash;apply-log-only选项）准备全量备份，之后按照顺序逐一准备并应用每个增量备份（同样使用&ndash;apply-log-only直到最后一个增量备份）。最后，使用（不带&ndash;apply-log-only选项）来完成准备过程，使得整个备份集（包括全量和所有增量部分）可以用于恢复。</p>
+<h4 id="2-还原合并增量备份">2. 还原合并增量备份</h4>
+<p>合并增量备份到全量备份：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 合并第一次增量备份到完全备份</span>
+</span></span><span class="line"><span class="cl">xtrabackup --prepare --apply-log-only --target-dir<span class="o">=</span>/path/to/full_backup <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>           --incremental-dir<span class="o">=</span>/path/to/inc_backup_1
+</span></span><span class="line"><span class="cl"><span class="c1"># 合并第二次增量备份到完全备份:最后一次还原不需要加--apply-log-only</span>
+</span></span><span class="line"><span class="cl">xtrabackup --prepare  --target-dir<span class="o">=</span>/path/to/full_backup <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>           --incremental-dir<span class="o">=</span>/path/to/inc_backup_2
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="3复制到数据库目录-1">3.复制到数据库目录</h4>
+<p>例如数据库主机宕机或者挂掉了，将备份的数据拷贝到新的主机或者修复的数据库主机目录下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">xtrabackup --copy-back --target-dir<span class="o">=</span>/path/to/full_backup
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>这里也可以使用 cp 命令进行复制</li>
+</ul>
+<div class="details admonition note open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-pencil-alt fa-fw" aria-hidden="true"></i>注意<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content">数据库目录必须为空，且MySQL服务不能启动</div>
+        </div>
+    </div>
+<h4 id="4还原属性-1">4.还原属性</h4>
+<p>修改所属者和所属组</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">chown -R mysql:mysql /var/lib/mysql
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>/var/lib/mysql</code> 是默认目录，如有修改动态调整</li>
+</ul>
+<h4 id="5启动服务-1">5.启动服务</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">systemctl start mysqld
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="mysql-增量备份基于-binlog">MySQL 增量备份（基于 Binlog）</h3>
+<h3 id="1-启用-binlog">1. 启用 Binlog</h3>
+<p>在 <code>my.cnf</code> 中配置：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-ini" data-lang="ini"><span class="line"><span class="cl"><span class="k">[mysqld]</span>
+</span></span><span class="line"><span class="cl"><span class="na">log_bin</span> <span class="o">=</span> <span class="s">/var/lib/mysql/mysql-bin</span>
+</span></span><span class="line"><span class="cl"><span class="na">server_id</span> <span class="o">=</span> <span class="s">1</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="2-定期备份-binlog">2. 定期备份 Binlog</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 刷新日志，生成新 Binlog 文件</span>
+</span></span><span class="line"><span class="cl">mysqladmin flush-logs
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 备份旧的 Binlog 文件（如 mysql-bin.000001）</span>
+</span></span><span class="line"><span class="cl">cp /var/lib/mysql/mysql-bin.000001 /backup/
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="3-使用-binlog-恢复数据">3. 使用 Binlog 恢复数据</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 恢复到指定时间点</span>
+</span></span><span class="line"><span class="cl">mysqlbinlog /backup/mysql-bin.000001 <span class="p">|</span> mysql -u root -p
+</span></span></code></pre></td></tr></table>
+</div>
+</div><hr>
+<h2 id="五方案对比与选择">五、方案对比与选择</h2>
+<table>
+<thead>
+<tr>
+<th><strong>备份方式</strong></th>
+<th><strong>XtraBackup 增量备份</strong></th>
+<th><strong>Binlog 增量备份</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>粒度</strong></td>
+<td>页面级（物理备份）</td>
+<td>SQL 语句级（逻辑备份）</td>
+</tr>
+<tr>
+<td><strong>恢复速度</strong></td>
+<td>快（直接文件替换）</td>
+<td>慢（需重放 SQL）</td>
+</tr>
+<tr>
+<td><strong>适用场景</strong></td>
+<td>大型数据库快速恢复</td>
+<td>精细恢复（如误删单表）</td>
+</tr>
+<tr>
+<td><strong>存储占用</strong></td>
+<td>中等（仅变化页）</td>
+<td>较大（记录所有变更）</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="六-xtrabackup-24-常用参数">六、 XtraBackup 2.4 常用参数</h2>
+<p>以下是 <strong>Percona XtraBackup 2.4</strong> 的常用参数解释表格，涵盖备份、恢复、压缩、加密等核心功能：</p>
+<hr>
+<h3 id="xtrabackup-24-核心参数表">XtraBackup 2.4 核心参数表</h3>
+<table>
+<thead>
+<tr>
+<th><strong>参数</strong></th>
+<th><strong>类型</strong></th>
+<th><strong>说明</strong></th>
+<th><strong>默认值</strong></th>
+<th><strong>示例</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>通用参数</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>--backup</code></td>
+<td>命令</td>
+<td>执行全量备份。</td>
+<td>-</td>
+<td><code>xtrabackup --backup --target-dir=/backup</code></td>
+</tr>
+<tr>
+<td><code>--prepare</code></td>
+<td>命令</td>
+<td>准备备份文件（应用日志，使其可恢复）。</td>
+<td>-</td>
+<td><code>xtrabackup --prepare --target-dir=/backup</code></td>
+</tr>
+<tr>
+<td><code>--copy-back</code></td>
+<td>命令</td>
+<td>将备份文件复制到 MySQL 数据目录。</td>
+<td>-</td>
+<td><code>xtrabackup --copy-back --target-dir=/backup</code></td>
+</tr>
+<tr>
+<td><code>--target-dir</code></td>
+<td>选项</td>
+<td>指定备份文件的存储目录。</td>
+<td>-</td>
+<td><code>--target-dir=/backup/full</code></td>
+</tr>
+<tr>
+<td><code>--datadir</code></td>
+<td>选项</td>
+<td>指定 MySQL 数据目录路径。</td>
+<td><code>/var/lib/mysql</code></td>
+<td><code>--datadir=/data/mysql</code></td>
+</tr>
+<tr>
+<td><strong>增量备份</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>--incremental</code></td>
+<td>选项</td>
+<td>执行增量备份。</td>
+<td><code>false</code></td>
+<td><code>--incremental --target-dir=/backup/inc1</code></td>
+</tr>
+<tr>
+<td><code>--incremental-basedir</code></td>
+<td>选项</td>
+<td>指定增量备份的基础目录（上一次全量或增量备份的路径）。</td>
+<td>-</td>
+<td><code>--incremental-basedir=/backup/full</code></td>
+</tr>
+<tr>
+<td><code>--incremental-lsn</code></td>
+<td>选项</td>
+<td>手动指定增量备份的起始 LSN（替代 <code>--incremental-basedir</code>）。</td>
+<td>-</td>
+<td><code>--incremental-lsn=12345678</code></td>
+</tr>
+<tr>
+<td><strong>压缩与解压</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>--compress</code></td>
+<td>选项</td>
+<td>启用备份文件压缩（使用 QuickLZ 算法）。</td>
+<td><code>false</code></td>
+<td><code>--compress</code></td>
+</tr>
+<tr>
+<td><code>--compress-threads</code></td>
+<td>选项</td>
+<td>指定压缩线程数（并行压缩）。</td>
+<td><code>1</code></td>
+<td><code>--compress --compress-threads=4</code></td>
+</tr>
+<tr>
+<td><code>--decompress</code></td>
+<td>选项</td>
+<td>解压已压缩的备份文件（需在 <code>--prepare</code> 阶段使用）。</td>
+<td><code>false</code></td>
+<td><code>xtrabackup --prepare --decompress --target-dir=/backup</code></td>
+</tr>
+<tr>
+<td><strong>加密</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>--encrypt</code></td>
+<td>选项</td>
+<td>启用备份文件加密（支持 AES128/AES192/AES256）。</td>
+<td><code>false</code></td>
+<td><code>--encrypt=AES256</code></td>
+</tr>
+<tr>
+<td><code>--encrypt-key</code></td>
+<td>选项</td>
+<td>直接指定加密密钥（不推荐，存在安全风险）。</td>
+<td>-</td>
+<td><code>--encrypt-key=&quot;MySecretKey123&quot;</code></td>
+</tr>
+<tr>
+<td><code>--encrypt-key-file</code></td>
+<td>选项</td>
+<td>从文件读取加密密钥（推荐方式）。</td>
+<td>-</td>
+<td><code>--encrypt-key-file=/path/to/keyfile</code></td>
+</tr>
+<tr>
+<td><code>--encrypt-threads</code></td>
+<td>选项</td>
+<td>指定加密线程数（并行加密）。</td>
+<td><code>1</code></td>
+<td><code>--encrypt=AES256 --encrypt-threads=4</code></td>
+</tr>
+<tr>
+<td><strong>并行处理</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>--parallel</code></td>
+<td>选项</td>
+<td>指定备份或恢复时的并行线程数（加速大文件操作）。</td>
+<td><code>1</code></td>
+<td><code>--parallel=4</code></td>
+</tr>
+<tr>
+<td><code>--use-memory</code></td>
+<td>选项</td>
+<td>指定 <code>--prepare</code> 阶段可用的内存大小（提高处理速度）。</td>
+<td><code>100MB</code></td>
+<td><code>--use-memory=2G</code></td>
+</tr>
+<tr>
+<td><strong>日志与监控</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>--log</code></td>
+<td>选项</td>
+<td>指定日志文件路径。</td>
+<td>输出到标准错误流</td>
+<td><code>--log=/var/log/xtrabackup.log</code></td>
+</tr>
+<tr>
+<td><code>--stream</code></td>
+<td>选项</td>
+<td>将备份流式传输到标准输出（通常结合压缩或加密使用）。</td>
+<td><code>false</code></td>
+<td><code>--stream=xbstream | gzip &gt; backup.xbstream.gz</code></td>
+</tr>
+<tr>
+<td><code>--stats</code></td>
+<td>选项</td>
+<td>输出备份统计信息（需配合 <code>--backup</code> 使用）。</td>
+<td><code>false</code></td>
+<td><code>--stats</code></td>
+</tr>
+<tr>
+<td><strong>高级选项</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>--slave-info</code></td>
+<td>选项</td>
+<td>备份从库时记录复制信息（用于构建新从库）。</td>
+<td><code>false</code></td>
+<td><code>--slave-info</code></td>
+</tr>
+<tr>
+<td><code>--safe-slave-backup</code></td>
+<td>选项</td>
+<td>停止复制线程以确保备份一致性（从库备份时使用）。</td>
+<td><code>false</code></td>
+<td><code>--safe-slave-backup</code></td>
+</tr>
+<tr>
+<td><code>--throttle</code></td>
+<td>选项</td>
+<td>限制备份时的 I/O 操作速率（单位：IOPS）。</td>
+<td><code>0</code>（无限制）</td>
+<td><code>--throttle=100</code></td>
+</tr>
+<tr>
+<td><code>--version-check</code></td>
+<td>选项</td>
+<td>检查 Percona Server 或 MySQL 版本兼容性。</td>
+<td><code>true</code></td>
+<td><code>--version-check=false</code></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="关键参数使用示例">关键参数使用示例</h3>
+<h4 id="1-全量备份--压缩--加密">1. 全量备份 + 压缩 + 加密</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">xtrabackup --backup <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --target-dir<span class="o">=</span>/backup/full <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --compress <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --compress-threads<span class="o">=</span><span class="m">4</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --encrypt<span class="o">=</span>AES256 <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --encrypt-key-file<span class="o">=</span>/etc/mysql/xtrabackup.key <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --encrypt-threads<span class="o">=</span><span class="m">4</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="2-增量备份">2. 增量备份</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 第一次增量（基于全量）</span>
+</span></span><span class="line"><span class="cl">xtrabackup --backup <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --target-dir<span class="o">=</span>/backup/inc1 <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --incremental-basedir<span class="o">=</span>/backup/full
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 第二次增量（基于前一次增量）</span>
+</span></span><span class="line"><span class="cl">xtrabackup --backup <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --target-dir<span class="o">=</span>/backup/inc2 <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --incremental-basedir<span class="o">=</span>/backup/inc1
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="3-准备备份并解压">3. 准备备份并解压</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 解压并应用日志</span>
+</span></span><span class="line"><span class="cl">xtrabackup --prepare <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --target-dir<span class="o">=</span>/backup/full <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --decompress
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="补充-安装-qpress-解压缩">补充 安装 qpress 解压缩</h4>
+<p>qpress 便携式高速文件归档器</p>
+<p>当全量备份进行压缩后，在还原时解压需要解压时需要<code>qpress</code>命令</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ wget -d --user-agent<span class="o">=</span><span class="s2">&#34;Mozilla/5.0 (Windows NT x.y; rv:10.0) Gecko/20100101 Firefox/10.0&#34;</span> https://docs-tencentdb-1256569818.cos.ap-guangzhou.myqcloud.com/qpress-11-linux-x64.tar
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">$ tar -xf qpress-11-linux-x64.tar -C /usr/local/bin
+</span></span><span class="line"><span class="cl">$ <span class="nb">source</span> /etc/profile
+</span></span></code></pre></td></tr></table>
+</div>
+</div><hr>
+<h3 id="注意事项">注意事项</h3>
+<ol>
+<li>
+<p><strong>加密密钥管理</strong>：</p>
+<ul>
+<li>优先使用 <code>--encrypt-key-file</code> 替代 <code>--encrypt-key</code>，避免密钥泄露。</li>
+<li>密钥文件需严格限制权限（如 <code>chmod 600</code>）。</li>
+</ul>
+</li>
+<li>
+<p><strong>并行与资源占用</strong>：</p>
+<ul>
+<li>高并发（<code>--parallel</code>、<code>--compress-threads</code>）可能显著增加 CPU 和内存消耗。</li>
+<li>生产环境中建议根据硬件资源调整。</li>
+</ul>
+</li>
+<li>
+<p><strong>版本兼容性</strong>：</p>
+<ul>
+<li>XtraBackup 2.4 支持 MySQL 5.1~5.7 和 Percona Server 对应版本。</li>
+<li>确保备份工具与数据库版本匹配。</li>
+</ul>
+</li>
+<li>
+<p><strong>增量备份依赖链</strong>：</p>
+<ul>
+<li>增量备份必须基于完整的全量备份链，恢复时需按顺序合并所有增量。</li>
+<li>定期清理过时的备份链以节省存储空间。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<p>通过合理组合这些参数，可以实现高效、安全的数据库备份与恢复操作。</p>
+<h2 id="七生产环境数据库备份策略">七、生产环境数据库备份策略</h2>
+<h3 id="一备份频率建议">一、备份频率建议</h3>
+<h4 id="1-全量备份频率">1. 全量备份频率</h4>
+<ul>
+<li><strong>建议周期：每周 1 次全量备份</strong>
+<ul>
+<li><strong>理由</strong>：
+<ul>
+<li>全量备份是恢复的基础，确保数据的完整性。</li>
+<li>如果数据量较小（如 TB 级以下），建议每周执行一次全量备份。</li>
+<li>如果数据量极大（如数十 TB），可延长至每 2 周一次，但需结合增量备份策略降低风险。</li>
+</ul>
+</li>
+<li><strong>执行时间</strong>：
+<ul>
+<li>选择业务低峰期（如凌晨）以减少对 I/O 和 CPU 的影响。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-增量备份频率">2. 增量备份频率</h4>
+<ul>
+<li><strong>建议周期：每日 1 次增量备份</strong>
+<ul>
+<li><strong>理由</strong>：
+<ul>
+<li>增量备份仅捕获自上次全量或增量后的数据变化，资源占用低。</li>
+<li>每日一次可平衡 RPO（恢复点目标）与存储成本。</li>
+</ul>
+</li>
+<li><strong>特殊情况调整</strong>：
+<ul>
+<li>若数据变更频繁（如电商大促期间），可缩短至每小时一次增量备份。</li>
+<li>若数据变更极少（如静态配置库），可放宽至每 2-3 天一次。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="二备份策略示例">二、备份策略示例</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">周一：全量备份（base）
+</span></span><span class="line"><span class="cl">周二~周日：每日增量备份（inc1, inc2, ..., inc6）
+</span></span><span class="line"><span class="cl">下周一：新一轮全量备份 + 清理旧备份链
+</span></span></code></pre></td></tr></table>
+</div>
+</div><hr>
+<h3 id="三关键注意事项">三、关键注意事项</h3>
+<h4 id="1-备份保留策略">1. 备份保留策略</h4>
+<ul>
+<li>保留至少 <strong>2-3 个全量备份链</strong>（如最近 2 周的备份），防止备份损坏或误删。</li>
+<li>增量备份需与其依赖的全量备份共同保留，确保恢复链完整。</li>
+</ul>
+<h4 id="2-恢复时间优化">2. 恢复时间优化</h4>
+<ul>
+<li>增量备份链不宜过长（建议不超过 7 次增量），否则恢复时合并时间可能超出 RTO。</li>
+<li>若增量链过长，可调整全量备份频率（如每 3 天一次全量）。</li>
+</ul>
+<h4 id="3-结合-binlog-实现精细化恢复">3. 结合 Binlog 实现精细化恢复</h4>
+<ul>
+<li>启用 MySQL Binlog，按需（如每 5-15 分钟）归档 Binlog 文件。</li>
+<li>恢复时，先通过 XtraBackup 还原到最近备份点，再通过 Binlog 恢复到精确时间点。</li>
+</ul>
+<h4 id="4-监控与验证">4. 监控与验证</h4>
+<ul>
+<li>监控备份任务状态，确保无失败或遗漏。</li>
+<li>定期演练恢复流程（如每季度一次），验证备份有效性。</li>
+</ul>
+<hr>
+<h3 id="四典型场景调整建议">四、典型场景调整建议</h3>
+<table>
+<thead>
+<tr>
+<th><strong>场景</strong></th>
+<th><strong>全量备份频率</strong></th>
+<th><strong>增量备份频率</strong></th>
+<th><strong>备注</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>小型数据库（&lt; 100GB）</td>
+<td>每周 1 次</td>
+<td>每日 1 次</td>
+<td>恢复速度快，资源压力小。</td>
+</tr>
+<tr>
+<td>中型数据库（100GB~1TB）</td>
+<td>每周 1 次</td>
+<td>每日 1 次（或 12h/次）</td>
+<td>增量频率可根据白天/夜间负载调整。</td>
+</tr>
+<tr>
+<td>大型数据库（&gt; 1TB）</td>
+<td>每周 1 次</td>
+<td>每日 2-4 次</td>
+<td>缩短增量间隔，避免单次增量过大。</td>
+</tr>
+<tr>
+<td>超高写入负载数据库</td>
+<td>每 3 天 1 次</td>
+<td>每小时 1 次</td>
+<td>通过更频繁全量备份减少增量链长度。</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="总结">总结</h3>
+<ul>
+<li><strong>核心原则</strong>：全量备份频率由数据量和恢复时间容忍度决定，增量备份频率由数据变更速度决定。</li>
+<li><strong>平衡点</strong>：在存储成本、备份资源开销、RTO/RPO 之间找到最佳平衡。</li>
+<li><strong>动态调整</strong>：根据业务周期（如节假日、促销）灵活调整备份策略。</li>
+</ul>
+<h2 id="八关键注意事项">八、关键注意事项</h2>
+<ol>
+<li><strong>定期验证备份</strong>：通过恢复测试确保备份有效性。</li>
+<li><strong>监控备份任务</strong>：结合 cron 或工具（如 Rundeck）自动化备份。</li>
+<li><strong>备份保留策略</strong>：保留多个全量+增量备份点，避免单点故障。</li>
+<li><strong>混合使用策略</strong>：XtraBackup + Binlog 提供双重保障，支持时间点恢复（PITR）。</li>
+</ol>
+<p>通过合理选择工具和策略，可确保 MySQL 数据的高效备份与可靠恢复。</p>
+<h2 id="九最佳实践">九、最佳实践</h2>
+<ol>
+<li><strong>始终检查版本兼容性</strong>：在升级 MySQL 或 XtraBackup 前，查阅 <a href="https://docs.percona.com/percona-xtrabackup/latest/compatibility.html" target="_blank" rel="noopener noreffer ">Percona 官方文档</a>。</li>
+<li><strong>测试备份恢复流程</strong>：在非生产环境验证备份文件的可用性。</li>
+<li><strong>自动化版本管理</strong>：使用 Ansible/Puppet 等工具确保环境版本一致。</li>
+<li><strong>将被备份数据放到远程数据库主机下</strong>：提升安全性</li>
+</ol>
+<h2 id="参考">参考</h2>
+<ol>
+<li><a href="https://www.percona.com/mysql/software/percona-xtrabackup" target="_blank" rel="noopener noreffer ">XtraDB Backup 官网</a></li>
+<li><a href="https://docs.percona.com/percona-server/5.7/" target="_blank" rel="noopener noreffer ">Percona Operator for MySQL based on Percona Server for MySQL</a></li>
+<li><a href="https://www.percona.com/downloads" target="_blank" rel="noopener noreffer ">XtraDB Backup 下载</a></li>
+<li><a href="https://github.com/gstorme/autoxtrabackup/tree/master" target="_blank" rel="noopener noreffer ">autoxtrabackup</a> 开源的xtrabackup自动备份脚本</li>
+</ol>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2025-01-26</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://lushuan.gihub.io/xtrabackup/" data-title="XtraDB Backup（Percona XtraBackup）备份MySQL详细介绍" data-via="xxxx" data-hashtags="MySQL,XtraBackup"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://lushuan.gihub.io/xtrabackup/" data-hashtag="MySQL"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="https://lushuan.gihub.io/xtrabackup/" data-title="XtraDB Backup（Percona XtraBackup）备份MySQL详细介绍"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="https://lushuan.gihub.io/xtrabackup/" data-title="XtraDB Backup（Percona XtraBackup）备份MySQL详细介绍"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://lushuan.gihub.io/xtrabackup/" data-title="XtraDB Backup（Percona XtraBackup）备份MySQL详细介绍"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/mysql/">MySQL</a>,&nbsp;<a href="/tags/xtrabackup/">XtraBackup</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/linux%E9%98%B2%E7%81%AB%E5%A2%99iptables%E8%AF%A6%E8%A7%A3/" class="prev" rel="prev" title="Linux 防火墙iptables详解"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Linux 防火墙iptables详解</a>
+            <a href="/linux%E7%B3%BB%E7%BB%9Fnvidia%E9%A9%B1%E5%8A%A8%E9%83%A8%E7%BD%B2/" class="next" rel="next" title="Linux系统Nvidia驱动部署">Linux系统Nvidia驱动部署<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+<div id="comments"><div id="gitalk" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://github.com/gitalk/gitalk"></a>Gitalk</a>.
+            </noscript><div id="giscus" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://giscus.app">Giscus</a>.
+            </noscript></div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">我是有底线的</div><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.114.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2025</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">lushuan</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/gitalk/gitalk.min.css"><link rel="stylesheet" href="/lib/lightgallery/css/lightgallery-bundle.min.css"><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/gitalk/gitalk.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/lightgallery/lightgallery.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/zoom/lg-zoom.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{"giscus":{"category":"Announcements","categoryId":"DIC_kwDOMOWcic4Coqlk","darkTheme":"dark","emitMetadata":"0","inputPosition":"bottom","lang":"zh-CN","lazyLoading":false,"lightTheme":"light","mapping":"pathname","reactionsEnabled":"1","repo":"lushuan/lushuan.github.io","repoId":"R_kgDOMOWciQ"},"gitalk":{"admin":["lushuan"],"clientID":"Ov23liSh0yG2wy6B7XP1","clientSecret":"7184a8df973267af95c92ddeb27789417ba82469","id":"2024-12-17T12:06:37+08:00","owner":"lushuan","repo":"lushuan.github.io","title":"XtraDB Backup（Percona XtraBackup）备份MySQL详细介绍"}},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"lightgallery":true,"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
