@@ -19,6 +19,17 @@ iptables 是运维中的重点但不算是特别的难点，是网站访问的�
   - 共享上网
   - 端口映射(端口转发)，ip 映射
 
+## 核心解释
+- iptables适用linux所有发行版，yum安装方式为 "yum install iptables-services"
+- iptables基于linux netfilter, Netfilter是Linux 2.4.x引入的一个子系统，它作为一个通用的、抽象的框架，提供一整套的hook函数的管理机制，使得诸如数据包过滤、网络地址转换(NAT)和基于协议类型的连接跟踪成为了可能
+- linux 内核中，netfilter， nf_* 的配置都会影响netfilter的性能
+- iptables结构：iptables -> Tables -> Chains -> Rules. 即tables由chains组成，而chains由rules组成
+- iptables 支持表类型有 filter （默认）， nat， mangle， raw  ， 优先级  raw > mangle > nat > filter
+- iptables 的 nat 功能依赖linux内核的net.ipv4.ip_forward， net.ipv6.ip_forward
+- iptables 的 nat 功能包含snat，dnat，其中snat仅用于postrouting
+    - MASQUERADE是SNAT的一个特例，主要用于动态返回snat地址
+- 防火墙实例: (/etc/sysconfig/iptables）
+
 ## iptables和netfilter的关系
 Iptables和netfilter的关系是一个很容易让人搞不清的问题。很多的知道iptables却不知道netfilter。其实iptables只是Linux防火墙的管理工具而已，位于/sbin/iptables。真正实现防火墙功能的是netfilter，它是Linux内核中实现包过滤的内部结构。
 
