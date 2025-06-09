@@ -23,6 +23,31 @@ MySQL冷备、mysqldump、MySQL热拷贝都无法实现对数据库进行增量�
 5. **自动实现备份检验**
 6. **开源，免费**
 
+
+### XtraBackup 对备份 MySQL 数据表类型的支持
+众所周知，Xtrabackup是一个对InnoDB做数据备份的工具，支持在线热备份（备份时不影响数据读写），是商业备份工具InnoDB Hotbackup的一个很好的替代品。但是在公司生产环境常用的版本还是MySQL v5.7 及之前的版本，也有一些业务升级到了MySQL 8.0版本，不同的业务使用的表类型不同，在使用Xtrabackup我们要了解它的适用范围以及会有哪些影响。
+
+在 **Percona XtraBackup** 的历史版本中，**2.4 版本** 是最后一个支持同时备份 **InnoDB** 和 **MyISAM** 表的版本。  
+
+#### 关键点：
+1. XtraBackup 2.4：
+   - 支持 **InnoDB**（包括 XtraDB）的热备份（不锁表）。
+   - 支持 **MyISAM** 的备份，但会短暂锁定表（`FLUSH TABLES WITH READ LOCK`）。
+   - 适用于 **MySQL 5.1、5.5、5.6 和 5.7 (5.7.9 ~ 5.7.28)**（部分版本）。  
+
+2. XtraBackup 8.0+：
+   - 从 **XtraBackup 8.0** 开始，Percona 移除了对 **MyISAM** 表的支持，仅专注于 **InnoDB** 和 **Percona Server** 的增强功能。  
+   - 适用于 **MySQL 8.0** 及更高版本。  
+
+#### 建议：
+- 如果你的数据库包含 **MyISAM** 表，并且需要完整备份，请使用 **XtraBackup 2.4**。  
+- 如果只有 **InnoDB** 表，建议使用最新的 **XtraBackup 8.0+** 以获得更好的性能和兼容性。  
+
+#### 额外说明：
+- **XtraBackup 2.4** 仍然可以备份 **MyISAM** 表，但备份期间会短暂锁表，可能影响写入操作。  
+- 对于纯 **InnoDB** 环境，推荐升级到 **XtraBackup 8.0+** 以支持 MySQL 8.0 的新特性（如 **redo log** 格式变更）。  
+
+
 ### XtraBackup 工具介绍
 xtrabackup工具文件组成:
 - Xtrabackup2.2 版之前包括4个可执行文件:
