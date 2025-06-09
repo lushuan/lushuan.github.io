@@ -27,7 +27,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/lushuan.gihub.io\/linux%E9%98%B2%E7%81%AB%E5%A2%99iptables%E8%AF%A6%E8%A7%A3\/"
-        },"genre": "posts","keywords": "linux, 防火墙","wordcount":  6106 ,
+        },"genre": "posts","keywords": "linux, 防火墙","wordcount":  6525 ,
         "url": "https:\/\/lushuan.gihub.io\/linux%E9%98%B2%E7%81%AB%E5%A2%99iptables%E8%AF%A6%E8%A7%A3\/","datePublished": "2024-11-19T12:06:37+08:00","dateModified": "2024-11-20T12:06:37+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -115,8 +115,8 @@
             <div class="toc-content always-active" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Linux 防火墙iptables详解</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/linux/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>linux</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2024-11-19">2024-11-19</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 6106 字&nbsp;
-                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 13 分钟&nbsp;</div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2024-11-19">2024-11-19</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 6525 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 14 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  data-kept="">
                 <div class="details-summary toc-title">
                     <span>目录</span>
@@ -125,6 +125,7 @@
                 <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
   <ul>
     <li><a href="#概述">概述</a></li>
+    <li><a href="#核心解释">核心解释</a></li>
     <li><a href="#iptables和netfilter的关系">iptables和netfilter的关系</a></li>
     <li><a href="#iptables-管理">iptables 管理</a></li>
     <li><a href="#iptables传输数据包的过程">iptables传输数据包的过程</a></li>
@@ -181,6 +182,21 @@
 <li>端口映射(端口转发)，ip 映射</li>
 </ul>
 </li>
+</ul>
+<h2 id="核心解释">核心解释</h2>
+<ul>
+<li>iptables适用linux所有发行版，yum安装方式为 &ldquo;yum install iptables-services&rdquo;</li>
+<li>iptables基于linux netfilter, Netfilter是Linux 2.4.x引入的一个子系统，它作为一个通用的、抽象的框架，提供一整套的hook函数的管理机制，使得诸如数据包过滤、网络地址转换(NAT)和基于协议类型的连接跟踪成为了可能</li>
+<li>linux 内核中，netfilter， nf_* 的配置都会影响netfilter的性能</li>
+<li>iptables结构：iptables -&gt; Tables -&gt; Chains -&gt; Rules. 即tables由chains组成，而chains由rules组成</li>
+<li>iptables 支持表类型有 filter （默认）， nat， mangle， raw  ， 优先级  raw &gt; mangle &gt; nat &gt; filter</li>
+<li>iptables 的 nat 功能依赖linux内核的net.ipv4.ip_forward， net.ipv6.ip_forward</li>
+<li>iptables 的 nat 功能包含snat，dnat，其中snat仅用于postrouting
+<ul>
+<li>MASQUERADE是SNAT的一个特例，主要用于动态返回snat地址</li>
+</ul>
+</li>
+<li>防火墙实例: (/etc/sysconfig/iptables）</li>
 </ul>
 <h2 id="iptables和netfilter的关系">iptables和netfilter的关系</h2>
 <p>Iptables和netfilter的关系是一个很容易让人搞不清的问题。很多的知道iptables却不知道netfilter。其实iptables只是Linux防火墙的管理工具而已，位于/sbin/iptables。真正实现防火墙功能的是netfilter，它是Linux内核中实现包过滤的内部结构。</p>
