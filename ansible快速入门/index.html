@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>Ansible 部署及快速入门 - Less is more</title><meta name="Description" content="晚来天欲雪,能饮一杯无?"><meta property="og:title" content="Ansible 部署及快速入门" />
+<meta property="og:description" content="1. Ansible 简介 Ansible是一个开源的IT自动化运维工具，用于配置管理、应用部署、任务执行和持续交付。其设计目标是简单易用，以帮助系统管理员更轻" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://lushuan.gihub.io/ansible%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/" /><meta property="og:image" content="https://lushuan.gihub.io/images/avatar.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2020-06-27T12:06:37+08:00" />
+<meta property="article:modified_time" content="2024-06-26T12:06:37+08:00" /><meta property="og:site_name" content="我的网站" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://lushuan.gihub.io/images/avatar.png"/>
+
+<meta name="twitter:title" content="Ansible 部署及快速入门"/>
+<meta name="twitter:description" content="1. Ansible 简介 Ansible是一个开源的IT自动化运维工具，用于配置管理、应用部署、任务执行和持续交付。其设计目标是简单易用，以帮助系统管理员更轻"/>
+<meta name="application-name" content="我的网站">
+<meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/images/avatar.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://lushuan.gihub.io/ansible%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/" /><link rel="prev" href="https://lushuan.gihub.io/%E6%AC%B2%E7%BD%A2%E4%B8%8D%E8%83%BD%E7%9A%84%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95%E7%AD%96%E7%95%A5/" /><link rel="next" href="https://lushuan.gihub.io/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E5%92%8C%E8%BF%98%E5%8E%9F/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Ansible 部署及快速入门",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/lushuan.gihub.io\/ansible%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8\/"
+        },"genre": "posts","keywords": "Ansible","wordcount":  4952 ,
+        "url": "https:\/\/lushuan.gihub.io\/ansible%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8\/","datePublished": "2020-06-27T12:06:37+08:00","dateModified": "2024-06-26T12:06:37+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "lushuan"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Less is more"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Less is more</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 归档 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/" title="About"> 关于 </a><a class="menu-item" href="/friends/" title="friends"> 友链 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Less is more"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Less is more</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">归档</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="About">关于</a><a class="menu-item" href="/friends/" title="friends">友链</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content always-active" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Ansible 部署及快速入门</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/ansible/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Ansible</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2020-06-27">2020-06-27</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 4952 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 10 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-ansible-简介">1. Ansible 简介</a>
+      <ul>
+        <li><a href="#11-使用场景">1.1 使用场景</a></li>
+        <li><a href="#12-工作原理">1.2 工作原理</a></li>
+        <li><a href="#13-命令执行过程">1.3 命令执行过程</a></li>
+        <li><a href="#14-ansible-管理命令">1.4 ansible 管理命令</a></li>
+      </ul>
+    </li>
+    <li><a href="#2-install-部署">2. install 部署</a>
+      <ul>
+        <li><a href="#21-免密配置可选">2.1 免密配置(可选)</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-ansible-基础">3. Ansible 基础</a>
+      <ul>
+        <li><a href="#31-配置主机清单">3.1 配置主机清单</a></li>
+        <li><a href="#32-测试-ansible-模块">3.2 测试 ansible 模块</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-inventory-主机清单">4. Inventory 主机清单</a></li>
+    <li><a href="#6-add-hoc-点对点模式">6. Add-Hoc 点对点模式</a></li>
+    <li><a href="#7-role-角色扮演">7. Role 角色扮演</a>
+      <ul>
+        <li><a href="#1-目录结构">1. 目录结构</a>
+          <ul>
+            <li><a href="#各个目录和文件的作用">各个目录和文件的作用</a></li>
+          </ul>
+        </li>
+        <li><a href="#2-编写任务">2. 编写任务</a></li>
+        <li><a href="#3-准备配置文件">3. 准备配置文件</a></li>
+        <li><a href="#4-编写变量">4. 编写变量</a></li>
+        <li><a href="#5-编写处理程序">5. 编写处理程序</a></li>
+        <li><a href="#6-剧本编写">6. 剧本编写</a></li>
+        <li><a href="#7-测试">7. 测试</a></li>
+      </ul>
+    </li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="1-ansible-简介">1. Ansible 简介</h2>
+<p>Ansible是一个开源的IT自动化运维工具，用于配置管理、应用部署、任务执行和持续交付。其设计目标是简单易用，以帮助系统管理员更轻松地管理服务器基础设施。Ansible通过YAML（YAML Ain&rsquo;t Markup Language）格式的清晰易懂的文本定义配置（称为Playbook），这种格式有助于用户快速编写和阅读任务及配置信息。</p>
+<p>以下是Ansible的主要特点：</p>
+<ul>
+<li>简单易用：Ansible无需复杂的环境搭建和编程语言知识，采用YAML语法编写任务，具有高度可读性。部署在目标主机上不需要安装Agent，因此不会增加额外负担。</li>
+<li>代理无需安装：Ansible通过SSH协议与目标主机通信，在目标主机上无需安装额外的代理程序，减轻了系统负担。</li>
+<li>幂等性：Ansible任务的执行具有幂等性，即同一任务被多次执行时，结果相同且不会产生副作用。这使得Ansible在多次执行任务时，始终保持系统的稳定。</li>
+<li>模块化：Ansible自带数百个可用于各种任务的模块，如文件管理、软件包安装、系统服务管理、网络设备配置等。用户还可以编写自定义模块以实现特定功能。</li>
+<li>配置管理：Ansible Playbook中的变量、模板和条件处理等功能，使得配置文件可以轻松实现参数化，同时满足多种环境和主机组的需求。</li>
+<li>任务编排：使用Ansible Playbook，用户可以编排一系列任务并按顺序执行。</li>
+<li>社区支持与生态系统：Ansible有一个庞大且积极的社区，提供大量的模块、插件、教程和技术支持。此外，Ansible已被许多知名企业采用，持续地完善和拓展功能。</li>
+</ul>
+<h3 id="11-使用场景">1.1 使用场景</h3>
+<p>Ansible作为一个功能强大的自动化运维工具，应用广泛，以下是一些典型的使用场景：</p>
+<ul>
+<li>系统配置管理：使用Ansible，可以轻松地对目标系统进行配置，例如设置用户、组、文件权限、网络配置等。通过YAML格式的Playbook来管理配置，便于维护及版本控制。</li>
+<li>软件包安装与升级：使用Ansible的软件包管理模块安装、升级或移除软件包。例如，可以针对大量服务器的软件升级、你也可以统一规划软件包的安装和版本。</li>
+<li>一键部署应用与服务：通过Ansible Playbook实现应用程序和服务的快速、自动化部署。例如，部署Web服务、数据库、负载均衡器等。</li>
+<li>持续集成与持续部署：将Ansible与持续集成工具（如Jenkins）结合，实现代码自动构建、测试和部署。可以大大提高软件开发和交付的效率。</li>
+<li>定时任务管理：使用Ansible管理定时任务，例如创建、修改、删除Linux系统中的crontab任务。</li>
+<li>网络设备管理：使用Ansible管理网络设备，包括路由器、交换机和防火墙等。可以快速地执行配置更改、故障排查和性能数据采集等任务。</li>
+<li>扩展基础设施：适用于云计算环境中的基础设施管理，可以快速创建、配置和销毁虚拟机或容器，以满足不断变化的需求。</li>
+<li>安全性管理：使用Ansible进行安全加固和审计，例如管理SSL证书、防火墙规则、OS安全补丁等。</li>
+<li>监控与告警：通过Ansible部署和配置各种监控工具（如Nagios、Zabbix等），实现对服务器、应用程序和网络设备的监控与告警。</li>
+<li>跨平台管理：Ansible支持多种操作系统，可以在Linux、Windows、MacOS等系统上实现统一的配置管理和任务执行。</li>
+</ul>
+<p>综上所述，Ansible凭借其灵活性和可扩展性，可广泛应用于各种场景。根据具体需求，用户可以开发自定义模块和插件，进一步实现自动化运维的高效性。</p>
+<h3 id="12-工作原理">1.2 工作原理</h3>
+<h3 id="13-命令执行过程">1.3 命令执行过程</h3>
+<h3 id="14-ansible-管理命令">1.4 ansible 管理命令</h3>
+<ul>
+<li>Ansible命令行执行方式有Ad-Hoc、Ansible-playbook两种方式：
+<ul>
+<li>Ad-Hoc主要用于临时命令的执行。</li>
+<li>Ansibel-playbook可以理解为Ad-Hoc的集合，通过一定的规则编排在一起。</li>
+</ul>
+</li>
+<li>两者的操作也极其简便，且提供了如with_items、failed_when、changed_when、until、ignore_errors等丰富的逻辑条件和Dry-run的Check Mode。但在Chceck Mode下并不真正执行命令，即将执行的操作不会对端服务器产生任何影响，只模拟命令的执行过程是否能正常执行。</li>
+<li>Ansible管理命令有：
+<ul>
+<li>ansible：这个命令是日常工作中使用率非常高的命令之一，主要用于临时一次性操作。</li>
+<li>ansible-doc：Ansible模块文档说明，针对每个模块都有详细的用法说明和应用案例介绍。</li>
+<li>ansible-galaxy：可以简单的理解为Github或PIP的功能，是Ansible官方一个分享role的功能平台。可以通过ansible-galaxy命令很简单的实现role的分享和安装。</li>
+<li>ansible-playbook：是日常应用中使用频率最高的命令，其工作机制是，通过读取预先编写好的playbook文件实现批量管理。</li>
+<li>ansible-pull：Ansible的另一种工作模式（pull模式），Ansible默认使用push模式。</li>
+<li>ansible-vault：主要用于配置文件加密。</li>
+<li>ansible-console：让用户可以在ansible-console虚拟出来的终端上像Shell一样使用Ansible内置的各种命令。</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-install-部署">2. install 部署</h2>
+<ul>
+<li>dns resolve(可选)</li>
+<li>install ansible</li>
+</ul>
+<p>安装</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ yum install epel-release -y
+</span></span><span class="line"><span class="cl">$ yum install ansible -y
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>检测部署是否完成</p>
+<ul>
+<li><code>rpm -ql ansible</code> 列出所有文件</li>
+<li><code>rpm -qc ansible</code> 查看配置文件</li>
+<li><code>ansible --help</code> 查看ansible帮助</li>
+<li><code>ansible-doc -l</code> 查看ansible所有模块</li>
+<li><code>ansible-doc -s yum</code> 查看ansible yum模块,并查看其功能</li>
+</ul>
+<p>注意：</p>
+<ul>
+<li>部分yum方式安装ansible可能会出错，可以选择采用<a href="https://releases.ansible.com/ansible/rpm/release/" target="_blank" rel="noopener noreffer ">rpm进行安装</a></li>
+<li>采坑-rpm安装的，运行会提示缺少argparse modules，用<code>yum install python-argparse</code>安装即可</li>
+</ul>
+<h3 id="21-免密配置可选">2.1 免密配置(可选)</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ ssh-keygen -t dsa
+</span></span><span class="line"><span class="cl">$ ssh-copy-id 192.168.143.102
+</span></span><span class="line"><span class="cl">$ ssh 192.168.143.102
+</span></span><span class="line"><span class="cl">Last login: Tue Jan  <span class="m">7</span> 11:44:30 <span class="m">2025</span> from 192.168.143.1
+</span></span><span class="line"><span class="cl">$ ip a<span class="p">|</span>grep 192.168.143.102
+</span></span><span class="line"><span class="cl">    inet 192.168.143.102/24 brd 192.168.143.255 scope global ens32
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="3-ansible-基础">3. Ansible 基础</h2>
+<h3 id="31-配置主机清单">3.1 配置主机清单</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">root@localhost:~$ vim /etc/ansible/hosts 
+</span></span><span class="line"><span class="cl">...
+</span></span><span class="line"><span class="cl"><span class="c1">## db-[99:101]-node.example.com</span>
+</span></span><span class="line"><span class="cl">192.168.143.102
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="32-测试-ansible-模块">3.2 测试 ansible 模块</h3>
+<p>指定<code>ping</code>模块</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ ansible localhost -m ping
+</span></span><span class="line"><span class="cl">localhost <span class="p">|</span> <span class="nv">SUCCESS</span> <span class="o">=</span>&gt; <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;changed&#34;</span>: false, 
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;ping&#34;</span>: <span class="s2">&#34;pong&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl">root@localhost:~$ ansible 192.168.143.102 -m ping
+</span></span><span class="line"><span class="cl">192.168.143.102 <span class="p">|</span> <span class="nv">SUCCESS</span> <span class="o">=</span>&gt; <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;ansible_facts&#34;</span>: <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;discovered_interpreter_python&#34;</span>: <span class="s2">&#34;/usr/bin/python&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>, 
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;changed&#34;</span>: false, 
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;ping&#34;</span>: <span class="s2">&#34;pong&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 如果目标主机未设置免密登录，并设置简洁输出</span>
+</span></span><span class="line"><span class="cl">root@localhost:~$ ansible 192.168.143.102 -m ping -o -u root -k
+</span></span><span class="line"><span class="cl">SSH password: 
+</span></span><span class="line"><span class="cl">192.168.143.102 <span class="p">|</span> <span class="nv">SUCCESS</span> <span class="o">=</span>&gt; <span class="o">{</span><span class="s2">&#34;ansible_facts&#34;</span>: <span class="o">{</span><span class="s2">&#34;discovered_interpreter_python&#34;</span>: <span class="s2">&#34;/usr/bin/python&#34;</span><span class="o">}</span>, <span class="s2">&#34;changed&#34;</span>: false, <span class="s2">&#34;ping&#34;</span>: <span class="s2">&#34;pong&#34;</span><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="4-inventory-主机清单">4. Inventory 主机清单</h2>
+<ol>
+<li>增加主机组</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">root@localhost:~$ vim /etc/ansible/hosts 
+</span></span><span class="line"><span class="cl">...
+</span></span><span class="line"><span class="cl"><span class="c1">## db-[99:101]-node.example.com</span>
+</span></span><span class="line"><span class="cl"><span class="o">[</span>webserver<span class="o">]</span>
+</span></span><span class="line"><span class="cl">host1
+</span></span><span class="line"><span class="cl">host2
+</span></span><span class="line"><span class="cl">host3
+</span></span><span class="line"><span class="cl">host4
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>测试组</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ ansible webserver -m ping -o -u root -k
+</span></span><span class="line"><span class="cl">SSH password: 
+</span></span><span class="line"><span class="cl">192.168.143.102 <span class="p">|</span> <span class="nv">SUCCESS</span> <span class="o">=</span>&gt; <span class="o">{</span><span class="s2">&#34;ansible_facts&#34;</span>: <span class="o">{</span><span class="s2">&#34;discovered_interpreter_python&#34;</span>: <span class="s2">&#34;/usr/bin/python&#34;</span><span class="o">}</span>, <span class="s2">&#34;changed&#34;</span>: false, <span class="s2">&#34;ping&#34;</span>: <span class="s2">&#34;pong&#34;</span><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="2">
+<li>增加用户名和密码</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">root@localhost:~$ vim /etc/ansible/hosts 
+</span></span><span class="line"><span class="cl">...
+</span></span><span class="line"><span class="cl"><span class="c1">## db-[99:101]-node.example.com</span>
+</span></span><span class="line"><span class="cl"><span class="o">[</span>webserver2<span class="o">]</span>
+</span></span><span class="line"><span class="cl">192.168.143.102 <span class="nv">ansible_ssh_user</span><span class="o">=</span><span class="s1">&#39;root&#39;</span> <span class="nv">ansible_ssh_pass</span><span class="o">=</span><span class="s1">&#39;123456&#39;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>测试</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">root@localhost:~$ ansible webserver2 -m ping -o 
+</span></span><span class="line"><span class="cl">192.168.143.102 <span class="p">|</span> <span class="nv">SUCCESS</span> <span class="o">=</span>&gt; <span class="o">{</span><span class="s2">&#34;ansible_facts&#34;</span>: <span class="o">{</span><span class="s2">&#34;discovered_interpreter_python&#34;</span>: <span class="s2">&#34;/usr/bin/python&#34;</span><span class="o">}</span>, <span class="s2">&#34;changed&#34;</span>: false, <span class="s2">&#34;ping&#34;</span>: <span class="s2">&#34;pong&#34;</span><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="3">
+<li>增加端口</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">root@localhost:~$ vim /etc/ansible/hosts 
+</span></span><span class="line"><span class="cl">...
+</span></span><span class="line"><span class="cl"><span class="c1">## db-[99:101]-node.example.com</span>
+</span></span><span class="line"><span class="cl"><span class="o">[</span>webserver3<span class="o">]</span>
+</span></span><span class="line"><span class="cl">192.168.143.102 <span class="nv">ansible_ssh_user</span><span class="o">=</span><span class="s1">&#39;root&#39;</span> <span class="nv">ansible_ssh_pass</span><span class="o">=</span><span class="s1">&#39;123456&#39;</span> <span class="nv">ansible_ssh_port</span><span class="o">=</span><span class="s1">&#39;22&#39;</span> 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>测试</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">root@localhost:~$ ansible webserver3 -m ping -o 
+</span></span><span class="line"><span class="cl">192.168.143.102 <span class="p">|</span> <span class="nv">SUCCESS</span> <span class="o">=</span>&gt; <span class="o">{</span><span class="s2">&#34;ansible_facts&#34;</span>: <span class="o">{</span><span class="s2">&#34;discovered_interpreter_python&#34;</span>: <span class="s2">&#34;/usr/bin/python&#34;</span><span class="o">}</span>, <span class="s2">&#34;changed&#34;</span>: false, <span class="s2">&#34;ping&#34;</span>: <span class="s2">&#34;pong&#34;</span><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="4">
+<li>组：变量</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">root@localhost:~$ vim /etc/ansible/hosts 
+</span></span><span class="line"><span class="cl">...
+</span></span><span class="line"><span class="cl"><span class="c1">## db-[99:101]-node.example.com</span>
+</span></span><span class="line"><span class="cl"><span class="o">[</span>webserver<span class="o">]</span>
+</span></span><span class="line"><span class="cl">host1 <span class="nv">ansible_ssh_port</span><span class="o">=</span><span class="s1">&#39;2222&#39;</span> <span class="c1"># 定制化端口</span>
+</span></span><span class="line"><span class="cl">host2
+</span></span><span class="line"><span class="cl">host3
+</span></span><span class="line"><span class="cl">host4
+</span></span><span class="line"><span class="cl"><span class="o">[</span>webserver:vars<span class="o">]</span>
+</span></span><span class="line"><span class="cl"><span class="nv">ansible_ssh_user</span><span class="o">=</span><span class="s1">&#39;root&#39;</span> 
+</span></span><span class="line"><span class="cl"><span class="nv">ansible_ssh_pass</span><span class="o">=</span><span class="s1">&#39;123456&#39;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="5">
+<li>子分组</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">root@localhost:~$ vim /etc/ansible/hosts 
+</span></span><span class="line"><span class="cl">...
+</span></span><span class="line"><span class="cl"><span class="c1">## db-[99:101]-node.example.com</span>
+</span></span><span class="line"><span class="cl"><span class="o">[</span>tomcaterver<span class="o">]</span>
+</span></span><span class="line"><span class="cl">host1
+</span></span><span class="line"><span class="cl">host2
+</span></span><span class="line"><span class="cl"><span class="o">[</span>mysqlterver<span class="o">]</span>
+</span></span><span class="line"><span class="cl">host3
+</span></span><span class="line"><span class="cl">host4
+</span></span><span class="line"><span class="cl"><span class="o">[</span>productserver:children<span class="o">]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>测试</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ ansible productserver -m ping -o 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="6">
+<li>自定义主机列表</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ ansible -i /etc/ansible/hosts webserver -m ping -o 
+</span></span><span class="line"><span class="cl">192.168.143.102 <span class="p">|</span> <span class="nv">SUCCESS</span> <span class="o">=</span>&gt; <span class="o">{</span><span class="s2">&#34;ansible_facts&#34;</span>: <span class="o">{</span><span class="s2">&#34;discovered_interpreter_python&#34;</span>: <span class="s2">&#34;/usr/bin/python&#34;</span><span class="o">}</span>, <span class="s2">&#34;changed&#34;</span>: false, <span class="s2">&#34;ping&#34;</span>: <span class="s2">&#34;pong&#34;</span><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><a href="http://www.ansible.com.cn/docs/intro_inventory.html#behavioral-parameters" target="_blank" rel="noopener noreffer ">Ansible 主机清单参数说明</a></li>
+</ul>
+<h2 id="6-add-hoc-点对点模式">6. Add-Hoc 点对点模式</h2>
+<p>内部指令常用模块</p>
+<ol>
+<li>shell</li>
+<li>copy</li>
+<li>user</li>
+<li>软件包管理</li>
+<li>服务模块</li>
+<li>文件模块</li>
+<li>收集模块</li>
+<li>fetch</li>
+<li>cron</li>
+<li>group</li>
+<li>script</li>
+<li>unarchive</li>
+</ol>
+<p><code>copy</code>模块案例</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ touch /tmp/1.txt
+</span></span><span class="line"><span class="cl">$ ansible-doc copy
+</span></span><span class="line"><span class="cl">$ ansible webserver -m copy -a <span class="s1">&#39;src=/tmp/1.txt dest=/tmp/11.txt owner=root group=root mode=777&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">192.168.143.102 <span class="p">|</span> <span class="nv">CHANGED</span> <span class="o">=</span>&gt; <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;ansible_facts&#34;</span>: <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;discovered_interpreter_python&#34;</span>: <span class="s2">&#34;/usr/bin/python&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>, 
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;changed&#34;</span>: true, 
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;checksum&#34;</span>: <span class="s2">&#34;da39a3ee5e6b4b0d3255bfef95601890afd80709&#34;</span>, 
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;dest&#34;</span>: <span class="s2">&#34;/tmp/11.txt&#34;</span>, 
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;gid&#34;</span>: 0, 
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;group&#34;</span>: <span class="s2">&#34;root&#34;</span>, 
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;md5sum&#34;</span>: <span class="s2">&#34;d41d8cd98f00b204e9800998ecf8427e&#34;</span>, 
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;mode&#34;</span>: <span class="s2">&#34;0777&#34;</span>, 
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;owner&#34;</span>: <span class="s2">&#34;root&#34;</span>, 
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;secontext&#34;</span>: <span class="s2">&#34;unconfined_u:object_r:admin_home_t:s0&#34;</span>, 
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;size&#34;</span>: 0, 
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;src&#34;</span>: <span class="s2">&#34;/root/.ansible/tmp/ansible-tmp-1736236277.53-3361-267624272356035/source&#34;</span>, 
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;state&#34;</span>: <span class="s2">&#34;file&#34;</span>, 
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;uid&#34;</span>: <span class="m">0</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="7-role-角色扮演">7. Role 角色扮演</h2>
+<p>Role则是在ansible中，playbooks的目标组织结构。将代码或文件进行模块化，成为roles的文件目录组织结构，易读，代码可重用，层次清晰。</p>
+<p>自动化运维面试的时候问到ansible的会比较多一些，ansible问的更多的便是playbook了。</p>
+<h3 id="1-目录结构">1. 目录结构</h3>
+<p>Ansible 的 Role 是一种将 Playbook 中的任务、变量、模板和文件组织在一起的方法，使得 Playbook 更加模块化、可重用和易于管理。每个 Role 通常对应一个特定的功能或服务（如 web server, database 等）。以下是一个典型的 Ansible Role 目录结构：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">roles/
+</span></span><span class="line"><span class="cl">└── myrole
+</span></span><span class="line"><span class="cl">    ├── defaults                <span class="c1"># 定义默认变量，这些变量可以在外部被覆盖。</span>
+</span></span><span class="line"><span class="cl">    │ └── main.yml              <span class="c1"># 默认变量文件，通常用于设置可选配置项。</span>
+</span></span><span class="line"><span class="cl">    ├── files                   <span class="c1"># 存放需要复制到远程主机上的静态文件。</span>
+</span></span><span class="line"><span class="cl">    ├── handlers                <span class="c1"># 定义可以由任务触发的动作（如重启服务）。</span>
+</span></span><span class="line"><span class="cl">    │ └── main.yml              <span class="c1"># 处理程序文件，定义了当某些条件满足时执行的操作。</span>
+</span></span><span class="line"><span class="cl">    ├── meta                    <span class="c1"># 包含角色元数据，如依赖关系、平台兼容性等。</span>
+</span></span><span class="line"><span class="cl">    │ └── main.yml              <span class="c1"># 元数据文件，指定角色依赖和其他属性。</span>
+</span></span><span class="line"><span class="cl">    ├── README.md               <span class="c1"># 说明文档，描述角色的功能、使用方法和注意事项。</span>
+</span></span><span class="line"><span class="cl">    ├── tasks                   <span class="c1"># 角色的主要任务列表，定义要执行的具体操作。</span>
+</span></span><span class="line"><span class="cl">    │ └── main.yml              <span class="c1"># 必须存在的入口文件，包含了一系列的任务定义。其它目录和文件为可选</span>
+</span></span><span class="line"><span class="cl">    ├── templates               <span class="c1"># 存放 Jinja2 模板文件，用于生成配置文件等文本内容。</span>
+</span></span><span class="line"><span class="cl">    ├── tests                   <span class="c1"># 测试用例目录，通常包括测试 Playbook 和库存文件。</span>
+</span></span><span class="line"><span class="cl">    │ ├── inventory             <span class="c1"># 测试环境的库存文件，定义了测试目标主机。</span>
+</span></span><span class="line"><span class="cl">    │ └── test.yml              <span class="c1"># 测试 Playbook 文件，用于验证角色是否按预期工作。</span>
+</span></span><span class="line"><span class="cl">    └── vars                    <span class="c1"># 定义不可覆盖的变量，通常用于强制性的配置选项。</span>
+</span></span><span class="line"><span class="cl">        └── main.yml            <span class="c1"># 变量文件，包含了角色所需的固定配置值。</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="各个目录和文件的作用">各个目录和文件的作用</h4>
+<ul>
+<li>
+<p><strong>defaults/</strong>: 此目录下的 <code>main.yml</code> 文件包含了该角色的默认变量，这些变量可以很容易地被用户自定义或覆盖。它们通常是可选的配置项，提供了合理的默认值。</p>
+</li>
+<li>
+<p><strong>files/</strong>: 这个目录用来存放那些不需要经过模板处理就可以直接复制到远程节点上的静态文件。</p>
+</li>
+<li>
+<p><strong>handlers/</strong>: 在这里定义的是处理程序，它们是一些特殊的任务，只有当其他任务通知它们时才会被执行。常见的例子是重启服务，因为这通常不应该在每次运行时都发生，而是在配置更改后才需要。</p>
+</li>
+<li>
+<p><strong>meta/</strong>: 包含有关角色的元数据信息，比如它可能依赖的其他角色、适用的操作系统类型等。这对于确保角色正确安装其依赖项非常重要。</p>
+</li>
+<li>
+<p><strong>README.md</strong>: 提供关于角色的详细信息，例如如何使用它、它的功能是什么以及任何重要的提示或警告。</p>
+</li>
+<li>
+<p><strong>tasks/</strong>: 这是角色的核心部分，<code>main.yml</code> 文件中列出了所有要执行的任务。这是当你将角色添加到 Playbook 中时会被调用的地方。</p>
+</li>
+<li>
+<p><strong>templates/</strong>: 如果你需要创建基于模板的文件（如配置文件），那么这些模板应该放在这个目录下。Ansible 使用 Jinja2 模板引擎来渲染这些模板，并根据需要插入变量值。</p>
+</li>
+<li>
+<p><strong>tests/</strong>: 该目录包含了用于测试角色的资源，包括一个模拟的库存文件和一个或多个测试 Playbook。这对于开发过程中进行单元测试和集成测试非常有用。</p>
+</li>
+<li>
+<p><strong>vars/</strong>: 此目录中的 <code>main.yml</code> 文件定义了角色所需的变量，这些变量应该是不可轻易覆盖的，因为它们代表了角色内部的关键配置。</p>
+</li>
+</ul>
+<p>通过这样的组织方式，Ansible 的 Roles 不仅易于理解，而且也促进了代码的重用性和模块化设计。</p>
+<h3 id="2-编写任务">2. 编写任务</h3>
+<p>创建一个 Role</p>
+<p>你可以手动创建上述目录结构，或者使用 ansible-galaxy 命令来自动创建。以下是使用 ansible-galaxy 创建 Role 的步骤：</p>
+<ol>
+<li>打开命令行工具。</li>
+<li>使用 ansible-galaxy role init <rolename> 来创建一个新的 Role。例如，如果你想创建一个名为 myrole 的 Role，你会运行：</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">root@localhost:/etc/ansible$ ansible-galaxy role init myrole^C
+</span></span><span class="line"><span class="cl">root@localhost:/etc/ansible$ tree roles/
+</span></span><span class="line"><span class="cl">roles/
+</span></span><span class="line"><span class="cl">└── myrole
+</span></span><span class="line"><span class="cl">    ├── defaults
+</span></span><span class="line"><span class="cl">    │ └── main.yml
+</span></span><span class="line"><span class="cl">    ├── files
+</span></span><span class="line"><span class="cl">    ├── handlers
+</span></span><span class="line"><span class="cl">    │ └── main.yml
+</span></span><span class="line"><span class="cl">    ├── meta
+</span></span><span class="line"><span class="cl">    │ └── main.yml
+</span></span><span class="line"><span class="cl">    ├── README.md
+</span></span><span class="line"><span class="cl">    ├── tasks
+</span></span><span class="line"><span class="cl">    │ └── main.yml
+</span></span><span class="line"><span class="cl">    ├── templates
+</span></span><span class="line"><span class="cl">    ├── tests
+</span></span><span class="line"><span class="cl">    │ ├── inventory
+</span></span><span class="line"><span class="cl">    │ └── test.yml
+</span></span><span class="line"><span class="cl">    └── vars
+</span></span><span class="line"><span class="cl">        └── main.yml
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="m">9</span> directories, <span class="m">8</span> files
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="3-准备配置文件">3. 准备配置文件</h3>
+<p>files 目录下是存放静态文件，templates 目录下是存放模板文件，文件中设置占位符一般是结合vars 变量和setup模块进行组合使用。</p>
+<ol>
+<li>在files 目录下创建一个静态文件，通过处理程序将其拷贝到远程主机</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ <span class="nb">cd</span> files
+</span></span><span class="line"><span class="cl">$ touch ansible.txt
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="2">
+<li>在templates 目录下创建一个模板文件</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ <span class="nb">cd</span> templates
+</span></span><span class="line"><span class="cl">$ vim ansible-templates.txt
+</span></span><span class="line"><span class="cl">the ntp_port is <span class="o">{{</span> ntp_port <span class="o">}}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="4-编写变量">4. 编写变量</h3>
+<p>变量结合模板文件一起使用，方便动态修改</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ <span class="nb">cd</span> vars
+</span></span><span class="line"><span class="cl">$ vim main.yml
+</span></span><span class="line"><span class="cl">ntp_port: <span class="m">8888</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="5-编写处理程序">5. 编写处理程序</h3>
+<p>处理程序tasks可以理解为playbook的导演</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ <span class="nb">cd</span> tasks
+</span></span><span class="line"><span class="cl">$ vim main.yml
+</span></span><span class="line"><span class="cl">- name: <span class="s2">&#34;Tasks in role demo&#34;</span>
+</span></span><span class="line"><span class="cl">  debug: <span class="nv">msg</span><span class="o">=</span><span class="s2">&#34;Simple role example&#34;</span>
+</span></span><span class="line"><span class="cl">- name: <span class="s2">&#34;copy file to dest host&#34;</span>
+</span></span><span class="line"><span class="cl">  copy:
+</span></span><span class="line"><span class="cl">    src: ansible.txt
+</span></span><span class="line"><span class="cl">    dest: /tmp/ansible.txt
+</span></span><span class="line"><span class="cl">    mode: <span class="m">0644</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">- name: <span class="s2">&#34;template file to dest host&#34;</span>
+</span></span><span class="line"><span class="cl">  template:
+</span></span><span class="line"><span class="cl">    src: ansible-template.txt
+</span></span><span class="line"><span class="cl">    dest: /tmp/ansible-template.txt
+</span></span><span class="line"><span class="cl">    owner: root
+</span></span><span class="line"><span class="cl">    group: root
+</span></span><span class="line"><span class="cl">    mode: <span class="m">0644</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="6-剧本编写">6. 剧本编写</h3>
+<p><code>site.yaml</code> 可以理解为剧本，可以设置每个role的执行顺序，例如冯小刚导演的电影1942的剧本就是刘震云编剧的</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ <span class="nb">cd</span> /etc/ansible/role
+</span></span><span class="line"><span class="cl">$ vim site.yaml
+</span></span><span class="line"><span class="cl">---
+</span></span><span class="line"><span class="cl"><span class="c1"># This playbook install base_vm</span>
+</span></span><span class="line"><span class="cl">- hosts: nodes 
+</span></span><span class="line"><span class="cl">  <span class="c1">#gather_facts: yes</span>
+</span></span><span class="line"><span class="cl">  pre_tasks:
+</span></span><span class="line"><span class="cl">    - name: pre task
+</span></span><span class="line"><span class="cl">      shell: <span class="nb">echo</span> <span class="s2">&#34;hello&#34;</span> in pre_tasks
+</span></span><span class="line"><span class="cl">  roles:
+</span></span><span class="line"><span class="cl">    - role: myrole
+</span></span><span class="line"><span class="cl">      <span class="c1">#when: &#34;ansible_os_family == &#39;RedHat&#39;&#34;  # 条件判断可以将其注释掉，结合gather_facts一起使用</span>
+</span></span><span class="line"><span class="cl">  tasks:
+</span></span><span class="line"><span class="cl">    - name: tasks in site.yaml
+</span></span><span class="line"><span class="cl">      debug: <span class="nv">msg</span><span class="o">=</span><span class="s2">&#34;this is task in site.yaml&#34;</span>
+</span></span><span class="line"><span class="cl">  post_tasks:
+</span></span><span class="line"><span class="cl">    - name: post task
+</span></span><span class="line"><span class="cl">      shell: <span class="nb">echo</span> <span class="s2">&#34;goodbye&#34;</span> in post_tasks
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="7-测试">7. 测试</h3>
+<p>对<code>playbook</code>进行语法测试</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ ansible-playbook site.yaml --syntax-check
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">playbook: site.yaml
+</span></span><span class="line"><span class="cl"><span class="c1"># 查看输出的细节</span>
+</span></span><span class="line"><span class="cl">$ ansible-playbook -i hosts site.yml --verbose
+</span></span><span class="line"><span class="cl"><span class="c1"># 查看该脚本影响哪些主机</span>
+</span></span><span class="line"><span class="cl">$ ansible-playbook -i hosts site.yml --list-hosts
+</span></span><span class="line"><span class="cl"><span class="c1"># 并行执行脚本</span>
+</span></span><span class="line"><span class="cl">$ ansible-playbook site.yml -f <span class="m">10</span> 
+</span></span><span class="line"><span class="cl"><span class="c1"># Dry run</span>
+</span></span><span class="line"><span class="cl">$ ansible-playbook site.yml --check
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="参考">参考</h2>
+<ol>
+<li><a href="https://docs.ansible.org.cn/ansible/latest/getting_started/index.html" target="_blank" rel="noopener noreffer ">Ansible 社区文档</a></li>
+<li><a href="http://www.ansible.com.cn/docs/" target="_blank" rel="noopener noreffer ">Ansible中文权威指南</a></li>
+<li><a href="https://www.cnblogs.com/maiblogs/p/16833354.html" target="_blank" rel="noopener noreffer ">自动化运维-Ansible03-Ansible常用命令和模块</a></li>
+<li><a href="https://github.com/ansible/ansible-examples" target="_blank" rel="noopener noreffer ">github官网 ansible examples</a></li>
+<li><a href="https://note.youdao.com/ynoteshare/index.html?id=ca2d3bbe7c37a2fd69ece59bdaad219e&amp;type=note&amp;_time=1736411850199" target="_blank" rel="noopener noreffer ">运维自动化之ANSIBLE</a></li>
+<li><a href="https://galaxy.ansible.com/ui/" target="_blank" rel="noopener noreffer ">Ansible Galaxy</a></li>
+</ol>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2024-06-26</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://lushuan.gihub.io/ansible%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/" data-title="Ansible 部署及快速入门" data-via="xxxx" data-hashtags="Ansible"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://lushuan.gihub.io/ansible%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/" data-hashtag="Ansible"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="https://lushuan.gihub.io/ansible%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/" data-title="Ansible 部署及快速入门"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="https://lushuan.gihub.io/ansible%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/" data-title="Ansible 部署及快速入门"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://lushuan.gihub.io/ansible%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/" data-title="Ansible 部署及快速入门"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/ansible/">Ansible</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/%E6%AC%B2%E7%BD%A2%E4%B8%8D%E8%83%BD%E7%9A%84%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95%E7%AD%96%E7%95%A5/" class="prev" rel="prev" title="欲罢不能的学习方法策略"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>欲罢不能的学习方法策略</a>
+            <a href="/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E5%92%8C%E8%BF%98%E5%8E%9F/" class="next" rel="next" title="MySQL 数据库备份和还原">MySQL 数据库备份和还原<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+<div id="comments"><div id="gitalk" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://github.com/gitalk/gitalk"></a>Gitalk</a>.
+            </noscript><div id="giscus" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://giscus.app">Giscus</a>.
+            </noscript></div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">我是有底线的</div><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.114.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2025</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">lushuan</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/gitalk/gitalk.min.css"><link rel="stylesheet" href="/lib/lightgallery/css/lightgallery-bundle.min.css"><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/gitalk/gitalk.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/lightgallery/lightgallery.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/zoom/lg-zoom.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{"giscus":{"category":"Announcements","categoryId":"DIC_kwDOMOWcic4Coqlk","darkTheme":"dark","emitMetadata":"0","inputPosition":"bottom","lang":"zh-CN","lazyLoading":false,"lightTheme":"light","mapping":"pathname","reactionsEnabled":"1","repo":"lushuan/lushuan.github.io","repoId":"R_kgDOMOWciQ"},"gitalk":{"admin":["lushuan"],"clientID":"Ov23liSh0yG2wy6B7XP1","clientSecret":"7184a8df973267af95c92ddeb27789417ba82469","id":"2020-06-27T12:06:37+08:00","owner":"lushuan","repo":"lushuan.github.io","title":"Ansible 部署及快速入门"}},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"lightgallery":true,"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
