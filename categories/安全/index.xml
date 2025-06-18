@@ -1,0 +1,16 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>安全 - 分类 - Less is more</title>
+        <link>https://lushuan.gihub.io/categories/%E5%AE%89%E5%85%A8/</link>
+        <description>安全 - 分类 - Less is more</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Thu, 13 Mar 2025 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/categories/%E5%AE%89%E5%85%A8/" rel="self" type="application/rss+xml" /><item>
+    <title>跨站请求伪造CSRF攻击的原理以及防范措施</title>
+    <link>https://lushuan.gihub.io/%E8%B7%A8%E7%AB%99%E8%AF%B7%E6%B1%82%E4%BC%AA%E9%80%A0csrf%E6%94%BB%E5%87%BB%E7%9A%84%E5%8E%9F%E7%90%86%E4%BB%A5%E5%8F%8A%E9%98%B2%E8%8C%83%E6%8E%AA%E6%96%BD/</link>
+    <pubDate>Thu, 13 Mar 2025 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>https://lushuan.gihub.io/%E8%B7%A8%E7%AB%99%E8%AF%B7%E6%B1%82%E4%BC%AA%E9%80%A0csrf%E6%94%BB%E5%87%BB%E7%9A%84%E5%8E%9F%E7%90%86%E4%BB%A5%E5%8F%8A%E9%98%B2%E8%8C%83%E6%8E%AA%E6%96%BD/</guid>
+    <description><![CDATA[前言 跨站请求伪造(Cross-Site Request Forgery, CSRF)攻击。它与XSS攻击的目标不同，但危害同样巨大，是Web安全的核心威胁之一。 CSRF攻击]]></description>
+</item>
+</channel>
+</rss>

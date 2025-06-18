@@ -4,7 +4,15 @@
         <link>https://lushuan.gihub.io/posts/</link>
         <description>所有文章 | Less is more</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
-            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Fri, 21 Feb 2025 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/posts/" rel="self" type="application/rss+xml" /><item>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Thu, 13 Mar 2025 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/posts/" rel="self" type="application/rss+xml" /><item>
+    <title>跨站请求伪造CSRF攻击的原理以及防范措施</title>
+    <link>https://lushuan.gihub.io/%E8%B7%A8%E7%AB%99%E8%AF%B7%E6%B1%82%E4%BC%AA%E9%80%A0csrf%E6%94%BB%E5%87%BB%E7%9A%84%E5%8E%9F%E7%90%86%E4%BB%A5%E5%8F%8A%E9%98%B2%E8%8C%83%E6%8E%AA%E6%96%BD/</link>
+    <pubDate>Thu, 13 Mar 2025 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>https://lushuan.gihub.io/%E8%B7%A8%E7%AB%99%E8%AF%B7%E6%B1%82%E4%BC%AA%E9%80%A0csrf%E6%94%BB%E5%87%BB%E7%9A%84%E5%8E%9F%E7%90%86%E4%BB%A5%E5%8F%8A%E9%98%B2%E8%8C%83%E6%8E%AA%E6%96%BD/</guid>
+    <description><![CDATA[前言 跨站请求伪造(Cross-Site Request Forgery, CSRF)攻击。它与XSS攻击的目标不同，但危害同样巨大，是Web安全的核心威胁之一。 CSRF攻击]]></description>
+</item>
+<item>
     <title>OpenSSH v9.9p2源码离线一键升级</title>
     <link>https://lushuan.gihub.io/openssh_v9.9p2%E6%BA%90%E7%A0%81%E7%A6%BB%E7%BA%BF%E4%B8%80%E9%94%AE%E5%8D%87%E7%BA%A7/</link>
     <pubDate>Fri, 21 Feb 2025 12:06:37 &#43;0800</pubDate>
@@ -75,14 +83,6 @@
     <author>lushuan</author>
     <guid>https://lushuan.gihub.io/ubuntu-server%E9%83%A8%E7%BD%B2k8s1.28containerd%E7%89%88%E6%9C%AC%E9%9B%86%E7%BE%A4/</guid>
     <description><![CDATA[整体流程 部署准备 k8s 集群容器运行时 Containerd 准备 k8s 集群部署 k8s 集群软件 apt 源准备 k8s 集群软件安装 k8s 集群初始化 k8s 集群worker 节点加入 k8s 集群网络插件 Calico 准备 部]]></description>
-</item>
-<item>
-    <title>一文了解 Kubernetes RBAC 机制和实践</title>
-    <link>https://lushuan.gihub.io/%E4%B8%80%E6%96%87%E4%BA%86%E8%A7%A3kubernetes-rbac/</link>
-    <pubDate>Sat, 27 Apr 2024 12:06:37 &#43;0800</pubDate>
-    <author>lushuan</author>
-    <guid>https://lushuan.gihub.io/%E4%B8%80%E6%96%87%E4%BA%86%E8%A7%A3kubernetes-rbac/</guid>
-    <description><![CDATA[前言 在了解RBAC 之前先了解一下Kubernetes API 对象，RBAC 最终操作的对象还是Kubernetes API 对象，本质还是对Kubernet]]></description>
 </item>
 </channel>
 </rss>

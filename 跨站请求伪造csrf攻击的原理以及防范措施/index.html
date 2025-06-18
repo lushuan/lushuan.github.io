@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>跨站请求伪造CSRF攻击的原理以及防范措施 - Less is more</title><meta name="Description" content="晚来天欲雪,能饮一杯无?"><meta property="og:title" content="跨站请求伪造CSRF攻击的原理以及防范措施" />
+<meta property="og:description" content="前言 跨站请求伪造(Cross-Site Request Forgery, CSRF)攻击。它与XSS攻击的目标不同，但危害同样巨大，是Web安全的核心威胁之一。 CSRF攻击" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://lushuan.gihub.io/%E8%B7%A8%E7%AB%99%E8%AF%B7%E6%B1%82%E4%BC%AA%E9%80%A0csrf%E6%94%BB%E5%87%BB%E7%9A%84%E5%8E%9F%E7%90%86%E4%BB%A5%E5%8F%8A%E9%98%B2%E8%8C%83%E6%8E%AA%E6%96%BD/" /><meta property="og:image" content="https://lushuan.gihub.io/images/avatar.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2025-03-13T12:06:37+08:00" />
+<meta property="article:modified_time" content="2025-06-16T12:06:37+08:00" /><meta property="og:site_name" content="我的网站" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://lushuan.gihub.io/images/avatar.png"/>
+
+<meta name="twitter:title" content="跨站请求伪造CSRF攻击的原理以及防范措施"/>
+<meta name="twitter:description" content="前言 跨站请求伪造(Cross-Site Request Forgery, CSRF)攻击。它与XSS攻击的目标不同，但危害同样巨大，是Web安全的核心威胁之一。 CSRF攻击"/>
+<meta name="application-name" content="我的网站">
+<meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/images/avatar.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://lushuan.gihub.io/%E8%B7%A8%E7%AB%99%E8%AF%B7%E6%B1%82%E4%BC%AA%E9%80%A0csrf%E6%94%BB%E5%87%BB%E7%9A%84%E5%8E%9F%E7%90%86%E4%BB%A5%E5%8F%8A%E9%98%B2%E8%8C%83%E6%8E%AA%E6%96%BD/" /><link rel="prev" href="https://lushuan.gihub.io/openssh_v9.9p2%E6%BA%90%E7%A0%81%E7%A6%BB%E7%BA%BF%E4%B8%80%E9%94%AE%E5%8D%87%E7%BA%A7/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "跨站请求伪造CSRF攻击的原理以及防范措施",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/lushuan.gihub.io\/%E8%B7%A8%E7%AB%99%E8%AF%B7%E6%B1%82%E4%BC%AA%E9%80%A0csrf%E6%94%BB%E5%87%BB%E7%9A%84%E5%8E%9F%E7%90%86%E4%BB%A5%E5%8F%8A%E9%98%B2%E8%8C%83%E6%8E%AA%E6%96%BD\/"
+        },"genre": "posts","keywords": "安全, Web安全","wordcount":  5549 ,
+        "url": "https:\/\/lushuan.gihub.io\/%E8%B7%A8%E7%AB%99%E8%AF%B7%E6%B1%82%E4%BC%AA%E9%80%A0csrf%E6%94%BB%E5%87%BB%E7%9A%84%E5%8E%9F%E7%90%86%E4%BB%A5%E5%8F%8A%E9%98%B2%E8%8C%83%E6%8E%AA%E6%96%BD\/","datePublished": "2025-03-13T12:06:37+08:00","dateModified": "2025-06-16T12:06:37+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "lushuan"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Less is more"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Less is more</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 归档 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/" title="About"> 关于 </a><a class="menu-item" href="/friends/" title="friends"> 友链 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Less is more"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Less is more</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">归档</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="About">关于</a><a class="menu-item" href="/friends/" title="friends">友链</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content always-active" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">跨站请求伪造CSRF攻击的原理以及防范措施</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%AE%89%E5%85%A8/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>安全</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2025-03-13">2025-03-13</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 5549 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 12 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#前言">前言</a></li>
+        <li><a href="#csrf攻击原理">CSRF攻击原理</a></li>
+        <li><a href="#csrf攻击的核心要素">CSRF攻击的核心要素</a></li>
+        <li><a href="#常见的csrf攻击实践构造恶意请求的方式">常见的CSRF攻击实践（构造恶意请求的方式）</a></li>
+        <li><a href="#csrf攻击的后果">CSRF攻击的后果</a></li>
+        <li><a href="#csrf攻击的防范措施核心思想增加请求的不可预测性">CSRF攻击的防范措施（核心思想：增加请求的不可预测性）</a></li>
+        <li><a href="#实践防御建议总结">实践防御建议总结</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h3 id="前言">前言</h3>
+<p>跨站请求伪造(Cross-Site Request Forgery, CSRF)攻击。它与XSS攻击的目标不同，但危害同样巨大，是Web安全的核心威胁之一。</p>
+<h3 id="csrf攻击原理">CSRF攻击原理</h3>
+<p>CSRF攻击的核心在于<strong>欺骗用户的浏览器，让其以用户的身份在已认证（登录）的网站上执行攻击者指定的操作</strong>。</p>
+<ol>
+<li>攻击者的目标： 攻击者诱使已经登录了目标网站（例如银行网站 <code>bank.com</code>）的用户，在用户不知情的情况下，向该目标网站发起一个恶意请求（例如转账给攻击者）。</li>
+<li>用户已登录： 受害者用户之前已经成功登录了目标网站（<code>bank.com</code>），浏览器保存了该网站的会话Cookie（或其他认证凭证）。只要这个Cookie未过期，浏览器在向目标网站发送任何请求时都会自动带上它。</li>
+<li>攻击者伪造请求：
+<ul>
+<li>攻击者精心构造一个指向目标网站关键功能（例如转账接口 <code>bank.com/transfer</code>）的HTTP请求。这个请求包含了执行恶意操作所需的所有参数（如收款账户、转账金额）。</li>
+<li><strong>关键点：</strong> 构造的请求可以是 <code>GET</code>（更容易，比如隐藏在图片链接或链接里）或 <code>POST</code>（常用，隐藏在表单里）请求。</li>
+</ul>
+</li>
+<li>诱骗用户触发请求：
+<ul>
+<li>攻击者需要设法让已经登录了目标网站的用户访问一个恶意页面（这个页面可以在攻击者控制的网站、论坛帖子、嵌入邮件的页面、甚至被XSS攻击的网站）。</li>
+<li>当受害者访问这个恶意页面时，该页面会包含<strong>自动触发</strong>或<strong>诱使用户点击</strong>向目标网站发起伪造请求的代码。</li>
+</ul>
+</li>
+<li>请求被发送并执行：
+<ul>
+<li>用户的浏览器访问恶意页面，并按照页面指示（自动或用户触发）向目标网站 <code>bank.com/transfer</code> 发起伪造的请求。</li>
+<li>由于用户之前已登录 <code>bank.com</code>，浏览器会自动将用户的 <code>bank.com</code> 会话Cookie添加到该请求头中。</li>
+<li><code>bank.com</code> 服务器收到这个请求：检查Cookie有效 -&gt; 验证用户身份通过 -&gt; 执行请求中的操作（转账）-&gt; 返回结果。</li>
+</ul>
+</li>
+<li>攻击完成： 攻击者在用户不知情、无意的情况下，以用户的身份和权限成功执行了恶意操作（如转账给攻击者账户）。受害者直到发现自己账户变动时才会察觉到攻击。</li>
+</ol>
+<h3 id="csrf攻击的核心要素">CSRF攻击的核心要素</h3>
+<ol>
+<li>受害者用户已登录目标网站A（身份认证有效）。</li>
+<li>目标网站A的会话认证机制仅依赖于Cookie（或其他浏览器自动发送的信息）。</li>
+<li>目标网站A存在关键操作接口（如转账、改密、改邮箱、发帖），该接口仅通过会话Cookie鉴别用户身份，对于请求的来源没有足够验证（只要Cookie对就执行）。</li>
+<li>攻击者能够构造出该关键操作的完整HTTP请求（知道URL、参数格式）。</li>
+<li>攻击者能诱使受害者用户在登录状态下访问包含能触发该请求的恶意页面。</li>
+</ol>
+<h3 id="常见的csrf攻击实践构造恶意请求的方式">常见的CSRF攻击实践（构造恶意请求的方式）</h3>
+<ol>
+<li>
+<p>GET请求伪装：</p>
+<ul>
+<li>攻击者直接在恶意页面上嵌入指向目标接口的 <code>GET</code> 请求（通过 <code>&lt;img&gt;</code>, <code>&lt;script&gt;</code>, <code>&lt;iframe&gt;</code> 等标签的 <code>src</code> 属性）。</li>
+<li><strong>例子：</strong> 恶意页面中嵌入：
+<code>&lt;img src=&quot;http://bank.com/transfer?to=attacker_account&amp;amount=10000&quot; width=&quot;0&quot; height=&quot;0&quot; /&gt;</code></li>
+<li>用户访问该恶意页面时，浏览器会尝试加载图片，自动向 <code>bank.com</code> 发送转账的 <code>GET</code> 请求（带上用户Cookie），完成攻击。攻击者账号收到10000元。</li>
+<li><strong>问题：</strong> <code>GET</code> 请求通常不应该用于修改数据的操作，但现在也能看到（危害更大）。</li>
+</ul>
+</li>
+<li>
+<p>POST请求伪装：</p>
+<ul>
+<li>攻击者在恶意页面中构造一个隐藏的表单 (<code>&lt;form&gt;</code>) ，表单的 <code>action</code> 指向目标接口地址（<code>bank.com/transfer</code>），<code>method</code> 为 <code>POST</code>，表单中包含恶意操作所需的参数（隐藏的输入框）。</li>
+<li>使用JS在页面加载时自动提交表单 (<code>form.submit()</code>)。</li>
+<li><strong>例子：</strong>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">body</span> <span class="na">onload</span><span class="o">=</span><span class="s">&#34;document.forms[0].submit()&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">form</span> <span class="na">action</span><span class="o">=</span><span class="s">&#34;http://bank.com/transfer&#34;</span> <span class="na">method</span><span class="o">=</span><span class="s">&#34;POST&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;hidden&#34;</span> <span class="na">name</span><span class="o">=</span><span class="s">&#34;to&#34;</span> <span class="na">value</span><span class="o">=</span><span class="s">&#34;attacker_account&#34;</span> <span class="p">/&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;hidden&#34;</span> <span class="na">name</span><span class="o">=</span><span class="s">&#34;amount&#34;</span> <span class="na">value</span><span class="o">=</span><span class="s">&#34;10000&#34;</span> <span class="p">/&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;submit&#34;</span> <span class="na">value</span><span class="o">=</span><span class="s">&#34;Click for Prize!&#34;</span> <span class="p">/&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="c">&lt;!-- 也可完全隐藏，靠onload提交 --&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">form</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>用户访问恶意页面时，表单被自动提交（即使提交按钮是诱骗性的或隐藏的），浏览器向 <code>bank.com</code> 发送包含恶意参数和用户Cookie的 <code>POST</code> 请求。</li>
+</ul>
+</li>
+<li>
+<p><strong>利用其他标签/方法：</strong> 除了图片和表单，攻击者还可以利用 <code>&lt;link&gt;</code> (rel=stylesheet 或 prerender/prefetch)、<code>&lt;video&gt;</code>、<code>&lt;object&gt;</code>、<code>XMLHttpRequest</code>、<code>fetch()</code>（如果允许跨域）等方法来发送伪造请求。</p>
+</li>
+</ol>
+<h3 id="csrf攻击的后果">CSRF攻击的后果</h3>
+<ul>
+<li>资金损失： 伪造银行转账操作。</li>
+<li>账户被接管： 伪造修改密码、修改密保邮箱操作。</li>
+<li>数据泄露/篡改： 伪造用户资料修改、删除重要数据操作。</li>
+<li>非授权操作： 伪造发送消息、发布帖子、投票、购物车结算等用户权限范围内的任何操作。</li>
+<li>声誉损害： 受害者在不知情的情况下进行的恶意操作可能损害其个人或公司的声誉。</li>
+</ul>
+<h3 id="csrf攻击的防范措施核心思想增加请求的不可预测性">CSRF攻击的防范措施（核心思想：增加请求的不可预测性）</h3>
+<ol>
+<li>
+<p>CSRF Tokens（最常用、最有效的方案）：</p>
+<ul>
+<li><strong>原理：</strong> 为每个用户会话生成一个<strong>唯一的、随机的、高强度的Token（令牌）</strong>。将这个Token包含在：
+<ul>
+<li>服务端生成的表单中（作为隐藏字段 <code>&lt;input type=&quot;hidden&quot; name=&quot;csrf_token&quot; value=&quot;random_value&quot;&gt;</code>）。</li>
+<li>AJAX请求的请求头中（<code>X-CSRF-Token: random_value</code>）。</li>
+</ul>
+</li>
+<li><strong>服务器验证：</strong> 在处理任何会改变状态的请求（<code>POST</code>, <code>PUT</code>, <code>DELETE</code>, <code>PATCH</code>）时，服务器检查请求中是否携带了有效的CSRF Token，并且该Token与当前用户会话中存储的Token一致。</li>
+<li><strong>安全性分析：</strong>
+<ul>
+<li>攻击者无法在自己的恶意页面中预先得知这个Token（因为Token是随机的且关联用户会话）。</li>
+<li>同源策略（Same-Origin Policy）阻止了恶意页面通过JavaScript从合法页面读取Token（因为恶意页面和目标网站不同源）。</li>
+<li>因此，攻击者无法在伪造的请求中包含正确的Token，服务器会拒绝执行请求。</li>
+</ul>
+</li>
+<li><strong>实现要点：</strong>
+<ul>
+<li>Token应绑定到用户会话（session），并在用户登录后生成。</li>
+<li>Token应具有足够的熵（长度和随机性）以防猜测。</li>
+<li>Token应在表单提交后立即失效（防止表单重复提交）或者在一个会话期内有效（后者更常见，但风险稍高），登出后应销毁。</li>
+<li>使用<code>POST</code>方法保护携带Token的请求（避免Token泄漏在URL上）。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>双重提交Cookie验证：</p>
+<ul>
+<li><strong>原理：</strong>
+<ul>
+<li>用户登录后，服务器除了设置会话Cookie（<code>Set-Cookie: SessionId=...; ...</code>），还会在客户端设置一个单独的CSRF Token Cookie（通常不能标记为 <code>HttpOnly</code>），如 <code>Set-Cookie: CSRF-Token=random_value; ...</code>。</li>
+<li>客户端在发起敏感请求（通常是非 <code>GET</code>）时，除了浏览器自动在 <code>Cookie</code> 头中带上会话Cookie和CSRF-Token Cookie，还需要在请求头（如 <code>X-CSRF-Token</code>）或者请求体（如参数 <code>csrf_token</code>）中也带上这个CSRF Token值。</li>
+<li>服务器在验证请求时：
+<ul>
+<li>从请求头或请求体中取出CSRF Token值（Token值）。</li>
+<li>从请求头中的Cookie里取出CSRF Token Cookie值。</li>
+<li>比较这两个Token值是否一致。一致则执行操作。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>安全性分析：</strong>
+<ul>
+<li>攻击者可以通过构造恶意请求让浏览器带上合法的会话Cookie（因为浏览器自动做），<strong>但无法让浏览器带上合法的CSRF Token Cookie发送到攻击者控制的服务器</strong>（攻击者拿不到Cookie）。</li>
+<li>攻击者在伪造请求的 <code>X-CSRF-Token</code> 头或请求体中放入什么值？他不知道用户真实的CSRF Token值（因为Cookie不可被恶意JS读取），也无法猜测。</li>
+<li>因此，服务器收到的伪造请求中，请求头/体中的Token值和Cookie中的Token值不一致（甚至缺失），验证失败。</li>
+</ul>
+</li>
+<li><strong>优缺点：</strong> 相比单纯使用Token在表单中，此方法JS更容易获取Token（从Cookie读取）。需要额外注意防止子域泄露问题（设置Cookie的 <code>Domain</code> 和 <code>Path</code> 属性严格控制范围）。现代框架常用此方式结合Token使用。</li>
+</ul>
+</li>
+<li>
+<p>检查 <code>Origin</code> / <code>Referer</code> HTTP请求头：</p>
+<ul>
+<li><strong>原理：</strong>
+<ul>
+<li>服务器在处理敏感请求时，检查HTTP请求头 <code>Origin</code>（更可靠）或 <code>Referer</code>（存在隐私问题和可被篡改风险，但旧浏览器兼容好）。</li>
+<li><strong><code>Origin</code> 头：</strong> 表示<strong>请求发起的源（协议+域名+端口）</strong>。不能由JS设置。浏览器在跨域请求和同站 <code>POST</code> 请求中通常会发送。</li>
+<li><strong><code>Referer</code> 头：</strong> 表示<strong>请求来源的完整页面URL</strong>。可能会被一些防火墙或浏览器插件屏蔽或隐私保护策略移除（空），也可能被篡改（不安全）。</li>
+</ul>
+</li>
+<li><strong>服务器验证：</strong> 如果请求头中包含 <code>Origin</code>，服务器检查它是否是<strong>预期</strong>的合法源（一个或多个白名单源，通常是网站自己的源地址）。如果请求头中没有 <code>Origin</code>（旧浏览器或简单请求如GET），可以检查 <code>Referer</code>（如果存在），并确保其来源域是合法的。</li>
+<li><strong>优缺点：</strong>
+<ul>
+<li>实现简单。</li>
+<li><code>Origin</code> 头比 <code>Referer</code> 可靠且安全。</li>
+<li>不能完全依赖作为唯一防线。<code>Referer</code> 头可能被禁用/篡改/为空。在特定配置的嵌套页面（如 <code>file:</code> 协议或HTTPS跳HTTP）下可能存在问题。攻击者在某些中间人攻击（如Wifi热点）或浏览器插件漏洞场景下可能绕过。</li>
+<li><strong>建议：</strong> 作为<strong>深度防御</strong>措施，与CSRF Token等方法<strong>结合</strong>使用，增加攻击难度。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>要求自定义请求头（配合CORS）：</p>
+<ul>
+<li><strong>原理：</strong>
+<ul>
+<li>服务端要求处理敏感操作的请求（通常是 <code>POST</code>, <code>PUT</code>, <code>DELETE</code> 等）必须携带一个特定的、非标准的安全自定义HTTP请求头（如 <code>X-Requested-With: XMLHttpRequest</code> 或自定义的 <code>X-Custom-Header: Value</code>）。</li>
+<li>攻击者构造的CSRF攻击通常使用 <code>&lt;form&gt;</code> 提交，浏览器默认不会（也无法）自动设置自定义的请求头（只会在同源请求中自动设置Cookie）。</li>
+<li><strong>CORS策略限制：</strong> 如果服务器设置了严格的CORS（跨域资源共享）策略，只允许特定的源（自身）发起请求，那么恶意页面发起的跨域AJAX请求：
+<ul>
+<li>需要预检请求 (<code>OPTIONS</code>)。</li>
+<li>由于请求携带了自定义头（即使AJAX设置了<code>X-Requested-With</code>等头），这个预检请求会被浏览器发送以检查是否被目标服务器允许。</li>
+<li><strong>关键：</strong> 除非目标服务器的CORS策略明确允许了攻击者恶意网站的源访问并携带该自定义头，否则预检请求会被服务器拒绝。浏览器就不会发送后续真正的敏感请求。即使恶意网站绕过AJAX使用<code>&lt;form&gt;</code>，也无法添加自定义头。</li>
+</ul>
+</li>
+<li>因此，服务器收到没有这个自定义请求头的请求（例如通过 <code>&lt;form&gt;</code> 提交的CSRF攻击请求），可以拒绝处理。</li>
+</ul>
+</li>
+<li><strong>优缺点：</strong>
+<ul>
+<li>实现相对简单。</li>
+<li>利用浏览器安全机制。</li>
+<li><strong>依赖于CORS策略的有效配置</strong>，需要严格限制允许的源（<code>Access-Control-Allow-Origin</code>）、允许的自定义头（<code>Access-Control-Allow-Headers</code>）。错误的CORS配置会引入其他严重漏洞（如泄露API数据）。</li>
+<li>只对<code>XMLHttpRequest</code> / <code>fetch()</code>请求有效，无法防御通过<code>&lt;form&gt;</code>提交的简单CSRF攻击（但<code>&lt;form&gt;</code>提交无法携带自定义头，服务器会拒绝此类没带头的请求）。</li>
+<li>对于使用JS库发起JSONP请求的老旧应用无效。</li>
+</ul>
+</li>
+<li><strong>建议：</strong> 对于主要使用API（AJAX）进行交互的应用，可以作为CSRF Token的有力补充。对于传统多表单提交的应用，效果受限。</li>
+</ul>
+</li>
+<li>
+<p>SameSite Cookie属性：</p>
+<ul>
+<li><strong>原理：</strong> 在设置Cookie时（特别是会话Cookie），添加 <code>SameSite</code> 属性来控制Cookie在跨站请求时是否被发送。
+<ul>
+<li><strong><code>SameSite=Strict</code>：</strong> 最严格。浏览器只会在同站请求(即请求来源和目标网站同源)中发送此Cookie。这意味着用户点击外部链接进入目标网站时，最开始访问的页面是没有会话Cookie的（相当于用户还没登录状态），需要重新登录，然后再执行操作（如从邮件中的链接进入银行）。<strong>安全但用户体验差。</strong></li>
+<li><strong><code>SameSite=Lax</code>：</strong> <strong>推荐的平衡方案（现代浏览器默认行为）。</strong> 在跨站请求中，对于“安全的HTTP方法”（如 <code>GET</code>, <code>HEAD</code>），且该请求会导致浏览器在顶层导航栏切换页面（如 <code>&lt;a&gt;</code> 链接点击），浏览器会发送Cookie。但对于非安全的请求（如 <code>POST</code>, <code>PUT</code>, <code>DELETE</code>）、或通过 <code>&lt;img&gt;</code>, <code>&lt;script&gt;</code>, <code>&lt;form&gt;</code>（没有导致顶层导航改变）发起的跨站请求，浏览器则不会发送Cookie。这意味着攻击者伪造的 <code>POST</code> 转账请求不会携带用户的 <code>SameSite=Lax</code> 会话Cookie，服务器认为用户未登录（或会话无效），攻击失败。攻击者伪造的 <code>GET</code> 请求（如转账链接，设置Strict或Lax后）虽然可能发送Cookie，但要求是顶层导航跳转（用户会看到页面跳转到银行并转账成功页面，更容易察觉），并且安全方法通常不用来做数据修改操作（银行也不该用GET做转账）。</li>
+<li><strong><code>SameSite=None; Secure</code>：</strong> 最宽松。浏览器会在跨站请求中发送Cookie，但必须标记为 <code>Secure</code>（要求HTTPS）。只有特殊场景（如跨多个域名的登录系统，嵌入的第三方iframe内容需要认证）才需要。容易受到CSRF攻击。</li>
+</ul>
+</li>
+<li><strong>优缺点：</strong>
+<ul>
+<li><strong>浏览器内置支持，服务端仅需在设置Cookie时添加属性（如 <code>Set-Cookie: SessionId=...; Secure; HttpOnly; SameSite=Lax; ...</code>）。</strong> 实现成本最低。</li>
+<li><code>SameSite=Lax</code> 能有效防御绝大多数基于 <code>&lt;form&gt;</code> POST的CSRF攻击，且不影响用户正常浏览体验（点击链接登录状态有效）。</li>
+<li><code>SameSite=Strict</code> 防御最强但体验差。</li>
+<li>存在一些兼容性问题（旧版本浏览器支持度有限），但现在主流浏览器支持良好。</li>
+<li><strong>不能作为唯一防御措施。</strong> 浏览器兼容性问题、应用本身存在低危CSRF漏洞（如用GET做状态修改）、以及 <code>SameSite=None</code> 的设置不当都会削弱效果。</li>
+</ul>
+</li>
+<li><strong>建议：</strong> <strong>强烈推荐为所有会话Cookie设置 <code>Secure; HttpOnly; SameSite=Lax</code>（或更严格的Strict）。</strong> 作为<strong>基础防御层</strong>，并与其他措施（如CSRF Token）结合提供深度防御。这是现代框架的推荐做法。</li>
+</ul>
+</li>
+</ol>
+<h3 id="实践防御建议总结">实践防御建议总结</h3>
+<ul>
+<li>黄金标准：
+<ul>
+<li><strong>核心防御：对所有敏感操作（非 <code>GET</code>）强制使用 CSRF Tokens + 验证（包括表单和AJAX）。</strong></li>
+<li><strong>基础加固：为会话Cookie设置 <code>Secure</code>, <code>HttpOnly</code>, <code>SameSite=Lax</code>（或Strict）。</strong></li>
+</ul>
+</li>
+<li>深度防御：
+<ul>
+<li>启用合理的CORS策略，并考虑<strong>对于API请求要求使用自定义安全头</strong> (配合CORS)。</li>
+<li>检查关键请求的 <code>Origin</code> 头（作为补充验证）。</li>
+<li>避免使用 <code>GET</code> 请求进行任何有状态或敏感的操作修改（应使用 <code>POST</code>, <code>PUT</code>, <code>DELETE</code>）。</li>
+<li>实施最小权限原则。</li>
+<li>使用现代安全框架，它们通常内置CSRF防护（如Django的CSRF中间件，Spring Security的CSRF防护）。</li>
+</ul>
+</li>
+<li>用户体验与安全的平衡： <code>SameSite=Lax</code> 通常是会话Cookie的最佳设置。</li>
+</ul>
+<p>通过综合运用这些措施，尤其是Token + <code>SameSite=Lax</code>，可以非常有效地抵御绝大多数的CSRF攻击，保护用户账户和数据的安全。安全是一个多层次的过程，纵深防御是关键。</p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2025-06-16</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://lushuan.gihub.io/%E8%B7%A8%E7%AB%99%E8%AF%B7%E6%B1%82%E4%BC%AA%E9%80%A0csrf%E6%94%BB%E5%87%BB%E7%9A%84%E5%8E%9F%E7%90%86%E4%BB%A5%E5%8F%8A%E9%98%B2%E8%8C%83%E6%8E%AA%E6%96%BD/" data-title="跨站请求伪造CSRF攻击的原理以及防范措施" data-via="xxxx" data-hashtags="安全,Web安全"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://lushuan.gihub.io/%E8%B7%A8%E7%AB%99%E8%AF%B7%E6%B1%82%E4%BC%AA%E9%80%A0csrf%E6%94%BB%E5%87%BB%E7%9A%84%E5%8E%9F%E7%90%86%E4%BB%A5%E5%8F%8A%E9%98%B2%E8%8C%83%E6%8E%AA%E6%96%BD/" data-hashtag="安全"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="https://lushuan.gihub.io/%E8%B7%A8%E7%AB%99%E8%AF%B7%E6%B1%82%E4%BC%AA%E9%80%A0csrf%E6%94%BB%E5%87%BB%E7%9A%84%E5%8E%9F%E7%90%86%E4%BB%A5%E5%8F%8A%E9%98%B2%E8%8C%83%E6%8E%AA%E6%96%BD/" data-title="跨站请求伪造CSRF攻击的原理以及防范措施"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="https://lushuan.gihub.io/%E8%B7%A8%E7%AB%99%E8%AF%B7%E6%B1%82%E4%BC%AA%E9%80%A0csrf%E6%94%BB%E5%87%BB%E7%9A%84%E5%8E%9F%E7%90%86%E4%BB%A5%E5%8F%8A%E9%98%B2%E8%8C%83%E6%8E%AA%E6%96%BD/" data-title="跨站请求伪造CSRF攻击的原理以及防范措施"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://lushuan.gihub.io/%E8%B7%A8%E7%AB%99%E8%AF%B7%E6%B1%82%E4%BC%AA%E9%80%A0csrf%E6%94%BB%E5%87%BB%E7%9A%84%E5%8E%9F%E7%90%86%E4%BB%A5%E5%8F%8A%E9%98%B2%E8%8C%83%E6%8E%AA%E6%96%BD/" data-title="跨站请求伪造CSRF攻击的原理以及防范措施"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/%E5%AE%89%E5%85%A8/">安全</a>,&nbsp;<a href="/tags/web%E5%AE%89%E5%85%A8/">Web安全</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/openssh_v9.9p2%E6%BA%90%E7%A0%81%E7%A6%BB%E7%BA%BF%E4%B8%80%E9%94%AE%E5%8D%87%E7%BA%A7/" class="prev" rel="prev" title="OpenSSH v9.9p2源码离线一键升级"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>OpenSSH v9.9p2源码离线一键升级</a></div>
+</div>
+<div id="comments"><div id="gitalk" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://github.com/gitalk/gitalk"></a>Gitalk</a>.
+            </noscript><div id="giscus" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://giscus.app">Giscus</a>.
+            </noscript></div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">我是有底线的</div><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.114.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2025</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">lushuan</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/gitalk/gitalk.min.css"><link rel="stylesheet" href="/lib/lightgallery/css/lightgallery-bundle.min.css"><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/gitalk/gitalk.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/lightgallery/lightgallery.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/zoom/lg-zoom.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{"giscus":{"category":"Announcements","categoryId":"DIC_kwDOMOWcic4Coqlk","darkTheme":"dark","emitMetadata":"0","inputPosition":"bottom","lang":"zh-CN","lazyLoading":false,"lightTheme":"light","mapping":"pathname","reactionsEnabled":"1","repo":"lushuan/lushuan.github.io","repoId":"R_kgDOMOWciQ"},"gitalk":{"admin":["lushuan"],"clientID":"Ov23liSh0yG2wy6B7XP1","clientSecret":"7184a8df973267af95c92ddeb27789417ba82469","id":"2025-03-13T12:06:37+08:00","owner":"lushuan","repo":"lushuan.github.io","title":"跨站请求伪造CSRF攻击的原理以及防范措施"}},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"lightgallery":true,"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
