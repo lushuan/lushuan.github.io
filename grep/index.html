@@ -27,7 +27,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/lushuan.gihub.io\/grep\/"
-        },"genre": "posts","keywords": "linux文本三剑客","wordcount":  574 ,
+        },"genre": "posts","keywords": "linux文本三剑客","wordcount":  992 ,
         "url": "https:\/\/lushuan.gihub.io\/grep\/","datePublished": "2021-06-20T12:06:37+08:00","dateModified": "2024-06-26T12:06:37+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -115,7 +115,7 @@
             <div class="toc-content always-active" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">文本三剑客之 grep</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/linux/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>linux</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2021-06-20">2021-06-20</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 574 字&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2021-06-20">2021-06-20</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 992 字&nbsp;
                 <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 2 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  data-kept="">
                 <div class="details-summary toc-title">
@@ -127,6 +127,18 @@
     <li><a href="#为什么使用linux-grep命令">为什么使用Linux grep命令?</a></li>
     <li><a href="#linux-grep命令是什么">Linux grep命令是什么？</a></li>
     <li><a href="#如何使用linux-grep命令">如何使用Linux grep命令？</a></li>
+    <li><a href="#最佳实践">最佳实践</a>
+      <ul>
+        <li><a href="#搜索文件中最后匹配的一个关键词的上下200行">搜索文件中最后匹配的一个关键词的上下200行</a>
+          <ul>
+            <li><a href="#命令解释">命令解释：</a></li>
+            <li><a href="#备选方案适用于大文件">备选方案（适用于大文件）</a></li>
+            <li><a href="#验证结果">验证结果</a></li>
+            <li><a href="#注意事项">注意事项</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
     <li><a href="#参考">参考</a></li>
   </ul>
 </nav></div>
@@ -201,6 +213,66 @@
             alt="/images/linux/grep.jpg" />
     </a><figcaption class="image-caption">grep</figcaption>
     </figure></p>
+<h2 id="最佳实践">最佳实践</h2>
+<h3 id="搜索文件中最后匹配的一个关键词的上下200行">搜索文件中最后匹配的一个关键词的上下200行</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ tac file.txt <span class="p">|</span> grep -m <span class="m">1</span> <span class="s2">&#34;/enforcementGroupInfo/editPassword&#34;</span> -B <span class="m">200</span> -A <span class="m">200</span> <span class="p">|</span> tac &gt; /tmp/1.txt
+</span></span><span class="line"><span class="cl"><span class="c1"># or</span>
+</span></span><span class="line"><span class="cl">$ tac file.txt <span class="p">|</span> grep -m <span class="m">1</span> <span class="s2">&#34;/enforcementGroupInfo/editPassword&#34;</span> -C <span class="m">200</span> <span class="p">|</span> tac &gt; /tmp/1.txt
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="命令解释">命令解释：</h4>
+<ol>
+<li><code>tac file.txt</code> - 反向读取文件内容（从最后一行开始）</li>
+<li><code>grep -m 1</code> - 只匹配第一个出现的模式（即原文件最后一个匹配项）</li>
+<li><code>-B 200 -A 200</code> - 显示匹配行前后的200行内容</li>
+<li><code>-C 200 </code> - 输出匹配模式的上下文行</li>
+<li><code>tac</code> - 再次反向输出，恢复原始行顺序</li>
+<li><code>&gt; /tmp/1.txt</code> - 将结果重定向到目标文件</li>
+</ol>
+<h4 id="备选方案适用于大文件">备选方案（适用于大文件）</h4>
+<p>如果文件非常大，可以使用更节省内存的方法：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 获取最后一个匹配行号</span>
+</span></span><span class="line"><span class="cl"><span class="nv">line</span><span class="o">=</span><span class="k">$(</span>grep -n <span class="s2">&#34;/enforcementGroupInfo/editPassword&#34;</span> file.txt <span class="p">|</span> tail -1 <span class="p">|</span> cut -d: -f1<span class="k">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 提取该行上下200行内容</span>
+</span></span><span class="line"><span class="cl"><span class="o">[</span> -n <span class="s2">&#34;</span><span class="nv">$line</span><span class="s2">&#34;</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> sed -n <span class="s2">&#34;</span><span class="k">$((</span>line&gt;200 ? line-200 : <span class="m">1</span><span class="k">))</span><span class="s2">,</span><span class="k">$((</span>line+200<span class="k">))</span><span class="s2">p&#34;</span> file.txt &gt; /tmp/1.txt
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="验证结果">验证结果</h4>
+<p>检查输出文件内容是否正确：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">wc -l /tmp/1.txt  <span class="c1"># 应该最多401行（200+1+200）</span>
+</span></span><span class="line"><span class="cl">tail -n <span class="m">10</span> /tmp/1.txt <span class="p">|</span> grep <span class="s2">&#34;/enforcementGroupInfo/editPassword&#34;</span>  <span class="c1"># 确认包含关键词</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="注意事项">注意事项</h4>
+<ol>
+<li>如果文件中没有匹配项，<code>/tmp/1.txt</code> 会是空文件</li>
+<li>如果匹配项在文件开头，前200行会从第1行开始</li>
+<li>如果匹配项在文件结尾，后200行会到文件末尾结束</li>
+<li>对于二进制文件，添加 <code>-a</code> 选项：<code>grep -a</code></li>
+</ol>
 <h2 id="参考">参考</h2>
 <ol>
 <li><a href="https://cloud.tencent.com/developer/article/1554542" target="_blank" rel="noopener noreffer ">是真的很详细了！Linux中的Grep命令使用实例</a></li>
