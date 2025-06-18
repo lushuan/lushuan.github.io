@@ -37,5 +37,43 @@ Grep是一个在Linux和其他类Unix系统上可用的命令行实用程序，�
 
 ![grep](/images/linux/grep.jpg "grep")
 
+## 最佳实践
+### 搜索文件中最后匹配的一个关键词的上下200行
+```bash
+$ tac file.txt | grep -m 1 "/enforcementGroupInfo/editPassword" -B 200 -A 200 | tac > /tmp/1.txt
+# or
+$ tac file.txt | grep -m 1 "/enforcementGroupInfo/editPassword" -C 200 | tac > /tmp/1.txt
+```
+
+#### 命令解释：
+1. `tac file.txt` - 反向读取文件内容（从最后一行开始）
+2. `grep -m 1` - 只匹配第一个出现的模式（即原文件最后一个匹配项）
+3. `-B 200 -A 200` - 显示匹配行前后的200行内容
+4. `-C 200 ` - 输出匹配模式的上下文行
+5. `tac` - 再次反向输出，恢复原始行顺序
+6. `> /tmp/1.txt` - 将结果重定向到目标文件
+
+#### 备选方案（适用于大文件）
+如果文件非常大，可以使用更节省内存的方法：
+```bash
+# 获取最后一个匹配行号
+line=$(grep -n "/enforcementGroupInfo/editPassword" file.txt | tail -1 | cut -d: -f1)
+
+# 提取该行上下200行内容
+[ -n "$line" ] && sed -n "$((line>200 ? line-200 : 1)),$((line+200))p" file.txt > /tmp/1.txt
+```
+#### 验证结果
+检查输出文件内容是否正确：
+```bash
+wc -l /tmp/1.txt  # 应该最多401行（200+1+200）
+tail -n 10 /tmp/1.txt | grep "/enforcementGroupInfo/editPassword"  # 确认包含关键词
+```
+#### 注意事项
+1. 如果文件中没有匹配项，`/tmp/1.txt` 会是空文件
+2. 如果匹配项在文件开头，前200行会从第1行开始
+3. 如果匹配项在文件结尾，后200行会到文件末尾结束
+4. 对于二进制文件，添加 `-a` 选项：`grep -a`
+
+
 ## 参考
 1. [是真的很详细了！Linux中的Grep命令使用实例](https://cloud.tencent.com/developer/article/1554542)
