@@ -53,6 +53,8 @@ unrewarded genius is almost a proverb. Education will not; the world is full of 
 - Linux
 - Shell
 - MySQL
+- Python
+- Java
 
 ## 云计算相关认证
 

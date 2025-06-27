@@ -291,6 +291,26 @@ target     prot opt source               destination
 3. 如果规则中没有明确表明是阻止还是通过的，也就是没有匹配规则，向下进行匹配，直到匹配默认规则得到明确的阻止还是通过
 4. 防火墙的默认规则是所有规则都匹配完才会匹配的
 
+## 常用 `iptables` 参数缩写及含义
+| **短选项** | **完整形式/含义**       | **功能说明**                                                                 |
+|------------|-------------------------|-----------------------------------------------------------------------------|
+| `-s`       | `--source`              | 匹配 **源 IP 地址或网段**（如 `-s 192.168.1.100` 或 `-s 10.0.0.0/24`）。     |
+| `-d`       | `--destination`         | 匹配 **目标 IP 地址或网段**（如 `-d 203.0.113.5`）。                         |
+| `-p`       | `--protocol`            | 指定 **协议类型**（如 `-p tcp`、`-p udp`、`-p icmp`）。                      |
+| `-j`       | `--jump`                | 指定规则匹配后的 **动作**（如 `-j ACCEPT`、`-j DROP`、`-j REJECT`）。        |
+| `-i`       | `--in-interface`        | 匹配 **输入网络接口**（如 `-i eth0`）。                                       |
+| `-o`       | `--out-interface`       | 匹配 **输出网络接口**（如 `-o wlan0`）。                                      |
+| `-m`       | `--match`               | 启用 **扩展模块**（如 `-m multiport`、`-m state --state ESTABLISHED`）。      |
+| `--sport`  | `--source-port`         | 匹配 **源端口**（需配合 `-p tcp` 或 `-p udp`，如 `--sport 22`）。             |
+| `--dport`  | `--destination-port`    | 匹配 **目标端口**（需配合 `-p tcp` 或 `-p udp`，如 `--dport 80`）。           |
+| `-A`       | `--append`              | 在规则链 **末尾追加** 新规则（如 `-A INPUT`）。                               |
+| `-I`       | `--insert`              | 在规则链 **指定位置插入** 新规则（默认插入到开头，如 `-I INPUT 2` 插到第2条）。|
+| `-D`       | `--delete`              | 从规则链中 **删除** 指定规则（如 `-D INPUT 3` 删除第3条规则）。               |
+| `-L`       | `--list`                | 列出规则链内容（如 `iptables -L INPUT`）。                                    |
+| `-F`       | `--flush`               | 清空规则链（如 `iptables -F INPUT`）。                                        |
+| `-N`       | `--new-chain`           | 创建自定义链（如 `iptables -N MY_CHAIN`）。                                   |
+
+
 ## iptables filter 表案例
 ```shell
 # 屏蔽单个IP的命令
