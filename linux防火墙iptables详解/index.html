@@ -27,7 +27,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/lushuan.gihub.io\/linux%E9%98%B2%E7%81%AB%E5%A2%99iptables%E8%AF%A6%E8%A7%A3\/"
-        },"genre": "posts","keywords": "linux, 防火墙","wordcount":  6525 ,
+        },"genre": "posts","keywords": "linux, 防火墙","wordcount":  6948 ,
         "url": "https:\/\/lushuan.gihub.io\/linux%E9%98%B2%E7%81%AB%E5%A2%99iptables%E8%AF%A6%E8%A7%A3\/","datePublished": "2024-11-19T12:06:37+08:00","dateModified": "2024-11-20T12:06:37+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -115,7 +115,7 @@
             <div class="toc-content always-active" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Linux 防火墙iptables详解</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/linux/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>linux</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2024-11-19">2024-11-19</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 6525 字&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2024-11-19">2024-11-19</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 6948 字&nbsp;
                 <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 14 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  data-kept="">
                 <div class="details-summary toc-title">
@@ -146,6 +146,7 @@
       </ul>
     </li>
     <li><a href="#iptables-执行流程">iptables 执行流程</a></li>
+    <li><a href="#常用-iptables-参数缩写及含义">常用 <code>iptables</code> 参数缩写及含义</a></li>
     <li><a href="#iptables-filter-表案例">iptables filter 表案例</a>
       <ul>
         <li><a href="#实践限制-ip-连接数">实践：限制 ip 连接数</a></li>
@@ -638,6 +639,93 @@
 <li>如果规则中没有明确表明是阻止还是通过的，也就是没有匹配规则，向下进行匹配，直到匹配默认规则得到明确的阻止还是通过</li>
 <li>防火墙的默认规则是所有规则都匹配完才会匹配的</li>
 </ol>
+<h2 id="常用-iptables-参数缩写及含义">常用 <code>iptables</code> 参数缩写及含义</h2>
+<table>
+<thead>
+<tr>
+<th><strong>短选项</strong></th>
+<th><strong>完整形式/含义</strong></th>
+<th><strong>功能说明</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-s</code></td>
+<td><code>--source</code></td>
+<td>匹配 <strong>源 IP 地址或网段</strong>（如 <code>-s 192.168.1.100</code> 或 <code>-s 10.0.0.0/24</code>）。</td>
+</tr>
+<tr>
+<td><code>-d</code></td>
+<td><code>--destination</code></td>
+<td>匹配 <strong>目标 IP 地址或网段</strong>（如 <code>-d 203.0.113.5</code>）。</td>
+</tr>
+<tr>
+<td><code>-p</code></td>
+<td><code>--protocol</code></td>
+<td>指定 <strong>协议类型</strong>（如 <code>-p tcp</code>、<code>-p udp</code>、<code>-p icmp</code>）。</td>
+</tr>
+<tr>
+<td><code>-j</code></td>
+<td><code>--jump</code></td>
+<td>指定规则匹配后的 <strong>动作</strong>（如 <code>-j ACCEPT</code>、<code>-j DROP</code>、<code>-j REJECT</code>）。</td>
+</tr>
+<tr>
+<td><code>-i</code></td>
+<td><code>--in-interface</code></td>
+<td>匹配 <strong>输入网络接口</strong>（如 <code>-i eth0</code>）。</td>
+</tr>
+<tr>
+<td><code>-o</code></td>
+<td><code>--out-interface</code></td>
+<td>匹配 <strong>输出网络接口</strong>（如 <code>-o wlan0</code>）。</td>
+</tr>
+<tr>
+<td><code>-m</code></td>
+<td><code>--match</code></td>
+<td>启用 <strong>扩展模块</strong>（如 <code>-m multiport</code>、<code>-m state --state ESTABLISHED</code>）。</td>
+</tr>
+<tr>
+<td><code>--sport</code></td>
+<td><code>--source-port</code></td>
+<td>匹配 <strong>源端口</strong>（需配合 <code>-p tcp</code> 或 <code>-p udp</code>，如 <code>--sport 22</code>）。</td>
+</tr>
+<tr>
+<td><code>--dport</code></td>
+<td><code>--destination-port</code></td>
+<td>匹配 <strong>目标端口</strong>（需配合 <code>-p tcp</code> 或 <code>-p udp</code>，如 <code>--dport 80</code>）。</td>
+</tr>
+<tr>
+<td><code>-A</code></td>
+<td><code>--append</code></td>
+<td>在规则链 <strong>末尾追加</strong> 新规则（如 <code>-A INPUT</code>）。</td>
+</tr>
+<tr>
+<td><code>-I</code></td>
+<td><code>--insert</code></td>
+<td>在规则链 <strong>指定位置插入</strong> 新规则（默认插入到开头，如 <code>-I INPUT 2</code> 插到第2条）。</td>
+</tr>
+<tr>
+<td><code>-D</code></td>
+<td><code>--delete</code></td>
+<td>从规则链中 <strong>删除</strong> 指定规则（如 <code>-D INPUT 3</code> 删除第3条规则）。</td>
+</tr>
+<tr>
+<td><code>-L</code></td>
+<td><code>--list</code></td>
+<td>列出规则链内容（如 <code>iptables -L INPUT</code>）。</td>
+</tr>
+<tr>
+<td><code>-F</code></td>
+<td><code>--flush</code></td>
+<td>清空规则链（如 <code>iptables -F INPUT</code>）。</td>
+</tr>
+<tr>
+<td><code>-N</code></td>
+<td><code>--new-chain</code></td>
+<td>创建自定义链（如 <code>iptables -N MY_CHAIN</code>）。</td>
+</tr>
+</tbody>
+</table>
 <h2 id="iptables-filter-表案例">iptables filter 表案例</h2>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
