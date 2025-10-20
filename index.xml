@@ -12,7 +12,7 @@
     <pubDate>Mon, 20 Oct 2025 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
     <guid>https://lushuan.gihub.io/%E5%9F%BA%E4%BA%8E-gitlab-%E6%9E%84%E5%BB%BA-gin-vue-admin-%E5%90%8E%E7%AB%AF-server-%E6%9C%8D%E5%8A%A1cicd/</guid>
-    <description><![CDATA[🚀 前言 记录基于 Gitlab 社区版搭建CI/CD，适用与中小团队的开发，功能包含build-&gt;push-&gt;deploy-&gt;dingTa]]></description>
+    <description><![CDATA[🚀 前言 记录基于 Gitlab 社区版搭建CI/CD，适用与中小团队的开发，功能包含prepare-&gt;build-&gt;push-&gt;deplo]]></description>
 </item>
 <item>
     <title>跨站请求伪造CSRF攻击的原理以及防范措施</title>

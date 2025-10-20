@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="noodp" />
         <title>基于 Gitlab Runner 构建 Gin-Vue-Admin 后端 server 服务CI/CD - Less is more</title><meta name="Description" content="晚来天欲雪,能饮一杯无?"><meta property="og:title" content="基于 Gitlab Runner 构建 Gin-Vue-Admin 后端 server 服务CI/CD" />
-<meta property="og:description" content="🚀 前言 记录基于 Gitlab 社区版搭建CI/CD，适用与中小团队的开发，功能包含build-&gt;push-&gt;deploy-&gt;dingTa" />
+<meta property="og:description" content="🚀 前言 记录基于 Gitlab 社区版搭建CI/CD，适用与中小团队的开发，功能包含prepare-&gt;build-&gt;push-&gt;deplo" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://lushuan.gihub.io/%E5%9F%BA%E4%BA%8E-gitlab-%E6%9E%84%E5%BB%BA-gin-vue-admin-%E5%90%8E%E7%AB%AF-server-%E6%9C%8D%E5%8A%A1cicd/" /><meta property="og:image" content="https://lushuan.gihub.io/images/avatar.png"/><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2025-10-20T12:06:37+08:00" />
@@ -14,7 +14,7 @@
 <meta name="twitter:image" content="https://lushuan.gihub.io/images/avatar.png"/>
 
 <meta name="twitter:title" content="基于 Gitlab Runner 构建 Gin-Vue-Admin 后端 server 服务CI/CD"/>
-<meta name="twitter:description" content="🚀 前言 记录基于 Gitlab 社区版搭建CI/CD，适用与中小团队的开发，功能包含build-&gt;push-&gt;deploy-&gt;dingTa"/>
+<meta name="twitter:description" content="🚀 前言 记录基于 Gitlab 社区版搭建CI/CD，适用与中小团队的开发，功能包含prepare-&gt;build-&gt;push-&gt;deplo"/>
 <meta name="application-name" content="我的网站">
 <meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/images/avatar.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://lushuan.gihub.io/%E5%9F%BA%E4%BA%8E-gitlab-%E6%9E%84%E5%BB%BA-gin-vue-admin-%E5%90%8E%E7%AB%AF-server-%E6%9C%8D%E5%8A%A1cicd/" /><link rel="prev" href="https://lushuan.gihub.io/%E8%B7%A8%E7%AB%99%E8%AF%B7%E6%B1%82%E4%BC%AA%E9%80%A0csrf%E6%94%BB%E5%87%BB%E7%9A%84%E5%8E%9F%E7%90%86%E4%BB%A5%E5%8F%8A%E9%98%B2%E8%8C%83%E6%8E%AA%E6%96%BD/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -27,7 +27,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/lushuan.gihub.io\/%E5%9F%BA%E4%BA%8E-gitlab-%E6%9E%84%E5%BB%BA-gin-vue-admin-%E5%90%8E%E7%AB%AF-server-%E6%9C%8D%E5%8A%A1cicd\/"
-        },"genre": "posts","keywords": "Gitlab, CI\/CD","wordcount":  4220 ,
+        },"genre": "posts","keywords": "Gitlab, CI\/CD","wordcount":  4232 ,
         "url": "https:\/\/lushuan.gihub.io\/%E5%9F%BA%E4%BA%8E-gitlab-%E6%9E%84%E5%BB%BA-gin-vue-admin-%E5%90%8E%E7%AB%AF-server-%E6%9C%8D%E5%8A%A1cicd\/","datePublished": "2025-10-20T12:06:37+08:00","dateModified": "2025-10-20T12:06:37+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -115,7 +115,7 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">基于 Gitlab Runner 构建 Gin-Vue-Admin 后端 server 服务CI/CD</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/gitlab/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Gitlab</a>&nbsp;<a href="/categories/ci/cd/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>CI/CD</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2025-10-20">2025-10-20</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 4220 字&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2025-10-20">2025-10-20</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 4232 字&nbsp;
                 <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 9 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  data-kept="">
                 <div class="details-summary toc-title">
@@ -163,7 +163,7 @@
   </ul>
 </nav></div>
             </div><div class="content" id="content"><h2 id="-前言">🚀 前言</h2>
-<p>记录基于 Gitlab 社区版搭建CI/CD，适用与中小团队的开发，功能包含build-&gt;push-&gt;deploy-&gt;dingTalk notify</p>
+<p>记录基于 Gitlab 社区版搭建CI/CD，适用与中小团队的开发，功能包含prepare-&gt;build-&gt;push-&gt;deploy-&gt;dingTalk notify</p>
 <p><figure><a class="lightgallery" href="/images/cicd/gitlab/gitlab-pipeline-1.png" title="gitlab-pipeline-demo" data-thumbnail="/images/cicd/gitlab/gitlab-pipeline-1.png" data-sub-html="<h2>Gitlab Pipelines</h2><p>gitlab-pipeline-demo</p>">
         <img
             class="lazyload"
