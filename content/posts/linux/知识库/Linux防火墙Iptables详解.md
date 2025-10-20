@@ -497,4 +497,7 @@ $ iptables -A INPUT -p icmp -j DROP
 ## iptables 总结
 iptables 在工作中也是常用到的服务，重要但是不是很复杂，这里找了一个iptables[面试参考](https://www.jianshu.com/p/19422676b854)，自己可以写一写，加深巩固下,在生产环境层面执行前最好是现在测试环境验证下
 
+## 参考
+1. [iptables详细教程：基础、架构、清空规则、追加规则、应用实例](https://lesca.me/archives/iptables-tutorial-structures-configuratios-examples.html)
+
 
