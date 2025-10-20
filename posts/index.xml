@@ -4,7 +4,15 @@
         <link>https://lushuan.gihub.io/posts/</link>
         <description>所有文章 | Less is more</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
-            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Thu, 13 Mar 2025 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/posts/" rel="self" type="application/rss+xml" /><item>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Mon, 20 Oct 2025 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/posts/" rel="self" type="application/rss+xml" /><item>
+    <title>基于 Gitlab Runner 构建 Gin-Vue-Admin 后端 server 服务CI/CD</title>
+    <link>https://lushuan.gihub.io/%E5%9F%BA%E4%BA%8E-gitlab-%E6%9E%84%E5%BB%BA-gin-vue-admin-%E5%90%8E%E7%AB%AF-server-%E6%9C%8D%E5%8A%A1cicd/</link>
+    <pubDate>Mon, 20 Oct 2025 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>https://lushuan.gihub.io/%E5%9F%BA%E4%BA%8E-gitlab-%E6%9E%84%E5%BB%BA-gin-vue-admin-%E5%90%8E%E7%AB%AF-server-%E6%9C%8D%E5%8A%A1cicd/</guid>
+    <description><![CDATA[🚀 前言 记录基于 Gitlab 社区版搭建CI/CD，适用与中小团队的开发，功能包含build-&gt;push-&gt;deploy-&gt;dingTa]]></description>
+</item>
+<item>
     <title>跨站请求伪造CSRF攻击的原理以及防范措施</title>
     <link>https://lushuan.gihub.io/%E8%B7%A8%E7%AB%99%E8%AF%B7%E6%B1%82%E4%BC%AA%E9%80%A0csrf%E6%94%BB%E5%87%BB%E7%9A%84%E5%8E%9F%E7%90%86%E4%BB%A5%E5%8F%8A%E9%98%B2%E8%8C%83%E6%8E%AA%E6%96%BD/</link>
     <pubDate>Thu, 13 Mar 2025 12:06:37 &#43;0800</pubDate>
@@ -75,14 +83,6 @@
     <author>lushuan</author>
     <guid>https://lushuan.gihub.io/helm%E4%BF%AE%E6%94%B9configmap%E5%90%8E%E5%BA%94%E7%94%A8%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF%E7%94%9F%E6%95%88/</guid>
     <description><![CDATA[前言 通过Helm部署应用，修改configmap后，Deployment 副本控制器不会自动生效，需要手动删除pod 重建一下才会生效， 这里实践]]></description>
-</item>
-<item>
-    <title>Ubuntu-server部署k8s1.28(containerd版本)集群</title>
-    <link>https://lushuan.gihub.io/ubuntu-server%E9%83%A8%E7%BD%B2k8s1.28containerd%E7%89%88%E6%9C%AC%E9%9B%86%E7%BE%A4/</link>
-    <pubDate>Thu, 20 Jun 2024 12:06:37 &#43;0800</pubDate>
-    <author>lushuan</author>
-    <guid>https://lushuan.gihub.io/ubuntu-server%E9%83%A8%E7%BD%B2k8s1.28containerd%E7%89%88%E6%9C%AC%E9%9B%86%E7%BE%A4/</guid>
-    <description><![CDATA[整体流程 部署准备 k8s 集群容器运行时 Containerd 准备 k8s 集群部署 k8s 集群软件 apt 源准备 k8s 集群软件安装 k8s 集群初始化 k8s 集群worker 节点加入 k8s 集群网络插件 Calico 准备 部]]></description>
 </item>
 </channel>
 </rss>
