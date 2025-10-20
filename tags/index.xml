@@ -4,7 +4,15 @@
         <link>https://lushuan.gihub.io/tags/</link>
         <description>Tags - 标签 - Less is more</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
-            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Thu, 13 Mar 2025 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/tags/" rel="self" type="application/rss+xml" /><item>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Mon, 20 Oct 2025 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/tags/" rel="self" type="application/rss+xml" /><item>
+    <title>Gitlab</title>
+    <link>https://lushuan.gihub.io/tags/gitlab/</link>
+    <pubDate>Mon, 20 Oct 2025 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>https://lushuan.gihub.io/tags/gitlab/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
     <title>Web安全</title>
     <link>https://lushuan.gihub.io/tags/web%E5%AE%89%E5%85%A8/</link>
     <pubDate>Thu, 13 Mar 2025 12:06:37 &#43;0800</pubDate>
@@ -74,14 +82,6 @@
     <pubDate>Mon, 23 Sep 2024 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
     <guid>https://lushuan.gihub.io/tags/k3s/</guid>
-    <description><![CDATA[]]></description>
-</item>
-<item>
-    <title>rsync</title>
-    <link>https://lushuan.gihub.io/tags/rsync/</link>
-    <pubDate>Mon, 26 Aug 2024 12:06:37 &#43;0800</pubDate>
-    <author>lushuan</author>
-    <guid>https://lushuan.gihub.io/tags/rsync/</guid>
     <description><![CDATA[]]></description>
 </item>
 </channel>

@@ -1,0 +1,16 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Gitlab - 标签 - Less is more</title>
+        <link>https://lushuan.gihub.io/tags/gitlab/</link>
+        <description>Gitlab - 标签 - Less is more</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Mon, 20 Oct 2025 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/tags/gitlab/" rel="self" type="application/rss+xml" /><item>
+    <title>基于 Gitlab Runner 构建 Gin-Vue-Admin 后端 server 服务CI/CD</title>
+    <link>https://lushuan.gihub.io/%E5%9F%BA%E4%BA%8E-gitlab-%E6%9E%84%E5%BB%BA-gin-vue-admin-%E5%90%8E%E7%AB%AF-server-%E6%9C%8D%E5%8A%A1cicd/</link>
+    <pubDate>Mon, 20 Oct 2025 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>https://lushuan.gihub.io/%E5%9F%BA%E4%BA%8E-gitlab-%E6%9E%84%E5%BB%BA-gin-vue-admin-%E5%90%8E%E7%AB%AF-server-%E6%9C%8D%E5%8A%A1cicd/</guid>
+    <description><![CDATA[🚀 前言 记录基于 Gitlab 社区版搭建CI/CD，适用与中小团队的开发，功能包含build-&gt;push-&gt;deploy-&gt;dingTa]]></description>
+</item>
+</channel>
+</rss>
