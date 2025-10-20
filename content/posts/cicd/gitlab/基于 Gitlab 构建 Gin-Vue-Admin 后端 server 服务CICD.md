@@ -11,7 +11,7 @@ categories: ["Gitlab","CI/CD"]
 tags: ["Gitlab","CI/CD"]
 ---
 ## 🚀 前言
-记录基于 Gitlab 社区版搭建CI/CD，适用与中小团队的开发，功能包含build->push->deploy->dingTalk notify
+记录基于 Gitlab 社区版搭建CI/CD，适用与中小团队的开发，功能包含prepare->build->push->deploy->dingTalk notify
 
 ![gitlab-pipeline-demo](/images/cicd/gitlab/gitlab-pipeline-1.png "Gitlab Pipelines")
 
