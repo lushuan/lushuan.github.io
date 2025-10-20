@@ -259,10 +259,11 @@ build:
 在项目根目录新建 `.gitlab-ci.yml` 文件，内容如下：
 ```
 stages:
+  - prepare   # 定义JOB全局环境变量
   - build     # 编译
   - push      # 镜像推送
   - deploy    # 部署
-
+  - notify    # 通知
 
 # 全局变量定义
 variables:
@@ -276,6 +277,21 @@ variables:
   DOCKER_DRIVER: overlay2
   TIMEOUT: "60s"
 
+# ==========================================
+# 定义 JOB 全局变量，生成时间戳并保存为 artifact (一次生成，全局共享)
+# ==========================================
+prepare:
+  stage: prepare
+  tags:
+    - gva
+  script:
+    - echo "IMAGE_TAG=$(date '+%Y%m%d%H%M%S')" > image_tag.env
+    - cat image_tag.env
+  artifacts:
+    reports:
+      dotenv: image_tag.env     # ✅ GitLab 会把这里的变量注入后续 Job 环境中
+  only:
+    - master
 
 # ==========================================
 # Stage 1: 构建镜像
