@@ -15,6 +15,14 @@
     <description><![CDATA[🚀 前言 记录基于 Gitlab 社区版搭建CI/CD，适用与中小团队的开发，功能包含prepare-&gt;build-&gt;push-&gt;deplo]]></description>
 </item>
 <item>
+    <title>Linux 后台启动命令setsid和nohup的区别介绍</title>
+    <link>https://lushuan.gihub.io/linux-%E5%90%8E%E5%8F%B0%E5%90%AF%E5%8A%A8%E5%91%BD%E4%BB%A4setsid%E5%92%8Cnohup%E7%9A%84%E5%8C%BA%E5%88%AB%E4%BB%8B%E7%BB%8D/</link>
+    <pubDate>Sat, 19 Apr 2025 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>https://lushuan.gihub.io/linux-%E5%90%8E%E5%8F%B0%E5%90%AF%E5%8A%A8%E5%91%BD%E4%BB%A4setsid%E5%92%8Cnohup%E7%9A%84%E5%8C%BA%E5%88%AB%E4%BB%8B%E7%BB%8D/</guid>
+    <description><![CDATA[setsid 和 nohup 都是 Linux/Unix 下常用的“后台启动命令”，但它们的原理、作用范围和适用场景是不同的。下面系统梳理一下对比。 🧩 一、nohup：防止进程收到挂断信号]]></description>
+</item>
+<item>
     <title>跨站请求伪造CSRF攻击的原理以及防范措施</title>
     <link>https://lushuan.gihub.io/%E8%B7%A8%E7%AB%99%E8%AF%B7%E6%B1%82%E4%BC%AA%E9%80%A0csrf%E6%94%BB%E5%87%BB%E7%9A%84%E5%8E%9F%E7%90%86%E4%BB%A5%E5%8F%8A%E9%98%B2%E8%8C%83%E6%8E%AA%E6%96%BD/</link>
     <pubDate>Thu, 13 Mar 2025 12:06:37 &#43;0800</pubDate>
@@ -77,14 +85,6 @@
     <author>lushuan</author>
     <guid>https://lushuan.gihub.io/rsync%E7%BB%93%E5%90%88inotify%E5%AE%9E%E7%8E%B0%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E5%AE%9E%E6%97%B6%E5%90%8C%E6%AD%A5/</guid>
     <description><![CDATA[rsync(remote synchronize)是一个远程数据同步工具，可通过 LAN/WAN 快速同步多台主机之间的文件，也可以使用 rsync 同步本地硬盘中的不同目录。rsync 是用于]]></description>
-</item>
-<item>
-    <title>Helm修改configmap后应用自动重启生效</title>
-    <link>https://lushuan.gihub.io/helm%E4%BF%AE%E6%94%B9configmap%E5%90%8E%E5%BA%94%E7%94%A8%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF%E7%94%9F%E6%95%88/</link>
-    <pubDate>Sun, 21 Jul 2024 12:06:37 &#43;0800</pubDate>
-    <author>lushuan</author>
-    <guid>https://lushuan.gihub.io/helm%E4%BF%AE%E6%94%B9configmap%E5%90%8E%E5%BA%94%E7%94%A8%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF%E7%94%9F%E6%95%88/</guid>
-    <description><![CDATA[前言 通过Helm部署应用，修改configmap后，Deployment 副本控制器不会自动生效，需要手动删除pod 重建一下才会生效， 这里实践]]></description>
 </item>
 </channel>
 </rss>
