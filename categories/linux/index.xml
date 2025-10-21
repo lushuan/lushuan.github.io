@@ -4,7 +4,15 @@
         <link>https://lushuan.gihub.io/categories/linux/</link>
         <description>linux - 分类 - Less is more</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
-            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Tue, 19 Nov 2024 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/categories/linux/" rel="self" type="application/rss+xml" /><item>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Sat, 19 Apr 2025 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/categories/linux/" rel="self" type="application/rss+xml" /><item>
+    <title>Linux 后台启动命令setsid和nohup的区别介绍</title>
+    <link>https://lushuan.gihub.io/linux-%E5%90%8E%E5%8F%B0%E5%90%AF%E5%8A%A8%E5%91%BD%E4%BB%A4setsid%E5%92%8Cnohup%E7%9A%84%E5%8C%BA%E5%88%AB%E4%BB%8B%E7%BB%8D/</link>
+    <pubDate>Sat, 19 Apr 2025 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>https://lushuan.gihub.io/linux-%E5%90%8E%E5%8F%B0%E5%90%AF%E5%8A%A8%E5%91%BD%E4%BB%A4setsid%E5%92%8Cnohup%E7%9A%84%E5%8C%BA%E5%88%AB%E4%BB%8B%E7%BB%8D/</guid>
+    <description><![CDATA[setsid 和 nohup 都是 Linux/Unix 下常用的“后台启动命令”，但它们的原理、作用范围和适用场景是不同的。下面系统梳理一下对比。 🧩 一、nohup：防止进程收到挂断信号]]></description>
+</item>
+<item>
     <title>Linux 防火墙iptables详解</title>
     <link>https://lushuan.gihub.io/linux%E9%98%B2%E7%81%AB%E5%A2%99iptables%E8%AF%A6%E8%A7%A3/</link>
     <pubDate>Tue, 19 Nov 2024 12:06:37 &#43;0800</pubDate>
@@ -75,14 +83,6 @@
     <author>lushuan</author>
     <guid>https://lushuan.gihub.io/lvm%E9%80%BB%E8%BE%91%E5%8D%B7%E7%BB%84%E7%AE%A1%E7%90%86/</guid>
     <description><![CDATA[背景 部署 k8s 时需要对磁盘进行分区划分，正常是集成是直接给创建好的，现场在沟通过程中只提供了一块磁盘。 本篇文章记录一下磁盘分区划分的原理和步骤，]]></description>
-</item>
-<item>
-    <title>xargs原理及使用</title>
-    <link>https://lushuan.gihub.io/xargs%E5%8E%9F%E7%90%86%E5%8F%8A%E4%BD%BF%E7%94%A8/</link>
-    <pubDate>Sun, 28 Feb 2021 12:06:37 &#43;0800</pubDate>
-    <author>lushuan</author>
-    <guid>https://lushuan.gihub.io/xargs%E5%8E%9F%E7%90%86%E5%8F%8A%E4%BD%BF%E7%94%A8/</guid>
-    <description><![CDATA[简介 之所以能用到这个命令，是由于很多 linux 命令不支持用管道传递参数，xargs 可以理解为参数转换器，例如 1 2 3 4 #错误指令 find /sbin -perm +700 | ls -l #正确指]]></description>
 </item>
 </channel>
 </rss>
