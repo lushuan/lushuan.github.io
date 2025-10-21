@@ -13,6 +13,14 @@
     <description><![CDATA[]]></description>
 </item>
 <item>
+    <title>KubeEdge </title>
+    <link>https://lushuan.gihub.io/categories/kubeedge/</link>
+    <pubDate>Wed, 10 Sep 2025 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>https://lushuan.gihub.io/categories/kubeedge/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
     <title>linux</title>
     <link>https://lushuan.gihub.io/categories/linux/</link>
     <pubDate>Sat, 19 Apr 2025 12:06:37 &#43;0800</pubDate>
@@ -74,14 +82,6 @@
     <pubDate>Thu, 20 Jun 2024 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
     <guid>https://lushuan.gihub.io/categories/kubernetes/</guid>
-    <description><![CDATA[]]></description>
-</item>
-<item>
-    <title>DevOps</title>
-    <link>https://lushuan.gihub.io/categories/devops/</link>
-    <pubDate>Sat, 17 Feb 2024 12:06:37 &#43;0800</pubDate>
-    <author>lushuan</author>
-    <guid>https://lushuan.gihub.io/categories/devops/</guid>
     <description><![CDATA[]]></description>
 </item>
 </channel>

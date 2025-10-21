@@ -1,0 +1,16 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>KubeEdge  - 分类 - Less is more</title>
+        <link>https://lushuan.gihub.io/categories/kubeedge/</link>
+        <description>KubeEdge  - 分类 - Less is more</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Wed, 10 Sep 2025 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/categories/kubeedge/" rel="self" type="application/rss+xml" /><item>
+    <title>KubeEdge v1.17.4 amd64结合arm64云边架构环境搭建</title>
+    <link>https://lushuan.gihub.io/kubeedge-v1.17.4-amd64%E7%BB%93%E5%90%88arm64%E4%BA%91%E8%BE%B9%E6%9E%B6%E6%9E%84%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</link>
+    <pubDate>Wed, 10 Sep 2025 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>https://lushuan.gihub.io/kubeedge-v1.17.4-amd64%E7%BB%93%E5%90%88arm64%E4%BA%91%E8%BE%B9%E6%9E%B6%E6%9E%84%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</guid>
+    <description><![CDATA[前言 最近在做一个网络内生安全方面的一个项目，需要在物联网IOT边端设备上部署软蜜罐和蜜网，为了方便管理边端设备服务，选型华为的KubeEdg]]></description>
+</item>
+</channel>
+</rss>
