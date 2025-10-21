@@ -34,7 +34,7 @@ unrewarded genius is almost a proverb. Education will not; the world is full of 
 相关开发经验。
 
 - 个人信息：lushuan
-- 拿手菜：清蒸鲈鱼、徐州地锅鸡、炒花蛤、香辣小炒肉
+- 拿手菜：徐州地锅鸡、清蒸鲈鱼、炒花蛤、香辣小炒肉
 - 兴趣爱好：篮球、音乐、阅读、掼蛋、台球、旅游等
 - 邮箱：`lushuan2071@126.com`
 - 我的微信
@@ -42,7 +42,7 @@ unrewarded genius is almost a proverb. Education will not; the world is full of 
 <img src="/images/ewm.jpg" width="20%" align="center" />
 
 
-技能说明：我会的东西基本上都写在博客中了，不敢说有多么精通，一直在努力学习中
+技能说明：我会的东西基本上都写在博客中了，不敢说有多么精通，一直在持续学习中
 - Kubernetes
 - Prometheus
 - InfluxDB
