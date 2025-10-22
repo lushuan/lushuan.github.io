@@ -27,7 +27,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/lushuan.gihub.io\/%E5%9F%BA%E4%BA%8E-gitlab-%E6%9E%84%E5%BB%BA-gin-vue-admin-%E5%90%8E%E7%AB%AF-server-%E6%9C%8D%E5%8A%A1cicd\/"
-        },"genre": "posts","keywords": "Gitlab, CI\/CD","wordcount":  4232 ,
+        },"genre": "posts","keywords": "Gitlab, CI\/CD","wordcount":  4254 ,
         "url": "https:\/\/lushuan.gihub.io\/%E5%9F%BA%E4%BA%8E-gitlab-%E6%9E%84%E5%BB%BA-gin-vue-admin-%E5%90%8E%E7%AB%AF-server-%E6%9C%8D%E5%8A%A1cicd\/","datePublished": "2025-10-20T12:06:37+08:00","dateModified": "2025-10-20T12:06:37+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -115,7 +115,7 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">基于 Gitlab Runner 构建 Gin-Vue-Admin 后端 server 服务CI/CD</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/gitlab/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Gitlab</a>&nbsp;<a href="/categories/ci/cd/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>CI/CD</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2025-10-20">2025-10-20</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 4232 字&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2025-10-20">2025-10-20</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 4254 字&nbsp;
                 <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 9 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  data-kept="">
                 <div class="details-summary toc-title">
@@ -767,7 +767,6 @@ Gitlab-runner 安装推荐和Gitlab 版本保持一致</p>
 </span></span><span class="line"><span class="cl">variables:
 </span></span><span class="line"><span class="cl">  PROJECT_NAME: gin-vue-admin
 </span></span><span class="line"><span class="cl">  IMAGE_NAME: 192.168.1.20/library/cloudbackend       # 修改为你的 Harbor 项目地址
-</span></span><span class="line"><span class="cl">  IMAGE_TAG: 202510201316                                            # 当前构建 tag
 </span></span><span class="line"><span class="cl">  K8S_DEPLOY_FILE: deploy/cloudbackend-deployment.yaml        # k8s 部署文件路径
 </span></span><span class="line"><span class="cl">  K8S_DEPLOY_CM_FILE: deploy/cloudbackend-configmap.yaml
 </span></span><span class="line"><span class="cl">  K8S_DEPLOY_SERVICE_FILE: deploy/cloudbackend-service.yaml
@@ -804,6 +803,7 @@ Gitlab-runner 安装推荐和Gitlab 版本保持一致</p>
 </span></span><span class="line"><span class="cl">    - echo &#34;开始 $(date)&#34;
 </span></span><span class="line"><span class="cl">    - echo &#34;=== Step 1 开始构建镜像 ===&#34;
 </span></span><span class="line"><span class="cl">    - docker build --network=host -t $IMAGE_NAME:$IMAGE_TAG .
+</span></span><span class="line"><span class="cl">    - docker image prune -f    # ✅ 构建后清理 无标签dangling 镜像，节省空间
 </span></span><span class="line"><span class="cl">    - echo &#34;=== 镜像构建完成 $IMAGE_NAME:$IMAGE_TAG ===&#34;
 </span></span><span class="line"><span class="cl">    - echo &#34;结束 $(date)&#34;
 </span></span><span class="line"><span class="cl">  only:
