@@ -371,7 +371,8 @@ deploy:
     - master
 
 # ==========================================
-# 通知阶段 (不影响主流程)
+# 通知阶段 (不影响主流程),并且提供钉钉稳健通知方案，
+# 避免偶发性网络问题
 # ==========================================
 notify:
   stage: notify
@@ -406,9 +407,20 @@ notify:
         }
       }"
 
-      curl -s "${DINGTALK_WEBHOOK}" \
-        -H "Content-Type: application/json" \
-        -d "$MESSAGE"
+      MAX_RETRY=3
+      for i in $(seq 1 $MAX_RETRY); do
+        echo "尝试发送第 $i 次通知..."
+        RESPONSE=$(curl -s -w "%{http_code}" -o /tmp/ding.log \
+          -H "Content-Type: application/json" \
+          -d "$MESSAGE" "$DINGTALK_WEBHOOK")
+        if [ "$RESPONSE" = "200" ]; then
+          echo "✅ 钉钉通知成功"
+          break
+        else
+          echo "⚠️ 第 $i 次失败，等待 5 秒重试"
+          sleep 5
+        fi
+      done
   when: always   # ✅ 无论成功或失败都执行
   only:
     - master
