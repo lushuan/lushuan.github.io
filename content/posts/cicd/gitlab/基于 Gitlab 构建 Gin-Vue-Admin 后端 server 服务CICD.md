@@ -269,7 +269,6 @@ stages:
 variables:
   PROJECT_NAME: gin-vue-admin
   IMAGE_NAME: 192.168.1.20/library/cloudbackend       # 修改为你的 Harbor 项目地址
-  IMAGE_TAG: 202510201316                                            # 当前构建 tag
   K8S_DEPLOY_FILE: deploy/cloudbackend-deployment.yaml        # k8s 部署文件路径
   K8S_DEPLOY_CM_FILE: deploy/cloudbackend-configmap.yaml
   K8S_DEPLOY_SERVICE_FILE: deploy/cloudbackend-service.yaml
@@ -306,6 +305,7 @@ build:
     - echo "开始 $(date)"
     - echo "=== Step 1 开始构建镜像 ==="
     - docker build --network=host -t $IMAGE_NAME:$IMAGE_TAG .
+    - docker image prune -f    # ✅ 构建后清理 无标签dangling 镜像，节省空间
     - echo "=== 镜像构建完成 $IMAGE_NAME:$IMAGE_TAG ==="
     - echo "结束 $(date)"
   only:
