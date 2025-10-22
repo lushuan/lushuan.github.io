@@ -21,6 +21,14 @@
     <description><![CDATA[前言 最近在做一个网络内生安全方面的一个项目，需要在物联网IOT边端设备上部署软蜜罐和蜜网，为了方便管理边端设备服务，选型华为的KubeEdg]]></description>
 </item>
 <item>
+    <title>Git提交代码后发起Merge全流程示例</title>
+    <link>https://lushuan.gihub.io/%E6%8F%90%E4%BA%A4%E4%BB%A3%E7%A0%81%E5%90%8E%E5%8F%91%E8%B5%B7merge%E5%85%A8%E6%B5%81%E7%A8%8B%E7%A4%BA%E4%BE%8B/</link>
+    <pubDate>Sat, 17 May 2025 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>https://lushuan.gihub.io/%E6%8F%90%E4%BA%A4%E4%BB%A3%E7%A0%81%E5%90%8E%E5%8F%91%E8%B5%B7merge%E5%85%A8%E6%B5%81%E7%A8%8B%E7%A4%BA%E4%BE%8B/</guid>
+    <description><![CDATA[背景 场景：一个团队中，员工负责开发功能并提交合并请求 (Merge Request) 技术经理 负责 Code Review → Merge → 验收 → 回滚（如有问题） 全程用命令行 git 操作，没有 GUI。 🧭 场景说]]></description>
+</item>
+<item>
     <title>Linux 后台启动命令setsid和nohup的区别介绍</title>
     <link>https://lushuan.gihub.io/linux-%E5%90%8E%E5%8F%B0%E5%90%AF%E5%8A%A8%E5%91%BD%E4%BB%A4setsid%E5%92%8Cnohup%E7%9A%84%E5%8C%BA%E5%88%AB%E4%BB%8B%E7%BB%8D/</link>
     <pubDate>Sat, 19 Apr 2025 12:06:37 &#43;0800</pubDate>
@@ -75,14 +83,6 @@
     <author>lushuan</author>
     <guid>https://lushuan.gihub.io/mysql%E9%9B%86%E7%BE%A4%E4%B9%8B%E4%B8%BB%E4%BB%8E%E9%83%A8%E7%BD%B2/</guid>
     <description><![CDATA[背景信息 为了增加数据的冗余备份，增强服务的高可用性，从传统的单服务应用升级到集群服务应用是一个合适方案，这里介绍一下MySQL 5.7 版本的部署，]]></description>
-</item>
-<item>
-    <title>K3s 快速入门及安装部署</title>
-    <link>https://lushuan.gihub.io/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/</link>
-    <pubDate>Mon, 23 Sep 2024 12:06:37 &#43;0800</pubDate>
-    <author>lushuan</author>
-    <guid>https://lushuan.gihub.io/k3s%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/</guid>
-    <description><![CDATA[背景 为物联网和边缘计算构建的经过认证的Kubernetes发行版，则是Rancher旗下产品 Great for: Edge IoT CI Development ARM Embedding k8s Situations where a PhD in k8s clusterology is infeasible 发展历程 微型]]></description>
 </item>
 </channel>
 </rss>

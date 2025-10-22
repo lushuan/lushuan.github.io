@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>Git提交代码后发起Merge全流程示例 - Less is more</title><meta name="Description" content="晚来天欲雪,能饮一杯无?"><meta property="og:title" content="Git提交代码后发起Merge全流程示例" />
+<meta property="og:description" content="背景 场景：一个团队中，员工负责开发功能并提交合并请求 (Merge Request) 技术经理 负责 Code Review → Merge → 验收 → 回滚（如有问题） 全程用命令行 git 操作，没有 GUI。 🧭 场景说" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://lushuan.gihub.io/%E6%8F%90%E4%BA%A4%E4%BB%A3%E7%A0%81%E5%90%8E%E5%8F%91%E8%B5%B7merge%E5%85%A8%E6%B5%81%E7%A8%8B%E7%A4%BA%E4%BE%8B/" /><meta property="og:image" content="https://lushuan.gihub.io/images/avatar.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2025-05-17T12:06:37+08:00" />
+<meta property="article:modified_time" content="2025-05-17T12:06:37+08:00" /><meta property="og:site_name" content="我的网站" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://lushuan.gihub.io/images/avatar.png"/>
+
+<meta name="twitter:title" content="Git提交代码后发起Merge全流程示例"/>
+<meta name="twitter:description" content="背景 场景：一个团队中，员工负责开发功能并提交合并请求 (Merge Request) 技术经理 负责 Code Review → Merge → 验收 → 回滚（如有问题） 全程用命令行 git 操作，没有 GUI。 🧭 场景说"/>
+<meta name="application-name" content="我的网站">
+<meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/images/avatar.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://lushuan.gihub.io/%E6%8F%90%E4%BA%A4%E4%BB%A3%E7%A0%81%E5%90%8E%E5%8F%91%E8%B5%B7merge%E5%85%A8%E6%B5%81%E7%A8%8B%E7%A4%BA%E4%BE%8B/" /><link rel="prev" href="https://lushuan.gihub.io/linux-%E5%90%8E%E5%8F%B0%E5%90%AF%E5%8A%A8%E5%91%BD%E4%BB%A4setsid%E5%92%8Cnohup%E7%9A%84%E5%8C%BA%E5%88%AB%E4%BB%8B%E7%BB%8D/" /><link rel="next" href="https://lushuan.gihub.io/kubeedge-v1.17.4-amd64%E7%BB%93%E5%90%88arm64%E4%BA%91%E8%BE%B9%E6%9E%B6%E6%9E%84%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Git提交代码后发起Merge全流程示例",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/lushuan.gihub.io\/%E6%8F%90%E4%BA%A4%E4%BB%A3%E7%A0%81%E5%90%8E%E5%8F%91%E8%B5%B7merge%E5%85%A8%E6%B5%81%E7%A8%8B%E7%A4%BA%E4%BE%8B\/"
+        },"genre": "posts","keywords": "Git","wordcount":  1433 ,
+        "url": "https:\/\/lushuan.gihub.io\/%E6%8F%90%E4%BA%A4%E4%BB%A3%E7%A0%81%E5%90%8E%E5%8F%91%E8%B5%B7merge%E5%85%A8%E6%B5%81%E7%A8%8B%E7%A4%BA%E4%BE%8B\/","datePublished": "2025-05-17T12:06:37+08:00","dateModified": "2025-05-17T12:06:37+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "lushuan"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Less is more"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Less is more</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 归档 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/" title="About"> 关于 </a><a class="menu-item" href="/friends/" title="friends"> 友链 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Less is more"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Less is more</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">归档</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="About">关于</a><a class="menu-item" href="/friends/" title="friends">友链</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Git提交代码后发起Merge全流程示例</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/git/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Git</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2025-05-17">2025-05-17</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 1433 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 3 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#背景">背景</a></li>
+    <li><a href="#-场景说明">🧭 场景说明</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#1-克隆项目">1️⃣ 克隆项目</a></li>
+    <li><a href="#2-从-master-拉取最新代码">2️⃣ 从 master 拉取最新代码</a></li>
+    <li><a href="#3-创建自己的功能分支">3️⃣ 创建自己的功能分支</a></li>
+    <li><a href="#4-编写代码提交更改">4️⃣ 编写代码、提交更改</a></li>
+    <li><a href="#5-推送到远程分支">5️⃣ 推送到远程分支</a></li>
+    <li><a href="#6-发起-merge-request">6️⃣ 发起 Merge Request</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#1-拉取最新远程分支">1️⃣ 拉取最新远程分支</a></li>
+    <li><a href="#2-检查员工的分支">2️⃣ 检查员工的分支</a></li>
+    <li><a href="#3-本地测试--验收">3️⃣ 本地测试 / 验收</a></li>
+    <li><a href="#4-合并到-master">4️⃣ 合并到 master</a></li>
+    <li><a href="#5-推送合并结果到远程-master">5️⃣ 推送合并结果到远程 master</a></li>
+    <li><a href="#6-清理无用分支">6️⃣ 清理无用分支</a></li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#-情况-1只想撤销最近一次合并提交">🧩 情况 1：只想撤销最近一次合并提交</a></li>
+        <li><a href="#-情况-2回滚到某个稳定版本比如上一个成功的-commit">🧨 情况 2：回滚到某个稳定版本（比如上一个成功的 commit）</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="背景">背景</h2>
+<ul>
+<li>场景：一个团队中，<strong>员工负责开发功能并提交合并请求 (Merge Request)</strong></li>
+<li><strong>技术经理</strong> 负责 <strong>Code Review → Merge → 验收 → 回滚（如有问题）</strong></li>
+<li><strong>全程用命令行 git 操作</strong>，没有 GUI。</li>
+</ul>
+<hr>
+<h2 id="-场景说明">🧭 场景说明</h2>
+<ul>
+<li>
+<p><strong>主分支</strong>：<code>master</code></p>
+</li>
+<li>
+<p><strong>开发分支命名规则</strong>：<code>feature/&lt;功能名&gt;</code>，例如：<code>feature/add-login-api</code></p>
+</li>
+<li>
+<p><strong>远程仓库</strong>：<code>origin</code></p>
+</li>
+<li>
+<p><strong>角色</strong>：</p>
+<ul>
+<li>👩‍💻 员工：负责创建分支、开发、提交代码、推送到远程、发起 merge request</li>
+<li>👨‍💼 技术经理：负责 Code Review、合并、验证、必要时回滚</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="-第一阶段员工开发流程">🌱 第一阶段：员工开发流程</h1>
+<h2 id="1-克隆项目">1️⃣ 克隆项目</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">git clone git@github.com:company/project.git
+</span></span><span class="line"><span class="cl"><span class="nb">cd</span> project
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>克隆远程仓库到本地。之后所有操作都在该项目目录下进行。</p>
+</blockquote>
+<hr>
+<h2 id="2-从-master-拉取最新代码">2️⃣ 从 master 拉取最新代码</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">git checkout master
+</span></span><span class="line"><span class="cl">git pull origin master
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>确保自己基于最新的主干开发，避免冲突。</p>
+</blockquote>
+<hr>
+<h2 id="3-创建自己的功能分支">3️⃣ 创建自己的功能分支</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">git checkout -b feature/add-login-api
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>创建并切换到自己的分支，命名要有意义（<code>feature/</code> 开头表示新功能）。</p>
+</blockquote>
+<hr>
+<h2 id="4-编写代码提交更改">4️⃣ 编写代码、提交更改</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">git add .
+</span></span><span class="line"><span class="cl">git commit -m <span class="s2">&#34;feat: add login API with JWT authentication&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<ul>
+<li><code>git add .</code> 表示把修改的文件加入暂存区</li>
+<li><code>git commit -m</code> 提交说明必须简洁明确（推荐遵守 <a href="https://www.conventionalcommits.org/" target="_blank" rel="noopener noreffer ">Conventional Commit</a> 规范）</li>
+</ul>
+</blockquote>
+<hr>
+<h2 id="5-推送到远程分支">5️⃣ 推送到远程分支</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">git push origin feature/add-login-api
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>把分支上传到远程仓库，供技术经理审核。</p>
+</blockquote>
+<hr>
+<h2 id="6-发起-merge-request">6️⃣ 发起 Merge Request</h2>
+<p>登录 GitLab/GitHub/Gitee →
+发起一个从 <code>feature/add-login-api</code> → <code>master</code> 的 <strong>Merge Request (MR)</strong>。
+写清楚：</p>
+<ul>
+<li>变更内容</li>
+<li>测试说明</li>
+<li>可能的影响范围</li>
+</ul>
+<p><figure><a class="lightgallery" href="/images/git/git-1.png" title="Git Merge Request" data-thumbnail="/images/git/git-1.png" data-sub-html="<h2>Git Merge Request</h2><p>Git Merge Request</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/git/git-1.png"
+            data-srcset="/images/git/git-1.png, /images/git/git-1.png 1.5x, /images/git/git-1.png 2x"
+            data-sizes="auto"
+            alt="/images/git/git-1.png" />
+    </a><figcaption class="image-caption">Git Merge Request</figcaption>
+    </figure></p>
+<blockquote>
+<p>💡 这步通常是网页上操作（不是 git 命令）。</p>
+</blockquote>
+<hr>
+<h1 id="-第二阶段技术经理-code-review--合并流程">🔍 第二阶段：技术经理 Code Review + 合并流程</h1>
+<h2 id="1-拉取最新远程分支">1️⃣ 拉取最新远程分支</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">git fetch origin
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>获取所有远程更新（包括员工新建的 feature 分支）。</p>
+</blockquote>
+<hr>
+<h2 id="2-检查员工的分支">2️⃣ 检查员工的分支</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">git checkout feature/add-login-api
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>切换到该功能分支。</p>
+</blockquote>
+<p>然后查看变更：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">git log --oneline --graph --decorate
+</span></span><span class="line"><span class="cl">git diff master
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<ul>
+<li><code>git diff master</code>：查看和主分支的代码差异</li>
+<li><code>git log</code>：确认提交历史是否干净，有没有多余的提交</li>
+</ul>
+</blockquote>
+<hr>
+<h2 id="3-本地测试--验收">3️⃣ 本地测试 / 验收</h2>
+<blockquote>
+<p>在本地编译、运行单元测试，确认功能正常、无冲突。</p>
+</blockquote>
+<hr>
+<h2 id="4-合并到-master">4️⃣ 合并到 master</h2>
+<p>切回 master 分支：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">git checkout master
+</span></span><span class="line"><span class="cl">git pull origin master
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>合并 feature 分支：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">git merge --no-ff feature/add-login-api -m <span class="s2">&#34;merge: add login API feature&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p><code>--no-ff</code> 表示保留合并节点，方便以后追踪是谁合并的。</p>
+</blockquote>
+<hr>
+<h2 id="5-推送合并结果到远程-master">5️⃣ 推送合并结果到远程 master</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">git push origin master
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>把合并后的主干更新到远程仓库。
+此时 Merge Request 可在平台上关闭或自动关闭。</p>
+</blockquote>
+<hr>
+<h2 id="6-清理无用分支">6️⃣ 清理无用分支</h2>
+<p>合并完成后，可以删除本地和远程的 feature 分支：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">git branch -d feature/add-login-api          <span class="c1"># 删除本地分支</span>
+</span></span><span class="line"><span class="cl">git push origin --delete feature/add-login-api  <span class="c1"># 删除远程分支</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><hr>
+<h1 id="-第三阶段合并后发现问题--回滚方案">🚨 第三阶段：合并后发现问题 → 回滚方案</h1>
+<p>假设技术经理合并后发现 master 出了问题。</p>
+<p>有两种情况：</p>
+<hr>
+<h3 id="-情况-1只想撤销最近一次合并提交">🧩 情况 1：只想撤销最近一次合并提交</h3>
+<p>1️⃣ 查看提交历史：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">git log --oneline
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>找到合并提交的 ID（假设是 <code>abc1234</code>）</p>
+<p>2️⃣ 执行回滚：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">git revert -m <span class="m">1</span> abc1234
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p><code>-m 1</code> 表示保留主分支（master）为主线，撤销 merge 分支的改动。
+这会生成一个新的提交，用来反向取消那次合并。</p>
+</blockquote>
+<p>3️⃣ 推送修改：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">git push origin master
+</span></span></code></pre></td></tr></table>
+</div>
+</div><hr>
+<h3 id="-情况-2回滚到某个稳定版本比如上一个成功的-commit">🧨 情况 2：回滚到某个稳定版本（比如上一个成功的 commit）</h3>
+<p>查看提交历史：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">git log --oneline
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>找到一个稳定版本（假设是 <code>789abcd</code>），然后执行：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">git reset --hard 789abcd
+</span></span><span class="line"><span class="cl">git push origin master --force
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p><strong>⚠️ 警告：</strong>
+这种方法会重写远程历史（危险操作），必须 <strong>确保团队成员知道</strong>，否则他们本地的 master 会混乱。</p>
+</blockquote>
+<hr>
+<h1 id="-第四阶段日常维护建议">🧹 第四阶段：日常维护建议</h1>
+<ul>
+<li>
+<p>每次合并前，务必：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">git pull origin master
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>保证自己的分支基于最新的主干。</p>
+</li>
+<li>
+<p>命名规范化：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">feature/*     → 新功能
+</span></span><span class="line"><span class="cl">fix/*         → 修复
+</span></span><span class="line"><span class="cl">hotfix/*      → 紧急修复
+</span></span><span class="line"><span class="cl">refactor/*    → 重构
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>提交说明规范化（示例）：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">feat: add login api
+</span></span><span class="line"><span class="cl">fix: correct user token expiry
+</span></span><span class="line"><span class="cl">refactor: simplify session handling
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+<hr>
+<h1 id="-总结完整命令流程复盘">✅ 总结：完整命令流程复盘</h1>
+<table>
+<thead>
+<tr>
+<th>角色</th>
+<th>操作步骤</th>
+<th>命令</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>员工</td>
+<td>同步主干</td>
+<td><code>git pull origin master</code></td>
+</tr>
+<tr>
+<td>员工</td>
+<td>创建分支</td>
+<td><code>git checkout -b feature/add-login-api</code></td>
+</tr>
+<tr>
+<td>员工</td>
+<td>开发提交</td>
+<td><code>git add . &amp;&amp; git commit -m &quot;feat: add login api&quot;</code></td>
+</tr>
+<tr>
+<td>员工</td>
+<td>推送分支</td>
+<td><code>git push origin feature/add-login-api</code></td>
+</tr>
+<tr>
+<td>员工</td>
+<td>发起 MR</td>
+<td>（网页操作）</td>
+</tr>
+<tr>
+<td>技术经理</td>
+<td>拉取更新</td>
+<td><code>git fetch origin</code></td>
+</tr>
+<tr>
+<td>技术经理</td>
+<td>检查分支</td>
+<td><code>git checkout feature/add-login-api</code></td>
+</tr>
+<tr>
+<td>技术经理</td>
+<td>查看差异</td>
+<td><code>git diff master</code></td>
+</tr>
+<tr>
+<td>技术经理</td>
+<td>测试通过后合并</td>
+<td><code>git checkout master &amp;&amp; git merge --no-ff feature/add-login-api -m &quot;merge: add login api&quot;</code></td>
+</tr>
+<tr>
+<td>技术经理</td>
+<td>推送主干</td>
+<td><code>git push origin master</code></td>
+</tr>
+<tr>
+<td>技术经理</td>
+<td>清理分支</td>
+<td><code>git branch -d feature/add-login-api &amp;&amp; git push origin --delete feature/add-login-api</code></td>
+</tr>
+<tr>
+<td>技术经理</td>
+<td>回滚合并（如需）</td>
+<td><code>git revert -m 1 &lt;merge_commit_id&gt;</code></td>
+</tr>
+</tbody>
+</table>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2025-05-17</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://lushuan.gihub.io/%E6%8F%90%E4%BA%A4%E4%BB%A3%E7%A0%81%E5%90%8E%E5%8F%91%E8%B5%B7merge%E5%85%A8%E6%B5%81%E7%A8%8B%E7%A4%BA%E4%BE%8B/" data-title="Git提交代码后发起Merge全流程示例" data-via="xxxx" data-hashtags="Git"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://lushuan.gihub.io/%E6%8F%90%E4%BA%A4%E4%BB%A3%E7%A0%81%E5%90%8E%E5%8F%91%E8%B5%B7merge%E5%85%A8%E6%B5%81%E7%A8%8B%E7%A4%BA%E4%BE%8B/" data-hashtag="Git"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="https://lushuan.gihub.io/%E6%8F%90%E4%BA%A4%E4%BB%A3%E7%A0%81%E5%90%8E%E5%8F%91%E8%B5%B7merge%E5%85%A8%E6%B5%81%E7%A8%8B%E7%A4%BA%E4%BE%8B/" data-title="Git提交代码后发起Merge全流程示例"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="https://lushuan.gihub.io/%E6%8F%90%E4%BA%A4%E4%BB%A3%E7%A0%81%E5%90%8E%E5%8F%91%E8%B5%B7merge%E5%85%A8%E6%B5%81%E7%A8%8B%E7%A4%BA%E4%BE%8B/" data-title="Git提交代码后发起Merge全流程示例"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://lushuan.gihub.io/%E6%8F%90%E4%BA%A4%E4%BB%A3%E7%A0%81%E5%90%8E%E5%8F%91%E8%B5%B7merge%E5%85%A8%E6%B5%81%E7%A8%8B%E7%A4%BA%E4%BE%8B/" data-title="Git提交代码后发起Merge全流程示例"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/git/">Git</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/linux-%E5%90%8E%E5%8F%B0%E5%90%AF%E5%8A%A8%E5%91%BD%E4%BB%A4setsid%E5%92%8Cnohup%E7%9A%84%E5%8C%BA%E5%88%AB%E4%BB%8B%E7%BB%8D/" class="prev" rel="prev" title="Linux 后台启动命令setsid和nohup的区别介绍"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Linux 后台启动命令setsid和nohup的区别介绍</a>
+            <a href="/kubeedge-v1.17.4-amd64%E7%BB%93%E5%90%88arm64%E4%BA%91%E8%BE%B9%E6%9E%B6%E6%9E%84%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" class="next" rel="next" title="KubeEdge v1.17.4 amd64结合arm64云边架构环境搭建">KubeEdge v1.17.4 amd64结合arm64云边架构环境搭建<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+<div id="comments"><div id="gitalk" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://github.com/gitalk/gitalk"></a>Gitalk</a>.
+            </noscript><div id="giscus" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://giscus.app">Giscus</a>.
+            </noscript></div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">我是有底线的</div><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.114.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2025</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">lushuan</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/gitalk/gitalk.min.css"><link rel="stylesheet" href="/lib/lightgallery/css/lightgallery-bundle.min.css"><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/gitalk/gitalk.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/lightgallery/lightgallery.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/zoom/lg-zoom.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{"giscus":{"category":"Announcements","categoryId":"DIC_kwDOMOWcic4Coqlk","darkTheme":"dark","emitMetadata":"0","inputPosition":"bottom","lang":"zh-CN","lazyLoading":false,"lightTheme":"light","mapping":"pathname","reactionsEnabled":"1","repo":"lushuan/lushuan.github.io","repoId":"R_kgDOMOWciQ"},"gitalk":{"admin":["lushuan"],"clientID":"Ov23liSh0yG2wy6B7XP1","clientSecret":"7184a8df973267af95c92ddeb27789417ba82469","id":"2025-05-17T12:06:37+08:00","owner":"lushuan","repo":"lushuan.github.io","title":"Git提交代码后发起Merge全流程示例"}},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"lightgallery":true,"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
