@@ -21,6 +21,14 @@
     <description><![CDATA[]]></description>
 </item>
 <item>
+    <title>Git</title>
+    <link>https://lushuan.gihub.io/tags/git/</link>
+    <pubDate>Sat, 17 May 2025 12:06:37 &#43;0800</pubDate>
+    <author>lushuan</author>
+    <guid>https://lushuan.gihub.io/tags/git/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
     <title>linux</title>
     <link>https://lushuan.gihub.io/tags/linux/</link>
     <pubDate>Sat, 19 Apr 2025 12:06:37 &#43;0800</pubDate>
@@ -74,14 +82,6 @@
     <pubDate>Tue, 17 Dec 2024 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
     <guid>https://lushuan.gihub.io/tags/xtrabackup/</guid>
-    <description><![CDATA[]]></description>
-</item>
-<item>
-    <title>防火墙</title>
-    <link>https://lushuan.gihub.io/tags/%E9%98%B2%E7%81%AB%E5%A2%99/</link>
-    <pubDate>Tue, 19 Nov 2024 12:06:37 &#43;0800</pubDate>
-    <author>lushuan</author>
-    <guid>https://lushuan.gihub.io/tags/%E9%98%B2%E7%81%AB%E5%A2%99/</guid>
     <description><![CDATA[]]></description>
 </item>
 </channel>

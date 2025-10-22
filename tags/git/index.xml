@@ -1,10 +1,10 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title>Git - 分类 - Less is more</title>
-        <link>https://lushuan.gihub.io/categories/git/</link>
-        <description>Git - 分类 - Less is more</description>
+        <title>Git - 标签 - Less is more</title>
+        <link>https://lushuan.gihub.io/tags/git/</link>
+        <description>Git - 标签 - Less is more</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
-            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Sat, 17 May 2025 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/categories/git/" rel="self" type="application/rss+xml" /><item>
+            <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Sat, 17 May 2025 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/tags/git/" rel="self" type="application/rss+xml" /><item>
     <title>Git提交代码后发起Merge全流程示例</title>
     <link>https://lushuan.gihub.io/%E6%8F%90%E4%BA%A4%E4%BB%A3%E7%A0%81%E5%90%8E%E5%8F%91%E8%B5%B7merge%E5%85%A8%E6%B5%81%E7%A8%8B%E7%A4%BA%E4%BE%8B/</link>
     <pubDate>Sat, 17 May 2025 12:06:37 &#43;0800</pubDate>
