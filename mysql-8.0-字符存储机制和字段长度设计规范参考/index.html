@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>MySQL 8.0 字符存储机制和字段长度设计规范参考 - Less is more</title><meta name="Description" content="晚来天欲雪,能饮一杯无?"><meta property="og:title" content="MySQL 8.0 字符存储机制和字段长度设计规范参考" />
+<meta property="og:description" content="🧩 一、MySQL 8.0 中 VARCHAR 长度与中文存储关系 在 MySQL 8.0 中，推荐使用 utf8mb4 字符集（兼容 Emoji 和所有中日韩文字）。 内容 占用字节数 英文字母/数字 1 字节 中文（UTF" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://lushuan.gihub.io/mysql-8.0-%E5%AD%97%E7%AC%A6%E5%AD%98%E5%82%A8%E6%9C%BA%E5%88%B6%E5%92%8C%E5%AD%97%E6%AE%B5%E9%95%BF%E5%BA%A6%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83%E5%8F%82%E8%80%83/" /><meta property="og:image" content="https://lushuan.gihub.io/images/avatar.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2025-06-14T12:06:37+08:00" />
+<meta property="article:modified_time" content="2025-06-26T12:06:37+08:00" /><meta property="og:site_name" content="我的网站" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://lushuan.gihub.io/images/avatar.png"/>
+
+<meta name="twitter:title" content="MySQL 8.0 字符存储机制和字段长度设计规范参考"/>
+<meta name="twitter:description" content="🧩 一、MySQL 8.0 中 VARCHAR 长度与中文存储关系 在 MySQL 8.0 中，推荐使用 utf8mb4 字符集（兼容 Emoji 和所有中日韩文字）。 内容 占用字节数 英文字母/数字 1 字节 中文（UTF"/>
+<meta name="application-name" content="我的网站">
+<meta name="apple-mobile-web-app-title" content="我的网站"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/images/avatar.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://lushuan.gihub.io/mysql-8.0-%E5%AD%97%E7%AC%A6%E5%AD%98%E5%82%A8%E6%9C%BA%E5%88%B6%E5%92%8C%E5%AD%97%E6%AE%B5%E9%95%BF%E5%BA%A6%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83%E5%8F%82%E8%80%83/" /><link rel="prev" href="https://lushuan.gihub.io/%E6%8F%90%E4%BA%A4%E4%BB%A3%E7%A0%81%E5%90%8E%E5%8F%91%E8%B5%B7merge%E5%85%A8%E6%B5%81%E7%A8%8B%E7%A4%BA%E4%BE%8B/" /><link rel="next" href="https://lushuan.gihub.io/kubeedge-v1.17.4-amd64%E7%BB%93%E5%90%88arm64%E4%BA%91%E8%BE%B9%E6%9E%B6%E6%9E%84%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "MySQL 8.0 字符存储机制和字段长度设计规范参考",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/lushuan.gihub.io\/mysql-8.0-%E5%AD%97%E7%AC%A6%E5%AD%98%E5%82%A8%E6%9C%BA%E5%88%B6%E5%92%8C%E5%AD%97%E6%AE%B5%E9%95%BF%E5%BA%A6%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83%E5%8F%82%E8%80%83\/"
+        },"genre": "posts","keywords": "MySQL","wordcount":  1340 ,
+        "url": "https:\/\/lushuan.gihub.io\/mysql-8.0-%E5%AD%97%E7%AC%A6%E5%AD%98%E5%82%A8%E6%9C%BA%E5%88%B6%E5%92%8C%E5%AD%97%E6%AE%B5%E9%95%BF%E5%BA%A6%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83%E5%8F%82%E8%80%83\/","datePublished": "2025-06-14T12:06:37+08:00","dateModified": "2025-06-26T12:06:37+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "lushuan"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Less is more"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Less is more</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 归档 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/" title="About"> 关于 </a><a class="menu-item" href="/friends/" title="friends"> 友链 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Less is more"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="/images/avatar.png"
+        data-srcset="/images/avatar.png, /images/avatar.png 1.5x, /images/avatar.png 2x"
+        data-sizes="auto"
+        alt="/images/avatar.png"
+        title="/images/avatar.png" />Less is more</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">归档</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="About">关于</a><a class="menu-item" href="/friends/" title="friends">友链</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">MySQL 8.0 字符存储机制和字段长度设计规范参考</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>lushuan</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/mysql/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>MySQL</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2025-06-14">2025-06-14</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 1340 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 3 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#-一mysql-80-中-varchar-长度与中文存储关系">🧩 一、MySQL 8.0 中 VARCHAR 长度与中文存储关系</a>
+      <ul>
+        <li><a href="#-举例">✅ 举例：</a></li>
+      </ul>
+    </li>
+    <li><a href="#-二字段长度与类型选择建议">🧭 二、字段长度与类型选择建议</a></li>
+    <li><a href="#-三字段设计的一般建议">🧠 三、字段设计的一般建议</a></li>
+    <li><a href="#-四扩展示例蜜罐信息表优化版">🔧 四、扩展示例：蜜罐信息表（优化版）</a></li>
+    <li><a href="#-五总结表常用字段长度建议">📊 五、总结表（常用字段长度建议）</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="-一mysql-80-中-varchar-长度与中文存储关系">🧩 一、MySQL 8.0 中 VARCHAR 长度与中文存储关系</h2>
+<p>在 MySQL 8.0 中，推荐使用 <strong><code>utf8mb4</code> 字符集</strong>（兼容 Emoji 和所有中日韩文字）。</p>
+<table>
+<thead>
+<tr>
+<th>内容</th>
+<th>占用字节数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>英文字母/数字</td>
+<td>1 字节</td>
+</tr>
+<tr>
+<td>中文（UTF-8 编码）</td>
+<td>3 字节</td>
+</tr>
+<tr>
+<td>Emoji 表情</td>
+<td>4 字节</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>⚠️ <strong>VARCHAR(n)</strong> 的 <code>n</code> 是“字符数”而不是字节数，<strong>即最多能存储 n 个字符</strong>（无论中文还是英文）。</p>
+</blockquote>
+<h3 id="-举例">✅ 举例：</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="n">description</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="nb">CHARACTER</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">utf8mb4</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>能存储 <strong>10 个字符</strong>；</li>
+<li>如果全部是中文，能放 <strong>10 个汉字</strong>；</li>
+<li>实际占用空间为 <strong>30 字节（约）</strong>；</li>
+<li>如果包含 emoji 表情，则可能占用更多字节，但仍为 10 字符。</li>
+</ul>
+<hr>
+<h2 id="-二字段长度与类型选择建议">🧭 二、字段长度与类型选择建议</h2>
+<p>下面是根据<strong>字段语义</strong>推荐的字段类型与合理长度范围：</p>
+<table>
+<thead>
+<tr>
+<th>字段用途</th>
+<th>推荐类型</th>
+<th>推荐长度</th>
+<th>说明与示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>主键 ID</strong></td>
+<td><code>BIGINT UNSIGNED</code></td>
+<td>自增</td>
+<td>可支持数十亿条数据</td>
+</tr>
+<tr>
+<td><strong>姓名 name</strong></td>
+<td><code>VARCHAR(50)</code></td>
+<td>50</td>
+<td>中文姓名通常 &lt;10，预留英文名、机构名空间</td>
+</tr>
+<tr>
+<td><strong>描述 description / remark</strong></td>
+<td><code>VARCHAR(255)</code> 或 <code>TEXT</code></td>
+<td>-</td>
+<td>一般用 255，若内容较长建议改用 <code>TEXT</code></td>
+</tr>
+<tr>
+<td><strong>邮箱 email</strong></td>
+<td><code>VARCHAR(100)</code></td>
+<td>100</td>
+<td>常见邮箱最长 60~70，预留扩展</td>
+</tr>
+<tr>
+<td><strong>手机号 phone</strong></td>
+<td><code>CHAR(11)</code></td>
+<td>固定长度 11</td>
+<td>国内手机号标准长度</td>
+</tr>
+<tr>
+<td><strong>IP 地址 (IPv4)</strong></td>
+<td><code>VARCHAR(15)</code></td>
+<td>15</td>
+<td>例如：255.255.255.255</td>
+</tr>
+<tr>
+<td><strong>IP 地址 (IPv6)</strong></td>
+<td><code>VARCHAR(45)</code></td>
+<td>45</td>
+<td>例如：2001:0db8:85a3:0000:0000:8a2e:0370:7334</td>
+</tr>
+<tr>
+<td><strong>密码 password</strong></td>
+<td><code>CHAR(60)</code></td>
+<td>固定长度</td>
+<td>通常是 bcrypt 或 hash 值长度</td>
+</tr>
+<tr>
+<td><strong>URL / 链接 address</strong></td>
+<td><code>VARCHAR(2083)</code></td>
+<td>2083</td>
+<td>IE 浏览器的最大 URL 长度（通用标准）</td>
+</tr>
+<tr>
+<td><strong>时间戳 created_at / updated_at</strong></td>
+<td><code>DATETIME(3)</code></td>
+<td>-</td>
+<td>精确到毫秒；或使用 <code>TIMESTAMP(3)</code></td>
+</tr>
+<tr>
+<td><strong>布尔状态（启用/禁用）</strong></td>
+<td><code>TINYINT(1)</code></td>
+<td>-</td>
+<td>0 / 1 表示 true/false</td>
+</tr>
+<tr>
+<td><strong>状态码 / 枚举</strong></td>
+<td><code>ENUM()</code> 或 <code>TINYINT</code></td>
+<td>-</td>
+<td>ENUM 适合固定选项，小型状态推荐用 TINYINT</td>
+</tr>
+<tr>
+<td><strong>金额 price</strong></td>
+<td><code>DECIMAL(10,2)</code></td>
+<td>-</td>
+<td>精确表示金额，最大 99999999.99</td>
+</tr>
+<tr>
+<td><strong>数量 count</strong></td>
+<td><code>INT UNSIGNED</code></td>
+<td>-</td>
+<td>整数型数量字段</td>
+</tr>
+<tr>
+<td><strong>UUID</strong></td>
+<td><code>CHAR(36)</code></td>
+<td>36</td>
+<td>例如 <code>550e8400-e29b-41d4-a716-446655440000</code></td>
+</tr>
+<tr>
+<td><strong>JSON 数据</strong></td>
+<td><code>JSON</code></td>
+<td>-</td>
+<td>结构化配置数据（如端口映射等）</td>
+</tr>
+<tr>
+<td><strong>性别 gender</strong></td>
+<td><code>ENUM('male','female','unknown')</code></td>
+<td>-</td>
+<td>固定枚举值场景</td>
+</tr>
+<tr>
+<td><strong>地区 / 国家代码</strong></td>
+<td><code>CHAR(2)</code> 或 <code>CHAR(3)</code></td>
+<td>-</td>
+<td>ISO 3166-1 标准，如 CN、USA</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="-三字段设计的一般建议">🧠 三、字段设计的一般建议</h2>
+<ol>
+<li>
+<p><strong>文本字段（VARCHAR / TEXT）</strong></p>
+<ul>
+<li>优先使用 <code>VARCHAR(255)</code>；</li>
+<li>超长内容（如描述、备注、日志）使用 <code>TEXT</code>；</li>
+<li><code>VARCHAR</code> 可被索引，<code>TEXT</code> 不可直接加索引（需前缀）。</li>
+</ul>
+</li>
+<li>
+<p><strong>时间字段</strong></p>
+<ul>
+<li>用 <code>DATETIME(3)</code> 表示带毫秒的时间；</li>
+<li>用 <code>TIMESTAMP(3)</code> 适合有时区、自动更新场景；</li>
+<li>常用字段：<code>created_at</code>、<code>updated_at</code>、<code>deleted_at</code>。</li>
+</ul>
+</li>
+<li>
+<p><strong>标识与外键</strong></p>
+<ul>
+<li>所有 <code>id</code> 建议 <code>BIGINT UNSIGNED AUTO_INCREMENT</code>；</li>
+<li>外键对应的类型保持一致。</li>
+</ul>
+</li>
+<li>
+<p><strong>索引字段</strong></p>
+<ul>
+<li>对常用查询条件（如 <code>email</code>、<code>ip</code>、<code>cluster_id</code>）建立索引；</li>
+<li>长文本（如 <code>description</code>）不要索引。</li>
+</ul>
+</li>
+<li>
+<p><strong>字符集与排序规则</strong></p>
+<ul>
+<li>
+<p>推荐统一设置：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">DEFAULT</span><span class="w"> </span><span class="n">CHARSET</span><span class="o">=</span><span class="n">utf8mb4</span><span class="w"> </span><span class="k">COLLATE</span><span class="o">=</span><span class="n">utf8mb4_general_ci</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>避免混用 <code>utf8</code>（老版本3字节）与 <code>utf8mb4</code>。</p>
+</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="-四扩展示例蜜罐信息表优化版">🔧 四、扩展示例：蜜罐信息表（优化版）</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">`</span><span class="n">honeypot_info</span><span class="o">`</span><span class="w"> </span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">id</span><span class="o">`</span><span class="w"> </span><span class="nb">BIGINT</span><span class="w"> </span><span class="n">UNSIGNED</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="n">AUTO_INCREMENT</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;主键ID&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">name</span><span class="o">`</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;蜜罐名称&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">description</span><span class="o">`</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;蜜罐描述信息&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">status</span><span class="o">`</span><span class="w"> </span><span class="n">ENUM</span><span class="p">(</span><span class="s1">&#39;pending&#39;</span><span class="p">,</span><span class="s1">&#39;running&#39;</span><span class="p">,</span><span class="s1">&#39;stopped&#39;</span><span class="p">,</span><span class="s1">&#39;error&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;pending&#39;</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;蜜罐状态&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">cluster_ip</span><span class="o">`</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">45</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;集群内IP&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">external_ip</span><span class="o">`</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">45</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;外部访问IP&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">ports</span><span class="o">`</span><span class="w"> </span><span class="n">JSON</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;端口映射配置&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">namespace</span><span class="o">`</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;K8S命名空间&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">os_type</span><span class="o">`</span><span class="w"> </span><span class="n">ENUM</span><span class="p">(</span><span class="s1">&#39;Linux&#39;</span><span class="p">,</span><span class="s1">&#39;Windows&#39;</span><span class="p">,</span><span class="s1">&#39;Other&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;Linux&#39;</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;系统类型&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">created_at</span><span class="o">`</span><span class="w"> </span><span class="n">DATETIME</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;创建时间&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">updated_at</span><span class="o">`</span><span class="w"> </span><span class="n">DATETIME</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;更新时间&#39;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="o">`</span><span class="n">id</span><span class="o">`</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">CHARSET</span><span class="o">=</span><span class="n">utf8mb4</span><span class="w"> </span><span class="k">COMMENT</span><span class="o">=</span><span class="s1">&#39;蜜罐信息表&#39;</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><hr>
+<h2 id="-五总结表常用字段长度建议">📊 五、总结表（常用字段长度建议）</h2>
+<table>
+<thead>
+<tr>
+<th>字段类型</th>
+<th>推荐长度</th>
+<th>可存内容示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>VARCHAR(10)</code></td>
+<td>10 个字符（≈10 个汉字）</td>
+<td>“运行正常”</td>
+</tr>
+<tr>
+<td><code>VARCHAR(50)</code></td>
+<td>50 字符</td>
+<td>姓名、简短标签</td>
+</tr>
+<tr>
+<td><code>VARCHAR(100)</code></td>
+<td>邮箱、URL简短版本</td>
+<td></td>
+</tr>
+<tr>
+<td><code>VARCHAR(255)</code></td>
+<td>常用文本描述字段</td>
+<td></td>
+</tr>
+<tr>
+<td><code>VARCHAR(512)</code></td>
+<td>说明或较长备注</td>
+<td></td>
+</tr>
+<tr>
+<td><code>TEXT</code></td>
+<td>不限长度</td>
+<td>日志、说明文档</td>
+</tr>
+<tr>
+<td><code>JSON</code></td>
+<td>不限</td>
+<td>动态结构化数据</td>
+</tr>
+</tbody>
+</table>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2025-06-26</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://lushuan.gihub.io/mysql-8.0-%E5%AD%97%E7%AC%A6%E5%AD%98%E5%82%A8%E6%9C%BA%E5%88%B6%E5%92%8C%E5%AD%97%E6%AE%B5%E9%95%BF%E5%BA%A6%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83%E5%8F%82%E8%80%83/" data-title="MySQL 8.0 字符存储机制和字段长度设计规范参考" data-via="xxxx" data-hashtags="MySQL"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://lushuan.gihub.io/mysql-8.0-%E5%AD%97%E7%AC%A6%E5%AD%98%E5%82%A8%E6%9C%BA%E5%88%B6%E5%92%8C%E5%AD%97%E6%AE%B5%E9%95%BF%E5%BA%A6%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83%E5%8F%82%E8%80%83/" data-hashtag="MySQL"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="https://lushuan.gihub.io/mysql-8.0-%E5%AD%97%E7%AC%A6%E5%AD%98%E5%82%A8%E6%9C%BA%E5%88%B6%E5%92%8C%E5%AD%97%E6%AE%B5%E9%95%BF%E5%BA%A6%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83%E5%8F%82%E8%80%83/" data-title="MySQL 8.0 字符存储机制和字段长度设计规范参考"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="https://lushuan.gihub.io/mysql-8.0-%E5%AD%97%E7%AC%A6%E5%AD%98%E5%82%A8%E6%9C%BA%E5%88%B6%E5%92%8C%E5%AD%97%E6%AE%B5%E9%95%BF%E5%BA%A6%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83%E5%8F%82%E8%80%83/" data-title="MySQL 8.0 字符存储机制和字段长度设计规范参考"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://lushuan.gihub.io/mysql-8.0-%E5%AD%97%E7%AC%A6%E5%AD%98%E5%82%A8%E6%9C%BA%E5%88%B6%E5%92%8C%E5%AD%97%E6%AE%B5%E9%95%BF%E5%BA%A6%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83%E5%8F%82%E8%80%83/" data-title="MySQL 8.0 字符存储机制和字段长度设计规范参考"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/mysql/">MySQL</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/%E6%8F%90%E4%BA%A4%E4%BB%A3%E7%A0%81%E5%90%8E%E5%8F%91%E8%B5%B7merge%E5%85%A8%E6%B5%81%E7%A8%8B%E7%A4%BA%E4%BE%8B/" class="prev" rel="prev" title="Git提交代码后发起Merge全流程示例"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Git提交代码后发起Merge全流程示例</a>
+            <a href="/kubeedge-v1.17.4-amd64%E7%BB%93%E5%90%88arm64%E4%BA%91%E8%BE%B9%E6%9E%B6%E6%9E%84%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" class="next" rel="next" title="KubeEdge v1.17.4 amd64结合arm64云边架构环境搭建">KubeEdge v1.17.4 amd64结合arm64云边架构环境搭建<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+<div id="comments"><div id="gitalk" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://github.com/gitalk/gitalk"></a>Gitalk</a>.
+            </noscript><div id="giscus" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://giscus.app">Giscus</a>.
+            </noscript></div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">我是有底线的</div><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.114.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2025</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">lushuan</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/gitalk/gitalk.min.css"><link rel="stylesheet" href="/lib/lightgallery/css/lightgallery-bundle.min.css"><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/gitalk/gitalk.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/lightgallery/lightgallery.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/zoom/lg-zoom.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{"giscus":{"category":"Announcements","categoryId":"DIC_kwDOMOWcic4Coqlk","darkTheme":"dark","emitMetadata":"0","inputPosition":"bottom","lang":"zh-CN","lazyLoading":false,"lightTheme":"light","mapping":"pathname","reactionsEnabled":"1","repo":"lushuan/lushuan.github.io","repoId":"R_kgDOMOWciQ"},"gitalk":{"admin":["lushuan"],"clientID":"Ov23liSh0yG2wy6B7XP1","clientSecret":"7184a8df973267af95c92ddeb27789417ba82469","id":"2025-06-14T12:06:37+08:00","owner":"lushuan","repo":"lushuan.github.io","title":"MySQL 8.0 字符存储机制和字段长度设计规范参考"}},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"lightgallery":true,"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

@@ -1,8 +1,8 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title>linux文本三剑客 - 标签 - Less is more</title>
+        <title>Linux文本三剑客 - 标签 - Less is more</title>
         <link>https://lushuan.gihub.io/tags/linux%E6%96%87%E6%9C%AC%E4%B8%89%E5%89%91%E5%AE%A2/</link>
-        <description>linux文本三剑客 - 标签 - Less is more</description>
+        <description>Linux文本三剑客 - 标签 - Less is more</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
             <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Tue, 29 Jun 2021 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/tags/linux%E6%96%87%E6%9C%AC%E4%B8%89%E5%89%91%E5%AE%A2/" rel="self" type="application/rss+xml" /><item>
     <title>文本三剑客之 awk</title>

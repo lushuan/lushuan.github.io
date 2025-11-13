@@ -2,16 +2,19 @@
     xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
     xmlns:xhtml="http://www.w3.org/1999/xhtml"
     ><url>
-            <loc>https://lushuan.gihub.io/categories/</loc><lastmod>2025-10-20T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
-            <loc>https://lushuan.gihub.io/tags/gitlab/</loc><lastmod>2025-10-20T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
-            <loc>https://lushuan.gihub.io/categories/gitlab/</loc><lastmod>2025-10-20T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
-            <loc>https://lushuan.gihub.io/</loc><lastmod>2025-10-21T11:14:13&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
-            <loc>https://lushuan.gihub.io/posts/</loc><lastmod>2025-10-21T11:14:13&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
-            <loc>https://lushuan.gihub.io/tags/</loc><lastmod>2025-10-20T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
-            <loc>https://lushuan.gihub.io/%E5%9F%BA%E4%BA%8E-gitlab-%E6%9E%84%E5%BB%BA-gin-vue-admin-%E5%90%8E%E7%AB%AF-server-%E6%9C%8D%E5%8A%A1cicd/</loc><lastmod>2025-10-20T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
+            <loc>https://lushuan.gihub.io/categories/</loc><lastmod>2025-10-20T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url><url>
+            <loc>https://lushuan.gihub.io/tags/gitlab/</loc><lastmod>2025-10-20T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url><url>
+            <loc>https://lushuan.gihub.io/categories/gitlab/</loc><lastmod>2025-10-20T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url><url>
+            <loc>https://lushuan.gihub.io/</loc><lastmod>2025-10-21T11:14:13&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url><url>
+            <loc>https://lushuan.gihub.io/posts/</loc><lastmod>2025-10-21T11:14:13&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url><url>
+            <loc>https://lushuan.gihub.io/tags/</loc><lastmod>2025-10-20T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url><url>
+            <loc>https://lushuan.gihub.io/%E5%9F%BA%E4%BA%8E-gitlab-%E6%9E%84%E5%BB%BA-gin-vue-admin-%E5%90%8E%E7%AB%AF-server-%E6%9C%8D%E5%8A%A1cicd/</loc><lastmod>2025-10-20T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url><url>
             <loc>https://lushuan.gihub.io/tags/kubeedge/</loc><lastmod>2025-09-14T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>https://lushuan.gihub.io/categories/kubeedge/</loc><lastmod>2025-09-14T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>https://lushuan.gihub.io/kubeedge-v1.17.4-amd64%E7%BB%93%E5%90%88arm64%E4%BA%91%E8%BE%B9%E6%9E%B6%E6%9E%84%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</loc><lastmod>2025-09-14T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
+            <loc>https://lushuan.gihub.io/tags/mysql/</loc><lastmod>2025-06-26T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
+            <loc>https://lushuan.gihub.io/categories/mysql/</loc><lastmod>2025-06-26T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
+            <loc>https://lushuan.gihub.io/mysql-8.0-%E5%AD%97%E7%AC%A6%E5%AD%98%E5%82%A8%E6%9C%BA%E5%88%B6%E5%92%8C%E5%AD%97%E6%AE%B5%E9%95%BF%E5%BA%A6%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83%E5%8F%82%E8%80%83/</loc><lastmod>2025-06-26T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>https://lushuan.gihub.io/tags/git/</loc><lastmod>2025-05-17T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>https://lushuan.gihub.io/categories/git/</loc><lastmod>2025-05-17T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>https://lushuan.gihub.io/%E6%8F%90%E4%BA%A4%E4%BB%A3%E7%A0%81%E5%90%8E%E5%8F%91%E8%B5%B7merge%E5%85%A8%E6%B5%81%E7%A8%8B%E7%A4%BA%E4%BE%8B/</loc><lastmod>2025-05-17T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
@@ -28,8 +31,6 @@
             <loc>https://lushuan.gihub.io/tags/gpu/</loc><lastmod>2025-06-26T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>https://lushuan.gihub.io/categories/gpu/</loc><lastmod>2025-06-26T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>https://lushuan.gihub.io/linux%E7%B3%BB%E7%BB%9Fnvidia%E9%A9%B1%E5%8A%A8%E9%83%A8%E7%BD%B2/</loc><lastmod>2025-06-26T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
-            <loc>https://lushuan.gihub.io/tags/mysql/</loc><lastmod>2025-06-09T14:59:49&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
-            <loc>https://lushuan.gihub.io/categories/mysql/</loc><lastmod>2025-06-09T14:59:49&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>https://lushuan.gihub.io/tags/xtrabackup/</loc><lastmod>2025-06-09T14:59:49&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>https://lushuan.gihub.io/xtrabackup/</loc><lastmod>2025-06-09T14:59:49&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>https://lushuan.gihub.io/linux%E9%98%B2%E7%81%AB%E5%A2%99iptables%E8%AF%A6%E8%A7%A3/</loc><lastmod>2024-11-20T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
@@ -46,6 +47,7 @@
             <loc>https://lushuan.gihub.io/tags/kubernetes/</loc><lastmod>2024-06-26T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>https://lushuan.gihub.io/categories/kubernetes/</loc><lastmod>2024-06-26T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>https://lushuan.gihub.io/ubuntu-server%E9%83%A8%E7%BD%B2k8s1.28containerd%E7%89%88%E6%9C%AC%E9%9B%86%E7%BE%A4/</loc><lastmod>2024-06-26T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
+            <loc>https://lushuan.gihub.io/mysql-8.0-%E8%A1%A8%E8%AE%BE%E8%AE%A1%E5%AD%97%E6%AE%B5%E7%B1%BB%E5%9E%8B%E4%B8%8E%E9%95%BF%E5%BA%A6%E9%80%89%E5%9E%8B%E6%A0%87%E5%87%86%E5%8C%96%E6%A8%A1%E6%9D%BF/</loc><lastmod>2024-05-16T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>https://lushuan.gihub.io/%E4%B8%80%E6%96%87%E4%BA%86%E8%A7%A3kubernetes-rbac/</loc><lastmod>2024-05-26T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>https://lushuan.gihub.io/10-must-know-free-devops-tools-for-professional-success/</loc><lastmod>2024-07-09T21:57:07&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>https://lushuan.gihub.io/tags/devops/</loc><lastmod>2024-07-09T21:57:07&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
@@ -161,7 +163,7 @@
             <loc>https://lushuan.gihub.io/ch16_%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%92%8C%E7%AE%97%E6%9C%AF/</loc><lastmod>2024-06-26T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>https://lushuan.gihub.io/ch17_%E6%96%87%E4%BB%B6%E5%92%8C%E9%87%8D%E5%AE%9A%E5%90%91/</loc><lastmod>2024-06-26T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>https://lushuan.gihub.io/ch18_%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC/</loc><lastmod>2024-06-26T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
-            <loc>https://lushuan.gihub.io/about/</loc><lastmod>2025-10-21T11:14:13&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
+            <loc>https://lushuan.gihub.io/about/</loc><lastmod>2025-10-21T11:14:13&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url><url>
             <loc>https://lushuan.gihub.io/linux%E6%97%B6%E9%97%B4%E6%A0%A1%E6%AD%A3/</loc><lastmod>2024-06-26T12:06:37&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>https://lushuan.gihub.io/tags/ci/cd/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>https://lushuan.gihub.io/categories/ci/cd/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
