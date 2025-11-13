@@ -7,8 +7,8 @@ draft: false
 toc:
 enable: true
 weight: false
-categories: ["linux"]
-tags: ["linux"]
+categories: ["Linux"]
+tags: ["Linux"]
 ---
 `setsid` 和 `nohup` 都是 **Linux/Unix 下常用的“后台启动命令”**，但它们的原理、作用范围和适用场景是不同的。下面系统梳理一下对比。
 

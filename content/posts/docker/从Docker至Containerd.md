@@ -7,8 +7,8 @@ draft: false
 toc:
   enable: true
 weight: false
-categories: ["docker"]
-tags: ["docker","containerd"]
+categories: ["Docker"]
+tags: ["Docker","Containerd"]
 ---
 平时较多使用的是docker项目将容器运行时迁移至了containerd，这里整理下相关的操作命令
 

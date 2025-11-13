@@ -7,8 +7,8 @@ draft: false
 toc:
   enable: true
 weight: false
-categories: ["linux"]
-tags: ["linux"]
+categories: ["Linux"]
+tags: ["Linux"]
 ---
 ##  简介
 之所以能用到这个命令，是由于很多 linux 命令不支持用管道传递参数，xargs 可以理解为参数转换器，例如

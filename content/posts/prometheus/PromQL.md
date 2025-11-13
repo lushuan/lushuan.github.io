@@ -7,8 +7,8 @@ draft: false
 toc:
   enable: true
 weight: false
-categories: ["prometheus"]
-tags: ["prometheus"]
+categories: ["Prometheus"]
+tags: ["Prometheus"]
 ---
 ![PromQL](/images/prometheus/promql/promql.png "PromQL")
 ## 介绍

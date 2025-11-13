@@ -7,8 +7,8 @@ draft: false
 toc:
   enable: true
 weight: false
-categories: ["linux"]
-tags: ["linux文本三剑客"]
+categories: ["Linux"]
+tags: ["Linux文本三剑客"]
 ---
 awk 是 Linux/Unix 系统中的一个强大的文本处理工具,主要用于处理文本文件和字符串。
 

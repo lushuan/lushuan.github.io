@@ -7,8 +7,8 @@ draft: false
 toc:
   enable: true
 weight: false
-categories: ["linux"]
-tags: ["linux"]
+categories: ["Linux"]
+tags: ["Linux"]
 ---
 打算给一台服务器做逻辑卷分区，发现磁盘未做分区，且磁盘空间余量较大，本篇记录一下 fdisk 磁盘分区划分的过程
 

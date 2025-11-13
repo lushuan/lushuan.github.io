@@ -7,8 +7,8 @@ draft: false
 toc:
   enable: true
 weight: false
-categories: ["linux"]
-tags: ["linux"]
+categories: ["Linux"]
+tags: ["Linux"]
 ---
 Linux服务器运行久时，系统时间就会存在一定的误差，一般情况下可以使用date命令进行时间设置，但在做数据库集群分片等操作时对多台机器的时间差是有要求的，此时就需要使用ntpdate进行时间同步
 

@@ -7,8 +7,8 @@ draft: false
 toc:
   enable: true
 weight: false
-categories: ["linux"]
-tags: ["linux文本三剑客"]
+categories: ["Linux"]
+tags: ["Linux文本三剑客"]
 ---
 ## 为什么使用Linux grep命令?
 Grep是一个非常有用的命令行工具，可以用来在文件中查找指定的文本模式。通过使用grep命令，你可以快速定位和提取包含特定模式的行，从而加快查找和处理文本数据的效率。这是一个在日常工作中经常需要使用的任务，因此grep命令在Linux中非常流行。

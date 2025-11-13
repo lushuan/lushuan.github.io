@@ -7,8 +7,8 @@ draft: false
 toc:
   enable: true
 weight: false
-categories: ["prometheus"]
-tags: ["prometheus"]
+categories: ["Prometheus"]
+tags: ["Prometheus"]
 ---
 ## 监控策略
 |目标 |服务发现模式 |监控方法 |数据源|

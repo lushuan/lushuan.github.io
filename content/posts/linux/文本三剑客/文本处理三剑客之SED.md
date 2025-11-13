@@ -7,8 +7,8 @@ draft: false
 toc:
   enable: true
 weight: false
-categories: ["linux"]
-tags: ["linux文本三剑客"]
+categories: ["Linux"]
+tags: ["Linux文本三剑客"]
 ---
 # 文本处理三剑客之SED
 - Stream EDitor, 流编辑器

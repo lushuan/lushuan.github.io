@@ -7,8 +7,8 @@ draft: false
 toc:
   enable: true
 weight: false
-categories: ["linux"]
-tags: ["linux"]
+categories: ["Linux"]
+tags: ["Linux"]
 ---
 ## netstat
 netstat是一个常用的命令行网络工具，用于显示与网络连接、路由表和网络接口相关的信息。以下是一些常用的netstat命令：

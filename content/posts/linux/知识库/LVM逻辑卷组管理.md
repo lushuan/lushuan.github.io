@@ -7,8 +7,8 @@ draft: false
 toc:
   enable: true
 weight: false
-categories: ["linux"]
-tags: ["linux"]
+categories: ["Linux"]
+tags: ["Linux"]
 ---
 ## 背景
 部署 k8s 时需要对磁盘进行分区划分，正常是集成是直接给创建好的，现场在沟通过程中只提供了一块磁盘。

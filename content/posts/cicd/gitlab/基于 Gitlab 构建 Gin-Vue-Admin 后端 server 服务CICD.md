@@ -259,22 +259,26 @@ build:
 在项目根目录新建 `.gitlab-ci.yml` 文件，内容如下：
 ```
 stages:
-  - prepare   # 定义JOB全局环境变量
+  - prepare     # 定义JOB全局环境变量
   - build     # 编译
   - push      # 镜像推送
   - deploy    # 部署
   - notify    # 通知
 
+
 # 全局变量定义
 variables:
   PROJECT_NAME: gin-vue-admin
-  IMAGE_NAME: 192.168.1.20/library/cloudbackend       # 修改为你的 Harbor 项目地址
+  IMAGE_NAME: harbor.example.net/library/cloudbackend       # 修改为你的 Harbor 项目地址
   K8S_DEPLOY_FILE: deploy/cloudbackend-deployment.yaml        # k8s 部署文件路径
   K8S_DEPLOY_CM_FILE: deploy/cloudbackend-configmap.yaml
   K8S_DEPLOY_SERVICE_FILE: deploy/cloudbackend-service.yaml
   K8S_NAMESPACE: default
   DOCKER_DRIVER: overlay2
-  TIMEOUT: "60s"
+  TIMEOUT: "90s"
+  BACKUP_DIR: /opt/deploy/csg-cloud/backend/release       # ✅ 镜像备份路径
+  KEEP_VERSIONS: 5                            # ✅ 保留最近5个版本
+
 
 # ==========================================
 # 定义 JOB 全局变量，生成时间戳并保存为 artifact (一次生成，全局共享)
@@ -302,12 +306,12 @@ build:
   before_script:
     - docker info
   script:
-    - echo "开始 $(date)"
-    - echo "=== Step 1 开始构建镜像 ==="
+    - 'echo "开始时间: $(date)"'
+    - 'echo "=== Step 1: 开始构建镜像 ==="'
     - docker build --network=host -t $IMAGE_NAME:$IMAGE_TAG .
     - docker image prune -f    # ✅ 构建后清理 无标签dangling 镜像，节省空间
     - echo "=== 镜像构建完成 $IMAGE_NAME:$IMAGE_TAG ==="
-    - echo "结束 $(date)"
+    - 'echo "结束时间: $(date)"'
   only:
     - master
 
@@ -320,13 +324,13 @@ push:
     - gva
   before_script:
     - echo "=== 登录 Harbor 仓库 ==="
-    - echo $HARBOR_PASSWORD | docker login 192.168.1.20 -u $HARBOR_USER --password-stdin
+    - echo $HARBOR_PASSWORD | docker login $HARBOR_IP  -u $HARBOR_USER --password-stdin
   script:
-    - echo "开始 $(date)"
-    - echo "=== Step 2 推送镜像 ==="
+    - 'echo "开始时间： $(date)"'
+    - 'echo "=== Step 2: 推送镜像 ==="'
     - docker push $IMAGE_NAME:$IMAGE_TAG
     - echo "=== 镜像推送成功 $IMAGE_NAME:$IMAGE_TAG ==="
-    - echo "结束 $(date)"
+    - 'echo "结束时间： $(date)"'
   only:
     - master
 
@@ -342,33 +346,57 @@ deploy:
     - echo "当前命名空间 $K8S_NAMESPACE"
     - kubectl version --client
   script:
-    - echo "开始 $(date)"
-    - echo "=== Step 3 记录当前镜像版本 ==="
-    - OLD_IMAGE=$(kubectl get deploy cloudbackend -n $K8S_NAMESPACE -o jsonpath='{.spec.template.spec.containers[0].image}')
-    - echo "上一个版本镜像 $OLD_IMAGE"
+    - 'echo "开始时间： $(date)"'
+    - 'echo "=== Step 3: 记录当前镜像版本 ==="'
+    # ✅ 判断 deployment 是否存在
+    - |
+      if kubectl get deploy cloudbackend -n $K8S_NAMESPACE >/dev/null 2>&1; then
+        OLD_IMAGE=$(kubectl get deploy cloudbackend -n $K8S_NAMESPACE -o jsonpath='{.spec.template.spec.containers[0].image}')
+        echo "上一个版本镜像: $OLD_IMAGE"
+      else
+        echo "⚠️ 当前命名空间中未找到 Deployment: cloudbackend，推测为首次部署"
+        OLD_IMAGE=""
+      fi
 
-    - echo "=== Step 4 更新 Deployment 镜像 ==="
-    - kubectl apply -f $K8S_DEPLOY_CM_FILE -n $K8S_NAMESPACE
+    - 'echo "=== Step 4: 更新 Deployment 镜像 ==="'
+    # - kubectl apply -f $K8S_DEPLOY_CM_FILE -n $K8S_NAMESPACE
     - kubectl apply -f $K8S_DEPLOY_FILE -n $K8S_NAMESPACE
     - kubectl apply -f $K8S_DEPLOY_SERVICE_FILE -n $K8S_NAMESPACE
+    - 'echo "New 镜像名称为: $IMAGE_NAME:$IMAGE_TAG"'
     - kubectl set image deployment/cloudbackend cloudbackend=$IMAGE_NAME:$IMAGE_TAG  -n $K8S_NAMESPACE
 
-    - echo "=== Step 5 等待新版本 Pod 启动 ==="
-    - kubectl rollout status deployment/cloudbackend -n $K8S_NAMESPACE --timeout=$TIMEOUT || ROLLBACK=true
+    - 'echo "=== Step 5: 等待新版本 Pod 启动 ==="'
+    - |
+      # 如果是首次部署（OLD_IMAGE 为空），不要直接 rollback
+      if [ -z "$OLD_IMAGE" ]; then
+        echo "⚙️ 首次部署，跳过回滚逻辑，仅等待 Pod 启动"
+        kubectl rollout status deployment/cloudbackend -n $K8S_NAMESPACE --timeout=$TIMEOUT || true
+      else
+        # 非首次部署则正常监控回滚
+        kubectl rollout status deployment/cloudbackend -n $K8S_NAMESPACE --timeout=$TIMEOUT || ROLLBACK=true
+      fi
 
     - |
-      if [ "$ROLLBACK" = "true" ]; then
+      if [ "$ROLLBACK" = "true" ] && [ -n "$OLD_IMAGE" ]; then
         echo "❌ 部署失败，自动回滚到上一个版本: $OLD_IMAGE"
         kubectl set image deployment/cloudbackend cloudbackend=$OLD_IMAGE -n $K8S_NAMESPACE
         kubectl rollout status deployment/cloudbackend -n $K8S_NAMESPACE --timeout=$TIMEOUT
+        DEPLOY_STATUS=failed
+        echo "DEPLOY_STATUS=failed" > deploy_status.env
         exit 1
       else
         echo "✅ 部署成功，新版本镜像: $IMAGE_NAME:$IMAGE_TAG"
         kubectl get pods -n $K8S_NAMESPACE -o wide
+        DEPLOY_STATUS=success
+        echo "DEPLOY_STATUS=success" > deploy_status.env
       fi
-    - echo "结束 $(date)"
+    - 'echo "结束时间： $(date)"'
+  artifacts:
+    reports:
+      dotenv: deploy_status.env
   only:
     - master
+
 
 # ==========================================
 # 通知阶段 (不影响主流程),并且提供钉钉稳健通知方案，
@@ -378,17 +406,23 @@ notify:
   stage: notify
   tags:
     - gva
+  needs:
+    - job: prepare
+      artifacts: true
+    - job: deploy
+      artifacts: true
   script:
     - 'echo "构建完成通知： $(date)"'
   after_script:
     - echo "当前 Job 状态  $CI_JOB_STATUS"
+    - echo "当前 部署状态  $DEPLOY_STATUS"
     - |
-      if [ "$CI_JOB_STATUS" = "success" ]; then
+      if [ "$DEPLOY_STATUS" = "failed" ]; then
+        STATUS="❌ 部署失败（已自动回滚）"
+      elif [ "$CI_JOB_STATUS" = "success" ]; then
         STATUS="✅ 成功"
-        COLOR="green"
       else
         STATUS="❌ 失败"
-        COLOR="red"
       fi
       
       MESSAGE="{
@@ -406,7 +440,7 @@ notify:
           > [查看详情](${CI_PIPELINE_URL})\"
         }
       }"
-
+      
       MAX_RETRY=3
       for i in $(seq 1 $MAX_RETRY); do
         echo "尝试发送第 $i 次通知..."

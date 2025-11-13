@@ -7,8 +7,8 @@ draft: false
 toc:
   enable: true
 weight: false
-categories: ["linux"]
-tags: ["linux","防火墙"]
+categories: ["Linux"]
+tags: ["Linux","防火墙"]
 ---
 iptables 是运维中的重点但不算是特别的难点，是网站访问的大门，本篇记录对 iptables 的常用梳理
 
