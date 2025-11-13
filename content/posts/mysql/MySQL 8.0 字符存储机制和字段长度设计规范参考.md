@@ -11,7 +11,7 @@ categories: ["MySQL"]
 tags: ["MySQL"]
 ---
 
-## 🧩 一、MySQL 8.0 中 VARCHAR 长度与中文存储关系
+## 🧩 一、VARCHAR 长度与中文存储关系
 
 在 MySQL 8.0 中，推荐使用 **`utf8mb4` 字符集**（兼容 Emoji 和所有中日韩文字）。
 
