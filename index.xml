@@ -2,7 +2,7 @@
     <channel>
         <title>Less is more</title>
         <link>https://lushuan.gihub.io/</link>
-        <description>晚来天欲雪,能饮一杯无?</description>
+        <description>也不过只是为了想让这世界知道，反复与坚持之后，柔水终成雕刀 --席慕蓉</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
             <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Mon, 20 Oct 2025 12:06:37 &#43;0800</lastBuildDate>
             <atom:link href="https://lushuan.gihub.io/index.xml" rel="self" type="application/rss+xml" />
@@ -28,7 +28,7 @@
     <pubDate>Sat, 14 Jun 2025 12:06:37 &#43;0800</pubDate>
     <author>lushuan</author>
     <guid>https://lushuan.gihub.io/mysql-8.0-%E5%AD%97%E7%AC%A6%E5%AD%98%E5%82%A8%E6%9C%BA%E5%88%B6%E5%92%8C%E5%AD%97%E6%AE%B5%E9%95%BF%E5%BA%A6%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83%E5%8F%82%E8%80%83/</guid>
-    <description><![CDATA[🧩 一、MySQL 8.0 中 VARCHAR 长度与中文存储关系 在 MySQL 8.0 中，推荐使用 utf8mb4 字符集（兼容 Emoji 和所有中日韩文字）。 内容 占用字节数 英文字母/数字 1 字节 中文（UTF]]></description>
+    <description><![CDATA[🧩 一、VARCHAR 长度与中文存储关系 在 MySQL 8.0 中，推荐使用 utf8mb4 字符集（兼容 Emoji 和所有中日韩文字）。 内容 占用字节数 英文字母/数字 1 字节 中文（UTF-]]></description>
 </item>
 <item>
     <title>Git提交代码后发起Merge全流程示例</title>

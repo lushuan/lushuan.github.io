@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="noodp" />
-        <title>K8s删除Namesapce一直处于Terminating状态处理 - Less is more</title><meta name="Description" content="晚来天欲雪,能饮一杯无?"><meta property="og:title" content="K8s删除Namesapce一直处于Terminating状态处理" />
+        <title>K8s删除Namesapce一直处于Terminating状态处理 - Less is more</title><meta name="Description" content="也不过只是为了想让这世界知道，反复与坚持之后，柔水终成雕刀 --席慕蓉"><meta property="og:title" content="K8s删除Namesapce一直处于Terminating状态处理" />
 <meta property="og:description" content="k8s namespace 无法删除记录 名字空间yaml 文件 1 2 3 4 kind: Namespace apiVersion: v1 metadata: name: kube-logging 删除卡住 1 2 $ sudo kubectl delete -f kube-logging.yaml --wait=true namespace &#34;kube-logging&#34; deleted # 长久的等待 强制删除（无效果） 1 sudo kubectl delete ns kube-logging --grace-period=0 --force 排查" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://lushuan.gihub.io/k8s%E5%88%A0%E9%99%A4namesapce%E4%B8%80%E7%9B%B4%E5%A4%84%E4%BA%8Eterminating%E7%8A%B6%E6%80%81%E5%A4%84%E7%90%86/" /><meta property="og:image" content="https://lushuan.gihub.io/images/avatar.png"/><meta property="article:section" content="posts" />
