@@ -1,8 +1,8 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title>prometheus - 标签 - Less is more</title>
+        <title>Prometheus - 标签 - Less is more</title>
         <link>https://lushuan.gihub.io/tags/prometheus/</link>
-        <description>prometheus - 标签 - Less is more</description>
+        <description>Prometheus - 标签 - Less is more</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
             <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Mon, 29 Aug 2022 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/tags/prometheus/" rel="self" type="application/rss+xml" /><item>
     <title>PromQL</title>

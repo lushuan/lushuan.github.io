@@ -1,8 +1,8 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title>linux - 分类 - Less is more</title>
+        <title>Linux - 分类 - Less is more</title>
         <link>https://lushuan.gihub.io/categories/linux/</link>
-        <description>linux - 分类 - Less is more</description>
+        <description>Linux - 分类 - Less is more</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>lushuan2071@126.com (lushuan)</managingEditor>
             <webMaster>lushuan2071@126.com (lushuan)</webMaster><lastBuildDate>Sat, 19 Apr 2025 12:06:37 &#43;0800</lastBuildDate><atom:link href="https://lushuan.gihub.io/categories/linux/" rel="self" type="application/rss+xml" /><item>
     <title>Linux 后台启动命令setsid和nohup的区别介绍</title>
