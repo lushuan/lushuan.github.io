@@ -6,8 +6,8 @@ draft: false
 toc:
   enable: true
 weight: false
-categories: ["hugo"]
-tags: ["hugo"]
+categories: ["Hugo"]
+tags: ["Hugo"]
 ---
 
 ## test
