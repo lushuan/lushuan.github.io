@@ -51,7 +51,6 @@ unrewarded genius is almost a proverb. Education will not; the world is full of 
 - Docker
 - Helm
 - Linux
-- Shell
 - MySQL
 - Python
 - Java
