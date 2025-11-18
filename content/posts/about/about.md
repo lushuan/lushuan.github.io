@@ -42,7 +42,7 @@ unrewarded genius is almost a proverb. Education will not; the world is full of 
 <img src="/images/ewm.jpg" width="20%" align="center" />
 
 
-技能说明：我会的东西基本上都写在博客中了，不敢说有多么精通，一直在持续学习中
+技能说明：我会的东西基本上都写在博客中了，不敢说有多精通，一直在持续学习中
 - Kubernetes
 - Prometheus
 - InfluxDB
@@ -55,6 +55,7 @@ unrewarded genius is almost a proverb. Education will not; the world is full of 
 - MySQL
 - Python
 - Java
+- Golang
 
 ## 云计算相关认证
 
