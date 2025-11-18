@@ -8,7 +8,7 @@ toc:
   enable: true
 weight: false
 categories: ["Linux"]
-tags: ["rsync"]
+tags: ["Rsync"]
 ---
 rsync(remote synchronize)是一个远程数据同步工具，可通过 LAN/WAN 快速同步多台主机之间的文件，也可以使用 rsync 同步本地硬盘中的不同目录。rsync 是用于替代rcp的一个工具，rsync 使用所谓的 rsync算法 进行数据同步，这种算法只传送两个文件的不同部分，而不是每次都整份传送，因此速度相当快。
 
