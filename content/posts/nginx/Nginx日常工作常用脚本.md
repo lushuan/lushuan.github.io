@@ -1,7 +1,7 @@
 ---
 title: "Nginx 日常工作常用脚本"
 subtitle: ""
-date: 2022-01-11T12:06:37+08:00
+date: 2022-03-11T12:06:37+08:00
 lastmod: 2022-06-27T12:06:37+08:00
 draft: false
 toc:

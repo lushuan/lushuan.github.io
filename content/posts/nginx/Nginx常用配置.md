@@ -1,7 +1,7 @@
 ---
 title: "Nginx 常用配置"
 subtitle: ""
-date: 2022-01-13T12:06:37+08:00
+date: 2022-04-13T12:06:37+08:00
 lastmod: 2022-06-26T12:06:37+08:00
 draft: false
 toc:

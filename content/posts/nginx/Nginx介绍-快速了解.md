@@ -1,7 +1,7 @@
 ---
 title: "Nginx 介绍-快速了解"
 subtitle: ""
-date: 2022-01-19T12:06:37+08:00
+date: 2022-01-03T12:06:37+08:00
 lastmod: 2022-06-26T12:06:37+08:00
 draft: false
 toc:
