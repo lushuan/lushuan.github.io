@@ -10,12 +10,11 @@ weight: false
 categories: ["Docker"]
 tags: ["Docker","CRI-Dockerd"]
 ---
-
 ### 前言
 
 在 Kubernetes v1.24 正式移除 dockershim 之后，整个容器生态经历了一次重大的架构调整。许多运维工程师在面对“K8s 不再原生支持 Docker”这一事实时，产生了大量的困惑与焦虑。CRI-Dockerd 正是在这一历史转折点诞生的关键组件。
 
-本文将从背景、原理、部署决策及生产实践四个维度，彻底讲透 CRI-Dockerd 的前世今生。
+本文将从背景、原理、部署决策及生产实践四个维度，彻底讲透 CRI-Dockerd的前世今生。
 
 ---
 
