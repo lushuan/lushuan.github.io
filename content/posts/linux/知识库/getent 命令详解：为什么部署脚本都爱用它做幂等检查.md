@@ -3,7 +3,7 @@ title: "getent 命令详解：为什么部署脚本都爱用它做幂等检查"
 subtitle: ""
 date: 2023-04-15T12:06:37+08:00
 lastmod: 2023-04-15T12:06:37+08:00
-draft: true
+draft: false
 toc:
   enable: true
 weight: false
