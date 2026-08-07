@@ -153,6 +153,7 @@ include /usr/local/nginx/conf/conf.d/*.conf;
 ### 2.4 语法检查与重载
 
 ```bash
+mkdir /var/log/nginx
 /usr/local/nginx/sbin/nginx -t
 # ✅ syntax is ok / test is successful
 
