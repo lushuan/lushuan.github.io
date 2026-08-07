@@ -3,3 +3,8 @@
 themes/LoveIt.zip
 
 public/django-模板语法/*
+
+# .gitignore
+public/
+resources/_gen/
+.hugo_build.lock
