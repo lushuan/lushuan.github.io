@@ -20,17 +20,25 @@ jobs:
     env:
       HUGO_VERSION: "0.126.0"   # ← 与你本地版本保持一致！
     steps:
+      # ① 必须先 Checkout，文件才存在
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0         # 获取完整历史（GitInfo/Lastmod 需要）
-
+      # ② 然后注入 Secrets（此时 config.toml 已在工作目录根路径）
+      - name: Inject secrets into config
+        run: |
+          sed -i "s|PLACEHOLDER_GITALK_CLIENT_ID|${{ secrets.GITALK_CLIENT_ID }}|g" config.toml
+          sed -i "s|PLACEHOLDER_GITALK_CLIENT_SECRET|${{ secrets.GITALK_CLIENT_SECRET }}|g" config.toml
+          sed -i "s|PLACEHOLDER_VALINE_APP_ID|${{ secrets.VALINE_APP_ID }}|g" config.toml
+          sed -i "s|PLACEHOLDER_VALINE_APP_KEY|${{ secrets.VALINE_APP_KEY }}|g" config.toml
+      # ③ 再安装 Hugo
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v3
         with:
           hugo-version: ${{ env.HUGO_VERSION }}
           extended: true         # LoveIt 必须用 Extended 版
-
+      # ④ 最后构建
       - name: Build
         run: hugo --gc --minify --baseURL "${{ vars.SITE_BASEURL || 'https://blog.dazhongma.top/' }}"
 

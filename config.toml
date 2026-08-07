@@ -453,15 +453,15 @@ defaultContentLanguage = "zh-cn"
         repo = "lushuan.github.io"
         id= "location.pathname"
         labels= "gitalk"
-        clientId = "Ov23liSh0yG2wy6B7XP1"
-        clientSecret = "7184a8df973267af95c92ddeb27789417ba82469"
+        clientId = "PLACEHOLDER_GITALK_CLIENT_ID"
+        clientSecret = "PLACEHOLDER_GITALK_CLIENT_SECRET" 
         distractionFreeMode = false
         redirect_uri = "https://blog.dazhongma.top/callback" # 添加此项确保与 OAuth 应用配置一致
       # Valine 评论系统设置
       [params.page.comment.valine]
         enable = false
-        appId = "XQderBhsCffEN9pw26SOSQon-MdYXbMMI"
-        appKey = "zLUsSeN2SfcBdQbGTv9iFhFp"
+        appId = "PLACEHOLDER_VALINE_APP_ID"
+        appKey = "PLACEHOLDER_VALINE_APP_KEY"
         placeholder = "期待您的评论..."
         avatar = "mp"
         meta= ""
