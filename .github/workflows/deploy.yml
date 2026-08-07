@@ -1,0 +1,52 @@
+name: Deploy Hugo Site to GitHub Pages
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:       # 允许手动触发
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      HUGO_VERSION: "0.126.0"   # ← 与你本地版本保持一致！
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive  # 如果 LoveIt 通过 submodule 引入
+          fetch-depth: 0         # 获取完整历史（GitInfo/Lastmod 需要）
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: ${{ env.HUGO_VERSION }}
+          extended: true         # LoveIt 必须用 Extended 版
+
+      - name: Build
+        run: hugo --gc --minify --baseURL "${{ vars.SITE_BASEURL || 'https://github.com/lushuan/lushuan.github.io/' }}"
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
