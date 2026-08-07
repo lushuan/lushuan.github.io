@@ -32,7 +32,7 @@ jobs:
           extended: true         # LoveIt 必须用 Extended 版
 
       - name: Build
-        run: hugo --gc --minify --baseURL "${{ vars.SITE_BASEURL || 'https://github.com/lushuan/lushuan.github.io/' }}"
+        run: hugo --gc --minify --baseURL "${{ vars.SITE_BASEURL || 'https://blog.dazhongma.top/' }}"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
