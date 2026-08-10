@@ -1,7 +1,3 @@
-以下是为你的项目量身定制的 README.md，可直接替换仓库中的现有文件：
-
----
-
 # 🌐 lushuan.github.io
 
 [![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-live-brightgreen?logo=github)](https://blog.dazhongma.top/)
@@ -74,7 +70,6 @@ git push origin main
 本项目使用 GitHub Actions 进行自动化部署，并配置了 `actions/cache` 加速构建：
 
 -   **Hugo Modules 缓存**：基于 `go.sum` + `config.toml` 哈希
--   **npm 依赖缓存**：基于 `package-lock.json` 哈希
 -   缓存命中时构建时间从 ~2 min 缩短至 ~30s
 
 详细工作流配置见 `.github/workflows/` 目录。
