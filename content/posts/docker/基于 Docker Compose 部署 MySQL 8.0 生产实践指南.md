@@ -3,12 +3,12 @@ title: "基于 Docker Compose 部署 MySQL 8.0 生产实践指南（Kylin V10 / 
 subtitle: ""
 date: 2025-12-17T16:25:58+08:00
 lastmod: 2025-12-17T16:25:58+08:00
-draft: true
+draft: false
 toc:
   enable: true
 weight: false
-categories: ["Docker"]
-tags: ["Docker Compose","MySQL 8.0"]
+categories: ["运维","数据库"]
+tags: ["Docker Compose","MySQL 8.0","数据库运维"]
 ---
 
 > **环境声明**：本文基于以下已完成的环境进行部署操作

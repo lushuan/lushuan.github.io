@@ -8,7 +8,7 @@ toc:
 enable: true
 weight: false
 categories: ["MySQL"]
-tags: ["MySQL"]
+tags: ["MySQL","MySQL 8.0","数据库运维"]
 ---
 
 
