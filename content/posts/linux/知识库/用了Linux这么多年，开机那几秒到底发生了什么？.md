@@ -1,8 +1,8 @@
 ---
-title: "c"
+title: "Linux启动流程全解析：从CentOS到Ubuntu再到麒麟V10服务器版"
 subtitle: ""
 date: 2024-03-28T12:06:37+08:00
-draft: true
+draft: false
 toc:
   enable: true
 weight: false
