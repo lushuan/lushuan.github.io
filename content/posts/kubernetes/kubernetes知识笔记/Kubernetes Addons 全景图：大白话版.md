@@ -173,14 +173,14 @@ Kubernetes 官方在 [Installing Addons](https://kubernetes.io/docs/concepts/clu
 
 > **通俗解读**：外部流量怎么进入集群？Ingress 就是"集群大门口的保安+指路人"，根据 URL 路径把请求分发给不同的 Service。比如 `/api` 转给后端服务，`/web` 转给前端服务。
 
-| 项目 | 热度 | 难度 | 生产可用 | 维护状态 | 通俗解读 |
-|:---|:---:|:---:|:---:|:---:|:---|
-| **Nginx Ingress Controller** | ⭐⭐⭐⭐⭐ | 低 | ✅ | ✅ 活跃（K8s SIG） | 最经典的 Ingress 实现，基于 Nginx 反向代理。配置简单，文档多，90% 的企业在用 |
-| **Traefik** | ⭐⭐⭐⭐ | 低 | ✅ | ✅ 活跃 | 自动发现 Service、自动配置路由，"零配置"体验好。自带 Dashboard |
-| **HAProxy Ingress** | ⭐⭐⭐ | 中 | ✅ | ✅ 活跃 | 性能极强（HAProxy 底子），适合高并发场景，配置比 Nginx 复杂 |
-| **Kong Ingress** | ⭐⭐⭐⭐ | 中 | ✅ | ✅ 活跃 | API 网关出身，除了路由还能做限流、认证、插件扩展 |
-| **APISIX Ingress** | ⭐⭐⭐⭐ | 中 | ✅ | ✅ 活跃（CNCF） | Apache 项目，国产主导，性能极强，插件丰富，社区活跃 |
-| **Envoy Gateway** | ⭐⭐⭐ | 中 | ✅ | ✅ 活跃（CNCF） | 基于 Envoy + Gateway API 新标准，代表未来方向，生态还在成长 |
+| 项目 | 热度 | 难度 | 生产可用 |      维护状态      | 通俗解读 |
+|:---|:---:|:---:|:---:|:--------------:|:---|
+| **Nginx Ingress Controller** | ⭐⭐⭐⭐⭐ | 低 | ✅ | 2026.3.24 停止维护 | 最经典的 Ingress 实现，基于 Nginx 反向代理。配置简单，文档多，90% 的企业在用 |
+| **Traefik** | ⭐⭐⭐⭐ | 低 | ✅ |      ✅ 活跃      | 自动发现 Service、自动配置路由，"零配置"体验好。自带 Dashboard |
+| **HAProxy Ingress** | ⭐⭐⭐ | 中 | ✅ |      ✅ 活跃      | 性能极强（HAProxy 底子），适合高并发场景，配置比 Nginx 复杂 |
+| **Kong Ingress** | ⭐⭐⭐⭐ | 中 | ✅ |      ✅ 活跃      | API 网关出身，除了路由还能做限流、认证、插件扩展 |
+| **APISIX Ingress** | ⭐⭐⭐⭐ | 中 | ✅ |   ✅ 活跃（CNCF）   | Apache 项目，国产主导，性能极强，插件丰富，社区活跃 |
+| **Envoy Gateway** | ⭐⭐⭐ | 中 | ✅ |   ✅ 活跃（CNCF）   | 基于 Envoy + Gateway API 新标准，代表未来方向，生态还在成长 |
 
 > ⚠️ 注意：Ingress Controller ≠ kube-proxy。kube-proxy 处理集群**内部** Service 流量，Ingress 处理**外部进入集群**的 HTTP/HTTPS 流量。
 
