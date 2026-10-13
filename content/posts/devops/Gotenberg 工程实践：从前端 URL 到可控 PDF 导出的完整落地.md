@@ -11,7 +11,6 @@ categories: ["DevOps"]
 tags: ["PDF","Chromium","Gotenberg"]
 ---
 
-
 > Gotenberg、Chromium、URL 转 PDF、Vue SPA、ECharts、A4 分页、`waitForExpression`
 
 在很多后台系统中，“导出 PDF”看起来只是一个按钮，真正做起来却很容易从一个简单功能变成一条完整的渲染链路。
