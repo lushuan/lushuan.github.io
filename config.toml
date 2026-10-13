@@ -78,7 +78,7 @@ defaultContentLanguage = "zh-cn"
       identifier = "friends"
       pre = ""
       post = ""
-      name = "友链"
+      name = "收藏"
       url = "/friends/"
       title = "friends"
 
@@ -154,7 +154,7 @@ defaultContentLanguage = "zh-cn"
       # 你可以在名称 (允许 HTML 格式) 之后添加其他信息, 例如图标
       post = ""
       #  是否为标题显示打字机动画
-      typeit = false
+      typeit = true
 
   # 页面底部信息配置
   [params.footer]
@@ -166,9 +166,9 @@ defaultContentLanguage = "zh-cn"
     #  是否显示版权信息
     copyright = true
     #  是否显示作者
-    author = true
+    author = false
     # 网站创立年份
-    since = 2019
+    since = 2018
     # ICP 备案信息，仅在中国使用 (支持 HTML 格式)
     icp = ""
     # 许可协议信息 (支持 HTML 格式)
