@@ -19,8 +19,8 @@ summary: "实践记录通过给 Deployment 添加 configmap-hash 标签的方式
 <!--more-->
 
 ## 一、前言
-通过Helm部署应用，修改configmap后，Deployment 副本控制器不会自动生效，需要手动删除pod 重建一下才会生效，
-这里实践通过添加标签的方式在通过只修改configmap也能联动Deployment自动重建
+通过Helm部署应用，修改configmap后，Deployment 副本控制器不会自动生效，需要手动删除pod 重建一下才会生效。
+这里实践通过添加标签的方式，通过只修改configmap也能联动Deployment自动重建
 
 ## 二、安装应用
 ```shell

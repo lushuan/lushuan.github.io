@@ -31,7 +31,7 @@ find /sbin -perm +700 |xargs ls -l
 
 通常Linux命令可以用|首尾相连，上一个命令的 stdout 连接到下一个命令的 stdin。但是有些命令，比如ls、rm等，是从命令行参数接受输入的。这时候如果想把上一个命令的输出传给它们，就不好办了。所以就有了xargs。
 
-简单而言，xargs可以把从 stdin 接受到的输入，按空白符或加车符分隔开，然后依次作为参数去调用xargs后面的命令
+简单而言，xargs可以把从 stdin 接受到的输入，按空白符或回车符分隔开，然后依次作为参数去调用xargs后面的命令
 
 xargs 默认的分隔符：空格 或 回车
 
@@ -42,7 +42,7 @@ xargs 默认的分隔符：空格 或 回车
 
 - `find . -name "*.jpg" | xargs rm`
 > 这样，所有被find找到的文件名，都会作为参数来调用rm命令了
-对于大多数情况，这一行命令没有问题，但是如有些文件名中包含空格，就会有问题了。
+对于大多数情况，这一行命令没有问题，但是如果有些文件名中包含空格，就会有问题了。
 xargs默认以空白符分隔接受到的输入，所以一个含有空格的文件名会被当做多个参数，分别传给rm。所以在处理文件名这类命令时，通常要这样  　　
 - `find . -name "*.jpg" -print0 | xargs -0 rm`
 > 这里的 -print0 是告诉find命令，在每个输出后面以'\0'作为结束。-0是告诉xargs，使用'\0'来分隔输入，而不是空白符。这样就避免出现问题了。
@@ -78,7 +78,7 @@ $ cat 1.txt |xargs -n 2 echo
  a b
 ```
 - `-p `
-> 操作具有可交互性，每次执行comand都交互式提示用户选择，当每次执行一个argument的时候询问一次用户
+> 操作具有可交互性，每次执行command都交互式提示用户选择，当每次执行一个argument的时候询问一次用户
 ```shell
 $ cat 1.txt |xargs -p echo
 echo aaa bbb ccc ddd a b ?...y
@@ -171,7 +171,7 @@ $find ~ -name ‘*.log’ -print0 | xargs -i -0 rm -f {}
 
 |命令|解释|
 |---|---|
-|echo -n "hello#word" &#124;xargs -d "#"|适用#号进行拆分|
+|echo -n "hello#word" &#124;xargs -d "#"|使用#号进行拆分|
 |echo "hello word"&#124;xargs -n 1|一次传递一个参数|
 |echo -n "hello#word"&#124;xargs -d "#" -t|直接输出打印命令无用户交互|
 |echo -n "hello#word"&#124;xargs -d "#" -p|用户交互选择是否打印命令并且输出打印命令|

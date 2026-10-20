@@ -18,7 +18,7 @@ summary: "本文整理了容器运行时从 Docker 迁移至 containerd 后的�
 
 <!--more-->
 
-平时较多使用的是docker项目将容器运行时迁移至了containerd，这里整理下相关的操作命令
+平时较多使用的是docker，项目将容器运行时迁移至了containerd，这里整理下相关的操作命令
 
 ## 一、常用指令对比
 ctr是containerd自带的工具，有命名空间的概念

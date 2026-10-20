@@ -35,7 +35,7 @@ Ansible是一个开源的IT自动化运维工具，用于配置管理、应用�
 Ansible作为一个功能强大的自动化运维工具，应用广泛，以下是一些典型的使用场景：
 
 - 系统配置管理：使用Ansible，可以轻松地对目标系统进行配置，例如设置用户、组、文件权限、网络配置等。通过YAML格式的Playbook来管理配置，便于维护及版本控制。
-- 软件包安装与升级：使用Ansible的软件包管理模块安装、升级或移除软件包。例如，可以针对大量服务器的软件升级、你也可以统一规划软件包的安装和版本。
+- 软件包安装与升级：使用Ansible的软件包管理模块安装、升级或移除软件包。例如，可以针对大量服务器的软件升级，你也可以统一规划软件包的安装和版本。
 - 一键部署应用与服务：通过Ansible Playbook实现应用程序和服务的快速、自动化部署。例如，部署Web服务、数据库、负载均衡器等。
 - 持续集成与持续部署：将Ansible与持续集成工具（如Jenkins）结合，实现代码自动构建、测试和部署。可以大大提高软件开发和交付的效率。
 - 定时任务管理：使用Ansible管理定时任务，例如创建、修改、删除Linux系统中的crontab任务。
@@ -51,12 +51,12 @@ Ansible作为一个功能强大的自动化运维工具，应用广泛，以下�
 ### 1.4 ansible 管理命令
 - Ansible命令行执行方式有Ad-Hoc、Ansible-playbook两种方式：
   - Ad-Hoc主要用于临时命令的执行。
-  - Ansibel-playbook可以理解为Ad-Hoc的集合，通过一定的规则编排在一起。
-- 两者的操作也极其简便，且提供了如with_items、failed_when、changed_when、until、ignore_errors等丰富的逻辑条件和Dry-run的Check Mode。但在Chceck Mode下并不真正执行命令，即将执行的操作不会对端服务器产生任何影响，只模拟命令的执行过程是否能正常执行。
+  - Ansible-playbook可以理解为Ad-Hoc的集合，通过一定的规则编排在一起。
+- 两者的操作也极其简便，且提供了如with_items、failed_when、changed_when、until、ignore_errors等丰富的逻辑条件和Dry-run的Check Mode。但在Check Mode下并不真正执行命令，即将执行的操作不会对端服务器产生任何影响，只模拟命令的执行过程是否能正常执行。
 - Ansible管理命令有：
   - ansible：这个命令是日常工作中使用率非常高的命令之一，主要用于临时一次性操作。
   - ansible-doc：Ansible模块文档说明，针对每个模块都有详细的用法说明和应用案例介绍。
-  - ansible-galaxy：可以简单的理解为Github或PIP的功能，是Ansible官方一个分享role的功能平台。可以通过ansible-galaxy命令很简单的实现role的分享和安装。
+  - ansible-galaxy：可以简单地理解为Github或PIP的功能，是Ansible官方一个分享role的功能平台。可以通过ansible-galaxy命令很简单地实现role的分享和安装。
   - ansible-playbook：是日常应用中使用频率最高的命令，其工作机制是，通过读取预先编写好的playbook文件实现批量管理。
   - ansible-pull：Ansible的另一种工作模式（pull模式），Ansible默认使用push模式。
   - ansible-vault：主要用于配置文件加密。
@@ -203,7 +203,7 @@ $ ansible -i /etc/ansible/hosts webserver -m ping -o
 ```
 
 - [Ansible 主机清单参数说明](http://www.ansible.com.cn/docs/intro_inventory.html#behavioral-parameters)
-## 6. Add-Hoc 点对点模式
+## 6. Ad-Hoc 点对点模式
 内部指令常用模块
 1. shell
 2. copy

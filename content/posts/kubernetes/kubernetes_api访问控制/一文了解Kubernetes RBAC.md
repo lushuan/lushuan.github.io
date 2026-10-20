@@ -20,7 +20,7 @@ Kubernetes RBAC 是基于角色的访问控制模型，通过 Role、ClusterRole
 <!--more-->
 
 ## 一、前言 
-在了解RBAC 之前先了解一下Kubernetes API 对象，RBAC 最终操作的对象还是Kubernetes API 对象，本质还是对Kubernetes API的访问控制，如下RBAC 是在 Api Server 中是通过授权插件默认引入的。
+在了解RBAC 之前先了解一下Kubernetes API 对象，RBAC 最终操作的对象还是Kubernetes API 对象，本质还是对Kubernetes API的访问控制，如下，RBAC 是在 Api Server 中通过授权插件默认引入的。
 ` /etc/kubernetes/manifests/kube-apiserver.yaml `
 ```
 spec:
@@ -83,7 +83,7 @@ Starting to serve on 127.0.0.1:8001
 curl http://127.0.0.1:8001/apis/apps/v1/daemonsets
 ```
 
-查看kubenetes api 资源类型，资源类型是否namespaced 还是集群范围的
+查看kubernetes api 资源类型，资源类型是namespaced 还是集群范围的
 ```shell
 $ kubectl api-resources
 NAME                              SHORTNAMES                                      APIVERSION                             NAMESPACED   KIND
@@ -95,7 +95,7 @@ events                            ev
 ....
 ```
 
-下面就进入正体RBAC,以上的介绍就是为了说明RBAC 最终的操作还是kubernetes api 对象，当然也不止是kubernetes api 各类资源对象，还有非资源类型的URL.
+下面就进入正文RBAC,以上的介绍就是为了说明RBAC 最终的操作还是kubernetes api 对象，当然也不止是kubernetes api 各类资源对象，还有非资源类型的URL.
 ## 二、RBAC 授权模型
 
 kubernetes 系统的RBAC 授权插件将角色分为Role和ClusterRole两类，它们都是kubernetes 内置支持的API 资源类型，其中role 作用于名称空间级别，用于承载名称空间内的资源权限集合，而clusterrole 则能够同时承载名称空间和集群级别的资源权限集合。
@@ -136,7 +136,7 @@ RBAC是基于角色的访问控制，是一种基于个人用户的角色来管�
 补充：
 
 - Subject:主体，对应集群中尝试操作的对象，集群中定义了 3 种类型的主体资源:
-  - User Account:用户，这是有外部独立服务进行管理的，管理员进行私钥的分配，用户可以使用KeyStone 或者 Goolge 帐号，甚至一个用户名和密码的文件列表也可以。对于用户的管理集群内部没有一个关联的资源对象，所以用户不能通过集群内部的 API 来进行管理
+  - User Account:用户，这是由外部独立服务进行管理的，管理员进行私钥的分配，用户可以使用KeyStone 或者 Google 帐号，甚至一个用户名和密码的文件列表也可以。对于用户的管理集群内部没有一个关联的资源对象，所以用户不能通过集群内部的 API 来进行管理
   - Group:组，这是用来关联多个账户的，集群中有一些默认创建的组，比如 cluster-admin
   - Service Account: 服务帐号
 
@@ -148,7 +148,7 @@ ServiceAccount 为 Pod 中运行的进程提供了一个身份，Pod 内的进�
 
 
 #### Role 和 ClusterRole
-Kubernetes 系统的RBAC 授权插件将角色分为Role 和 ClusterRole 两类，它们都是kubernetes 内置支持的API 资源类型，其中Role 用作于空间级别，用于承载名称空间内的资源权限集合，而ClusterRole则能够同时承载名称空间和集群级别的资源权限集合。
+Kubernetes 系统的RBAC 授权插件将角色分为Role 和 ClusterRole 两类，它们都是kubernetes 内置支持的API 资源类型，其中Role 作用于名称空间级别，用于承载名称空间内的资源权限集合，而ClusterRole则能够同时承载名称空间和集群级别的资源权限集合。
 
 Role 无法承载集群级别的资源类型的操作权限，这类的资源包括集群级别的资源(例如Node)、非资源类型的端点(例如/healthz),以及作用于所有名称空间的资源(例如跨名称空间获取任何资源的权限)等。
 
@@ -167,7 +167,7 @@ $ kubectl api-resources --namespaced=false
 #### RoleBinding 和 ClusterRoleBinding
 利用Role 和 ClusterRole 进行角色赋权时，需要用到另外两种资源RoleBinding和ClusterRoleBinding,它们同样是API Server 内置的支持的资源类型。
 - RoleBinding 用于将Role 绑定到一个或一组用户之上，它隶属于且仅能作用于其所在的单个名称空间。
-- RoleBinding 可以引用同一名称空间中的role,也可以引用集群级别的ClusterRole,但是引用ClusterRole的许可权限会降级到仅能在Rolebingding所在的名称空间生效。
+- RoleBinding 可以引用同一名称空间中的role,也可以引用集群级别的ClusterRole,但是引用ClusterRole的许可权限会降级到仅能在RoleBinding所在的名称空间生效。
 - ClusterRoleBinding 则用于将ClusterRole 绑定到用户和组，它作用于集群全局，且仅能够引用ClusterRole.
 
 简单来说就是把声明的Subject 和我们的 Role 进行绑定的过程(给某个用户绑定上操作的权限)，二者的区别也是作用范围的区别:RoleBinding 只会影响到当前 namespace 下面的资源操作权限，而ClusterRoleBinding 会影响到所有的 namespace。
@@ -185,7 +185,7 @@ sa 创建后会自动创建一个secret,该secret 会包含一个token,这个tok
 sa 创建后依然会自动创建一个secret,但是pod 里面使用的sa token不是该secret里面包含的令牌了，而是kubelet 去tokenrequest api 请求的有时间限制的token
 
 #####  kubernetes >= 1.24
-sa 创建后不会自动创建一个secret 进行关联，然后和前面这个方式一样，通过tokenrequest api 请求token，每个一小时会自动刷新一次令牌，pod 容器内令牌路径为`/var/run/secrets/kubernetes.io/serviceaccount/token`
+sa 创建后不会自动创建一个secret 进行关联，然后和前面这个方式一样，通过tokenrequest api 请求token，每隔一小时会自动刷新一次令牌，pod 容器内令牌路径为`/var/run/secrets/kubernetes.io/serviceaccount/token`
 
 ```shell
 $ kubectl exec -it nginx-deploy-5947669f9-9h9vg -- cat /var/run/secrets/kubernetes.io/serviceaccount/token
@@ -196,7 +196,7 @@ $
 
 ![Service Account 和 Token](/images/kubernetes/rbac/rbac-4.png  "Service Account 和 Token")
 
-最新版本的令牌是一小时刷新一次，并且exp 是一年后到期，如果创建的ServiceAcccount 设置不自动挂载可以通过如下设置
+最新版本的令牌是一小时刷新一次，并且exp 是一年后到期，如果创建的ServiceAccount 设置不自动挂载可以通过如下设置
 ```yaml
 apiVersion: v1
 kind: ServiceAccount
@@ -223,7 +223,7 @@ serviceaccount/sa-demo created
 $ kubectl create sa sa2
 serviceaccount/sa2 created
 ```
-如果创建一个Pod 资源，不绑定serviceaccount 则使用namesapce命名空间下的默认的serviceaccount 也就是default
+如果创建一个Pod 资源，不绑定serviceaccount 则使用namespace命名空间下的默认serviceaccount 也就是default
 ```shell
 $ kubectl get pod nginx-deploy-5947669f9-9h9vg -o yaml|grep -i serviceAccount
     - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
@@ -366,11 +366,11 @@ username: lushuan
 group: ikubernetes
 ```
 创建用户凭证
-我们前面已经提到过，Kubernetes 没有 User Account 的 API 对象，不过要创建一个用户帐号的话也是挺简单的，利用管理员分配给你的一个私钥就可以创建了，这个我们可以参考官方文档中的方法，这里我们来使用 0penssL 证书来创建一个 User，当然我们也可以使用更简单的 cfssl 工具来创建:给用户 lushuan 创建一个私钥，命名成 lushuan.key:
+我们前面已经提到过，Kubernetes 没有 User Account 的 API 对象，不过要创建一个用户帐号的话也是挺简单的，利用管理员分配给你的一个私钥就可以创建了，这个我们可以参考官方文档中的方法，这里我们来使用 OpenSSL 证书来创建一个 User，当然我们也可以使用更简单的 cfssl 工具来创建:给用户 lushuan 创建一个私钥，命名成 lushuan.key:
 ```shell
 $ openssl genrsa -out lushuan.key 2048
 ```
-使用我们刚刚创建的私钥创建一个证书签名请求文件:lushuan.csr，要注意需要确保在-subj参数中指定用户名和组(CN 表示用户名，0表示组):
+使用我们刚刚创建的私钥创建一个证书签名请求文件:lushuan.csr，要注意需要确保在-subj参数中指定用户名和组(CN 表示用户名，O表示组):
 ```shell
 $ openssl req -new -key lushuan.key -out lushuan.csr -subj "/CN=lushuan/O=ikubernetes"
 ```
@@ -416,7 +416,7 @@ CURRENT   NAME                          CLUSTER        AUTHINFO           NAMESP
           lushuan-context               cluster-demo   lushuan            kube-system
 
 ```
-验证,在我们执行`kubectl get pod` 是使用的默认的上下文，此时我们指定上面创建的上下文`lushuan-context`
+验证,在我们执行`kubectl get pod` 时使用的是默认的上下文，此时我们指定上面创建的上下文`lushuan-context`
 ```shell
 $ kubectl get pod
 No resources found in default namespace.
@@ -428,7 +428,7 @@ $ kubectl config use-context lushuan-context
 Switched to context "lushuan-context".
 kubectl get pod --context=lushuan-context
 ```
-分享报错信息为无法list (操作)资源pods,在哪个组下,在哪个名字空间下，说白了就是需要操作的资源的相关权限，后面就需要配置RBAC了，会用到上面的提到的相关概念。
+报错信息为无法list (操作)资源pods,在哪个组下,在哪个名字空间下，说白了就是需要操作的资源的相关权限，后面就需要配置RBAC了，会用到上面的提到的相关概念。
 创建`lushuan-role.yaml`
 ```yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -483,7 +483,7 @@ Error from server (Forbidden): daemonsets.apps is forbidden: User "lushuan" cann
 ## 三、总结
 - Role 和 RoleBinding 用于同一个namespace
 - RoleBindings 可以存在于不同的命名空间，以授予服务账户权限。
-- RoleBinding 可以引用同一名称空间中的role,也可以引用集群级别的ClusterRole,但是引用ClusterRole的许可权限会降级到仅能在Rolebingding所在的名称空间生效。
+- RoleBinding 可以引用同一名称空间中的role,也可以引用集群级别的ClusterRole,但是引用ClusterRole的许可权限会降级到仅能在RoleBinding所在的名称空间生效。
 - ClusterRoleBinding 则用于将ClusterRole 绑定到用户和组，它作用于集群全局，可以访问集群所有资源，但是仅能够引用ClusterRole.
 - ClusterRoleBinding 不可以引用Role
 

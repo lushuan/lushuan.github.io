@@ -45,7 +45,7 @@ configure arguments: --prefix=/usr/share/nginx --sbin-path=/usr/sbin/nginx --mod
 | Nginx模块名称               | 模块作用                                                     |
 | --------------------------- | ------------------------------------------------------------ |
 | ngx_http_access_module      | 四层基于IP的访问控制，可以通过匹配客户端源IP地址进行限制     |
-| ngx_http_auth_basic_module  | 状态页，使用basic机制进行用户认证，在编译安装nginx的时候需要添加编译参数--withhttp_stub_status_module，否则配置完成之后监测会是提示语法错误 |
+| ngx_http_auth_basic_module  | 状态页，使用basic机制进行用户认证，在编译安装nginx的时候需要添加编译参数--withhttp_stub_status_module，否则配置完成之后监测时会提示语法错误 |
 | ngx_http_stub_status_module | 状态统计模块                                                 |
 | ngx_http_gzip_module        | 文件的压缩功能                                               |
 | ngx_http_gzip_static_module | 静态压缩模块                                                 |
@@ -54,7 +54,7 @@ configure arguments: --prefix=/usr/share/nginx --sbin-path=/usr/sbin/nginx --mod
 | ngx_http_referer_module     | 防盗链功能，基于访问安全考虑                                 |
 | ngx_http_proxy_module       | 将客户端的请求以http协议转发至指定服务器进行处理             |
 | ngx_stream_proxy_module     | tcp负载，将客户端的请求以tcp协议转发至指定服务器处理         |
-| ngx_http_fastcgi_module     | 将客户端对php的请求以fastcgi协议转发至指定服务器助理         |
+| ngx_http_fastcgi_module     | 将客户端对php的请求以fastcgi协议转发至指定服务器处理         |
 | ngx_http_uwsgi_module       | 将客户端对Python的请求以uwsgi协议转发至指定服务器处理        |
 | ngx_http_headers_module     | 可以实现对头部报文添加指定的key与值                          |
 | ngx_http_upstream_module    | 负载均衡模块，提供服务器分组转发、权重分配、状态监测、调度算法等高级功能 |
@@ -148,7 +148,7 @@ http {
 5. 每一条语句结尾必须是分号结束
 6. 以区段形式的配置参数，需要有闭合的花括号 {}
 7. 不同作用域的配置参数，不能瞎嵌套
-    - server{}是用于定义nginx的 http核心模块功能的子配置，必须防止在http{}括号外中
+    - server{}是用于定义nginx的 http核心模块功能的子配置，必须放置在http{}括号中
     - 写在http{}外层，与其同级，语法报错
 8. include配置参数：`include /etc/nginx/default.d/*.conf;`
    - 导入外部的配置文件，优化，简化主配置文件的格式
@@ -202,11 +202,11 @@ location ~* \.(gif|jpg|jpeg)$ {
 ### Nginx 配置动静分离
 #### 什么是动静分离
 - 在 Web 开发中，通常来说，动态资源其实就是指那些后台资源，而静态资源就是指 HTML，JavaScript，CSS，img 等文件。
-- 在使用前后端分离之后，可以很大程度的提升静态资源的访问速度，同时在开发过程中也可以让前后端开发并行可以有效的提高开发时间，也可以有效的减少联调时间 。
-- 适合中小型网址
+- 在使用前后端分离之后，可以很大程度的提升静态资源的访问速度，同时在开发过程中也可以让前后端开发并行可以有效的缩短开发时间，也可以有效的减少联调时间 。
+- 适合中小型网站
 
 #### 动静分离方案
-- 直接使用不同的域名，把静态资源放在独立的云服务器上，这个种方案也是目前比较推崇的。
+- 直接使用不同的域名，把静态资源放在独立的云服务器上，这种方案也是目前比较推崇的。
 - 动态请求和静态文件放在一起，通过 nginx 配置分开
 ```
 server {
@@ -390,7 +390,7 @@ location / {
 ```
 
 ### 配置防盗链
- 防盗链本质上是存在自己服务器上的资源，只能由自己的服务器来访问，其实更多的时候网站还是希望自己的能够有更多的流量进来，而不是添加防盗链防止别人引用，只是在个别的情况，例如微信公众号文章中的图片不允许别人引用时会添加防盗链
+ 防盗链本质上是存在自己服务器上的资源，只能由自己的服务器来访问，其实更多的时候网站还是希望自己能够有更多的流量进来，而不是添加防盗链防止别人引用，只是在个别的情况，例如微信公众号文章中的图片不允许别人引用时会添加防盗链
 
 - http协议中的referer
 - nginx 防盗链配置
@@ -1264,7 +1264,7 @@ http {
 }
 ```
 
-### Nginx upsream 重试机制
+### Nginx upstream 重试机制
 探测上游服务器健康状态
 - 重试机制(被动重试机制和主动重试机制)
 - 状态检查

@@ -22,13 +22,13 @@ summary: "介绍在 CentOS 7 上通过 yum 包管理器与源码预编译两种�
 - 方式一：yum 安装(Redhat)
 - 方式二：二进制预编译安装
 - 指定安装版本
-- 安装操作系统版本CentOs7.x
+- 安装操作系统版本CentOS7.x
 
 
 ## 一、方式一： yum 包管理器安装
 这里选择通过yum 源进行安装，安装操作系统为Linux CentOS 7.9
 
-1. CentOs 配置阿里云 yum 源
+1. CentOS 配置阿里云 yum 源
 ```
 # 备份
 mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup

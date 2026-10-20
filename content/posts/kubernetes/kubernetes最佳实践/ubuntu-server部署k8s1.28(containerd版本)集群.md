@@ -36,7 +36,7 @@ summary: "完整记录在 Ubuntu Server 22.04 上以 containerd 为运行时部�
 - 容器运行时为 Containerd 1.7.11
 
 ## 1. 主机准备
-虚拟机是通过vmvare 创建的，搭建的k8s 集群是非高可用模式，下方提供部署脚本。
+虚拟机是通过vmware 创建的，搭建的k8s 集群是非高可用模式，下方提供部署脚本。
 部署过程中由于2024年6月份 docker 镜像仓库不再对大陆提供服务，需要进行离线部署，主要是 calico 这一块会有镜像源缺失,对应章节会有补充说明及解决方案
 
 ### 1.1 操作系统
@@ -60,7 +60,7 @@ hostnamectl set-hostname k8s-nastert01
 hostnamectl set-hostname k8s-node01
 ```
 #### 1.3.2 主机ip 地址配置
-vmvare 创建虚拟机网络适配器选择桥接模式(自动)，需要手动配置ip地址，否则当虚拟机重启后ip 地址会发生变化
+vmware 创建虚拟机网络适配器选择桥接模式(自动)，需要手动配置ip地址，否则当虚拟机重启后ip 地址会发生变化
 k8s-master01 节点
 ```shell
 sudo cp /etc/netplan/00-installer-config.yaml  /etc/netplan/00-installer-config.yaml_before
@@ -255,7 +255,7 @@ $ sudo systemctl stop ufw
 #禁止防火墙开机启动
 $ sudo systemctl disable ufw
 ```
-## 2. 部署Conatinerd 服务
+## 2. 部署Containerd 服务
 所有主机都要执行
 ### 2.1 下载及安装
 
@@ -453,12 +453,12 @@ kubeadm join 192.168.1.11:6443 --token abcdef.0123456789abcdef \
         --cri-socket=unix:///run/containerd/containerd.sock
 ```
 ## 4. k8s集群部署网络插件 calico
-常见的网络插件有多种，比如flannel、Calico和Cilium，本次实验使用Calico使用。
+常见的网络插件有多种，比如flannel、Calico和Cilium，本次实验使用Calico。
 
 首先访问Calico帮助文档https://docs.tigera.io/calico/latest/getting-started/kubernetes/quickstart
 
 ### master 节点
-calico 部署使用的是operator 的方式，且不再和kube-system 共用一个namespace，另起了一个namesapce calico-system,引入了istio 相关组件服务，详情可以看下calico官网
+calico 部署使用的是operator 的方式，且不再和kube-system 共用一个namespace，另起了一个namespace calico-system,引入了istio 相关组件服务，详情可以看下calico官网
 
 配置插件需要的环境
 ```shell
@@ -569,7 +569,7 @@ kubectl get service -o wide
 浏览器访问`http://192.168.1.11:30080` 提示 `Welcome to nginx!` 表示生效成功
 
 ## 6. 部署crictl(optional)
-crictl 是Kubelet容器接口（CRI）的CLI和验证工具: 这里部署以下 containerd客户端crictl
+crictl 是Kubelet容器接口（CRI）的CLI和验证工具: 这里部署一下 containerd客户端crictl
 ```
 $ VERSION="v1.28.0"
 $ wget https://github.com/kubernetes-sigs/cri-tools/releases/download/$VERSION/crictl-$VERSION-linux-amd64.tar.gz

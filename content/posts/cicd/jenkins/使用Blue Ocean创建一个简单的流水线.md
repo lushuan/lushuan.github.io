@@ -21,9 +21,9 @@ Blue Ocean 是 Jenkins 的开源子项目，为持续交付流水线提供了强
 
 ## 一、什么是 Blue Ocean?
 
-Blue Ocean 是Jenkins的开源子项目，在保证原有强大的功能不变的基础下，对持续交付(CD)Pipeline过程的可视化方面相较于Jenkins 之前的经典界面有了很大的提升。
+Blue Ocean 是Jenkins的开源子项目，在保证原有强大的功能不变的基础上，对持续交付(CD)Pipeline过程的可视化方面相较于Jenkins 之前的经典界面有了很大的提升。
 
-Blue Ocean 重新思考Jenkins的用户体验，从头开始设计Jenkins Pipeline, 但仍然与自由式作业兼容，Blue Ocean减少了混乱而且进一步明确了团队中每个成员 Blue Ocean 的主要特性包括：
+Blue Ocean 重新思考Jenkins的用户体验，从头开始设计Jenkins Pipeline, 但仍然与自由式作业兼容，Blue Ocean减少了混乱而且进一步明确了团队中每个成员的角色。Blue Ocean 的主要特性包括：
 
 - 持续交付(CD)Pipeline的 复杂可视化 ，可以让您快速直观地理解管道状态。
 

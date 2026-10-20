@@ -61,7 +61,7 @@ sar（System Activity Reporter）是一个性能监控工具，它可以提供�
 - 使用场景：查看块设备（硬盘）的读写操作、传输速率和请求队列长度。
 
 ### Example
-统计sockets连接新
+统计sockets连接信息
 1. sar -n SOCK
 ```shell script
 $  sar -n SOCK 1 1
@@ -74,8 +74,8 @@ Linux 4.4.115-1.el7.elrepo.x86_64 (chm)         2022年05月20日  _x86_64_     
 - totsck 当前被使用的socket总数
 - tcpsck 当前正在被使用的TCP的socket总数
 - udpsck 当前正在被使用的UDP的socket总数
-- rawsck 当前正在被使用于RAW的skcket总数
-- if-frag 当前的IP分片的数目
+- rawsck 当前正在被使用于RAW的socket总数
+- ip-frag 当前的IP分片的数目
 - tcp-tw TCP套接字中处于TIME-WAIT状态的连接数量
 
 

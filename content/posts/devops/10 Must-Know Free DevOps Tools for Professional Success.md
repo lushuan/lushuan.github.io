@@ -155,7 +155,7 @@ In addition, what sets Ansible apart is that it’s agentless. This means there�
 
 It also boasts a vast ecosystem of modules and plugins, making it compatible with a wide range of operating systems, cloud platforms, and software applications. This versatility ensures that DevOps professionals can manage complex, heterogeneous environments efficiently.
 
-While it’s not mandatory for a DevOps engineer, like containers, Kubernetes, and Git are, you’ll hardly find a job listing for a DevOps role that doesn’t ask for skills to some level in Ansible or any of the other alternative automation tools, such as Chief, Puppet, etc. That’s why proficiency is more than advisable.
+While it’s not mandatory for a DevOps engineer, like containers, Kubernetes, and Git are, you’ll hardly find a job listing for a DevOps role that doesn’t ask for skills to some level in Ansible or any of the other alternative automation tools, such as Chef, Puppet, etc. That’s why proficiency is more than advisable.
 
 
 ### 6. Jenkins

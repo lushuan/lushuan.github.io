@@ -26,9 +26,9 @@ statefulset 通过nfs 动态创建pv，发现无法创建成功
  Warning  FailedMount  2m50s (x6 over 6m4s)  kubelet  Unable to attach or mount volumes: unmounted volumes=[data], unattached volumes=[kube-api-access-8p8wf data]: error processing PVC kube-logging/data-es-cluster-0: PVC is not bound
 ```
 
-通过报错日志可以看的出来pvc 无法绑定pv,通过命令查看pvc创建成功，pv 则没有进行创建
+通过报错日志可以看得出来pvc 无法绑定pv,通过命令查看pvc创建成功，pv 则没有进行创建
 
-StatefulSet 挂载 NFS 存储卷时出现了问题,导致 PVC 没有被成功绑定到 PV的原因
+StatefulSet 挂载 NFS 存储卷时出现了问题,导致 PVC 没有被成功绑定到 PV
 
 常见原因有:
 

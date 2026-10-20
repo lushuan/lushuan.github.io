@@ -32,7 +32,7 @@ coredns/coredns:1.6.7/1.8.4
 ## 二、操作
 根据版本选择对应的dns镜像以及yaml文件上传到其中一台master主机，以1.8.4 版本为例
 
-如果是内网则将coredns-1.6.7/1.8.4.tar.gz 压缩包进行解压并上传至现场的harbor仓库，如果可以连接外网则直接修改 coredns-1.8.4.yaml 文件，将站位符{{ image_address }} 进行修改
+如果是内网则将coredns-1.6.7/1.8.4.tar.gz 压缩包进行解压并上传至现场的harbor仓库，如果可以连接外网则直接修改 coredns-1.8.4.yaml 文件，将占位符{{ image_address }} 进行修改
 
 ## 三、将原有的 kube-dns 停止
 ```shell

@@ -21,20 +21,20 @@ summary: "介绍 CI/CD 持续集成与持续部署的基本概念、Jenkins 及�
 
 在了解Jenkins 之前先了解一下CI&CD
 ## 一、cicd 介绍
-持续集成(Continous Intergrations) 和持续部署(Continuous Deployment)的区别
-- 持续集成(Continous Intergrations) 和持续部署(Continuous Deployment)是DevOps中域软件交付和
+持续集成(Continuous Integration) 和持续部署(Continuous Deployment)的区别
+- 持续集成(Continuous Integration) 和持续部署(Continuous Deployment)是DevOps中与软件交付和
 部署相关的两个重要概念
 - 尽管他们的目标是类似的，但在具体含义上存在一些区别
 
 ### 持续集成CI
-- 持续集成(Continous Intergrations) 是一种开发实践，通过将每次的代码改动频繁地集成到
+- 持续集成(Continuous Integration) 是一种开发实践，通过将每次的代码改动频繁地集成到
 共享代码库中，并进行自动化构建和测试，以确保团队开发的代码能够快速且无误地集成在一起
 
-- 持续集成的目标是通过频繁的集成代码来快速发现和解决集成问题，减少冲突和错误，提供开发效率和
+- 持续集成的目标是通过频繁的集成代码来快速发现和解决集成问题，减少冲突和错误，提高开发效率和
 代码质量
 ### 持续部署CD
 - 持续部署(Continuous Deployment)是在持续集成的基础上更进一步，指的是将经过
-持续集成和测试的代码自动部署到生成环境中，使其可以立即提供用户使用
+持续集成和测试的代码自动部署到生产环境中，使其可以立即提供用户使用
 - 持续部署强调自动化的部署过程，通过自动化测试和验证确保代码的稳定性和可靠性，
 使新功能、修复或者改进能够实时交付给用户
 
@@ -43,7 +43,7 @@ Jenkins是一款开源 CI&CD 软件，用于自动化各种任务，包括构建
 
 Jenkins 支持各种运行方式，可通过系统包、Docker 或者通过一个独立的 Java 程序。
 
-说明 Jenkins 是CI&CD 实现方式的一种，还有其它很多种类似的工具,不过使用于特定的场景，只不过在业界 Jenkins
+说明 Jenkins 是CI&CD 实现方式的一种，还有其它很多种类似的工具,不过适用于特定的场景，只不过在业界 Jenkins
 是使用最广泛的一种
 
 ### Jenkins 同类CICD工具了解
@@ -260,7 +260,7 @@ root@k8s-master01:/opt/jenkins/jenkins# cat hudson.model.UpdateCenter.xml
 ```
 
 ## 五、修改 Jenkins 配置
-为了方便的使用Jenkins，需要安装一写常用的插件，以下列的有点多，根据需要安装常用的插件，以下基本上都会用得到的，不了解的插件可以到插件市场上
+为了方便地使用Jenkins，需要安装一些常用的插件，以下列的有点多，根据需要安装常用的插件，以下基本上都会用得到的，不了解的插件可以到插件市场上
 搜索一下看下介绍。
 
 1. Locale
@@ -277,7 +277,7 @@ root@k8s-master01:/opt/jenkins/jenkins# cat hudson.model.UpdateCenter.xml
 12. Credentials
 13. Credentials Binding
 14. Blue Ocean  (Jenkins 外部UI的页面)
-15. Blue Ocean Pineline Editor
+15. Blue Ocean Pipeline Editor
 16. Blue Ocean Core Js
 17. Pipeline SCM API for Blue Ocean
 18. Dashboard for Blue Ocean
@@ -286,7 +286,7 @@ root@k8s-master01:/opt/jenkins/jenkins# cat hudson.model.UpdateCenter.xml
 21. Extended Choice Parameter
 22. List Git Branches Parameter
 23. Pipeline
-24. Pipelinie: Declarative
+24. Pipeline: Declarative
 25. Publish Over SSH
 26. SonarQube Scanner
 27. Localization: Chinese(Simplified)

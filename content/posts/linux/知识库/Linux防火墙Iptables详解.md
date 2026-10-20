@@ -40,7 +40,7 @@ iptables 是运维中的重点但不算是特别的难点，是网站访问的�
 - 防火墙实例: (/etc/sysconfig/iptables）
 
 ## 三、iptables和netfilter的关系
-Iptables和netfilter的关系是一个很容易让人搞不清的问题。很多的知道iptables却不知道netfilter。其实iptables只是Linux防火墙的管理工具而已，位于/sbin/iptables。真正实现防火墙功能的是netfilter，它是Linux内核中实现包过滤的内部结构。
+Iptables和netfilter的关系是一个很容易让人搞不清的问题。很多人知道iptables却不知道netfilter。其实iptables只是Linux防火墙的管理工具而已，位于/sbin/iptables。真正实现防火墙功能的是netfilter，它是Linux内核中实现包过滤的内部结构。
 
 ## 四、iptables 管理
 安装了`iptables-service`后方便通过systemd管理iptables服务
@@ -68,7 +68,7 @@ $ sudo rpm -ql iptables
 注意: 使用`iptables` 记得将`firewalld` 关闭掉`systemctl disable firewalld`
 
 防火墙激活  
-防护墙是默认嵌入到linux内核中，但是没有默认激活,`lsmod`查看内核中加载了哪些模块
+防火墙是默认嵌入到linux内核中，但是没有默认激活,`lsmod`查看内核中加载了哪些模块
 ```shell
 $ sudo lsmod|egrep "iptables|nat|filter"
 xt_nat                 12681  4 
@@ -148,7 +148,7 @@ target     prot opt source               destination
 ### 防火墙的种类及使用说明
 - 硬件：整个企业入口
   - 三层路由：H3C 华为 Cisco(思科)
-  - 防护墙：深信服
+  - 防火墙：深信服
 - 软件：开源软件 网站内部 封ip
   - iptables 写入到Linux 内核中 以后服务docker 工作在4层
   - firewalld C7
@@ -170,7 +170,7 @@ target     prot opt source               destination
 详细解释：
 - 表（tables）提供特定的功能，iptables内置了4个表，即filter表、nat表、mangle表和raw表，分别用于实现包过滤，网络地址转换、包重构(修改)和数据跟踪处理。
 - 链（chains）是数据包传播的路径，每一条链其实就是众多规则中的一个检查清单，每一条链中可以有一条或数条规则。当一个数据包到达一个链时，iptables就会从链中第一条规则开始检查，看该数据包是否满足规则所定义的条件。如果满足，系统就会根据该条规则所定义的方法处理该数据包；否则iptables将继续检查下一条规则，如果该数据包不符合链中任一条规则，iptables就会根据该链预先定义的默认策略来处理数据包。
-- Iptables采用“表”和“链”的分层结构。在REHL4中是三张表五个链。现在REHL5、6成了四张表五个链了，不过多出来的那个表用的也不太多，所以基本还是和以前一样。下面罗列一下这四张表和五个链。注意一定要明白这些表和链的关系及作用。
+- Iptables采用“表”和“链”的分层结构。在RHEL4中是三张表五个链。现在RHEL5、6成了四张表五个链了，不过多出来的那个表用的也不太多，所以基本还是和以前一样。下面罗列一下这四张表和五个链。注意一定要明白这些表和链的关系及作用。
 
 ![iptables-四表五链](/images/linux/iptables-四表五链.png "四表五链")
 
@@ -191,9 +191,9 @@ target     prot opt source               destination
 2. OUTPUT——外出的数据包应用此规则链中的策略
 3. FORWARD——转发数据包时应用此规则链中的策略
 4. PREROUTING——对数据包作路由选择前应用此链中的规则  
-（记住！所有的数据包进来的时侯都先由这个链处理）
+（记住！所有的数据包进来的时候都先由这个链处理）
 5. POSTROUTING——对数据包作路由选择后应用此链中的规则  
-（所有的数据包出来的时侯都先由这个链处理）
+（所有的数据包出来的时候都先由这个链处理）
 
 备注：常用的规则链有INPUT、OUTPUT、FORWARD
 
@@ -296,7 +296,7 @@ target     prot opt source               destination
 ## 八、iptables 执行流程
 工作流程小结：
 1. 防火墙是层层过滤的，实际是按照配置规则的顺序从上到下，从前到后进行过滤的。
-2. 如果匹配成功规则，即明确表示是拒绝(DROP)还是接受(ACCEPT),数据包就不再向下匹配新的规则
+2. 如果成功匹配规则，即明确表示是拒绝(DROP)还是接受(ACCEPT),数据包就不再向下匹配新的规则
 3. 如果规则中没有明确表明是阻止还是通过的，也就是没有匹配规则，向下进行匹配，直到匹配默认规则得到明确的阻止还是通过
 4. 防火墙的默认规则是所有规则都匹配完才会匹配的
 
@@ -504,7 +504,7 @@ $ iptables -A INPUT -p icmp -j DROP
 掌握这些参数后，可以灵活配置防火墙规则，实现流量过滤、NAT 转换、日志记录等功能。
 
 ## 十二、iptables 总结
-iptables 在工作中也是常用到的服务，重要但是不是很复杂，这里找了一个iptables[面试参考](https://www.jianshu.com/p/19422676b854)，自己可以写一写，加深巩固下,在生产环境层面执行前最好是现在测试环境验证下
+iptables 在工作中也是常用到的服务，重要但是不是很复杂，这里找了一个iptables[面试参考](https://www.jianshu.com/p/19422676b854)，自己可以写一写，加深巩固下,在生产环境层面执行前最好是先在测试环境验证下
 
 ## 十三、参考
 1. [iptables详细教程：基础、架构、清空规则、追加规则、应用实例](https://lesca.me/archives/iptables-tutorial-structures-configuratios-examples.html)

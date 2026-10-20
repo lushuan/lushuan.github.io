@@ -33,7 +33,7 @@ summary: "记录 Ansible 通过 SSH 连接目标主机时出现 Permission denie
 
 ssh-keygen一路回车,主要是用来免密通信的
 
-ssh-copy-id 172.16.24.220 需要输入对应主节的root密码
+ssh-copy-id 172.16.24.220 需要输入对应主机的root密码
 ```shell
 $ ssh-keygen 
 Generating public/private rsa key pair.

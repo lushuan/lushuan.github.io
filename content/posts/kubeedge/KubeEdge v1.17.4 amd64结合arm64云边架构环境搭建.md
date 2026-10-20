@@ -20,9 +20,9 @@ summary: "基于真实边缘网关记录 KubeEdge v1.17.4 云端 amd64 结合边
 <!--more-->
 
 ## 一、前言
-最近在做一个网络内生安全方面的一个项目，需要在物联网IOT边端设备上部署软蜜罐和蜜网，为了方便管理边端设备服务，选型华为的[KubeEdge开源方案](https://kubeedge.io/zh/),
+最近在做网络内生安全方面的一个项目，需要在物联网IOT边端设备上部署软蜜罐和蜜网，为了方便管理边端设备服务，选型华为的[KubeEdge开源方案](https://kubeedge.io/zh/),
 当然使用k8s 定制版的 k3s 也可以，这里由于设备资源有限最终还是选择了KubeEdge,但是在网上找了很多资料以及官网都没有找到基于云端amd64+边端arm64架构组合的环境搭建，
-基本上云端amd64+边端amd64组合的方案，更多的是一种演示。本文是基于真实采购的边缘网关搭建的一整套流程，在此做一下记录，方便后面回溯复用。
+基本上都是云端amd64+边端amd64组合的方案，更多的是一种演示。本文是基于真实采购的边缘网关搭建的一整套流程，在此做一下记录，方便后面回溯复用。
 
 ## 二、KubeEdge 介绍
 KubeEdge是一个开源系统，用于将容器化应用程序编排功能扩展到Edge的主机。它基于Kubernetes构建，并为网络应用程序提供基础架构支持、云和边缘之间的部署和元数据同步。
@@ -262,7 +262,7 @@ EOF
 hostnamectl set-hostname node1
 ```
 
-- 部署分为两部分云端也就是k8s master 节点，另一部是边端，部署顺序为先云端后边端
+- 部署分为两部分，云端也就是k8s master 节点，另一部分是边端，部署顺序为先云端后边端
 
 ## 六、Cloud 节点部署
 - 运行在 amd64 master节点
@@ -668,7 +668,7 @@ cni-plugins-linux-amd64-v1.1.1.tgz             100%[============================
 ### 注意
 
 1.  edge边缘节点不要部署kubelet
-2.  `/etc/kubeedge/config/edgecore.yaml` 修改mqqt 连接地址
+2.  `/etc/kubeedge/config/edgecore.yaml` 修改mqtt 连接地址
 
 ## 八、KubeEdge 验证部署
 

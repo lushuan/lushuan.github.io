@@ -20,7 +20,7 @@ summary: "基于 Gitlab CE 与 Gitlab Runner 为 Gin-Vue-Admin 后端服务搭�
 <!--more-->
 
 ## 一、🚀 前言
-记录基于 Gitlab 社区版搭建CI/CD，适用与中小团队的开发，功能包含prepare->build->push->deploy->dingTalk notify
+记录基于 Gitlab 社区版搭建CI/CD，适用于中小团队的开发，功能包含prepare->build->push->deploy->dingTalk notify
 
 ![gitlab-pipeline-demo](/images/cicd/gitlab/gitlab-pipeline-1.png "Gitlab Pipelines")
 
@@ -57,7 +57,7 @@ summary: "基于 Gitlab CE 与 Gitlab Runner 为 Gin-Vue-Admin 后端服务搭�
 ## 四、🧰 Gitlab Runner 介绍和部署
 篇幅有限，默认在搭建整个ci/cd 工具链中，其它组件已经提前部署好，这里选型gitlab-runner v18.4.0，理论上来讲建议Gitlab CE和gitlab-runner 版本相匹配，
 这里直接选择了gitlab-runner v18.4.0 较高版本，在验证的过程中发现也是可以，并且插件版本向后兼容，并且还会介绍基于传统常见的Redhat 系列和Debian 系列的在线安装方式，
-但是在国产数据库部署，这里选择二进制的方式进行部署
+但是在国产操作系统部署，这里选择二进制的方式进行部署
 
 ### 🧩 一、GitLab Runner 是什么？
 
@@ -470,7 +470,7 @@ notify:
 ```
 
 注意：
-- `.gitlab-ci.yaml` 脚本的秘钥环境变量推荐配置到gitlab 项目下的Variables下,项目->Settings->CI/CD->Variables,当然写死在`Gitlab-ci.yaml`中也可以
+- `.gitlab-ci.yaml` 脚本的密钥环境变量推荐配置到gitlab 项目下的Variables下,项目->Settings->CI/CD->Variables,当然写死在`Gitlab-ci.yaml`中也可以
 
 ![gitlab-pipeline-demo](/images/cicd/gitlab/gitlab-pipeline-2.png "Gitlab Variables")
 
@@ -478,7 +478,7 @@ notify:
 如果你已有官方 GVA 项目，可参考下方后端构建 Dockerfile，该Dockerfile 优化了如下问题
 1. DNS 解析不稳定问题
 2. 使用国内镜像源进行加速代理
-3. 优化使用框架依赖缓存，每次构建拉取时间较长问题
+3. 优化框架依赖缓存，解决每次构建拉取时间较长的问题
 4. 优化构建后的image size 大小问题，减少一半
 
 ```

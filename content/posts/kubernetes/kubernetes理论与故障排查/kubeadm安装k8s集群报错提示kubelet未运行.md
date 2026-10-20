@@ -65,7 +65,7 @@ kubeadm init 安装报错信息
 ## 二、排查思路
 查看官网介绍为 docker 和 kubelet  服务中的 cgroup 驱动不一致，有两种方法  
 方式一：驱动向 docker 看齐  
-方式二：驱动为向 kubelet 看齐  
+方式二：驱动向 kubelet 看齐  
 如果docker 不方便重启则统一向 kubelet看齐，并重启对应的服务即可
 
 ## 三、解决方式
@@ -91,8 +91,8 @@ $ cat /etc/docker/daemon.json
 ```
 重启docker
 `systemctl restart docker`
-### kublete 配置文件
-grep 截取一下,可以看得出来kubelet默认 cgoup 驱动为systemd
+### kubelet 配置文件
+grep 截取一下,可以看得出来kubelet默认 cgroup 驱动为systemd
 ```Bash
 $ cat /var/lib/kubelet/config.yaml |grep group
 cgroupDriver: systemd

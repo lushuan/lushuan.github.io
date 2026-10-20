@@ -25,7 +25,7 @@ summary: "梳理 Prometheus 监控 Kubernetes 各组件的策略与采集指标�
 |从集群各节点kubelet组件中获取节点kubelet的基本运行状态的监控指标|node |白盒监控|kubelet|
 |从集群各节点kubelet内置的cAdvisor中获取，节点中运行的容器的监控指标|node |白盒监控|kubelet|
 |从部署到各个节点的Node Exporter中采集主机资源相关的运行资源|node |白盒监控|node exporter|
-|对于内置了Promthues支持的应用，需要从Pod实例中采集其自定义监控指标|pod |白盒监控|custom pod|
+|对于内置了Prometheus支持的应用，需要从Pod实例中采集其自定义监控指标|pod |白盒监控|custom pod|
 |获取API Server组件的访问地址，并从中获取Kubernetes集群相关的运行监控指标|endpoints |白盒监控|api server|
 |获取集群中Service的访问地址，并通过Blackbox Exporter获取网络探测指标|service |黑盒监控|blackbox exporter|
 |获取集群中Ingress的访问信息，并通过Blackbox Exporter获取网络探测指标|ingress |黑盒监控|blackbox exporter|
@@ -47,7 +47,7 @@ summary: "梳理 Prometheus 监控 Kubernetes 各组件的策略与采集指标�
 | cpu.throttled.util    | 容器CPU执行周期受到限制的百分比       | 未录入                                                       | 0-100的范围                          |
 | cpu.periods           | 容器生命周期中度过的cpu周期总数       | counter型无需计算                                            | 使用rate/increase 查看               |
 | cpu.throttled.periods | 容器生命周期中度过的受限的cpu周期总数 | counter型无需计算                                            | 使用rate/increase 查看               |
-| cpu.throttled.time    | 容器被节流的总时间 )                  | counter型无需计算                                            | 单位(纳秒                            |
+| cpu.throttled.time    | 容器被节流的总时间                    | counter型无需计算                                            | 单位(纳秒)                           |
 
 `mem 指标`
 
@@ -60,7 +60,7 @@ summary: "梳理 Prometheus 监控 Kubernetes 各组件的策略与采集指标�
 | mem.bytes.workingset.percent | 容器真实使用的内存量百分比                           | container_memory_working_set_bytes/container_spec_memory_limit_bytes *100 | 范围0-100                                      |
 | mem.bytes.cached             | 容器cache内存量                                      | container_memory_cache                                       | 单位byte                                       |
 | mem.bytes.rss                | 容器rss内存量                                        | container_memory_rss                                         | 单位byte                                       |
-| mem.bytes.swap               | 容器cache内存量                                      | container_memory_swap                                        | 单位byte                                       |
+| mem.bytes.swap               | 容器swap内存量                                      | container_memory_swap                                        | 单位byte                                       |
 
 `filesystem && disk.io 指标`
 
@@ -77,7 +77,7 @@ summary: "梳理 Prometheus 监控 Kubernetes 各组件的策略与采集指标�
 | 夜莺指标名                                                   | 含义                       | prometheus metrics或计算方式                               | 说明            |
 | :----------------------------------------------------------- | :------------------------- | :--------------------------------------------------------- | :-------------- |
 | net.in.bytes                                                 | 容器网络接收数据总数       | rate(container_network_receive_bytes_total)[1m]            | (单位：bytes/s) |
-| net.out.bytes                                                | 容器网络积传输数据总数）   | rate(container_network_transmit_bytes_total)[1m]           | (单位：bytes/s) |
+| net.out.bytes                                                | 容器网络传输数据总数       | rate(container_network_transmit_bytes_total)[1m]           | (单位：bytes/s) |
 | net.in.pps                                                   | 容器网络接收数据包pps      | rate(container_network_receive_packets_total)[1m]          | (单位：p/s)     |
 | net.out.pps                                                  | 容器网络发送数据包pps      | rate(container_network_transmit_packets_total)[1m]         | (单位：p/s)     |
 | net.in.errs                                                  | 容器网络接收数据错误数     | rate(container_network_receive_errors_total)[1m]           | (单位：bytes/s) |
@@ -191,7 +191,7 @@ summary: "梳理 Prometheus 监控 Kubernetes 各组件的策略与采集指标�
 
 
 
-### kube-stats-metrics 指标说明
+### kube-state-metrics 指标说明
 
 `pod metrics`
 
@@ -203,8 +203,8 @@ summary: "梳理 Prometheus 监控 Kubernetes 各组件的策略与采集指标�
 |       kube_pod_container_status_terminated        |  gauge  |          pod处于terminated状态，值为1代表terminated          |
 |    kube_pod_container_status_terminated_reason    |  gauge  | pod处于terminated状态原因：OOMKilled，Completed，Error，ContainerCannotRun，DeadlineExceeded，Evicted |
 |     kube_pod_container_status_restarts_total      | counter |                     pod中的容器重启次数                      |
-|  kube_pod_container_resource_requests_cpu_cores   |  gauge  |                       pod容器cpu limit                       |
-| kube_pod_container_resource_requests_memory_bytes |  gauge  |                 pod容器mem limit(单位:字节)                  |
+|  kube_pod_container_resource_requests_cpu_cores   |  gauge  |                       pod容器cpu request                       |
+| kube_pod_container_resource_requests_memory_bytes |  gauge  |                 pod容器mem request(单位:字节)                  |
 
 `deployment metrics`
 
@@ -251,7 +251,7 @@ summary: "梳理 Prometheus 监控 Kubernetes 各组件的策略与采集指标�
 |       kube_cronjob_status_active       | gauge | job running pod数 |
 |       kube_cronjob_spec_suspend        | gauge | =1代表 job 被挂起 |
 |    kube_cronjob_next_schedule_time     | gauge | job 下次调度时间  |
-| kube_cronjob_status_last_schedule_time | gauge | job 下次调度时间  |
+| kube_cronjob_status_last_schedule_time | gauge | job 上次调度时间  |
 
 `PersistentVolume metrics`
 

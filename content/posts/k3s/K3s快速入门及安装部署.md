@@ -20,7 +20,7 @@ K3s 是 Rancher 旗下面向物联网和边缘计算的经过认证的轻量级 
 <!--more-->
 
 ## 一、背景
-为物联网和边缘计算构建的经过认证的Kubernetes发行版，则是Rancher旗下产品
+为物联网和边缘计算构建的经过认证的Kubernetes发行版，是Rancher旗下产品
 
 Great for:
 
@@ -37,8 +37,8 @@ Great for:
 1. CNCF认证的Kubernetes发行版
 2. 50MB左右二进制包，500MB左右内存消耗
 3. 单一进程包含Kubernetes master,Kubelet,和 containerd
-4. 支持SQLite/Mysql/PostgreSQL/DQlite和etcd
-5. 同时为x86 64,Arm64,和 Armv7 平台发布
+4. 支持SQLite/Mysql/PostgreSQL/Dqlite和etcd
+5. 同时为x86_64、Arm64和Armv7平台发布
 
 变更
 1. 多合一：将基础服务合并到了单一的进程中，如api-server,controller manager、scheduler和cloud-controller-manager合到了单一的进程中,简化了运维，降低了复杂度
@@ -74,7 +74,7 @@ Great for:
 - 默认命名空间
   - kube-system
   - kube-public
-  - kube-node-release
+  - kube-node-lease
 - k3s 资源文件目录：`/var/lib/rancher/k3s`
 ## 四、安装部署
 ### server 部署
@@ -181,10 +181,10 @@ node1    Ready    <none>                 64s   v1.24.9-rc1+k3s2
 
   
 ### 其他名字空间
-1. catle-system  
-Rancher的"catle-system"命名空间通常用于存储Rancher控制平面组件的资源，如Webhook服务(rancher-webhookpod)和与安全相关的配置，比如TLS证书(cattle-webhook-tls)。这些组件是Rancher管理集群自动化部署和操作的核心部分。
+1. cattle-system  
+Rancher的"cattle-system"命名空间通常用于存储Rancher控制平面组件的资源，如Webhook服务(rancher-webhook pod)和与安全相关的配置，比如TLS证书(cattle-webhook-tls)。这些组件是Rancher管理集群自动化部署和操作的核心部分。
 
-当你提到洲除1oca1集群catt1e-system命名空间中的特定Pod和TLS密钥时，这意味着你可能正在清理测试环境或者准备进行维护操作。以
+当你提到删除local集群cattle-system命名空间中的特定Pod和TLS密钥时，这意味着你可能正在清理测试环境或者准备进行维护操作。
 
 
 ## 六、生产环境参考

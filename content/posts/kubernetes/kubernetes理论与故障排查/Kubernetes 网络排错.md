@@ -18,7 +18,7 @@ summary: "记录 Kubernetes 网络问题的常见场景与排查方向，包括 
 
 <!--more-->
 
-记录一下kuberntes 遇到的问题场景及排查方向
+记录一下kubernetes 遇到的问题场景及排查方向
 ## 一、DNS 解析异常
 5 秒延时
 如果DNS查询经常延时5秒才返回，通常是遇到内核 conntrack 冲突导致的丢包
@@ -36,7 +36,7 @@ summary: "记录 Kubernetes 网络问题的常见场景与排查方向，包括 
 $ ps -ef | grep kubelet
 ... /usr/bin/kubelet --cluster-dns=172.16.14.217 ...
 ```
-或者放置配置文件中
+或者放置在配置文件中
 ```shell
 $ cat /var/lib/kubelet/config.yaml|grep clusterDNS -A 2
 clusterDNS:

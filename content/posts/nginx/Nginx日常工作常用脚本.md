@@ -45,7 +45,7 @@ for((i=0;i<$log_files_num;i++));do
 done
 $nginx_sbin -s reload
 ```
-### 图片放盗链
+### 图片防盗链
 ```
 server {
   listen       80;        

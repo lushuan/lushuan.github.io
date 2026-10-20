@@ -19,7 +19,7 @@ summary: "解析 MySQL 8.0 中 utf8mb4 字符集下 VARCHAR 长度与中文存�
 
 <!--more-->
 
-## 一、🧩 一、VARCHAR 长度与中文存储关系
+## 一、🧩 VARCHAR 长度与中文存储关系
 
 在 MySQL 8.0 中，推荐使用 **`utf8mb4` 字符集**（兼容 Emoji 和所有中日韩文字）。
 
@@ -44,7 +44,7 @@ description VARCHAR(10) CHARACTER SET utf8mb4;
 
 ---
 
-## 二、🧭 二、字段长度与类型选择建议
+## 二、🧭 字段长度与类型选择建议
 
 下面是根据**字段语义**推荐的字段类型与合理长度范围：
 
@@ -71,7 +71,7 @@ description VARCHAR(10) CHARACTER SET utf8mb4;
 
 ---
 
-## 三、🧠 三、字段设计的一般建议
+## 三、🧠 字段设计的一般建议
 
 1. **文本字段（VARCHAR / TEXT）**
 
@@ -82,7 +82,7 @@ description VARCHAR(10) CHARACTER SET utf8mb4;
 2. **时间字段**
 
     * 用 `DATETIME(3)` 表示带毫秒的时间；
-    * 用 `TIMESTAMP(3)` 适合有时区、自动更新场景；
+    * `TIMESTAMP(3)` 适合有时区、自动更新场景；
     * 常用字段：`created_at`、`updated_at`、`deleted_at`。
 
 3. **标识与外键**
@@ -106,7 +106,7 @@ description VARCHAR(10) CHARACTER SET utf8mb4;
 
 ---
 
-## 四、🔧 四、扩展示例：蜜罐信息表（优化版）
+## 四、🔧 扩展示例：蜜罐信息表（优化版）
 
 ```sql
 CREATE TABLE `honeypot_info` (
@@ -127,7 +127,7 @@ CREATE TABLE `honeypot_info` (
 
 ---
 
-## 五、📊 五、总结表（常用字段长度建议）
+## 五、📊 总结表（常用字段长度建议）
 
 | 字段类型           | 推荐长度            | 可存内容示例  |
 | -------------- | --------------- | ------- |

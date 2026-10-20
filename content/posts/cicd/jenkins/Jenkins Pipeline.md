@@ -40,7 +40,7 @@ Pipeline，简单来说，就是一套运行在 Jenkins 上的工作流框架，
 通过对一系列的发布任务建立标准的模板，用户可以利用更多流水线的特性，比如： 
 - 代码化: 流水线是在代码中实现的，通常会存放到源代码控制，使团队具有编辑、审查和更新他们项目的交付流水线的能力。 
 - 耐用性：流水线可以从Jenkins的master节点重启后继续运行。 
-- 可暂停的：流水线可以由人功输入或批准继续执行流水线。 
+- 可暂停的：流水线可以由人工输入或批准继续执行流水线。 
 - 解决复杂发布： 支持复杂的交付流程。例如循环、并行执行。 
 - 可扩展性： 支持扩展DSL和其他插件集成。
 
@@ -57,7 +57,7 @@ Pipeline，简单来说，就是一套运行在 Jenkins 上的工作流框架，
 
 ![jenkins-pipeline-demo](/images/cicd/jenkins-pipeline-demo.png "Jenkins")
 
-一般我们都推荐在 Jenkins 中直接从源代码控制(SCMD)中直接载入 Jenkinsfile Pipeline 这种方法，正常项目中会将 Jenkinsfile 流水线文件放到项目目录下，可以选择`Pipeline script from SCM`
+一般我们都推荐在 Jenkins 中直接从源代码控制(SCM)中直接载入 Jenkinsfile Pipeline 这种方法，正常项目中会将 Jenkinsfile 流水线文件放到项目目录下，可以选择`Pipeline script from SCM`
 ![jenkins-pipeline-scm](/images/cicd/jenkins-pipeline-scm.png "Jenkins")
 
 - [参考项目](https://gitee.com/lu_shuan/spring-mytest)
@@ -196,9 +196,9 @@ pipeline{
 ```
 
 ## 七、流水线基础语法
-以下是简要的对流水线语法进行粗浅的人生，更详细的请登录[官网流水线语法参考](https://www.jenkins.io/zh/doc/book/pipeline/syntax/)进行查看
+以下是简要地对流水线语法进行粗浅的认识，更详细的请登录[官网流水线语法参考](https://www.jenkins.io/zh/doc/book/pipeline/syntax/)进行查看
 
-- 简介pipeline 基础语法，声明式脚步式，节点步骤
+- 简介pipeline 基础语法，声明式脚本式，节点步骤
 
 1. 安装声明式插件 `Pipeline: Declarative`
 2. Jenkinsfile 组成
@@ -206,7 +206,7 @@ pipeline{
 	2. 指定运行选项
 	3. 指定stages 阶段
 	4. 指定构建后操作
-3. Pipeline 的语法分为两种，一种是声明式的，另外一种是脚步式的，声明式编写更加友好，声明式内可以嵌入脚本式
+3. Pipeline 的语法分为两种，一种是声明式的，另外一种是脚本式的，声明式编写更加友好，声明式内可以嵌入脚本式
 
 ### Pipeline定义- post
 - 指定构建后操作
@@ -220,9 +220,9 @@ pipeline{
 ### Pipeline语法- agent
 agent 指定了流水线的执行节点
 参数：
-	- any 在任何可用的节点上执行pipeling
+	- any 在任何可用的节点上执行pipeline
 	- none 没有指定agent 的时候默认
-	- lable 在指定的标签上的节点上运行Pipeline
+	- label 在指定的标签上的节点上运行Pipeline
 	- node 允许额外的选项
 	```
 	两种是一样的
@@ -232,7 +232,7 @@ agent 指定了流水线的执行节点
 ### Pipeline语法- option
 - buildDiscarder:为最近的流水线运行的特定数量保存组件和控制台输出。
 - disableConcurrentBuilds:不允许同时执行流水线。可被用来防止同时访问共享资源等
-- overridelndexTriggers: 允许覆盖分支索引触发器的默认处理。
+- overrideIndexTriggers: 允许覆盖分支索引触发器的默认处理。
 - skipDefaultCheckout: 在agent 指令中,跳过从源代码控制中检出代码的默认情况。
 - skipStagesAfterUnstable:一旦构建状态变得UNSTABLE,跳过该阶段。
 - checkoutToSubdirectory: 在工作空间的子目录中自动地执行源代码控制检出。
@@ -289,7 +289,7 @@ when 指令允许流水线根据给定的条件决定是否应该执行阶段。
 
 语法和在stage 平级
 内置条件
-- branch: 当正在构建的分支与模式给定的分支匹配是，执行这个阶段，这只适用于多分支流水线例如：
+- branch: 当正在构建的分支与模式给定的分支匹配时，执行这个阶段，这只适用于多分支流水线例如：
 ```
 when { branch 'master'}
 ```
@@ -306,7 +306,7 @@ anyof
 when { anyof {branch 'master';branch 'staging'}}
 ```
 ### Pipeline语法- parallel 并行
-声明式流水线的阶段可以在他们内部声明多隔嵌套阶段, 它们将并行执行。
+声明式流水线的阶段可以在他们内部声明多个嵌套阶段, 它们将并行执行。
 
 另外, 通过添加 failFast true 到包含parallel的 stage中， 当其中一个进程失败时，可以强制所有的 parallel 阶段都被终止。
 

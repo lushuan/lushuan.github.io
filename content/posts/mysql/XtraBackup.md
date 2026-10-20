@@ -21,7 +21,7 @@ Percona XtraBackup 是主流的 MySQL 在线热备份工具，支持非阻塞备
 
 ## 一、XtraDB Backup（Percona XtraBackup）介绍
 
-MySQL冷备、mysqldump、MySQL热拷贝都无法实现对数据库进行增量备份。在实际生产环境中增量备份是非常实用的，如果数据大于50G或100G，存储空间足够的情况下，可以每天进行完整备份，如果每天产生的数据量较大，需要定制数据备份策略。例如每周实用完整备份，周一到周六实用增量备份。而Percona-Xtrabackup就是为了实现增量备份而出现的一款主流备份工具，xtrabakackup有2个工具，分别是xtrabakup、innobakupe。
+MySQL冷备、mysqldump、MySQL热拷贝都无法实现对数据库的增量备份。在实际生产环境中增量备份是非常实用的，如果数据大于50G或100G，存储空间足够的情况下，可以每天进行完整备份，如果每天产生的数据量较大，需要定制数据备份策略。例如每周使用完整备份，周一到周六使用增量备份。而Percona-Xtrabackup就是为了实现增量备份而出现的一款主流备份工具，xtrabackup有2个工具，分别是xtrabackup、innobackupex。
 
 **XtraBackup** 是由 Percona 开发的开源工具，专门用于 MySQL 及兼容数据库（如 MariaDB、Percona Server）的**在线热备份**。它支持 InnoDB/XtraDB 存储引擎的高效备份，具有以下核心特性：
 
@@ -34,7 +34,7 @@ MySQL冷备、mysqldump、MySQL热拷贝都无法实现对数据库进行增量�
 
 
 ### XtraBackup 对备份 MySQL 数据表类型的支持
-众所周知，Xtrabackup是一个对InnoDB做数据备份的工具，支持在线热备份（备份时不影响数据读写），是商业备份工具InnoDB Hotbackup的一个很好的替代品。但是在公司生产环境常用的版本还是MySQL v5.7 及之前的版本，也有一些业务升级到了MySQL 8.0版本，不同的业务使用的表类型不同，在使用Xtrabackup我们要了解它的适用范围以及会有哪些影响。
+众所周知，Xtrabackup是一个对InnoDB做数据备份的工具，支持在线热备份（备份时不影响数据读写），是商业备份工具InnoDB Hotbackup的一个很好的替代品。但是在公司生产环境常用的版本还是MySQL v5.7 及之前的版本，也有一些业务升级到了MySQL 8.0版本，不同的业务使用的表类型不同，在使用Xtrabackup时我们要了解它的适用范围以及会有哪些影响。
 
 在 **Percona XtraBackup** 的历史版本中，**2.4 版本** 是最后一个支持同时备份 **InnoDB** 和 **MyISAM** 表的版本。  
 
@@ -67,7 +67,7 @@ xtrabackup工具文件组成:
  
 xtrabackup 是用来备份 InnoDB 表的，不能备份非InnoDB 表，和 MySQLServer 没有交互
 
-innobackupex 脚本用来备份非InnoDB 表，同时会调用 xtrabackup 命令来备份 InnoDB 表，还会和 MySQLServer 发送命令进行交互，如加全局读锁(FTWRL)、获取位点(SHOW SLAVESTATUS)等。即innobackupex是在 xtrabackup 之上做了一层封装实现的
+innobackupex 脚本用来备份非InnoDB 表，同时会调用 xtrabackup 命令来备份 InnoDB 表，还会向 MySQLServer 发送命令进行交互，如加全局读锁(FTWRL)、获取位点(SHOW SLAVESTATUS)等。即innobackupex是在 xtrabackup 之上做了一层封装实现的
 
 **xtrabackup的新版变化**
 
@@ -266,7 +266,7 @@ xtrabackup --prepare --apply-log-only --target-dir=/path/to/full_backup
 ```
 - --apply-log-only阻止回滚未完成的事务，它仅执行redo日志的应用而不执行undo操作。这意味着事务不会被回滚。
 
-**适用场景**：当计划应用增量备份（Incremental Backup）到全量备份时，需要先使用这个命令来准备全量备份。这样做是为了确保后续的增量备份可以正确地应用到基础备份上。 也就是说你的恢复策略包括先做一次全量备份，然后在此基础上应用一个或多个增量备份，则首先需要使用第一个命令（带--apply-log-only选项）准备全量备份，之后按照顺序逐一准备并应用每个增量备份（同样使用--apply-log-only直到最后一个增量备份）。最后，使用（不带--apply-log-only选项）来完成准备过程，使得整个备份集（包括全量和所有增量部分）可以用于恢复。
+**适用场景**：当计划应用增量备份（Incremental Backup）到全量备份时，需要先使用这个命令来准备全量备份。这样做是为了确保后续的增量备份可以正确地应用到基础备份上。 也就是说你的恢复策略包括先做一次全量备份，然后在此基础上应用一个或多个增量备份，则首先需要使用第一个命令（带--apply-log-only选项）准备全量备份，之后按照顺序逐一准备并应用每个增量备份（同样使用--apply-log-only直到最后一个增量备份）。最后，使用不带--apply-log-only选项的命令来完成准备过程，使得整个备份集（包括全量和所有增量部分）可以用于恢复。
 
 #### 2. 还原合并增量备份
 合并增量备份到全量备份：
@@ -421,7 +421,7 @@ xtrabackup --prepare \
 #### 补充 安装 qpress 解压缩
 qpress 便携式高速文件归档器
 
-当全量备份进行压缩后，在还原时解压需要解压时需要`qpress`命令
+当全量备份进行压缩后，在还原时解压需要`qpress`命令
 ```shell
 $ wget -d --user-agent="Mozilla/5.0 (Windows NT x.y; rv:10.0) Gecko/20100101 Firefox/10.0" https://docs-tencentdb-1256569818.cos.ap-guangzhou.myqcloud.com/qpress-11-linux-x64.tar
 

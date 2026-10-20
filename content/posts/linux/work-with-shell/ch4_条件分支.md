@@ -74,8 +74,8 @@ case $name in
       echo "other name"
   ;;
 esac
+```
 
-```shell
 注意：
 - []前面要有空格，它里面是逻辑表达式
 - if elif后面要跟then，然后才是要执行的语句

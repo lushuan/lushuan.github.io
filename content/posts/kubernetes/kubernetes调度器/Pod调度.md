@@ -21,7 +21,7 @@ summary: "详细讲解 Kubernetes Pod 调度的各种控制方式，包括 nodeS
 
 # Pod调度
 
-一般情况下我们部署的 Pod 是通过集群的自动调度策略来选择节点的，默认情况下调度器考虑的是资源足够，并且负载尽量平均，但是有的时候我们需要能够更加细粒度的去控制 Pod 的调度，比如我们希望一些机器学习的应用只跑在有 GPU 的节点上；但是有的时候我们的服务之间交流比较频繁，又希望能够将这服务的 Pod 都调度到同一个的节点上。这就需要使用一些调度方式来控制 Pod 的调度了，主要有两个概念：亲和性和反亲和性，亲和性又分成节点亲和性(nodeAffinity)和 Pod 亲和性(podAffinity)。
+一般情况下我们部署的 Pod 是通过集群的自动调度策略来选择节点的，默认情况下调度器考虑的是资源足够，并且负载尽量平均，但是有的时候我们需要能够更加细粒度的去控制 Pod 的调度，比如我们希望一些机器学习的应用只跑在有 GPU 的节点上；但是有的时候我们的服务之间交流比较频繁，又希望能够将这些服务的 Pod 都调度到同一个节点上。这就需要使用一些调度方式来控制 Pod 的调度了，主要有两个概念：亲和性和反亲和性，亲和性又分成节点亲和性(nodeAffinity)和 Pod 亲和性(podAffinity)。
 
 
 ## 一、nodeSelector
@@ -40,7 +40,7 @@ node2     Ready    <none>                 82d   v1.22.2   beta.kubernetes.io/arc
 $ kubectl label nodes node2 com=schedulernode
 node/node2 labeled
 ```
-我们可以通过上面的 --show-labels 参数可以查看上述标签是否生效。当节点被打上了相关标签后，在调度的时候就可以使用这些标签了，只需要在 Pod 的 spec 字段中添加 nodeSelector 字段，里面是我们需要被调度的节点的 label 标签，比如，下面的 Pod 我们要强制调度到 node2 这个节点上去，我们就可以使用 nodeSelector 来表示了：
+我们可以通过上面的 --show-labels 参数查看上述标签是否生效。当节点被打上了相关标签后，在调度的时候就可以使用这些标签了，只需要在 Pod 的 spec 字段中添加 nodeSelector 字段，里面是我们需要被调度的节点的 label 标签，比如，下面的 Pod 我们要强制调度到 node2 这个节点上去，我们就可以使用 nodeSelector 来表示了：
 ```yaml
 # node-selector-demo.yaml
 apiVersion: v1
@@ -85,7 +85,7 @@ Events:
 
 我们可以看到 Events 下面的信息，我们的 Pod 通过默认的 default-scheduler 调度器被绑定到了 node2 节点。不过需要注意的是nodeSelector 属于强制性的，如果我们的目标节点没有可用的资源，我们的 Pod 就会一直处于 Pending 状态。
 
-通过上面的例子我们可以感受到 nodeSelector 的方式比较直观，但是还够灵活，控制粒度偏大，接下来我们再和大家了解下更加灵活的方式：节点亲和性(nodeAffinity)。
+通过上面的例子我们可以感受到 nodeSelector 的方式比较直观，但是还不够灵活，控制粒度偏大，接下来我们再和大家了解下更加灵活的方式：节点亲和性(nodeAffinity)。
 
 ## 二、亲和性和反亲和性调度
 前面我们了解了 kubernetes 调度器的调度流程，我们知道默认的调度器在使用的时候，经过了 predicates 和 priorities 两个阶段，但是在实际的生产环境中，往往我们需要根据自己的一些实际需求来控制 Pod 的调度，这就需要用到 nodeAffinity(节点亲和性)、podAffinity(pod 亲和性) 以及 podAntiAffinity(pod 反亲和性)。
@@ -144,7 +144,7 @@ spec:
 ```
 上面这个 Pod 首先是要求不能运行在 master1 这个节点上，如果有个节点满足 com=schedulernode 的话就优先调度到这个节点上。
 
-由于上面 node02 节点我们打上了 com=schedulernode 这样的 label 标签，所以按要求会优先调度到这个节点来的，现在我们来创建这个 Pod，然后查看具体的调度情况是否满足我们的要求。
+由于上面 node2 节点我们打上了 com=schedulernode 这样的 label 标签，所以按要求会优先调度到这个节点来的，现在我们来创建这个 Pod，然后查看具体的调度情况是否满足我们的要求。
 
 ```shell
 $ kubectl apply -f node-affinty-demo.yaml
@@ -258,7 +258,7 @@ pod-affinity-76c56567c-792n4   1/1     Running   0          2m59s   10.244.2.254
 pod-affinity-76c56567c-8s2pd   1/1     Running   0          3m53s   10.244.4.18    node1   <none>           <none>
 pod-affinity-76c56567c-hx7ck   1/1     Running   0          2m52s   10.244.3.23    node2   <none>           <none>
 ```
-可以看到现在是分别运行在2个节点下面的，因为他们都属于 beta.kubernetes.io/os 这个拓扑域。
+可以看到现在是分别运行在2个节点下面的，因为它们都属于 beta.kubernetes.io/os 这个拓扑域。
 
 ## 五、Pod反亲和性
 Pod 反亲和性（podAntiAffinity）则是反着来的，比如一个节点上运行了某个 Pod，那么我们的模板 Pod 则不希望被调度到这个节点上面去了。我们把上面的 podAffinity 直接改成 podAntiAffinity：
@@ -331,7 +331,7 @@ Unschedulable:      false
 我们可以使用上面的命令查看 master 节点的信息，其中有一条关于 Taints 的信息：node-role.kubernetes.io/master:NoSchedule，就表示master 节点打了一个污点的标记，其中影响的参数是 NoSchedule，表示 Pod 不会被调度到标记为 taints 的节点，除了 NoSchedule 外，还有另外两个选项：
 
 - PreferNoSchedule：NoSchedule 的软策略版本，表示尽量不调度到污点节点上去
-- NoExecute：该选项意味着一旦 Taint 生效，如该节点内正在运行的 Pod 没有对应容忍（Tolerate）设置，则会直接被逐出污点 
+- NoExecute：该选项意味着一旦 Taint 生效，如该节点内正在运行的 Pod 没有对应容忍（Tolerate）设置，则会直接被驱逐 
 
 相比较NoExecute策略，NoSchedule，只会影响新的 Pod 调度，不会将正在运行的Pod进行驱逐
 
@@ -340,7 +340,7 @@ taint 标记节点的命令如下：
 $ kubectl taint nodes node2 test=node2:NoSchedule
 node "node2" tainted
 ```
-上面的命名将 node2 节点标记为了污点，影响策略是 NoSchedule，只会影响新的 Pod 调度，如果仍然希望某个 Pod 调度到 taint 节点上，则必须在 Spec 中做出 Toleration 定义，才能调度到该节点，比如现在我们想要将一个 Pod 调度到 master 节点：
+上面的命令将 node2 节点标记为了污点，影响策略是 NoSchedule，只会影响新的 Pod 调度，如果仍然希望某个 Pod 调度到 taint 节点上，则必须在 Spec 中做出 Toleration 定义，才能调度到该节点，比如现在我们想要将一个 Pod 调度到 master 节点：
 ```yaml
 # taint-demo.yaml
 apiVersion: apps/v1
@@ -370,7 +370,7 @@ spec:
         operator: "Exists"
         effect: "NoSchedule"
 ```
-由于 master 节点被标记为了污点，所以我们这里要想 Pod 能够调度到改节点去，就需要增加容忍的声明：
+由于 master 节点被标记为了污点，所以我们这里要想 Pod 能够调度到该节点去，就需要增加容忍的声明：
 ```yaml
 tolerations:
 - key: "node-role.kubernetes.io/master"
@@ -398,7 +398,7 @@ taint-845d8bb4fb-zb78x                    1/1       Running            0        
 - 如果不指定 operator 属性，则默认值为 Equal
 另外，还有两个特殊值：
 
-- 空的 key 如果再配合 Exists 就能匹配所有的 key 与 value，也就是是能容忍所有节点的所有 Taints
+- 空的 key 如果再配合 Exists 就能匹配所有的 key 与 value，也就是能容忍所有节点的所有 Taints
 - 空的 effect 匹配所有的 effect
 最后如果我们要取消节点的污点标记，可以使用下面的命令
 ```shell

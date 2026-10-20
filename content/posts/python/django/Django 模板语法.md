@@ -20,7 +20,7 @@ summary: "基于 Django 3.2 详解模板引擎 DTL 与模板语法，涵盖模�
 <!--more-->
 
 ## 一、Django 模板语法
-模板引擎是一种可以让开发者把服务端数据填充到html网页中完成渲染效果的技术。它实现了把前端代码和服务端代码分离的作用，让项目中的业务逻辑代码和数据表现代码分离，让前端开发者和服务端开发者可以更好的完成协同开发。
+模板引擎是一种可以让开发者把服务端数据填充到html网页中完成渲染效果的技术。它实现了把前端代码和服务端代码分离的作用，让项目中的业务逻辑代码和数据表现代码分离，让前端开发者和服务端开发者可以更好地完成协同开发。
 
 {{< admonition info >}}
 静态网页：页面上的数据都是写死的，万年不变
@@ -42,7 +42,7 @@ Django框架中内置了web开发领域非常出名的一个DjangoTemplate模板
 
 
 
-配置模板目录：在当前项目根目录下创建了模板目录templates. 然后在settings.py, 模板相关配置，找到TEMPLATES配置项，填写DIRS设置模板目录。
+配置模板目录：在当前项目根目录下创建了模板目录templates. 然后在settings.py的模板相关配置中，找到TEMPLATES配置项，填写DIRS设置模板目录。
 
 ```Python
 # 模板引擎配置
@@ -67,7 +67,7 @@ TEMPLATES = [
 
 ### 简单案例
 
-为了方便接下里的演示内容，我这里创建创建一个新的子应用myapp
+为了方便接下来的演示内容，我这里创建一个新的子应用myapp
 ```
 python manage.py startapp myapp
 ```
@@ -218,7 +218,7 @@ def index(request):
 | last            | 获取列表/元组的最后一个成员              | {{liast \| last}}               |
 | first           | 获取列表/元组的第一个成员                | {{list\|first}}                 |
 | length          | 获取数据的长度                           | {{list \| length}}              |
-| defualt         | 当变量没有值的情况下, 系统输出默认值,    | {{str\|default=“默认值”}}       |
+| default         | 当变量没有值的情况下, 系统输出默认值,    | {{str\|default=“默认值”}}       |
 | safe            | 让系统不要对内容中的html代码进行实体转义 | {{htmlcontent\| safe}}          |
 | upper           | 字母转换成大写                           | {{str \| upper}}                |
 | lower           | 字母转换成小写                           | {{str \| lower}}                |
@@ -555,7 +555,7 @@ urlpatterns = [
 {{< admonition tip >}}
 - 如果你在模版中使用 {{< raw >}}{% extends %}{{< /raw >}} 标签，它必须是模版中的第一个标签。其他的任何情况下，模版继承都将无法工作。
 - 在base模版中设置越多的 {{< raw >}}{% block %}{{< /raw >}} 标签越好。请记住，子模版不必定义全部父模版中的blocks，所以，你可以在大多数blocks中填充合理的默认内容，然后，只定义你需要的那一个。多一点钩子总比少一点好。
-- 为了更好的可读性，你也可以给你的 {{< raw >}}{% endblock %}{{< /raw >}} 标签一个 名字 。例如：{{< raw >}}{% block content `}...{% endblock content %}{{< /raw >}},在大型模版中，这个方法帮你清楚的看到哪一个　 {{< raw >}}{% block %}{{< /raw >}} 标签被关闭了。
+- 为了更好的可读性，你也可以给你的 {{< raw >}}{% endblock %}{{< /raw >}} 标签一个 名字 。例如：{{< raw >}}{% block content `}...{% endblock content %}{{< /raw >}},在大型模版中，这个方法帮你清楚地看到哪一个　 {{< raw >}}{% block %}{{< /raw >}} 标签被关闭了。
 - 不能在一个模版中定义多个相同名字的 block 标签。
 {{< /admonition >}}
 

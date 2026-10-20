@@ -93,7 +93,7 @@ test-cmdb
     {{- .Values.global.repository }}/{{ .Values.image.repository }}:{{ index .Values "name-template" "image" "tag" | default .Chart.AppVersion }}  
     {{- end }}
     ```
-    其中，`name-template`为实际的镜像名称，该镜像信息配置在`$HELM_PATH/charts/values.yaml`中，如果该文件中没有匹配的信息，当在部署时会提示异常。
+    其中，`name-template`为实际的镜像名称，该镜像信息配置在`$HELM_PATH/charts/values.yaml`中，如果该文件中没有匹配的信息，在部署时会提示异常。
     
 * 环境变量
     

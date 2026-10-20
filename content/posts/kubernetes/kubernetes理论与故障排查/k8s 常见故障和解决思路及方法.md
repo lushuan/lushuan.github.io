@@ -83,7 +83,7 @@ error: code = Unknown desc = failed to set up sandbox container
 cni failed to set up pod “tomcat" network: failed to set bridge addr: "cni0" already has an IP address different from
 10.244.1.4/24
 ```
-总结：pod 异常需要通过 describe 查看具体报错信息，根据具体报错信息再进行处理，以上是遇到同类问题的一种排查思路，问题各种各样，排查问题的思路确是可以有迹可循的
+总结：pod 异常需要通过 describe 查看具体报错信息，根据具体报错信息再进行处理，以上是遇到同类问题的一种排查思路，问题各种各样，排查问题的思路却是可以有迹可循的
 
 ### Pod状态异常排查问题集-pending状态排查思路
 Pending是挂起状态：表示创建的Pod找不到可以运行它的物理节点，不能调度到相应的节点上运行，那么这种情况如何去排查呢？可以从两个层面分析问题：
@@ -97,7 +97,7 @@ Pending是挂起状态：表示创建的Pod找不到可以运行它的物理节�
 - 这个看到的是控制节点的污点，表示不允许Pod调度（如果Pod定义容忍度，则可以实现调度）
 
 **1. Pod 本身分析 **
-1. 在定义pod时，如果指定了nodeName是不存在的，那也会调度失败
+1. 在定义pod时，如果指定的nodeName是不存在的，那也会调度失败
 2. 在定义Pod时，如果定义的资源请求比较大，导致物理节点资源不够也是不会调度的
 
 ### Pod状态异常排查问题集- ImagePullBackOff状态
@@ -154,11 +154,11 @@ Unknown是pod状态不能通过kubelet汇报给apiserver，这很有可能是主
 **为什么需要探针？**
 
 如果没有探针，k8s无法知道应用是否还活着，只要pod还在运行，k8s则认为容器是健康的。但实际上，pod虽然运行了，但里面容器中的应用可能还没提供服务，那就需要做健康检查，健康检查就需要探针，常见的探针有如下几种：
-1. httGet
+1. httpGet
 对容器的ip地址(指定的端口和路径)执行http get请求
 如果探测器收到响应，并且响应码是2xx,则认为探测成功。如果服务器没有响应或者返回错误响
 应码则说明探测失败，容器将重启。
-2. tcpSock  
+2. tcpSocket  
 探针与容器指定端口建立tcp连接，如果连接建立则探测成功，否则探测失败容器重启。
 3. exec  
 在容器内执行任意命令，并检查命令退出状态码，如果状态码为0，则探测成功，否则探测失败
@@ -210,16 +210,16 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 
 
-## 二、K8S 之统信异常——【网络故障】
+## 二、K8S 之通信异常——【网络故障】
 ### 网络故障原因
-Kubernetes中的网络是非常重要的，整个k8s集群的通信调度都是通过网络插件实现的，kubernetes之上的网路通信主要有如下几种：
+Kubernetes中的网络是非常重要的，整个k8s集群的通信调度都是通过网络插件实现的，kubernetes之上的网络通信主要有如下几种：
 
 1. 容器间的通信: 同一个pod内的多个容器间的通信，lo
 2. pod 通信： 从一个pod Ip到另一个pod Ip
 3. Pod与service通信： pod ip 到 cluster ip
 4. 外部通信： Service与集群外部客户端的通信
 
-通信需要依赖网络插件，如calico、flannel、canel等，通信过程最常见的故障如下
+通信需要依赖网络插件，如calico、flannel、canal等，通信过程最常见的故障如下
 
 1. Pod 自身网络故障
 2. Pod 间通信故障
@@ -260,7 +260,7 @@ systemctl status kubelet
 调度方式：
 
 1、当我们发送请求创建Pod，调度器就会把pod调度到合适的物理节点，大致分为以下过程：  
-Scheduler根据预选策略和优选函数，选额合适的noed节点调度  
+Scheduler根据预选策略和优选函数，选出合适的node节点调度  
 2、可以通过定义nodeName和nodeSelector进行调度  
 3、可以通过节点亲和性进行调度  
 
@@ -292,10 +292,10 @@ Pod超过节点资源限制分两种情况：
 
 ### K8S之内部异常 【节点故障】 排查思路总结
 节点状态查询：kubectl get nodes  
-常见异常现象：1、节点状态NotReady 2、调度到该节点的pod显示Unkonwn、Pending等  
+常见异常现象：1、节点状态NotReady 2、调度到该节点的pod显示Unknown、Pending等  
 常见故障：kubelet进程异常、未安装cni网络插件、docker异常、磁盘空间不足、内存不足、cpu不足  
 
-排查排查：
+排查：
 - `kubectl describe nodes 查看node节点信息`
 - `kubectl describe pods <pod 名字> 查看pod节点信息`
 - `systemctl status 查看kubelet状态`
@@ -366,7 +366,7 @@ kube-proxy 会为我们暴露的service追加iptables规则，具体流程如下
 
 经过上面的分析，service和pod正确关联，pod也处于运行状态，那请求service还是访问不到pod，90%就是kube-proxy引起的。查看kube-proxy是否在机器上正常运行。
 
-kube-proxy如果在节点上运行，下一步，确认它有没有出现其他异常，比如连接主节点失败。要做到这一点，必须查看日志：如 /var/log/messages或者/var/log/kube-proxy.log(二进制安装的时候可以指定的)，也使用 journalctl 访问日志、kube-proxy如果是在k8s中以pod形式运行的，可以通过kubectl logs <pod name> 查看日志。 根据日志报错信息再进行进一步的排查
+kube-proxy如果在节点上运行，下一步，确认它有没有出现其他异常，比如连接主节点失败。要做到这一点，必须查看日志：如 /var/log/messages或者/var/log/kube-proxy.log(二进制安装的时候可以指定的)，也可以使用 journalctl 访问日志、kube-proxy如果是在k8s中以pod形式运行的，可以通过kubectl logs <pod name> 查看日志。 根据日志报错信息再进行进一步的排查
 
 
 ### 故障排查：Pod删除失败

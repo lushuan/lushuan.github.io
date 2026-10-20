@@ -23,7 +23,7 @@ summary: "记录一次 kube-apiserver 与 etcd 连接的随机端口占用业务
 部署后十天客户直接将主节点的内存进行了扩容，导致现场的应用服务无法访问。
 
 ## 二、现象
-打开访问应用门户，提示 nginx 网关访问报错
+访问应用门户，提示 nginx 网关访问报错
 `503 Service Temporarily Unavailable`
 
 ## 三、定位

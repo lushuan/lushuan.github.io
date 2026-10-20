@@ -30,7 +30,7 @@ summary: "对 Kubernetes 常用命令进行分类整理，涵盖集群管理、P
   - kubectl get pod
   - kubectl get service
   - kubectl cordon 命令：用于标记某个节点不可调度
-  - kubectl uncordon 命令：用于标签节点可以调度
+  - kubectl uncordon 命令：用于标记节点可以调度
   - kubectl drain 命令： 用于在维护期间排除节点。
   - kubectl taint 命令：用于给某个Node节点设置污点 
 - Pod 管理
@@ -89,7 +89,7 @@ summary: "对 Kubernetes 常用命令进行分类整理，涵盖集群管理、P
 
 
 ## 一、命令说明
-### 1. kubectl expose 和 kubectl port-forwad 的区别
+### 1. kubectl expose 和 kubectl port-forward 的区别
 kubectl expose 和 kubectl port-forward 是两个不同的命令，它们在 Kubernetes 中有不同的作用和用法。
 
 kubectl expose 命令用于创建一个新的 Service 对象来暴露 Deployment、ReplicationController 或 ReplicaSet 等其他资源。它会为指定的资源创建一个新的 ClusterIP 类型的 Service，在集群内部通过 Service IP 和端口号来访问暴露的资源。这个 Service 对象可以是临时的，也可以是永久的，它根据指定的参数设置来控制其行为。
@@ -140,7 +140,7 @@ kubectl attach -it my-pod
 ### 5. kubectl patch和kubectl replace的区别
 kubectl patch和kubectl replace是用于部分更新和替换更新Kubernetes资源的命令，但它们在更新方式和行为上有一些区别。
 
-kubectl patch命令用于部分更新Kubernetes资源的特定字段。它可以通过提供一个JSON或YAML文件、一个JSON或YAML字符串，或者使用特定的操作类型（如add、remove、replace等）来更新资源的字段。例如，可以使用以下命令将名为my-deployment的Deployment资源的labels字段添加一个新的标签：
+kubectl patch命令用于部分更新Kubernetes资源的特定字段。它可以通过提供一个JSON或YAML文件、一个JSON或YAML字符串，或者使用特定的操作类型（如add、remove、replace等）来更新资源的字段。例如，可以使用以下命令为名为my-deployment的Deployment资源的labels字段添加一个新的标签：
 
 ```shell
 kubectl patch deployment/my-deployment -p '{"spec":{"template":{"metadata":{"labels":{"new-label":"value"}}}}}'

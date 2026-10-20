@@ -32,7 +32,7 @@ Events:
   Warning  FailedCreatePodSandBox  2m (x4307 over 16h)  kubelet, 10.179.80.31  (combined from similar events): Failed create pod sandbox: rpc error: code = Unknown desc = failed to create a sandbox for pod "apigateway-6dc48bf8b6-l8xrw": Error response from daemon: mkdir /var/lib/docker/aufs/mnt/1f09d6c1c9f24e8daaea5bf33a4230de7dbc758e3b22785e8ee21e3e3d921214-init: no space left on device
 ```
 ### limit 设置太小或者单位不对
-如果 limit 设置过小以至于不足以成功运行 Sandbox 也会造成这种状态，常见的是因为 memory limit 单位设置不对造成的 limit 过小，比如误将 memory 的 limit 单位像 request 一样设置为小 m，这个单位在 memory 不适用，会被 k8s 识别成 byte， 应该用 Mi 或 M。，
+如果 limit 设置过小以至于不足以成功运行 Sandbox 也会造成这种状态，常见的是因为 memory limit 单位设置不对造成的 limit 过小，比如误将 memory 的 limit 单位像 request 一样设置为小 m，这个单位在 memory 不适用，会被 k8s 识别成 byte， 应该用 Mi 或 M。
 
 举个例子: 如果 memory limit 设为 1024m 表示限制 1.024 Byte，这么小的内存， pause 容器一起来就会被 cgroup-oom kill 掉，导致 pod 状态一直处于 ContainerCreating。
 
@@ -67,9 +67,9 @@ to start sandbox container for pod ... Error response from daemon: OCI runtime c
 
 ## 三、Pod 一直处于 ImagePullBackOff 状态
 ### http 类型 registry，地址未加入到 insecure-registry
-dockerd 默认从 https 类型的 registry 拉取镜像，如果使用 https 类型的 registry，则必须将它添加到 insecure-registry 参数中，然后重启或 reload dockerd 生效。
+dockerd 默认从 https 类型的 registry 拉取镜像，如果使用 http 类型的 registry，则必须将它添加到 insecure-registry 参数中，然后重启或 reload dockerd 生效。
 
-### https 自签发类型 resitry，没有给节点添加 ca 证书
+### https 自签发类型 registry，没有给节点添加 ca 证书
 如果 registry 是 https 类型，但证书是自签发的，dockerd 会校验 registry 的证书，校验成功才能正常使用镜像仓库，
 要想校验成功就需要将 registry 的 ca 证书放置到 /etc/docker/certs.d/\<registry:port>/ca.crt 位置。
 
@@ -80,7 +80,7 @@ dockerd 默认从 https 类型的 registry 拉取镜像，如果使用 https 类
 如果 push 的镜像文件损坏了，下载下来也用不了，需要重新 push 镜像文件
 
 ### 镜像拉取超时
-如果节点上新起的 Pod 太多就会有许多可能会造成容器镜像下载排队，如果前面有许多大镜像需要下载很长时间，后面排队的 Pod 就会报拉取超时。
+如果节点上新起的 Pod 太多就可能造成容器镜像下载排队，如果前面有许多大镜像需要下载很长时间，后面排队的 Pod 就会报拉取超时。
 
 ### 镜像不存在
 kubelet 日志：
@@ -106,7 +106,7 @@ Events:
 - CPU 负载过高
 - 剩余可以被分配的内存不够
 
-如果判断某个 Node 资源是否足够？ 通过 kubectl describe node <node-name> 查看 node 资源情况，关注以下信息：
+如何判断某个 Node 资源是否足够？ 通过 kubectl describe node <node-name> 查看 node 资源情况，关注以下信息：
 
 - Allocatable: 表示此节点能够申请的资源总和
 - Allocated resources: 表示此节点已分配的资源 (Allocatable 减去节点上所有 Pod 总的 Request)
@@ -144,7 +144,7 @@ https://kubernetes.io/zh-cn/docs/concepts/scheduling-eviction/assign-pod-node/
 - podAntiAffinity: Pod 反亲和性，用于避免将某一类 Pod 调度到同一个地方避免单点故障，比如将集群 DNS 服务的 Pod 副本都调度到不同节点，避免一个节点挂了造成整个集群 DNS 解析失败，使得业务中断。
 
 ### Node 存在 Pod 没有容忍的污点
-如果节点上存在污点 (Taints)，而 Pod 没有响应的容忍 (Tolerations)，Pod 也将不会调度上去。通过 describe node 可以看下 Node 有哪些 Taints:
+如果节点上存在污点 (Taints)，而 Pod 没有相应的容忍 (Tolerations)，Pod 也将不会调度上去。通过 describe node 可以看下 Node 有哪些 Taints:
 ```shell
 $ kubectl describe nodes host1
 ...
@@ -183,7 +183,7 @@ NetworkUnavailable     True        node.kubernetes.io/network-unavailable
 - NetworkUnavailable 为 True 表示节点上的网络没有正确配置，无法跟其它 Pod 正常通信
 
 ### kube-scheduler 没有正常运行
-检查 maser 上的 kube-scheduler 是否运行正常，异常的话可以尝试重启临时恢复。
+检查 master 上的 kube-scheduler 是否运行正常，异常的话可以尝试重启临时恢复。
 ```shell
 $ sudo kubectl -n kube-system get pod|grep kube-scheduler
 kube-scheduler-10.10.192.220              1/1     Running   183 (40d ago)   424d
@@ -223,7 +223,7 @@ Warning FailedSync 3m (x408 over 1h) kubelet, 10.179.80.31 error determining sta
 
 处置建议：
 - 升级到docker 18. 该版本使用了新的 containerd，针对很多bug进行了修复。
-- 如果出现terminating状态的话，可以提供让容器专家进行排查，不建议直接强行删除，会可能导致一些业务上问题。
+- 如果出现terminating状态的话，可以让容器专家进行排查，不建议直接强行删除，会可能导致一些业务上问题。
 
 ### 存在 Finalizers
 k8s 资源的 metadata 里如果存在 finalizers，那么该资源一般是由某程序创建的，并且在其创建的资源的 metadata 里的 finalizers 加了一个它的标识，这意味着这个资源被删除时需要由创建资源的程序来做删除前的清理，清理完了它需要将标识从该资源的 finalizers 中移除，然后才会最终彻底删除资源。比如 Rancher 创建的一些资源就会写入 finalizers 标识。
@@ -231,7 +231,7 @@ k8s 资源的 metadata 里如果存在 finalizers，那么该资源一般是由�
 处理建议：kubectl edit 手动编辑资源定义，删掉 finalizers，这时再看下资源，就会发现已经删掉了。通过prometheus-operator 创建prometheus时，最后无法删除namespace 也是此原因。
 
 ## 六、Pod 一直处于 Unknown 状态
-通常是节点失联，没有上报状态给 apiserver，到达阀值后 controller-manager 认为节点失联并将其状态置为 Unknown。
+通常是节点失联，没有上报状态给 apiserver，到达阈值后 controller-manager 认为节点失联并将其状态置为 Unknown。
 
 可能原因:
 
@@ -245,7 +245,7 @@ k8s 资源的 metadata 里如果存在 finalizers，那么该资源一般是由�
 - pod 如果就绪检查失败会将此 pod ip 从 service 中摘除，通过 service 访问，流量将不会被转发给就绪检查失败的 pod
 - pod 如果存活检查失败，kubelet 将会杀死容器并尝试重启
 
-健康检查失败的可能原因有多种，除了业务程序BUG导致不能响应健康检查导致 unhealthy，还能有有其它原因，下面我们来逐个排查。
+健康检查失败的可能原因有多种，除了业务程序BUG导致不能响应健康检查导致 unhealthy，还可能有其它原因，下面我们来逐个排查。
 
 ### 健康检查配置不合理
 initialDelaySeconds 太短，容器启动慢，导致容器还没完全启动就开始探测，如果 successThreshold 是默认值 1，检查失败一次就会被 kill，然后 pod 一直这样被 kill 重启。
@@ -270,7 +270,7 @@ Pod 如果处于 CrashLoopBackOff 状态说明之前是启动了，只是又异�
 如果是容器进程主动退出，退出状态码一般在 0-128 之间，除了可能是业务程序 BUG，还有其它许多可能原因
 
 ### 系统OOM
-如果发生系统 OOM，可以看到 Pod 中容器退出状态码是 137，表示被 SIGKILL 信号杀死，同时内核会报错: Out of memory: Kill process ...。大概率是节点上部署了其它非 K8S 管理的进程消耗了比较多的内存，或者 kubelet 的 --kube-reserved 和 --system-reserved 配的比较小，没有预留足够的空间给其它非容器进程，节点上所有 Pod 的实际内存占用总量不会超过 /sys/fs/cgroup/memory/kubepods 这里 cgroup 的限制，这个限制等于 capacity - "kube-reserved" - "system-reserved"，如果预留空间设置合理，节点上其它非容器进程（kubelet, dockerd, kube-proxy, sshd 等) 内存占用没有超过 kubelet 配置的预留空间是不会发生系统 OOM 的，可以根据实际需求做合理的调整。
+如果发生系统 OOM，可以看到 Pod 中容器退出状态码是 137，表示被 SIGKILL 信号杀死，同时内核会报错: Out of memory: Kill process ...。大概率是节点上部署了其它非 K8S 管理的进程消耗了比较多的内存，或者 kubelet 的 --kube-reserved 和 --system-reserved 配得比较小，没有预留足够的空间给其它非容器进程，节点上所有 Pod 的实际内存占用总量不会超过 /sys/fs/cgroup/memory/kubepods 这里 cgroup 的限制，这个限制等于 capacity - "kube-reserved" - "system-reserved"，如果预留空间设置合理，节点上其它非容器进程（kubelet, dockerd, kube-proxy, sshd 等) 内存占用没有超过 kubelet 配置的预留空间是不会发生系统 OOM 的，可以根据实际需求做合理的调整。
 
 ### cgroup OOM
 如果是 cgroup OOM 杀掉的进程，从 Pod 事件的下 Reason 可以看到是 OOMKilled，说明容器实际占用的内存超过 limit 了，同时内核日志会报: ``。 可以根据需求调整下 limit

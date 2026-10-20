@@ -61,9 +61,9 @@ test 和 [] 是等价的，后续我们会交替使用 test 和 []，以让读�
 |---|---|
 | -eq | 两数是否相等 | 
 | -ne | 两数是否不等 | 
-| -gt | 前者是否大于后者（greater then） | 
-| -lt | 前面是否小于后者（less than） | 
-| -ge | 前者是否大于等于后者（greater then or equal） | 
+| -gt | 前者是否大于后者（greater than） | 
+| -lt | 前者是否小于后者（less than） | 
+| -ge | 前者是否大于等于后者（greater than or equal） | 
 | -le | 前者是否小于等于后者（less than or equal） | 
 
 ## 四、文件操作
@@ -84,7 +84,7 @@ test 和 [] 是等价的，后续我们会交替使用 test 和 []，以让读�
 | -u     | 是否设置了文件的 SUID 位 | 
 | -G     | 文件是否存在且归该组所有 | 
 | -w     | 文件是否可写，则为真 | 
-| -k     | 文件是否设置了的粘贴位 | 
+| -k     | 文件是否设置了粘贴位 | 
 | -o     | 或，一个条件为真 | 
 | -O     | 文件是否存在且归该用户所有 | 
 | !      | 取反 | 
@@ -102,9 +102,9 @@ test 和 [] 是等价的，后续我们会交替使用 test 和 []，以让读�
 ###  整数判断
 - -eq 两数是否相等
 - -ne 两数是否不等
-- -gt 前者是否大于后者（greater then）
-- -lt 前面是否小于后者（less than）
-- -ge 前者是否大于等于后者（greater then or equal）
+- -gt 前者是否大于后者（greater than）
+- -lt 前者是否小于后者（less than）
+- -ge 前者是否大于等于后者（greater than or equal）
 - -le 前者是否小于等于后者（less than or equal）
 
 ###  字符串判断str1 exp str2：

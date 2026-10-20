@@ -1,5 +1,5 @@
 ---
-title: "K8s删除Namesapce一直处于Terminating状态处理"
+title: "K8s删除Namespace一直处于Terminating状态处理"
 subtitle: ""
 date: 2023-05-27T12:06:37+08:00
 lastmod: 2024-06-26T12:06:37+08:00
@@ -54,8 +54,8 @@ kubectl get namespace "待删命名空间" -o json \
 ```
 
 ### 总结
-- 创建namesapce时注入finalizers会导致namespace无法
-- 可以通过edit ns 的方式将finalizers 置空或者上面的一行命令解决的方式，本质是一致的
+- 创建namespace时注入finalizers会导致namespace无法删除
+- 可以通过edit ns 的方式将finalizers 置空，或者用上面的一行命令解决，本质是一致的
 
 ### 补充 K8s Finalizers
 Finalizers 字段属于 Kubernetes GC 垃圾收集器，是一种删除拦截机制，能够让控制器实现异步的删除前（Pre-delete）回调。其存在于任何一个资源对象的 Meta[1] 中，在 k8s 源码中声明为 []string，该 Slice 的内容为需要执行的拦截器名称。

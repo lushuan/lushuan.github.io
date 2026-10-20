@@ -52,7 +52,7 @@ why ——为什么选择master/worker 这种模型？
 ![image-20240722141618078](/images/nginx/nginx-process-structure.png "Nginx 进程结构")
 
 进程结构分类
-1. 单进程结构 适用与开发测试环境
+1. 单进程结构 适用于开发测试环境
 2. 多进程结构 适用于生产环境
 
 - 所有的worker 进程是处理真正的请求的
@@ -185,11 +185,11 @@ ngx_master_process_cycle(ngx_cycle_t cycle)
 
 1.接受来自外界的信号。其中master循环中的各项标志位就对应着各种信号，如：ngx_quit代表QUIT信号，表示优雅的关闭整个服务。
 
-2.向各个worker进程发送信。比如ngx_noaccept代表WINCH信号，表示所有子进程不再接受处理新的连接，由master向所有的子进程发送QUIT信号量。
+2.向各个worker进程发送信号。比如ngx_noaccept代表WINCH信号，表示所有子进程不再接受处理新的连接，由master向所有的子进程发送QUIT信号量。
 
 3.监控worker进程的运行状态。比如ngx_reap代表CHILD信号，表示有子进程意外结束，这时需要监控所有子进程的运行状态，主要由ngx_reap_children完成。
 
-4.当woker进程退出后（异常情况下），会自动重新启动新的woker进程。主要也是在ngx_reap_children
+4.当worker进程退出后（异常情况下），会自动重新启动新的worker进程。主要也是在ngx_reap_children
 
 
 ### Nginx 进程管理：信号
@@ -197,7 +197,7 @@ ngx_master_process_cycle(ngx_cycle_t cycle)
 
 ![image-20240722142156195](/images/nginx/nginx-process-signal.png "Nginx 进程管理：信号")
 
-这里可以看到worker 进程接收到的信号和master 进程接收到信号基本上是一一对应的，为什么不直接对worker 进程直接发送信号呢，是因为需要通过master 进程来进行管理，这也是正常的处理方式。
+这里可以看到worker 进程接收到的信号和master 进程接收到信号基本上是一一对应的，为什么不直接对worker 进程发送信号呢，是因为需要通过master 进程来进行管理，这也是正常的处理方式。
 ## 二、Nginx reload热更新
 
 ![image-20240722151323960](/images/nginx/nginx-reload.png "Nginx reload热更新")
@@ -265,9 +265,9 @@ request：Nginx 中 http 请求。
 
 基本的 HTTP Web Server 工作模式：
 
-1. 接收请求：逐行读取请求行和请求头，判断段有请求体后，读取请求体
+1. 接收请求：逐行读取请求行和请求头，判断有请求体后，读取请求体
 2. 处理请求
-3. 返回响应：根据处理结果，生成相应的 HTTP 请求（响应行、响应头、响应体）
+3. 返回响应：根据处理结果，生成相应的 HTTP 响应（响应行、响应头、响应体）
 
 Nginx 也是这个套路，整体流程一致。
 

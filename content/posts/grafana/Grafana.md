@@ -20,7 +20,7 @@ Grafana 是一款开源的监控仪表系统，能够基于多种数据源快速
 <!--more-->
 
 ## 一、Grafana简介
-Grafana 是一个监控仪表系统，它是由 Grafana Labs 公司开源的的一个系统监测 (System Monitoring) 工具。它可以大大帮助你简化监控的复杂度，你只需要提供你需要监控的数据，它就可以帮你生成各种可视化仪表。同时它还有报警功能，可以在系统出现问题时通知你。
+Grafana 是一个监控仪表系统，它是由 Grafana Labs 公司开源的一个系统监测 (System Monitoring) 工具。它可以大大帮助你简化监控的复杂度，你只需要提供你需要监控的数据，它就可以帮你生成各种可视化仪表。同时它还有报警功能，可以在系统出现问题时通知你。
 
 Grafana 本身是非常轻量级的，不会占用大量资源，此外 Grafana 需要一个数据库来存储其配置数据，比如用户、数据源和仪表盘等，目前 Grafana 支持 SQLite、MySQL、PostgreSQL 3 种数据库，默认使用的是 SQLite，该数据库文件会存储在 Grafana 的安装位置，所以需要对 Grafana 的安装目录进行持久化。
 
@@ -190,7 +190,7 @@ service/grafana   NodePort   10.110.17.117   <none>        3000:30009/TCP   11m
 ![grafan-1](/images/grafana/grafana-1.png "grafana")
 
 ## 三、访问功能界面
-`http://ip:30009` 登录是默认账号口令为`admin/admin`,第一次登录时提示修改密码
+`http://ip:30009` 登录时默认账号口令为`admin/admin`,第一次登录时提示修改密码
 ![grafan-2](/images/grafana/grafana-2.png "grafana")
 
 登录成功界面
@@ -204,14 +204,14 @@ service/grafana   NodePort   10.110.17.117   <none>        3000:30009/TCP   11m
 
 ## 五、导入 Dashboard
 为了能够快速对系统进行监控，我们可以直接复用别人的 Grafana Dashboard，在 Grafana 的官方网站上就有很多非常优秀的第三方 Dashboard，我们完全可以直接导入进来即可。
-比如我们想要对所有的集群节点进行监控，也就是 node-exporter 采集的数据进行展示，这里我们就可以导入 https://grafana.com/grafana/dashboards/8919 这个 Dashboard。
+比如我们想要对所有的集群节点进行监控，也就是对 node-exporter 采集的数据进行展示，这里我们就可以导入 https://grafana.com/grafana/dashboards/8919 这个 Dashboard。
 
 在侧边栏点击 "+"，选择 Import，在 Grafana Dashboard 的文本框中输入 8919 即可导入：
 
 ![grafan-5](/images/grafana/grafana-5.png "grafana")
 
 {{< admonition >}}
-在导入之前需要先创建数据源，大屏是适配的Prometheus 数据源
+在导入之前需要先创建数据源，大屏适配的是Prometheus 数据源
 {{< /admonition >}}
 
 通过部署Prometheus 和 Node Exporter 采集的实时数据大屏

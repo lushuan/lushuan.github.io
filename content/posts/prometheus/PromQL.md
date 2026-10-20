@@ -22,7 +22,7 @@ summary: "系统介绍 PromQL 查询语言的基础概念、数据类型、时�
 ![PromQL](/images/prometheus/promql/promql.png "PromQL")
 ## 一、介绍
 PromQL 是 Prometheus 内置的数据查询语言，其提供对时间序列数据丰富的查询，聚合以及逻辑运算能力的支持。
-并且被广泛应用在 Prometheus 的日常应用当中，包括对数据查询、可视化、告警处理。可以这么说，PromQL 是 Prometheus 所有应用场景的基础，理解和掌握 PromQL 是我们使用 Prometheus 必备的技能。
+并且被广泛应用在 Prometheus 的日常应用当中，包括数据查询、可视化、告警处理。可以这么说，PromQL 是 Prometheus 所有应用场景的基础，理解和掌握 PromQL 是我们使用 Prometheus 必备的技能。
 
 ### PromQL 简介
 Prometheus Query Language (PromQL) 是一个专为Prometheus监控系统设计的强大查询语言，
@@ -86,8 +86,8 @@ http_request_total{status="200", method="POST"}@1434417560938 => 4748
 http_request_total{status="200", method="POST"}@1434417561287 => 4785
 ```
 #### 指标类型
-从存储上来讲所有的监控指标 metric 都是相同的，但是在不同的场景下这些 metric 又有一些细微的差异。 例如，在 Node Exporter 返回的样本中指标 node_load1 反应的是当前系统的负载状态，随着时间的变化这个指标返回的样本数据是在不断变化的。
-而指标 node_cpu_seconds_total 所获取到的样本数据却不同，它是一个持续增大的值，因为其反应的是 CPU 的累计使用时间，从理论上讲只要系统不关机，这个值是会一直变大。
+从存储上来讲所有的监控指标 metric 都是相同的，但是在不同的场景下这些 metric 又有一些细微的差异。 例如，在 Node Exporter 返回的样本中指标 node_load1 反映的是当前系统的负载状态，随着时间的变化这个指标返回的样本数据是在不断变化的。
+而指标 node_cpu_seconds_total 所获取到的样本数据却不同，它是一个持续增大的值，因为其反映的是 CPU 的累计使用时间，从理论上讲只要系统不关机，这个值是会一直变大。
 
 为了能够帮助用户理解和区分这些不同监控指标之间的差异，Prometheus 定义了 4 种不同的指标类型：
 - Counter（计数器）
@@ -104,20 +104,20 @@ node_cpu_seconds_total{cpu="cpu0",mode="idle"} 362812.7890625
 ##### Counter
 Counter (只增不减的计数器) 类型的指标其工作方式和计数器一样，只增不减。常见的监控指标，如 http_requests_total、node_cpu_seconds_total 都是 Counter 类型的监控指标。
 
-Counter 是一个简单但又强大的工具，例如我们可以在应用程序中记录某些事件发生的次数，通过以时间序列的形式存储这些数据，我们可以轻松的了解该事件产生的速率变化。PromQL 内置的聚合操作和函数可以让用户对这些数据进行进一步的分析，例如，通过 rate() 函数获取 HTTP 请求量的增长率：
+Counter 是一个简单但又强大的工具，例如我们可以在应用程序中记录某些事件发生的次数，通过以时间序列的形式存储这些数据，我们可以轻松地了解该事件产生的速率变化。PromQL 内置的聚合操作和函数可以让用户对这些数据进行进一步的分析，例如，通过 rate() 函数获取 HTTP 请求量的增长率：
 ```
 rate(prometheus_http_requests_total[5m])
 or
 rate(http_requests_total[5m])
 ```
 ##### Gauge
-与 Counter 不同，Gauge（可增可减的仪表盘）类型的指标侧重于反应系统的当前状态。因此这类指标的样本数据可增可减。常见指标如：node_memory_MemFree_bytes（主机当前空闲的内存大小）、node_memory_MemAvailable_bytes（可用内存大小）都是 Gauge 类型的监控指标。
+与 Counter 不同，Gauge（可增可减的仪表盘）类型的指标侧重于反映系统的当前状态。因此这类指标的样本数据可增可减。常见指标如：node_memory_MemFree_bytes（主机当前空闲的内存大小）、node_memory_MemAvailable_bytes（可用内存大小）都是 Gauge 类型的监控指标。
 通过 Gauge 指标，用户可以直接查看系统的当前状态：
 ```
 node_memory_MemFree_bytes
 ```
 ##### Histogram 和 Summary
-除了 Counter 和 Gauge 类型的监控指标以外，Prometheus 还定义了 Histogram 和 Summary 的指标类型。Histogram 和 Summary 主用用于统计和分析样本的分布情况。
+除了 Counter 和 Gauge 类型的监控指标以外，Prometheus 还定义了 Histogram 和 Summary 的指标类型。Histogram 和 Summary 主要用于统计和分析样本的分布情况。
 
 在大多数情况下人们都倾向于使用某些量化指标的平均值，例如 CPU 的平均使用率、页面的平均响应时间，这种方式也有很明显的问题，以系统 API 调用的平均响应时间为例：如果大多数 API 请求都维持在 100ms 的响应时间范围内，而个别请求的响应时间需要 5s，那么就会导致某些 WEB 页面的响应时间落到中位数上，而这种现象被称为长尾问题。
 
@@ -133,7 +133,7 @@ prometheus_tsdb_wal_fsync_duration_seconds{quantile="0.99"} 0.017316173
 prometheus_tsdb_wal_fsync_duration_seconds_sum 2.888716127000002
 prometheus_tsdb_wal_fsync_duration_seconds_count 216
 ```
-从上面的样本中可以得知当前 Prometheus Server 进行 wal_fsync 操作的总次数为 216 次，耗时 2.888716127000002s。其中中位数（quantile=0.5）的耗时为 0.012352463，9 分位数（quantile=0.9）的耗时为 0.014458005s。
+从上面的样本中可以得知当前 Prometheus Server 进行 wal_fsync 操作的总次数为 216 次，耗时 2.888716127000002s。其中中位数（quantile=0.5）的耗时为 0.012352463，90 分位数（quantile=0.9）的耗时为 0.014458005s。
 
 在 Prometheus Server 自身返回的样本数据中，我们还能找到类型为 Histogram 的监控指标prometheus_tsdb_compaction_chunk_range_seconds_bucket：
 ```
@@ -153,8 +153,8 @@ prometheus_tsdb_compaction_chunk_range_seconds_bucket{le="+Inf"} 2.5687896e+07
 prometheus_tsdb_compaction_chunk_range_seconds_sum 4.7728699529576e+13
 prometheus_tsdb_compaction_chunk_range_seconds_count 2.5687896e+07
 ```
-与 Summary 类型的指标相似之处在于 Histogram 类型的样本同样会反应当前指标的记录的总数(以 _count 作为后缀)以及其值的总量（以 _sum 作为后缀）。
-不同在于 Histogram 指标直接反应了在不同区间内样本的个数，区间通过标签 le 进行定义。
+与 Summary 类型的指标相似之处在于 Histogram 类型的样本同样会反映当前指标的记录的总数(以 _count 作为后缀)以及其值的总量（以 _sum 作为后缀）。
+不同在于 Histogram 指标直接反映了在不同区间内样本的个数，区间通过标签 le 进行定义。
 
 ## 三、查询
 ### 简单查询和表达式
@@ -165,7 +165,7 @@ PromQL Web UI 的 Graph 选项卡提供了简单的用于查询数据的入口
 up{job="kubernetes-pods"}
 ```
 
-注意此时是 up{job="node-exporter"}属于绝对匹配，PromQL 也支持如下表达式：
+注意此时 up{job="node-exporter"}属于绝对匹配，PromQL 也支持如下表达式：
 - !=：不等于；
 - =~：表示等于符合正则表达式的指标；
 -  !~：和=~类似，=~表示正则匹配，!~表示正则不匹配。
@@ -220,10 +220,10 @@ node_memory_Active_bytes{instance="10.10.192.220:9100"} offset 1h
 ```
 
 ### 高级查询
-使用PromQL除了能够方便的按照查询和过滤时间序列以外，PromQL还支持丰富的操作符，用户可以使用这些操作符对进一步的对事件序列进行二次加工。这些操作符包括：数学运算符，逻辑运算符，布尔运算符等等。
+使用PromQL除了能够方便地按照查询和过滤时间序列以外，PromQL还支持丰富的操作符，用户可以使用这些操作符进一步地对时间序列进行二次加工。这些操作符包括：数学运算符，逻辑运算符，布尔运算符等等。
 
 #### 数学运算
-例如，我们可以通过指标node_memory_MemFree_bytes获取当前主机可用的内存空间大小，其样本单位为Bytes。这是如果客户端要求使用MB作为单位响应数据，那只需要将查询到的时间序列的样本值进行单位换算即可
+例如，我们可以通过指标node_memory_MemFree_bytes获取当前主机可用的内存空间大小，其样本单位为Bytes。这时如果客户端要求使用MB作为单位响应数据，那只需要将查询到的时间序列的样本值进行单位换算即可
 
 ```
 node_memory_MemFree_bytes / 1024 / 1024
@@ -274,14 +274,14 @@ min_over_time(node_timex_sync_status[1m]) == 0 and node_timex_maxerror_seconds >
 其中irate是PromQL中的内置函数，用于计算区间向量中时间序列每秒的即时增长率。
 
 #### 内置函数
-Prometheus还提供了下列内置的聚合操作符，这些操作符作用域瞬时向量。可以将瞬时表达式返回的样本数据进行聚合，形成一个新的时间序列。
+Prometheus还提供了下列内置的聚合操作符，这些操作符作用于瞬时向量。可以将瞬时表达式返回的样本数据进行聚合，形成一个新的时间序列。
 
 - sum (求和)  
 - min (最小值)  
 - max (最大值)  
 - avg (平均值)  
 - stddev (标准差)  
-- stdvar (标准差异)  
+- stdvar (标准方差)  
 - count (计数)  
 - count_values (对value进行计数)  
 - bottomk (后n条时序)  
@@ -311,7 +311,7 @@ sum(http_requests_total) by (code,handler,job,method)
 sum(http_requests_total)
 ```
 
-count_values用于时间序列中每一个样本值出现的次数。count_values会为每一个唯一的样本值输出一个时间序列，并且每一个时间序列包含一个额外的标签。
+count_values用于统计时间序列中每一个样本值出现的次数。count_values会为每一个唯一的样本值输出一个时间序列，并且每一个时间序列包含一个额外的标签。
 
 例如：
 ```

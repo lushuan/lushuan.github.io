@@ -321,7 +321,7 @@ Kubernetes 官方在 [Installing Addons](https://kubernetes.io/docs/concepts/clu
 | **Romana** | CNI 网络 | 项目已归档，社区消亡 |
 | **Weave Net** | CNI 网络 | Weaveworks 公司已倒闭，项目无人维护 |
 | **kube-router** | CNI 网络 | 已移入 CNCF Archive，不再发展 |
-| **CNI-Genie** | CNI 网络 | 华为出品，更新极低，社区几乎无活动 |
+| **CNI-Genie** | CNI 网络 | 华为出品，更新极少，社区几乎无活动 |
 | **Tiller (Helm v2)** | 包管理 | Helm v3 已移除 Tiller 组件，架构完全不同 |
 
 > ⚠️ 如果你在网上看到教程推荐上述项目，大概率是**过时内容**。请以本文列出的活跃项目为准。

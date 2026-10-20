@@ -23,9 +23,9 @@ summary: "本文介绍在 CentOS 7 环境下通过源码编译方式将 OpenSSH 
 - Linux操作系统环境：CentOS 7.x
 
 {{< admonition type=info title="前言" >}}
-由于安全扫描不同主机的 OpenSSH 版本不一，有些版本存在安全漏洞问题，现将 OpenSSH 统一升级至v9.9p2 版本，这里记录下整个操作的过程。
+由于安全扫描发现不同主机的 OpenSSH 版本不一，有些版本存在安全漏洞问题，现将 OpenSSH 统一升级至v9.9p2 版本，这里记录下整个操作的过程。
 
-如果 OpenSSL 相对版本较低，这里建议先将OpenSS版本升级至OpenSSL 1.1.1w  11 Sep 2023，然后再升级 OpenSSH v9.9p2,如果你的主机当前的OpenSSH 版本为v9.9p1，则同样建议升级至v9.9p2，因为v9.9p1 含有两个中危漏洞，OpenSSH 安全漏洞(CVE-2025-26465 ) 和 OpenSSH 资源管理错误漏洞(CVE-2025-26466 )，此漏洞同样在 v9.9p2 版本进行了修复。
+如果 OpenSSL 相对版本较低，这里建议先将OpenSSL版本升级至OpenSSL 1.1.1w  11 Sep 2023，然后再升级 OpenSSH v9.9p2,如果你的主机当前的OpenSSH 版本为v9.9p1，则同样建议升级至v9.9p2，因为v9.9p1 含有两个中危漏洞，OpenSSH 安全漏洞(CVE-2025-26465 ) 和 OpenSSH 资源管理错误漏洞(CVE-2025-26466 )，此漏洞同样在 v9.9p2 版本进行了修复。
 {{< /admonition >}}
 
 ## 二、相关安装包

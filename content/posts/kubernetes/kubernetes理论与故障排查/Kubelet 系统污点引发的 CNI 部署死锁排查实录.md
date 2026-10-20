@@ -21,7 +21,7 @@ summary: "记录节点因 CNI 网络插件未部署而持续 NotReady 的修复�
 
 # Kubelet 系统污点引发的 CNI 部署死锁排查实录
 
-在修复好网络模式变更导致控制平面组件异常和证书过期的问题后，发现节点的状态还是 NotReady 的状态，本篇文档记录一下Node 节点为NotReady 的修复的全记录，为NotReady 的原因有很多，这里的出现该问题
+在修复好网络模式变更导致控制平面组件异常和证书过期的问题后，发现节点还是 NotReady 的状态，本篇文档记录一下Node 节点为NotReady 的修复的全记录，NotReady 的原因有很多，这里出现该问题
 的原因则很明显是 cni 网络插件没有部署，在部署好cni 网络插件后，再思索一下为什么k8s 调整了使用operator 部署。最后引申出这种部署方式的好处有哪些？
 
 ## 1. 灾难降临：故障现场与第一震撼现象 (The Incident)
@@ -39,8 +39,8 @@ k8s-master01   NotReady   <none>   84s   v1.28.11
 
 - 基础设施：VMware 虚拟机
 - 架构版本：Kubernetes v1.28/操作系统内核版本 5.15.0
-- 诱发变更: 该k8s 集群是在2024年搭建的，当时用作自己的测试学习，当时还基于该环境整理一篇部署文档，[Ubuntu-server部署k8s1.28(containerd版本)集群
-  ](https://blog.dazhongma.top/ubuntu-server%E9%83%A8%E7%BD%B2k8s1.28containerd%E7%89%88%E6%9C%AC%E9%9B%86%E7%BE%A4/),上一篇文档是记录解决切换网络模式解决控制平面组件异常的问题，也就是[网络模式变更为什么会洗残k8s集群](https://blog.dazhongma.top/%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%BC%8F%E5%8F%98%E6%9B%B4%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E6%B4%97%E6%AE%8Bk8s%E9%9B%86%E7%BE%A4/),本篇记录了Node 节点NotReady 各种原因中的其中一个CNI 网络插件问题。
+- 诱发变更: 该k8s 集群是在2024年搭建的，当时用作自己的测试学习，当时还基于该环境整理了一篇部署文档，[Ubuntu-server部署k8s1.28(containerd版本)集群
+  ](https://blog.dazhongma.top/ubuntu-server%E9%83%A8%E7%BD%B2k8s1.28containerd%E7%89%88%E6%9C%AC%E9%9B%86%E7%BE%A4/),上一篇文档是记录切换网络模式解决控制平面组件异常的问题，也就是[网络模式变更为什么会摧残k8s集群](https://blog.dazhongma.top/%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%BC%8F%E5%8F%98%E6%9B%B4%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E6%B4%97%E6%AE%8Bk8s%E9%9B%86%E7%BE%A4/),本篇记录了Node 节点NotReady 各种原因中的其中一个CNI 网络插件问题。
 
 ## 2. 顺藤摸瓜：多维度排查与见招拆招 (The Exploration)
 
@@ -62,12 +62,12 @@ k8s-master01   NotReady   <none>   84s   v1.28.11
 
 ### 2.1 部署 k8s集群部署网络插件 calico
 
-常见的网络插件有多种，比如flannel、Calico和Cilium，本次实验使用Calico使用。
+常见的网络插件有多种，比如flannel、Calico和Cilium，本次实验使用Calico。
 
 首先访问Calico帮助文档https://docs.tigera.io/calico/latest/getting-started/kubernetes/quickstart
 
 #### master 节点
-calico 部署使用的是operator 的方式，且不再和kube-system 共用一个namespace，另起了一个namesapce calico-system,引入了istio 相关组件服务，详情可以看下calico官网
+calico 部署使用的是operator 的方式，且不再和kube-system 共用一个namespace，另起了一个namespace calico-system,引入了istio 相关组件服务，详情可以看下calico官网
 
 配置插件需要的环境
 ```shell
@@ -143,7 +143,7 @@ kube-public        Active   28h
 kube-system        Active   28h
 tigera-operator    Active   26h
 ```
-此刻发现tiger-operator pod 异常重启
+此刻发现tigera-operator pod 异常重启
 ```shell
 
 $ kubectl get node
@@ -171,7 +171,7 @@ Events:
 
 既然容器能跑起来再挂掉，说明不是 K8s 调度的锅，而是 Operator 进程内部由于缺少某些初始化条件或者配置冲突崩了。
 
-目前是已经部署了tiger-operator 但是pod 异常重启
+目前是已经部署了tigera-operator 但是pod 异常重启
 
 ### 核心排查命令查看 pod 更多信息
 对于这种启动即崩溃（Exit Code 通常是 1 或 137/255）的 Operator，我们需要看它到底在临死前喊了什么。请执行以下命令抓取它的崩尸日志：
@@ -471,7 +471,7 @@ tigera-operator-7595bb75f4-g7rpl   0/1     Error    3 (36s ago)   57s
 
 ##### 3.2 原因剖析（核心死锁逻辑）
 
-1. Tigera Operator 作为一个普通 Pod 启动，默认根据内部配置或 ConfigMap，尝试通过 Kubernetes 内置的集群服务虚拟 IP（**ClusterIP: `10.96.0.1**`）去和 APIServer 握手通迅。
+1. Tigera Operator 作为一个普通 Pod 启动，默认根据内部配置或 ConfigMap，尝试通过 Kubernetes 内置的集群服务虚拟 IP（**ClusterIP: `10.96.0.1**`）去和 APIServer 握手通讯。
 2. 然而，因为此时 Calico 还没起来，由 `kube-proxy` 维护的虚拟转发网络和底层网络平面**根本不存在**，宿主机内核路由表找不到去往 `10.96.0.1` 的路径，直接抛出 `no route to host`。
 3. **死锁达成**：Operator 需要网络通了才能去创建 Calico；而网络要通，又必须等 Operator 成功运行去创建 Calico。
 

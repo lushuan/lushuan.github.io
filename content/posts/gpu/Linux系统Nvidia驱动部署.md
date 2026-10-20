@@ -70,7 +70,7 @@ $ sudo apt install -y g++ gcc gcc-c++ make build-essential pciutils  bzip2 dkms
 # redhat
 $ sudo yum install -y g++ gcc gcc-c++  make  pciutils  bzip2 dkms
 ```
-查看是否已安装gcc和picutils
+查看是否已安装gcc和pciutils
 ```
 # 验证系统是否有GCC编译环境
 $ gcc --version
@@ -423,7 +423,7 @@ sh cuda_*.run
 可以把 **驱动程序（Driver）** 和 **CUDA** 想象成 **“汽车引擎”** 和 **“赛车配件包”** 的关系：
 
 - **驱动程序（Driver）**：  
-  就像汽车的 **引擎**，它让 GPU 硬件能够被操作系统识别并基础运行（如显示画面、基础计算）。没有引擎，汽车根本无法启动。
+  就像汽车的 **引擎**，它让 GPU 硬件能够被操作系统识别并基本运行（如显示画面、基础计算）。没有引擎，汽车根本无法启动。
 
 - **CUDA**：  
   则像一套 **赛车专用配件包**（如涡轮增压、高性能变速箱、赛用轮胎等），它提供了开发高性能计算程序所需的工具和接口（如并行计算库、编译器）。只有安装了 CUDA，你才能利用 GPU 的算力做深度学习、科学计算等复杂任务。
@@ -708,7 +708,7 @@ EOF
 yum install -y nvidia-container-toolkit
 ```
 ### nvidia docker, nvidia docker2, nvidia container toolkits区别
-在docker容器中用GPU时，查阅了网上许多教程，教程之间概念模糊不清，相互矛盾，过时的教程和新的教程混杂在一起。主要原因是Nvidia为docker容器的支持发生了好几代变更，api发生了不少变化。
+在docker容器中用GPU时，查阅了网上许多教程，教程之间概念模糊不清，相互矛盾，过时的教程和新的教程混杂在一起。主要原因是Nvidia对docker容器的支持发生了好几代变更，api发生了不少变化。
 
 **省流版总结**  
 凡是使用了命令nvidia docker或者在docker中引入了--runtime=nvidia参数的都是过时教程，最新方法只需要下载nvidia-container-toolkits，在docker中引入--gpus参数即可。
@@ -725,7 +725,7 @@ nvidia docker2是NVIDIA第二代支持docker容器内使用GPU资源的项目。
 ```
 Backward compatibility To help transitioning code from 1.0 to 2.0, a bash script is provided in /usr/bin/nvidia-docker for backward compatibility. It will automatically inject the --runtime=nvidia argument and convert NV_GPU to NVIDIA_VISIBLE_DEVICES.
 ```
-也就是说，在二代中，既可以使用nvidia docker命令，这会自动引入参数--runtime=nvidia也可以使用docker命令，手动指定参数--runtime=nvidia
+也就是说，在二代中，既可以使用nvidia docker命令，这会自动引入参数--runtime=nvidia，也可以使用docker命令，手动指定参数--runtime=nvidia
 
 #### nvidia-container-toolkits(推荐)
 根据github这是最新的支持方案，如帖子描述，nvidia docker2 被Nvidia container toolkits取代，无需指定--runtime参数，只需要传递--gpus参数
@@ -790,7 +790,7 @@ $ docker run -d  --gpus all--name pytorch  swr.cn-south-1.myhuaweicloud.com/myj-
 `docker exec -it pytorch  bash  执行 python3,调用cuda 计算显卡`
 
 **测试四**
-进pod 里面执行nvida-smi 是否有输出，有输出说明成功了
+进pod 里面执行nvidia-smi 是否有输出，有输出说明成功了
 
 
 ## 排错答疑

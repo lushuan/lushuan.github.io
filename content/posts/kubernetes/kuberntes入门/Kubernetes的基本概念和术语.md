@@ -111,7 +111,7 @@ Kubernetes的三种IP，这三种IP分别如下。
 
 NodePort的实现方式是，在Kubernetes集群的每个Node上都为需要外部访问的Service开启一个对应的TCP监听端口，外部系统只要用任意一个Node的IP地址+NodePort端口号即可访问此服务，在任意Node上运行netstat命令，就可以看到有NodePort端口被监听。
 
-## 九、NodePort 存在的一问题引出了Ingress对象  
+## 九、NodePort 存在的一个问题引出了Ingress对象  
 
 NodePort的确功能强大且通用性强，但也存在一个问题，即每个Service都需要在Node上独占一个端口，而端口又是有限的物理资源，那能不能让多个Service共用一个对外端口呢？这就是后来增加的Ingress资源对象所要解决的问题。在一定程度上，我们可以把Ingress的实现机制理解为基于Nginx的支持虚拟主机的HTTP代理。
 

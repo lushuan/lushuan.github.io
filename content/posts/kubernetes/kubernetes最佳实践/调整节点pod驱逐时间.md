@@ -21,7 +21,7 @@ summary: "介绍 Kubernetes 节点故障时 Pod 驱逐时间的调整方法，�
 ## 一、问题描述
 {{< admonition question >}}
 在高可用的k8s集群中，当Node节点挂掉，kubelet无法提供工作的时候，pod将会自动调度到其他的节点上去，
-而调度到节点上的时间需要我们慎重考量，因为它决定了生产的稳定性、可靠性，更快的迁移可以减少我们业务的影响性，
+而调度到节点上的时间需要我们慎重考量，因为它决定了生产的稳定性、可靠性，更快的迁移可以减少对我们业务的影响，
 但是有可能会对集群造成一定的压力，从而造成集群崩溃。
 {{< /admonition >}}
 
@@ -41,4 +41,4 @@ kube-controller-manager 和 kubelet 是异步工作的，这意味着延迟可�
 
 修改/etc/systemd/system/kube-controller-manager.service文件
 
-增加一行--pod-eviction-timeout=1m （这里是调整为1分钟，具体数值可以根据业务重要实际情况修改）
+增加一行--pod-eviction-timeout=1m （这里是调整为1分钟，具体数值可以根据业务的重要性和实际情况修改）

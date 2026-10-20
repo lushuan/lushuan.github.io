@@ -24,7 +24,7 @@ summary: "介绍 UNIX/Linux 下常见的几种 shell（Bourne shell/bash、C she
 这三种 shell 在交谈（interactive）模式下的表现相当类似，但作为命令文件语言时，在语法和执行效率上就有些不同了。
 
 ## 一、bash
-Bourne shell 是标准的 UNIX shell，以前常被用来做为管理系统之用。大部份的系统管理命令文件，例如 rc start、stop 与 shutdown 都是 Bourne shell 的命令档，且在单一使用者模式（single user mode）下以 root 签入时它常被系统管理者使用。
+Bourne shell 是标准的 UNIX shell，以前常被用来作为管理系统之用。大部份的系统管理命令文件，例如 rc start、stop 与 shutdown 都是 Bourne shell 的命令档，且在单一使用者模式（single user mode）下以 root 签入时它常被系统管理者使用。
 
 Bourne shell 是由 AT&T 发展的，以简洁、快速著名。 Bourne shell 提示符号的默认值是 $。
 
@@ -41,7 +41,7 @@ Korn shell 是 Bourne shell 的超集（superset），由 AT&T 的 David Korn �
 在 shell 的语法方面，Korn shell 是比较接近一般程序语言，而且它具有子程序的功能及提供较多的资料型态。至于 Bourne shell，它所拥有的资料型态是三种 shell 中最少的，仅提供字符串变量和布尔型态。在整体考量下 Korn shell 是三者中表现最佳者，其次为 C shell，最后才是 Bourne shell，但是在实际使用中仍有其它应列入考虑的因素，如速度是最重要的选择时，很可能应该采用 Bourne shell，因它是最基本的 shell，执行的速度最快。
 
 ## 四、tcsh
-tcsh 是近几年崛起的一个免费软件（Linux 下的 C shell 其实就是使用 tcsh）执行，它虽然不是 UNIX 的标准配备，但是从许多地方您都可以下载到它。如果您是 C shell 的拥护者，笔者建议不妨试试 tcsh，因为您至少可以将它当作是 C shell 来使用。如果您愿意花点时间学习，您还可以享受许多它新增的优越功能，例如：
+tcsh 是近几年崛起的一个免费软件（Linux 下的 C shell 其实就是使用 tcsh），它虽然不是 UNIX 的标准配备，但是从许多地方您都可以下载到它。如果您是 C shell 的拥护者，笔者建议不妨试试 tcsh，因为您至少可以将它当作是 C shell 来使用。如果您愿意花点时间学习，您还可以享受许多它新增的优越功能，例如：
 
 - tcsh 提供了一个命令列（command line）编辑程序。
 - 提供了命令列补全功能。

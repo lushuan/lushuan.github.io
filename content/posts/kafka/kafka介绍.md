@@ -20,7 +20,7 @@ Kafka 是 Apache 基金会旗下的开源分布式消息系统，具备高吞吐
 <!--more-->
 
 ## 一、kafka 简介
-Kafka 被称为下一代分布式消息系统，是非营利性组织ASF(Apache Software Foundation，简称为ASF)基金会中的一个开源项目，比如HTTP Server、Hadoop、ActiveMQ、Tomcat等开源软件都属于Apache基金会的开源软件，类似的消息系统还有RbbitMQ、ActiveMQ、ZeroMQ，最主要的优势是其具备分布式功能、并且结合zookeeper可以实现动态扩容。
+Kafka 被称为下一代分布式消息系统，是非营利性组织ASF(Apache Software Foundation，简称为ASF)基金会中的一个开源项目，比如HTTP Server、Hadoop、ActiveMQ、Tomcat等开源软件都属于Apache基金会的开源软件，类似的消息系统还有RabbitMQ、ActiveMQ、ZeroMQ，最主要的优势是其具备分布式功能、并且结合zookeeper可以实现动态扩容。
 
 ![kafka-vs-others](/images/kafka/kafka-vs-others.png "kafka 竞品比较")
 
@@ -77,18 +77,18 @@ kafka的诞生，是为了解决linkedin的数据管道问题，起初linkedin�
 上图中包含了2个Producer（生产者），一个Topic（主题），3个Partition（分区），3个Replica（副本），3个Broker（Kafka实例或节点），一个Consumer Group（消费者组），其中包含3个Consumer（消费者）。下面我们逐一介绍这些概念。
 
 ### Producer（生产者）
-生产者，顾名思义，就是生产东西的，也就是发送消息的，生产者每发送一个条消息必须有一个Topic（主题），也可以说是消息的类别，生产者源源不断的向kafka服务器发送消息。
+生产者，顾名思义，就是生产东西的，也就是发送消息的，生产者每发送一条消息必须有一个Topic（主题），也可以说是消息的类别，生产者源源不断的向kafka服务器发送消息。
 
 ### Topic（主题）
 每一个发送到Kafka的消息都有一个主题，也可叫做一个类别，类似我们传统数据库中的表名一样，比如说发送一个主题为order的消息，那么这个order下边就会有多条关于订单的消息，只不过kafka称之为主题，都是一样的道理。
 ### Partition（分区）
 生产者发送的消息数据Topic会被存储在分区中，这个分区的概念和ElasticSearch中分片的概念是一致的，都是想把数据分成多个块，好达到我们的负载均衡，合理的把消息分布在不同的分区上，分区是被分在不同的Broker上也就是服务器上，这样我们大量的消息就实现了负载均衡。每个Topic可以指定多个分区，但是至少指定一个分区。每个分区存储的数据都是有序的，不同分区间的数据不保证有序性。因为如果有了多个分区，消费数据的时候肯定是各个分区独立开始的，有的消费得慢，有的消费得快肯定就不能保证顺序了。那么当需要保证消息的顺序消费时，我们可以设置为一个分区，只要一个分区的时候就只能消费这个一个分区，那自然就保证有序了。
 ### Replica（副本）
-副本就是分区中数据的备份，是Kafka为了防止数据丢失或者服务器宕机采取的保护数据完整性的措施，一般的数据存储软件都应该会有这个功能。假如我们有3个分区，由于不同分区中存放的是部分数据，所以为了全部数据的完整性，我们就必须备份所有分区。这时候我们的一份副本就包括3个分区，每个分区中有一个副本，两份副本就包含6个分区，一个分区两份副本。Kafka做了副本之后同样的会把副本分区放到不同的服务器上，保证负载均衡。讲到这我们就可以看见，这根本就是传统数据库中的主从复制的功能，没错，Kafka会找一个分区作为主分区（leader）来控制消息的读写，其他的（副本）都是从分区（follower），这样的话读写可以通过leader来控制，然后同步到副本上去，保证的数据的完整性。如果有某些服务器宕机，我们可以通过副本恢复数据，也可以暂时用副本中的数据来使用。
+副本就是分区中数据的备份，是Kafka为了防止数据丢失或者服务器宕机采取的保护数据完整性的措施，一般的数据存储软件都应该会有这个功能。假如我们有3个分区，由于不同分区中存放的是部分数据，所以为了全部数据的完整性，我们就必须备份所有分区。这时候我们的一份副本就包括3个分区，每个分区中有一个副本，两份副本就包含6个分区，一个分区两份副本。Kafka做了副本之后同样的会把副本分区放到不同的服务器上，保证负载均衡。讲到这我们就可以看见，这根本就是传统数据库中的主从复制的功能，没错，Kafka会找一个分区作为主分区（leader）来控制消息的读写，其他的（副本）都是从分区（follower），这样的话读写可以通过leader来控制，然后同步到副本上去，保证了数据的完整性。如果有某些服务器宕机，我们可以通过副本恢复数据，也可以暂时用副本中的数据来使用。
 ### Broker（实例或节点）
-这个就好说了，意思就是Kafka的实例，启动一个Kafka就是一个Broker，多个Brokder构成一个Kafka集群，这就是分布式的体现，服务器多了自然吞吐率效率啥的都上来了。
+这个就好说了，意思就是Kafka的实例，启动一个Kafka就是一个Broker，多个Broker构成一个Kafka集群，这就是分布式的体现，服务器多了自然吞吐率效率啥的都上来了。
 ### Consumer Group（消费者组）和 Consumer（消费者）
-Consume消费者来读取Kafka中的消息，可以消费任何Topic的数据，多个Consume组成一个消费者组，一般的一个消费者必须有一个组（Group）名，如果没有的话会被分一个默认的组名。
+Consumer消费者来读取Kafka中的消息，可以消费任何Topic的数据，多个Consumer组成一个消费者组，一般的一个消费者必须有一个组（Group）名，如果没有的话会被分一个默认的组名。
 
 
 ## 四、kafka 集群架构
@@ -106,7 +106,7 @@ Kafka是作为一个集群建立和运行的——一组服务器或代理管理
 
 ![Kafka-cluster-architecture](/images/kafka/Kafka-cluster-architecture.png "Kafka-cluster-architecture")
 
-上图该kafka集群A,该集群有8个实例broker节点，集群中的主题有8个分区(p0-p7),副本因子是3，也就是说每份数据存3份，每个分区都有1个leader 和2个follwer,以第一个broker为例，该broker 有3个分区，p1 分区为leader,p1分区上的所有读写请求都是由这个broker 进行处理的，p0和p2 分区是follwer,因此该broker 只负责p0和p2 从p1 中同步数据，而不处理这两个follwer 分区的读写请求。
+上图为kafka集群A,该集群有8个实例broker节点，集群中的主题有8个分区(p0-p7),副本因子是3，也就是说每份数据存3份，每个分区都有1个leader 和2个follower,以第一个broker为例，该broker 有3个分区，p1 分区为leader,p1分区上的所有读写请求都是由这个broker 进行处理的，p0和p2 分区是follower,因此该broker 只负责p0和p2 从p1 中同步数据，而不处理这两个follower 分区的读写请求。
 
 
 ## 五、环境搭建-本地伪分布式安装
@@ -187,7 +187,7 @@ root@k8s-master01:/usr/local/kafka_2.12-2.1.0/bin# ./kafka-console-producer.sh -
 >message
 ```
 ### 监听器和内外部网络
-总结一下kafka server.proerties 必要配置项
+总结一下kafka server.properties 必要配置项
 - broker.id
 - logs.dirs
 - zookeeper.connect
@@ -203,7 +203,7 @@ listeners: 指定broker 启动时本机的监听名称、端口
 listeners: 指定broker 启动时的本机监听端口，`给服务器使用`  
 advertised.listeners: 对外发布的访问IP和端口，注册到zookeeper 中，`给客户端(client)使用`
 
-更多详细配置请参考[KAFAK 配置内外网分流，实现同时支持内网，外网，其他网络](https://www.cnblogs.com/wangcc7/p/17718020.html)
+更多详细配置请参考[KAFKA 配置内外网分流，实现同时支持内网，外网，其他网络](https://www.cnblogs.com/wangcc7/p/17718020.html)
 
 ## 六、kafka 消息模型
 - 点对点
