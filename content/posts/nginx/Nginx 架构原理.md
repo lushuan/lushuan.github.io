@@ -6,11 +6,20 @@ lastmod: 2022-06-29T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Nginx"]
 tags: ["Nginx"]
+slug: "nginx-arch"
+featuredImage: "/images/nginx/cover.jpg"
+summary: "深入解析 Nginx 的 master/worker 多进程模型与事件驱动架构，讲解进程信号管理、reload 热更新与热升级机制以及模块化体系。"
 ---
-## 基本原理
+
+本文深入解析 Nginx 的架构原理，涵盖 master/worker 多进程模型、事件驱动的异步非阻塞处理机制与进程信号管理，并详细讲解 Nginx reload 配置热更新、程序热升级的实现原理以及模块化体系结构。
+
+<!--more-->
+
+## 一、基本原理
 ### Nginx 进程模型
 Nginx启动后以daemon形式在后台运行，后台进程包含一个master进程和多个worker进程。如下图所示：
 ```
@@ -189,7 +198,7 @@ ngx_master_process_cycle(ngx_cycle_t cycle)
 ![image-20240722142156195](/images/nginx/nginx-process-signal.png "Nginx 进程管理：信号")
 
 这里可以看到worker 进程接收到的信号和master 进程接收到信号基本上是一一对应的，为什么不直接对worker 进程直接发送信号呢，是因为需要通过master 进程来进行管理，这也是正常的处理方式。
-## Nginx reload热更新
+## 二、Nginx reload热更新
 
 ![image-20240722151323960](/images/nginx/nginx-reload.png "Nginx reload热更新")
 
@@ -217,7 +226,7 @@ nginx热升级过程如下：
 4. master进程用新Nginx文件启动新master进程，此时新老master/worker同时存在。
 5. 向老master发送WINCH信号，关闭旧worker进程，观察新worker进程工作情况。若升级成功，则向老master进程发送QUIT信号，关闭老master进程；若升级失败，则需要回滚，向老master发送HUP信号（重读配置文件），向新master发送QUIT信号，关闭新master及worker。
 
-## Worker 进程
+## 三、Worker 进程
 核心逻辑
 
 worker进程的主逻辑在ngx_worker_process_cycle，核心关注源码：
@@ -251,7 +260,7 @@ ngx_worker_process_cycle(ngx_cycle_t cycle, void data)
 ```
 由上述代码，可以理解，worker进程主要在处理网络事件，通过ngx_process_events_and_timers方法实现，其中事件主要包括：网络事件、定时器事件。
 
-## Nginx 的事件处理模型
+## 四、Nginx 的事件处理模型
 request：Nginx 中 http 请求。
 
 基本的 HTTP Web Server 工作模式：
@@ -263,7 +272,7 @@ request：Nginx 中 http 请求。
 Nginx 也是这个套路，整体流程一致。
 
 ![nginx-request-process](/images/nginx/nginx-request-process.png "Nginx 请求流程")
-## Nginx 模块
+## 五、Nginx 模块
 ### Nginx 模块化体系结构
 
 ![nginx-architecture-2](/images/nginx/nginx-architecture-2.png "Nginx 模块化体系结构")
@@ -301,17 +310,17 @@ Nginx 模块分类
 如我们想要打开gzip 压缩，可以在Nginx 模块官网上找到对应的[模块参考](https://nginx.org/en/docs/)`ngx_http_gzip_module`,查看使用示例
 
 
-## Nginx 进程间架构图
+## 六、Nginx 进程间架构图
 
 ![image-20240722155037255](/images/nginx/nginx-interprocess.png "Nginx 进程间架构图")
 
 
-## 附录
+## 七、附录
 - [百万并发下 Nginx 的优化之道](https://zhuanlan.zhihu.com/p/49415781)
 - [Nginx vs Apache](https://www.oschina.net/translate/nginx-vs-apache)
 
 
-## 参考
+## 八、参考
 
 - https://aosabook.org/en/v2/nginx.html
 - https://www.fatalerrors.org/a/analysis-of-nginx-architecture.html

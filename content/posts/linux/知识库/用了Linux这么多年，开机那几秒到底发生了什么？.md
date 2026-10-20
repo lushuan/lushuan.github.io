@@ -5,10 +5,19 @@ date: 2024-03-28T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Linux"]
 tags: ["Linux"]
+slug: "linux-boot-process"
+featuredImage: "/images/linux/cover.jpg"
+summary: "全解析 Linux 启动流程的五阶段模型：固件（BIOS/UEFI）、GRUB 引导、内核与 initramfs、init 系统、服务启动与登录，并对比 CentOS、Ubuntu 和麒麟 V10 服务器版在各阶段的实现差异。"
 ---
+
+从按下电源键到看见登录界面，Linux 启动遵循统一的五阶段模型：固件（BIOS/UEFI）→ GRUB 引导加载器 → 内核与 initramfs → init 系统 → 服务启动与登录。本文逐阶段拆解每个环节的工作原理，并对比 CentOS、Ubuntu 22.04 与银河麒麟 V10 服务器版在实现细节上的异同。
+
+<!--more-->
+
 
 ## 写在前面
 

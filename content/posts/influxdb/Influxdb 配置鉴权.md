@@ -6,11 +6,19 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Influxdb"]
 tags: ["Influxdb"]
+slug: "influxdb-auth"
+summary: "介绍 InfluxDB 时序数据库的基本特性与 Docker 部署方式，并记录开启 HTTP 鉴权配置、创建 admin 用户及验证查询的完整过程。"
 ---
-## InfluxDB 基础了解
+
+InfluxDB 是一款开源的时间序列数据库，内置 HTTP API 且支持类 SQL 查询语言。本文介绍其基本特性与 Docker 部署方式，并记录如何通过配置文件开启鉴权、创建 admin 用户，以及使用 curl 携带用户名密码验证查询的完整过程。
+
+<!--more-->
+
+## 一、InfluxDB 基础了解
 ### 介绍
 一个开源的时间序列数据库
 ### 特性
@@ -29,7 +37,7 @@ docker run --name=cm2-influxdb -d -p 8530:8083 -p 8586:8086 \
 influxdb:1.8
 ```
 
-## 配置鉴权
+## 二、配置鉴权
 ### 添加鉴权配置
 ```
 [http]  
@@ -67,5 +75,5 @@ $ curl -G http://172.16.24.220:8586/query -u admin:abc@123A --data-urlencode "q=
 {"results":[{"statement_id":0,"series":[{"name":"databases","columns":["name"],"values":[["host_metrics"],["vnf_metrics"],["events"],["alarm"],["custom_metrics"],["_internal"],["k8s_metrics"],["mw_metrics"],["bss_metrics"],["application_metrics"],["oss_metrics"],["itracing_metrics"],["prometheus_metrics"],["dcm_metrics"]]}]}]}
 ```
 
-## 参考
+## 三、参考
 - [influxdb 官网](https://docs.influxdata.com/influxdb/v1/introduction/download/)

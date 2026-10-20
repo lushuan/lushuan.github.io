@@ -6,10 +6,19 @@ lastmod: 2025-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["GPU"]
 tags: ["GPU"]
+slug: "nvidia-driver-install"
+featuredImage: "/images/gpu/cover.jpg"
+summary: "本文记录在 openEuler/CentOS 等 Linux 系统上部署 NVIDIA 显卡驱动的完整流程，涵盖内核依赖检查、Nouveau 禁用、Secure Boot 处理、驱动与 CUDA 安装、NVIDIA Container Toolkit 配置以及 K8s GPU 调度验证。"
 ---
+
+本文以在 openEuler 22.03 + Tesla T4 物理机上部署大模型基础环境为背景，完整记录 NVIDIA 显卡驱动的安装流程。内容包括内核与依赖检查、Nouveau 开源驱动禁用、.run 驱动安装与验证，以及可选的 CUDA 和 NVIDIA Container Toolkit 配套工具安装。最后还给出 Docker/Containerd 运行时的 GPU 配置和 K8s 设备插件部署示例与常见排错方法。
+
+<!--more-->
+
 ## 背景
 部署通义千问大模型`qwen2.5-7b-awq`基础环境预安装
 

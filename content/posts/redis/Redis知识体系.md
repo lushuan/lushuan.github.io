@@ -6,11 +6,20 @@ lastmod: 2022-08-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Redis"]
 tags: ["Redis"]
+slug: "redis-overview"
+featuredImage: "/images/blog_cover/sky/1.jpg"
+summary: "Redis 系统性学习笔记，从基本概念、安装配置、常用命令与十大数据模型，到事务、数据持久化、主从复制与哨兵高可用机制。"
 ---
-## 基本概念
+
+本文是一篇 Redis 系统性学习笔记，介绍 Redis 的基本概念、使用场景与竞品对比，详解安装配置与各数据类型常用命令、十大数据模型，并涵盖事务、数据持久化、主从复制与哨兵（Sentinel）高可用机制。
+
+<!--more-->
+
+## 一、基本概念
 Redis（REmote DIctionary Service）是一个开源（BSD 许可）的内存数据结构服务器，可用作数据库、高速缓存和消息队列代理。它支持字符串、哈希表、列表、集合、有序集合、位图、HyperLogLog 等数据类型。内置复制、Lua 脚本、LRU 回收、事务以及不同级别的磁盘持久化功能，同时通过 Redis Sentinel 提供高可用，通过 Redis Cluster 提供自动分区。
 
 ![redis explained](/images/redis/redis-explained.png "redis explained")
@@ -32,7 +41,7 @@ Memcached vs Redis
 ![redis-1](/images/redis/redis-vs-memcached.png "redis-vs-memcached")
 
 
-## 安装配置
+## 二、安装配置
 这里安装的环境是 Linux Ubuntu 22.04.4 LTS 操作系统，其它安装方式见[安装介绍](https://redis.ac.cn/docs/install/install-redis/)
 ```shell
 sudo apt install lsb-release curl gpg
@@ -97,7 +106,7 @@ OK
 - API（Application Programming Interface）
 - GUI（Graphical User Interface）：常用的图形化工具有 RedisInsight
 
-## 常用命令
+## 三、常用命令
 Redis 的[使用命令](https://redis.io/docs/latest/commands/)很多，这里重点介绍几种常用的命令
 ### 键命令(Key)
 ```
@@ -296,7 +305,7 @@ ZREVRANGE scores 0 0   # 输出: 1) "Alice"
 
 ```
 
-## 十大数据模型
+## 四、十大数据模型
 Redis 支持多种数据类型，初始化时可以指定不同的数据类型，更多数据类型可以查看[官网介绍](https://redis.io/docs/latest/develop/data-types/)
 
 ![redis-datatype](/images/redis/redis-datatype.png "redis-datatype")
@@ -366,7 +375,7 @@ Redis 有序集合和集合一样也是 String 类型元素的集合，且不允
 - Bitmap：即位图数据结构，都是操作二进制位来进行记录，只有 0 和 1 两个状态
 - 位域 Bitfield
 
-## 事务
+## 五、事务
 ### 什么是 Redis 事务
 Redis 事务的本质是一组命令的集合。事务支持一次执行多个命令，一个事务中所有命令都会被序列化。在事务执行过程，会按照顺序串行化执行队列中的命令，其他客户端提交的命令请求不会插入到事务执行命令序列中。总结说：Redis 事务就是一次性、顺序性、排他性地执行一个队列中的一系列命令。
 
@@ -392,7 +401,7 @@ OK
 
 ```
 
-## 数据持久化
+## 六、数据持久化
 为了防止数据丢失以及服务重启时能够恢复数据，Redis 支持数据的持久化，主要分为两种方式，分别是 RDB 和 AOF；当然实际场景下还会使用这两种的混合模式。
 
 - RDB(Redis Database)
@@ -523,7 +532,7 @@ Redis 4.0 中提出了一个混合使用 AOF 日志和内存快照的方法。�
 这样一来，快照不用很频繁地执行，这就避免了频繁 fork 对主线程的影响。而且，AOF 日志也只用记录两次快照间的操作，也就是说，不需要记录所有操作了，因此，就不会出现文件过大的情况了，也可以避免重写开销。可以通过配置 `aof-use-rdb-preamble yes` 开启混合持久化（Redis 4.0 起默认开启）。
 
 
-## 主从复制
+## 七、主从复制
 我们知道要避免单点故障，即保证高可用，便需要冗余（副本）方式提供集群服务。而 Redis 提供了主从库模式，以保证数据副本的一致，主从库之间采用的是读写分离的方式。本文主要阐述 Redis 的主从复制。
 
 主从复制，是指将一台 Redis 服务器的数据，复制到其他的 Redis 服务器。前者称为主节点（master），后者称为从节点（slave）；数据的复制是单向的，只能由主节点到从节点。
@@ -569,7 +578,7 @@ role:slave
 ...
 ```
 
-## 高可用：哨兵机制（Redis Sentinel）
+## 八、高可用：哨兵机制（Redis Sentinel）
 在上文主从复制的基础上，如果主节点出现故障该怎么办呢？ 在 Redis 主从集群中，哨兵机制是实现主从库自动切换的关键机制，它有效地解决了主从复制模式下故障转移的问题。
 
 ### 哨兵机制（Redis Sentinel）
@@ -603,7 +612,7 @@ redis-sentinel sentinel.conf
 ```
 注意：生产环境需要三个哨兵节点
 
-## 参考
+## 九、参考
 - https://redis.io/docs/latest/develop/
 - https://www.redis.net.cn/
 - [Redis 设计与实现](https://huangz.works/redisbook1e/index.html#id9)

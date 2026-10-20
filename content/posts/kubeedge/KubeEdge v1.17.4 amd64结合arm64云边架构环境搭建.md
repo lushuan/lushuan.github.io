@@ -5,17 +5,26 @@ date: 2025-09-10T12:06:37+08:00
 lastmod: 2025-09-14T12:06:37+08:00
 draft: false
 toc:
-enable: true
+  enable: true
+  auto: true
 weight: false
 categories: ["KubeEdge "]
 tags: ["KubeEdge "]
+slug: "kubeedge-setup"
+featuredImage: "/images/kubeedge/cover.jpg"
+summary: "基于真实边缘网关记录 KubeEdge v1.17.4 云端 amd64 结合边端 arm64 的云边架构环境搭建全流程，并介绍 KubeEdge 的核心组件、解决的痛点与典型使用场景。"
 ---
-## 前言
+
+本文基于真实采购的边缘网关，记录 KubeEdge v1.17.4 云端 amd64 结合边端 arm64 异构架构的环境搭建全流程，弥补网上缺乏混合架构搭建资料的空白。同时介绍 KubeEdge 的核心组件、云边协同机制、解决的痛点与典型物联网使用场景。
+
+<!--more-->
+
+## 一、前言
 最近在做一个网络内生安全方面的一个项目，需要在物联网IOT边端设备上部署软蜜罐和蜜网，为了方便管理边端设备服务，选型华为的[KubeEdge开源方案](https://kubeedge.io/zh/),
 当然使用k8s 定制版的 k3s 也可以，这里由于设备资源有限最终还是选择了KubeEdge,但是在网上找了很多资料以及官网都没有找到基于云端amd64+边端arm64架构组合的环境搭建，
 基本上云端amd64+边端amd64组合的方案，更多的是一种演示。本文是基于真实采购的边缘网关搭建的一整套流程，在此做一下记录，方便后面回溯复用。
 
-## KubeEdge 介绍
+## 二、KubeEdge 介绍
 KubeEdge是一个开源系统，用于将容器化应用程序编排功能扩展到Edge的主机。它基于Kubernetes构建，并为网络应用程序提供基础架构支持、云和边缘之间的部署和元数据同步。
 
 目标是创建一个开放平台，使能边缘计算，将容器化应用编排功能扩展到基于Kubernetes构建的边缘节点和设备，并为云和边缘之间的网络、应用部署和元数据同步提供基础架构支持。
@@ -71,7 +80,7 @@ KubeEdge是一个开源系统，用于将容器化应用程序编排功能扩展
 * **适用行业**：制造、零售、安防、能源、交通、智能家居等所有需要**就近计算、降低云依赖、保障实时性**的场景。
 * **混合架构**：同时支持 amd64 与 arm 混部，方便企业“中心机房 + 边缘节点”一体化运维。
 
-## KubeEdge 部署架构
+## 三、KubeEdge 部署架构
 ### 1. 典型部署架构
 
 ```
@@ -185,7 +194,7 @@ spec:
 * **多架构混部**：支持。CloudCore 可跑 amd64，EdgeCore 可跑 arm64/amd64/armv7，只需确保镜像/二进制匹配。
 * **调度策略**：利用 `nodeSelector`、`affinity` 保证应用调度到正确架构。
 
-## KubeEdge 部署方案
+## 四、KubeEdge 部署方案
 
 * **Kubernetes 集群 v1.28**（已有 master/control-plane）
 * **容器运行时：containerd v1.7.24**
@@ -218,7 +227,7 @@ node节点
 - [KubeEdge 和 Kubernetes 部署对应版本关系](https://github.com/kubeedge/kubeedge?tab=readme-ov-file#kubernetes-compatibility)
 - root 或者 具有 sudo 权限的用户
 
-## KubeEdge 环境准备
+## 五、KubeEdge 环境准备
 边端node节点
 ```
 sudo apt-get update 
@@ -255,7 +264,7 @@ hostnamectl set-hostname node1
 
 - 部署分为两部分云端也就是k8s master 节点，另一部是边端，部署顺序为先云端后边端
 
-## Cloud 节点部署
+## 六、Cloud 节点部署
 - 运行在 amd64 master节点
 ### 部署前准备
 云端 master 节点需要对外暴露一个广播地址,边缘节点在加入集群时会用到，这里是通过metallb进行创建
@@ -498,7 +507,7 @@ $ kubectl -n kubeedge get cm cloudcore -o yaml|grep cloudStream  -A 2
         enable: true  # 调整为true
         streamPort: 10003
 ```
-## Edge 节点部署
+## 七、Edge 节点部署
 - 运行在 arm 工控机
 ### 容器运行时
 
@@ -661,7 +670,7 @@ cni-plugins-linux-amd64-v1.1.1.tgz             100%[============================
 1.  edge边缘节点不要部署kubelet
 2.  `/etc/kubeedge/config/edgecore.yaml` 修改mqqt 连接地址
 
-## KubeEdge 验证部署
+## 八、KubeEdge 验证部署
 
 在 master 节点上：
 
@@ -742,7 +751,7 @@ spec:
         imagePullPolicy: IfNotPresent
 ```
 
-## CloudCore 配置文件参数释义(回顾)
+## 九、CloudCore 配置文件参数释义(回顾)
 ```
 [root@master soft-honeypot]# kubectl -n kubeedge get cm cloudcore -o yaml
 apiVersion: v1
@@ -1015,7 +1024,7 @@ data:
 * **taskManager** → 分布式任务调度
 
 
-## 后记
+## 十、后记
 ### KubeEdge 边缘节点无法通过Service 创建NodePort类型
 原因和 Kubernetes 与 KubeEdge 的架构有关
 
@@ -1075,7 +1084,7 @@ data:
 * NodePort 主要用于云端节点或完整 Kubernetes 集群环境，不适合裸边缘节点直接暴露。
 
 
-## 参考
+## 十一、参考
 1. [KubeEdge 官网](https://kubeedge.io/zh/)
 2. [KubeEdge 和 Kubernetes 部署对应版本关系](https://github.com/kubeedge/kubeedge?tab=readme-ov-file#kubernetes-compatibility)
 

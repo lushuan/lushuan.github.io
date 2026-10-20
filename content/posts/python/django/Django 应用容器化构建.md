@@ -6,10 +6,19 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Django"]
 tags: ["Django"]
+slug: "django-docker-build"
+featuredImage: "/images/python/cover.jpg"
+summary: "讲解如何使用 Docker 对 Django 应用进行容器化构建，涵盖项目创建、Dockerfile 编写、镜像构建与容器运行的完整流程。"
 ---
+
+本文讲解如何使用 Docker 对 Django 应用进行容器化构建，涵盖 Django 项目的创建、Dockerfile 的编写要点，以及镜像构建、容器运行与验证的完整流程和构建记录。
+
+<!--more-->
+
 Docker 是一个用于构建、运行和分发应用程序的平台。它允许您将应用程序及其所有依赖项打包到一个容器中，然后可以在任何安装了 Docker 的服务器上运行。
 
 这使得 Docker 成为部署 Web 应用程序的理想选择，因为它可以轻松地将应用程序从一个环境移动到另一个环境，而无需担心任何兼容性问题。
@@ -22,7 +31,7 @@ Docker 化和部署 Django 应用程序是一个相对简单的过程。涉及�
 1. 为您的 Django 应用程序创建 Dockerfile。
 2. 从 Dockerfile 构建 Docker 映像。
 3. 将Docker镜像部署到生产环境。
-## 准备
+## 一、准备
 基于 Python 3.9、Django 3.2、docker 20.10.13
 ### 软件安装
 - Docker
@@ -59,7 +68,7 @@ django-demo/
 ```
 $ python manage.py runserver
 ```
-## Dockerfile
+## 二、Dockerfile
 ```
 # 使用官方Python运行时作为父镜像
 FROM python:3.9-alpine
@@ -157,6 +166,6 @@ CONTAINER ID  IMAGE                       COMMAND               CREATED        S
 49c212881ab1  localhost/mydjangoapp:v1.0  python manage.py ...  8 seconds ago  Up 8 seconds  0.0.0.0:8000->8000/tcp  mydjangoapp
 ```
 
-## 参考
+## 三、参考
 - [Python 镜像的全方位指南 原创](https://blog.51cto.com/jiemei/8712683)
 

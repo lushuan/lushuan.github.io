@@ -6,12 +6,21 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Prometheus"]
 tags: ["Prometheus"]
+slug: "promql-guide"
+featuredImage: "/images/scenery/cover-2.jpg"
+summary: "系统介绍 PromQL 查询语言的基础概念、数据类型、时间序列与四种指标类型，以及标签过滤与高级查询等用法。"
 ---
+
+本文系统介绍 Prometheus 内置查询语言 PromQL，涵盖即时向量、区间向量、标量等数据类型，时间序列与 Counter/Gauge/Histogram/Summary 四种指标类型等基础概念，并讲解简单查询、标签选择器过滤与高级查询的语法用法。
+
+<!--more-->
+
 ![PromQL](/images/prometheus/promql/promql.png "PromQL")
-## 介绍
+## 一、介绍
 PromQL 是 Prometheus 内置的数据查询语言，其提供对时间序列数据丰富的查询，聚合以及逻辑运算能力的支持。
 并且被广泛应用在 Prometheus 的日常应用当中，包括对数据查询、可视化、告警处理。可以这么说，PromQL 是 Prometheus 所有应用场景的基础，理解和掌握 PromQL 是我们使用 Prometheus 必备的技能。
 
@@ -26,7 +35,7 @@ PromQL都能够提供必要的工具来满足用户的需求。
 PromQL的设计哲学围绕着几个关键点：灵活性、表现力和性能。它旨在提供足够的灵活性，以支持从简单到复杂的各种查询需求，
 同时保持查询表达式的简洁性。此外，PromQL经过优化以支持高效的数据处理和检索，这对于实时监控系统来说至关重要。
 
-## PromQL基础概念
+## 二、PromQL基础概念
 ### 数据类型和结构
 在PromQL中，主要操作以下几种数据类型：
 #### 即时向量（Instant Vector）
@@ -147,7 +156,7 @@ prometheus_tsdb_compaction_chunk_range_seconds_count 2.5687896e+07
 与 Summary 类型的指标相似之处在于 Histogram 类型的样本同样会反应当前指标的记录的总数(以 _count 作为后缀)以及其值的总量（以 _sum 作为后缀）。
 不同在于 Histogram 指标直接反应了在不同区间内样本的个数，区间通过标签 le 进行定义。
 
-## 查询
+## 三、查询
 ### 简单查询和表达式
 PromQL Web UI 的 Graph 选项卡提供了简单的用于查询数据的入口
 输入 up，然后点击 Execute，就能查到监控正常的 Target

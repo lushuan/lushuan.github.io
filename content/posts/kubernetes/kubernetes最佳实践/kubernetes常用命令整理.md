@@ -6,10 +6,19 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Kubernetes"]
 tags: ["Kubernetes"]
+slug: "kubectl-commands-cheatsheet"
+featuredImage: "/images/kubernetes/cover.jpg"
+summary: "对 Kubernetes 常用命令进行分类整理，涵盖集群管理、Pod/Service/Deployment 管理、资源监测、配置加密、命名空间及 kubeadm 等场景，并详细辨析 expose 与 port-forward、scale 与 autoscale、exec 与 attach 等易混命令的区别。"
 ---
+
+日常使用 Kubernetes 离不开命令行，本文按集群管理、Pod 管理、资源监测、Service 管理、配置和加密、Deployment 管理等分类整理常用 kubectl/kubeadm 命令，并对多组容易混淆的命令进行详细对比说明，方便日常查阅。
+
+<!--more-->
+
 使用 kubernetes 经常会用到命令行，这里对命令行进行分类整理
 
 - 集群管理
@@ -79,7 +88,7 @@ tags: ["Kubernetes"]
   - kubeadm token create --print-join-command 创建node加入口令
 
 
-## 命令说明
+## 一、命令说明
 ### 1. kubectl expose 和 kubectl port-forwad 的区别
 kubectl expose 和 kubectl port-forward 是两个不同的命令，它们在 Kubernetes 中有不同的作用和用法。
 

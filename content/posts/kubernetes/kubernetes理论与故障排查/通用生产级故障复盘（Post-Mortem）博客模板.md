@@ -5,12 +5,19 @@ date: 2026-06-01T12:06:37+08:00
 lastmod: 2026-06-01T12:06:37+08:00
 draft: true
 toc:
-enable: true
+  enable: true
+  auto: true
 weight: false
 categories: ["Kubernetes"]
 tags: ["Kubernetes排障"]
+slug: "post-mortem-blog-template"
+featuredImage: "/images/kubernetes/cover.jpg"
+summary: "提供一套通用型、标准化的生产级故障复盘（Post-Mortem）博客模板，按照故障现场、递进排查、终极破局、架构反思、经验沉淀五个章节组织内容，帮助把排障流水账写成逻辑严密的技术文章。"
 ---
 
+一个优秀的故障复盘博客，核心是把"枯燥的填坑流水账"包装成"逻辑严密的侦探小说"。本文提供一套云原生与系统运维方向通用的 Post-Mortem 博客模板，涵盖故障现场、多维度排查、终极破局、架构反思和经验沉淀五大章节，可直接套用。
+
+<!--more-->
 
 一个**通用型、标准化的“生产级故障复盘（Post-Mortem）”博客模板**。
 

@@ -5,17 +5,26 @@ date: 2025-10-20T12:06:37+08:00
 lastmod: 2025-10-20T12:06:37+08:00
 draft: false
 toc:
-enable: true
+  enable: true
+  auto: true
 weight: false
 categories: ["Gitlab","CI/CD"]
 tags: ["Gitlab","CI/CD"]
+slug: "gitlab-cicd-gva"
+featuredImage: "/images/cicd/cover.jpg"
+summary: "基于 Gitlab CE 与 Gitlab Runner 为 Gin-Vue-Admin 后端服务搭建完整 CI/CD 流水线，涵盖环境准备、镜像构建、推送 Harbor、Kubernetes 部署与钉钉通知的全流程实践。"
 ---
-## 🚀 前言
+
+本文记录基于 Gitlab 社区版搭建 CI/CD 的完整实践，适用于中小团队。以 Gin-Vue-Admin 后端 server 服务为例，实现代码 push/merge 到 master 后自动完成镜像构建、推送 Harbor、Kubernetes 部署以及钉钉通知的全流程，并详细介绍 Gitlab Runner 的部署与配置。
+
+<!--more-->
+
+## 一、🚀 前言
 记录基于 Gitlab 社区版搭建CI/CD，适用与中小团队的开发，功能包含prepare->build->push->deploy->dingTalk notify
 
 ![gitlab-pipeline-demo](/images/cicd/gitlab/gitlab-pipeline-1.png "Gitlab Pipelines")
 
-## 🧩 环境信息
+## 二、🧩 环境信息
 
 1. 操作系统：Kylin v10 (Ubuntu / CentOS 均可)
 2. Kubernetes v1.28.0
@@ -27,7 +36,7 @@ tags: ["Gitlab","CI/CD"]
 
 目标：push/merge 到 master → 自动 build + push + k8s 部署 + 钉钉通知
 
-## 🧱 总体流程
+## 三、🧱 总体流程
 
 ```
    GitLab
@@ -45,7 +54,7 @@ tags: ["Gitlab","CI/CD"]
  访问 NodePort 端口
 ```
 
-## 🧰 Gitlab Runner 介绍和部署
+## 四、🧰 Gitlab Runner 介绍和部署
 篇幅有限，默认在搭建整个ci/cd 工具链中，其它组件已经提前部署好，这里选型gitlab-runner v18.4.0，理论上来讲建议Gitlab CE和gitlab-runner 版本相匹配，
 这里直接选择了gitlab-runner v18.4.0 较高版本，在验证的过程中发现也是可以，并且插件版本向后兼容，并且还会介绍基于传统常见的Redhat 系列和Debian 系列的在线安装方式，
 但是在国产数据库部署，这里选择二进制的方式进行部署
@@ -254,7 +263,7 @@ build:
 如果没有匹配标签的 Runner，Job 会一直处于 *pending* 状态。
 
 ---
-## ⚙️GitLab CI 配置文件 `.gitlab-ci.yml`
+## 五、⚙️GitLab CI 配置文件 `.gitlab-ci.yml`
 
 在项目根目录新建 `.gitlab-ci.yml` 文件，内容如下：
 ```
@@ -465,7 +474,7 @@ notify:
 
 ![gitlab-pipeline-demo](/images/cicd/gitlab/gitlab-pipeline-2.png "Gitlab Variables")
 
-## 🐳 Dockerfile 示例（放在项目根目录）
+## 六、🐳 Dockerfile 示例（放在项目根目录）
 如果你已有官方 GVA 项目，可参考下方后端构建 Dockerfile，该Dockerfile 优化了如下问题
 1. DNS 解析不稳定问题
 2. 使用国内镜像源进行加速代理
@@ -516,7 +525,7 @@ COPY --from=0 /app/config.yaml ./
 EXPOSE 8888
 ENTRYPOINT ["./server", "-c", "config.yaml"]
 ```
-## 🧩 K8S 部署示例
+## 七、🧩 K8S 部署示例
 ```
 apiVersion: v1
 kind: ConfigMap
@@ -588,7 +597,7 @@ spec:
       port: 8888
       nodePort: 30088
 ```
-## 🧠 测试与验证
+## 八、🧠 测试与验证
 
 1️⃣ 推送到 master：
 
@@ -622,7 +631,7 @@ http://k8s_master_vip:30088
 ![gitlab-pipeline-demo](/images/cicd/gitlab/gitlab-pipeline-3.png "DingTalk Notify")
 
 
-## 🧩 常见问题排查
+## 九、🧩 常见问题排查
 
 | 问题                          | 解决方法                                      |
 | --------------------------- | ----------------------------------------- |
@@ -631,7 +640,7 @@ http://k8s_master_vip:30088
 | Job 一直 pending              | 检查 Runner 是否注册到项目、是否有 tag 匹配。             |
 | 镜像无法拉取                      | 将 `imagePullPolicy` 设置为 `Never` 或推送到私有仓库。 |
 
-## 🧩 踩坑
+## 十、🧩 踩坑
 在提交`.gitlab-ci.yaml` 调试的过程中，一直提示如下报错
 ```
 Syntax is incorrect. CI configuration validated, including all configuration added with the includes keyword
@@ -661,7 +670,7 @@ script:
 ```
 外层使用单引号 '...'，里面的冒号就不会被解析器误认为 key。
 
-##  ✅ 总结
+##  十一、✅ 总结
 
 | 模块    | 技术                      |
 | ----- | ----------------------- |

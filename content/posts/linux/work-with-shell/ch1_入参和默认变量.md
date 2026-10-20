@@ -6,10 +6,18 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Shell"]
 tags: ["Shell"]
+slug: "shell-ch1-args"
+summary: "介绍 shell 脚本的入参与默认变量，包括 $0、$1 等位置参数，以及 $#、$@、$*、$$、$? 等特殊变量的含义。"
 ---
+
+shell 脚本通过位置参数接收外部输入，$0 表示脚本名，$1、$2 等表示依次传入的参数。除位置参数外，还有 $#、$@、$*、$$、$? 等默认变量，分别表示参数个数、参数列表、进程 ID 和上一条命令的退出状态。
+
+<!--more-->
+
 对于shell脚本而言，有些内容是专门用于处理参数的，它们都有特定的含义，例如
 ```shell
 /home/shouwang/test.sh para1 para2 para3

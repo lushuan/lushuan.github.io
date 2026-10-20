@@ -6,10 +6,19 @@ lastmod: 2024-06-26T16:25:58+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Docker"]
 tags: ["Docker","CRI-Dockerd"]
+slug: "cri-dockerd-guide"
+featuredImage: "/images/blog_cover/caoyuan/2.jpg"
+summary: "本文详解 CRI-Dockerd 的诞生背景、工作原理与版本兼容矩阵，解答 K8s v1.24 移除 dockershim 后是否还需要 CRI-Dockerd 的选型疑问，并给出生产环境的性能对比、故障排查与迁移避坑指南。"
 ---
+
+Kubernetes v1.24 正式移除 dockershim 之后，"K8s 不再原生支持 Docker"引发了大量困惑，CRI-Dockerd 正是这一历史转折点诞生的关键组件。本文从历史背景、工作原理、部署决策和生产实践四个维度彻底讲透 CRI-Dockerd 的前世今生，包括它作为 CRI 协议转换垫片的架构、与 containerd 的性能对比、版本兼容矩阵，以及从 Docker 渐进迁移到 containerd 的策略。
+
+<!--more-->
+
 ### 前言
 
 在 Kubernetes v1.24 正式移除 dockershim 之后，整个容器生态经历了一次重大的架构调整。许多运维工程师在面对“K8s 不再原生支持 Docker”这一事实时，产生了大量的困惑与焦虑。CRI-Dockerd 正是在这一历史转折点诞生的关键组件。

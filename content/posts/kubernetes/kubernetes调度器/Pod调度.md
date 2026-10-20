@@ -6,16 +6,25 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Kubernetes"]
 tags: ["Kubernetes"]
+slug: "pod-scheduling-affinity"
+featuredImage: "/images/kubernetes/cover.jpg"
+summary: "详细讲解 Kubernetes Pod 调度的各种控制方式，包括 nodeSelector、节点亲和性（nodeAffinity）、Pod 亲和性与反亲和性（podAffinity/podAntiAffinity）及软硬策略的区别，并配合完整 YAML 示例演示。"
 ---
+
+默认调度器只考虑资源充足和负载均衡，实际生产中往往需要更细粒度地控制 Pod 调度。本文介绍 nodeSelector、节点亲和性、Pod 亲和性与反亲和性等调度方式，讲解软策略与硬策略的区别，并通过大量 YAML 示例演示具体用法。
+
+<!--more-->
+
 # Pod调度
 
 一般情况下我们部署的 Pod 是通过集群的自动调度策略来选择节点的，默认情况下调度器考虑的是资源足够，并且负载尽量平均，但是有的时候我们需要能够更加细粒度的去控制 Pod 的调度，比如我们希望一些机器学习的应用只跑在有 GPU 的节点上；但是有的时候我们的服务之间交流比较频繁，又希望能够将这服务的 Pod 都调度到同一个的节点上。这就需要使用一些调度方式来控制 Pod 的调度了，主要有两个概念：亲和性和反亲和性，亲和性又分成节点亲和性(nodeAffinity)和 Pod 亲和性(podAffinity)。
 
 
-## nodeSelector
+## 一、nodeSelector
 在了解亲和性之前，我们先来了解一个非常常用的调度方式：nodeSelector。我们知道 label 标签是 kubernetes 中一个非常重要的概念，用户可以非常灵活的利用 label 来管理集群中的资源，比如最常见的 Service 对象通过 label 去匹配 Pod 资源，而 Pod 的调度也可以根据节点的 label 来进行调度。
 
 我们可以通过下面的命令查看我们的 node 的 label：
@@ -78,7 +87,7 @@ Events:
 
 通过上面的例子我们可以感受到 nodeSelector 的方式比较直观，但是还够灵活，控制粒度偏大，接下来我们再和大家了解下更加灵活的方式：节点亲和性(nodeAffinity)。
 
-## 亲和性和反亲和性调度
+## 二、亲和性和反亲和性调度
 前面我们了解了 kubernetes 调度器的调度流程，我们知道默认的调度器在使用的时候，经过了 predicates 和 priorities 两个阶段，但是在实际的生产环境中，往往我们需要根据自己的一些实际需求来控制 Pod 的调度，这就需要用到 nodeAffinity(节点亲和性)、podAffinity(pod 亲和性) 以及 podAntiAffinity(pod 反亲和性)。
 
 亲和性调度可以分成软策略和硬策略两种方式:
@@ -87,7 +96,7 @@ Events:
 - 硬策略就比较强硬了，如果没有满足条件的节点的话，就不断重试直到满足条件为止，简单说就是你必须满足我的要求，不然就不干了
 对于亲和性和反亲和性都有这两种规则可以设置： preferredDuringSchedulingIgnoredDuringExecution 和requiredDuringSchedulingIgnoredDuringExecution，前面的就是软策略，后面的就是硬策略
 
-## 节点亲和性
+## 三、节点亲和性
 节点亲和性（nodeAffinity）主要是用来控制 Pod 要部署在哪些节点上，以及不能部署在哪些节点上的，它可以进行一些简单的逻辑组合了，不只是简单的相等匹配。
 
 比如现在我们用一个 Deployment 来管理8个 Pod 副本，现在我们来控制下这些 Pod 的调度，如下例子：
@@ -162,7 +171,7 @@ node-affinity-cdd9d54d9-t5mff   1/1     Running   0          2m28s   10.244.1.11
 
 但是需要注意的是如果 nodeSelectorTerms 下面有多个选项的话，满足任何一个条件就可以了；如果 matchExpressions有多个选项的话，则必须同时满足这些条件才能正常调度 Pod。
 
-## Pod亲和性
+## 四、Pod亲和性
 Pod 亲和性（podAffinity）主要解决 Pod 可以和哪些 Pod 部署在同一个拓扑域中的问题（其中拓扑域用主机标签实现，可以是单个主机，也可以是多个主机组成的 cluster、zone 等等），而 Pod 反亲和性主要是解决 Pod 不能和哪些 Pod 部署在同一个拓扑域中的问题，它们都是处理的 Pod 与 Pod 之间的关系，比如一个 Pod 在一个节点上了，那么我这个也得在这个节点，或者你这个 Pod 在节点上了，那么我就不想和你待在同一个节点上。
 
 由于我们这里只有一个集群，并没有区域或者机房的概念，所以我们这里直接使用主机名来作为拓扑域，把 Pod 创建在同一个主机上面。
@@ -251,7 +260,7 @@ pod-affinity-76c56567c-hx7ck   1/1     Running   0          2m52s   10.244.3.23 
 ```
 可以看到现在是分别运行在2个节点下面的，因为他们都属于 beta.kubernetes.io/os 这个拓扑域。
 
-## Pod反亲和性
+## 五、Pod反亲和性
 Pod 反亲和性（podAntiAffinity）则是反着来的，比如一个节点上运行了某个 Pod，那么我们的模板 Pod 则不希望被调度到这个节点上面去了。我们把上面的 podAffinity 直接改成 podAntiAffinity：
 ```yaml
 # pod-antiaffinity-demo.yaml
@@ -300,7 +309,7 @@ pod-antiaffinity-84d5bf9df4-vk9tc   1/1     Running   0          57s   10.244.3.
 ```
 我们可以看到没有被调度到 node2 节点上，因为我们这里使用的是 Pod 反亲和性。大家可以思考下，如果这里我们将拓扑域更改成 beta.kubernetes.io/os 会怎么样呢？可以自己去测试下看看。
 
-## 污点和容忍
+## 六、污点和容忍
 对于 nodeAffinity 无论是硬策略还是软策略方式，都是调度 Pod 到预期节点上，而污点（Taints）恰好与之相反，如果一个节点标记为 Taints ，除非 Pod 也被标识为可以容忍污点节点，否则该 Taints 节点不会被调度 Pod。
 
 比如用户希望把 Master 节点保留给 Kubernetes 系统组件使用，或者把一组具有特殊资源预留给某些 Pod，则污点就很有用了，Pod 不会再被调度到 taint 标记过的节点。我们使用 kubeadm 搭建的集群默认就给 master 节点添加了一个污点标记，所以我们看到我们平时的 Pod 都没有被调度到 master 上去：

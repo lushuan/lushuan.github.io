@@ -6,12 +6,21 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Jenkins"]
 tags: ["Jenkins"]
+slug: "jenkins-intro"
+featuredImage: "/images/cicd/cover.jpg"
+summary: "介绍 CI/CD 持续集成与持续部署的基本概念、Jenkins 及同类工具对比，并给出基于 Kubernetes 部署 Jenkins 的完整 YAML 配置实践。"
 ---
+
+本文从持续集成（CI）与持续部署（CD）的基本概念讲起，介绍开源 CI/CD 工具 Jenkins 的定位与同类工具对比，并详细演示如何基于 Kubernetes 编写 Deployment 等 YAML 清单来部署 Jenkins。
+
+<!--more-->
+
 在了解Jenkins 之前先了解一下CI&CD
-## cicd 介绍
+## 一、cicd 介绍
 持续集成(Continous Intergrations) 和持续部署(Continuous Deployment)的区别
 - 持续集成(Continous Intergrations) 和持续部署(Continuous Deployment)是DevOps中域软件交付和
 部署相关的两个重要概念
@@ -29,7 +38,7 @@ tags: ["Jenkins"]
 - 持续部署强调自动化的部署过程，通过自动化测试和验证确保代码的稳定性和可靠性，
 使新功能、修复或者改进能够实时交付给用户
 
-## Jenkins 介绍
+## 二、Jenkins 介绍
 Jenkins是一款开源 CI&CD 软件，用于自动化各种任务，包括构建、测试和部署软件。
 
 Jenkins 支持各种运行方式，可通过系统包、Docker 或者通过一个独立的 Java 程序。
@@ -64,7 +73,7 @@ Jenkins 支持各种运行方式，可通过系统包、Docker 或者通过一�
 
 每个工具都有其独特的优势和适用场景，选择合适的工具通常取决于项目的具体需求、团队的技术栈和预算等因素。
 
-## 安装
+## 三、安装
 在官网的用户手册上提供了多种部署Jenkins的方式，下面提供一下基于Kubernetes 部署的Jenkins
 
 jenkins-deploy.yaml
@@ -230,7 +239,7 @@ kubectl -n kube-ops get pod
 
 - [其它方式安装Jenkins-官网](https://www.jenkins.io/zh/doc/book/installing/)
 
-## 修改镜像源
+## 四、修改镜像源
 由于国内墙的原因，下载一些插件会遇到网络问题，需要修改一下镜像源
 `系统管控-> 插件管理-> 高级配置`
 
@@ -250,7 +259,7 @@ root@k8s-master01:/opt/jenkins/jenkins# cat hudson.model.UpdateCenter.xml
   </site>
 ```
 
-## 修改 Jenkins 配置
+## 五、修改 Jenkins 配置
 为了方便的使用Jenkins，需要安装一写常用的插件，以下列的有点多，根据需要安装常用的插件，以下基本上都会用得到的，不了解的插件可以到插件市场上
 搜索一下看下介绍。
 
@@ -291,5 +300,5 @@ root@k8s-master01:/opt/jenkins/jenkins# cat hudson.model.UpdateCenter.xml
 - [Jenkins 插件官网](https://plugins.jenkins.io/)
 
 
-## 参考
+## 六、参考
 - https://www.jenkins.io/zh/doc/

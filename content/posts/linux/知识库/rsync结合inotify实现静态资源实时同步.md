@@ -6,10 +6,18 @@ lastmod: 2024-08-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Linux"]
 tags: ["Rsync"]
+slug: "rsync-inotify-sync"
+featuredImage: "/images/blog_cover/caoyuan/1.jpg"
+summary: "介绍 rsync 的三种模式与安装配置，结合 inotify 目录监控实现静态资源实时同步，并演示 rsyncd 安全认证与免密登录的配置方法。"
 ---
+rsync 是基于 rsync 算法的远程数据同步工具，只传送文件的差异部分，速度快；inotify 负责监测目录变化，两者结合即可实现静态资源的实时同步。本文介绍 rsync 的三种模式、rsyncd 守护进程的安装配置、双主机同步示例，以及安全认证与免密登录的设置方法。
+
+<!--more-->
+
 rsync(remote synchronize)是一个远程数据同步工具，可通过 LAN/WAN 快速同步多台主机之间的文件，也可以使用 rsync 同步本地硬盘中的不同目录。rsync 是用于替代rcp的一个工具，rsync 使用所谓的 rsync算法 进行数据同步，这种算法只传送两个文件的不同部分，而不是每次都整份传送，因此速度相当快。
 
 rsync 基于inotify开发,inotify 主要的功能是监测目标目录是否有变化。rsync 用作同步，inotify 用作监测，两者结合使用实现静态资源方案同步的实现。
@@ -18,7 +26,7 @@ Rsync有三种模式
 - 本地模式(类似于cp命令)
 - 远程模式(类似于scp命令)
 - 守护进程(socket进程：是rsync的重要功能)
-## 安装
+## 一、安装
 - 测试机器节点`192.168.143.101`作为源主机 和 `192.168.143.102`作为目标主机
 - rsync 结合inotify 监控源主机的指定目录实时推送到目标主机的指定目录下，实现静态资源的实时同步
 
@@ -53,7 +61,7 @@ receiving incremental file list
 - 目标主机需要防火墙需要对源主机开放873 端口权限
 - 目标主机的同步目录权限应为755
 
-## rsyncd 增加安全认证及免密登录
+## 二、rsyncd 增加安全认证及免密登录
 ```shell
 echo "lushuan:111" >> /etc/rsyncd.pwd
 chmod 600 /etc/rsyncd.pwd
@@ -99,7 +107,7 @@ $ rsync -avz --delete --password-file=/etc/rsyncd.pwd.client lushuan@192.168.143
 | `--delete`     | 删除目标位置上存在但在源位置不存在的文件，使目标位置的内容完全与源位置一致。 |
 | `--exclude=PATTERN` | 指定排除规则，不传输匹配该模式的文件或目录。              |
 
-## rsync 推送方案
+## 三、rsync 推送方案
 - 近时推送(目标主机定时轮询拉取源主机，会有一定的网络资源的浪费)
 - 实时推送
 
@@ -130,7 +138,7 @@ $ systemctl restart rsyncd
 # 实时推送(手动)
 $ rsync -avz --delete --password-file=/etc/rsyncd.pwd.client /data/rsync_test/ lushuan@192.168.143.102::ftp 
 ```
-## inotify
+## 四、inotify
 
 ### inotify 介绍
 `inotify` 是一种用于 Linux 系统的文件系统事件监控机制，它允许应用程序监听文件或目录的变化。通过 `inotify`，程序可以接收到诸如文件被读取、写入、创建、删除、权限更改等操作的通知。这使得它非常适合需要实时响应文件系统变化的应用场景，比如自动同步文件、日志监控或者作为某些开发工具（如热重载功能）的基础。
@@ -188,7 +196,7 @@ done
 | `-d, --daemon` | 以守护进程模式运行，通常配合 `--outfile` 使用来指定日志文件。     |
 | `--outfile`   | 指定输出重定向到的文件路径，常与 `-d` 选项一起使用。             |
 
-## 最佳实践
+## 五、最佳实践
 在部署rsyncd 时，可能会遇到权限相关的问题，或者是配置相关的问题，下面给出对应的参考，若果有其它的异常报错可以参考[rsync故障排除解答](https://blog.51cto.com/53cto/1771826),下面是配置参考，根据自己需求来修改，这里是加密认证的配置。 另外如果是在生产环境可能遇到防火墙没有开放的问题，注意放开一下 873 端口，最后就是源主机和目标主机如果是非root 用户注意查看目录的权限，推荐目录权限为766
 ```shell
 ...
@@ -202,7 +210,7 @@ read only =  no
 ```
 
 
-## 参考
+## 六、参考
 1. [rsync官网](https://rsync.samba.org/)
 2. [rsync 用法教程](https://www.ruanyifeng.com/blog/2020/08/rsync.html)
 3. [rsync故障排除解答](https://blog.51cto.com/53cto/1771826)

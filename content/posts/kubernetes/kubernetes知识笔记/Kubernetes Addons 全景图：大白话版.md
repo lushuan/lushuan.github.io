@@ -6,10 +6,18 @@ lastmod: 2025-03-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Kubernetes"]
 tags: ["Kubernetes"]
+slug: "k8s-addons-overview"
+featuredImage: "/images/kubernetes/cover.jpg"
+summary: "基于官方 Addons 页面和生产经验，用大白话按功能分类解读 Kubernetes 插件生态，涵盖 CNI 网络、DNS、监控、日志、安全、GitOps 等类别，给出各项目的热度、难度、生产可用性及选型建议。"
 ---
+
+kubeadm 装好的集群只是"毛坯房"，网络、DNS、监控、日志等能力都要靠 Addons 插件补齐。本文基于官方 Addons 页面结合生产经验，按必选程度分层、按功能分类，用通俗语言解读各主流插件解决什么痛点，并给出热度、上手难度、生产可用性和选型建议。
+
+<!--more-->
 
 ## 前言
 
@@ -25,7 +33,8 @@ Kubernetes 官方在 [Installing Addons](https://kubernetes.io/docs/concepts/clu
 
 ---
 
-## 总览：按"必选程度"分层
+## 总览
+> 按"必选程度"分层
 
 ```
 ┌─────────────────────────────────────────────────────────────┐

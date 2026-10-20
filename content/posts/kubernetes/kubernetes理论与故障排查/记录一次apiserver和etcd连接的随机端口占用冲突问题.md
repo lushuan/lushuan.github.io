@@ -6,20 +6,27 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Kubernetes"]
 tags: ["Kubernetes排障"]
+slug: "apiserver-etcd-port-conflict"
+summary: "记录一次 kube-apiserver 与 etcd 连接的随机端口占用业务端口（52306）导致生产应用异常的故障分析，给出通过 net.ipv4.ip_local_reserved_ports 预留端口范围的永久解决方案，并附 k8s.conf 内核参数说明。"
 ---
 
-## 背景
+主节点内存扩容重启后，业务门户报 503，排查发现 MySQL 端口被 apiserver 与 etcd 之间连接的随机端口占用。本文记录该端口冲突问题的定位过程、临时与永久处理方法（预留端口范围），并补充说明 /etc/sysctl.d/k8s.conf 中常见内核参数的含义。
+
+<!--more-->
+
+## 一、背景
 项目现场通过 kubeadm 部署一套 k8s 临时环境 版本是v1.22, 因为是临时环境，部署方式是一主两从的模式，
 部署后十天客户直接将主节点的内存进行了扩容，导致现场的应用服务无法访问。
 
-## 现象
+## 二、现象
 打开访问应用门户，提示 nginx 网关访问报错
 `503 Service Temporarily Unavailable`
 
-## 定位
+## 三、定位
 通过 kubectl 查看 pod 状态发现很多应用是 CrashLoopBackOff,猜测是系统基础组件出现异常,查看应用日志提示
 jdbc 连接 MySQL 异常，查看MySQL 日志发现端口52306被占用。
 
@@ -30,7 +37,7 @@ tcp        0      0 127.0.0.1:52306         127.0.0.1:2379          ESTABLISHED 
 tcp        0      0 127.0.0.1:2379          127.0.0.1:52306         ESTABLISHED 23788/etcd
 ```
 
-## 问题处理
+## 四、问题处理
 1. 确认端口占用情况：执行 sudo netstat -lnp | grep <port> 命令查看指定端口是否被占用
 2. 释放端口：如果该端口已被占用，可以通过 sudo lsof -i:<port> 命令查找占用端口的进程
 3. 临时处理，pod 重建 kill 掉 etcd 的静态 pod，端口可能还是会重新被占用
@@ -47,7 +54,7 @@ net.bridge.bridge-nf-call-iptables = 1
 net.ipv4.ip_local_reserved_ports = 52000-52999
 ```
 `net.ipv4.ip_local_reserved_ports`新增预留端口配置，保留端口范围不被占用，告诉内核保留端口范围从 52000 到 52999，以便这些端口不会被普通应用程序占用
-## /etc/sysctl.d/k8s.conf 配置项说明
+## 五、/etc/sysctl.d/k8s.conf 配置项说明
 在 Kubernetes 1.22 版本的 /etc/sysctl.d/k8s.conf 配置文件中，可能包含以下一些配置项：
 
 1、 net.bridge.bridge-nf-call-ip6tables：

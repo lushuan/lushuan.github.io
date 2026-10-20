@@ -1,15 +1,23 @@
 ---
-title: "基于 Docker Compose 部署 MySQL 8.0 生产实践指南（Kylin V10 / RHEL 系列）| 附完整 yml 与运维命令"
-subtitle: ""
+title: "基于 Docker Compose 部署 MySQL 8.0 生产实践指南"
+subtitle: "（Kylin V10 / RHEL 系列）| 附完整 yml 与运维命令"
 date: 2025-12-17T16:25:58+08:00
 lastmod: 2025-12-17T16:25:58+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["运维","数据库"]
 tags: ["Docker Compose","MySQL 8.0","数据库运维"]
+slug: "docker-compose-mysql"
+featuredImage: "/images/blog_cover/caoyuan/1.jpg"
+summary: "本文基于 Kylin V10/RHEL 系列环境，介绍使用 Docker Compose 部署 MySQL 8.0 的生产实践，涵盖目录规划、my.cnf 配置调优、compose 编排、备份恢复、运维命令与故障排查速查。"
 ---
+
+本文基于 Kylin V10/CentOS/RHEL 系列 + Docker 25.0.0 + Compose v2.24.1 环境，完整介绍 MySQL 8.0 容器化的生产部署实践。内容包括 MySQL 客户端安装、标准目录规划、my.cnf 生产级配置、docker-compose.yml 编排（含健康检查、资源限制、日志轮转），以及验证部署、自动备份脚本和故障排查速查表，最终交付一套数据持久化、自动拉起、可追溯的生产级数据库实例。
+
+<!--more-->
 
 > **环境声明**：本文基于以下已完成的环境进行部署操作
 > - 操作系统：Kylin V10 / CentOS / RHEL 系列

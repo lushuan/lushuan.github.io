@@ -6,10 +6,19 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Linux"]
 tags: ["Linux"]
+slug: "linux-performance-tuning"
+featuredImage: "/images/blog_cover/nature/3.jpg"
+summary: "讲解 Linux 系统性能问题定位方法：top/pidstat 监控进程、内存指标释义与占用排查、iostat/iotop 分析磁盘 IO 瓶颈、缓存清理与僵尸进程处理，并给出完整排查思路。"
 ---
+
+本文介绍 Linux 系统性能问题的定位方法：top 快捷键与进程监控、WSS/RSS/CACHE/SWAP 等内存指标释义、通过 iostat 的 %util/await 判断磁盘 IO 瓶颈、iotop 查找 IO 大户、pidstat 监控进程资源，以及清理缓存、kill 僵尸进程等最佳实践，最后总结一套完整的服务器性能排查思路。
+
+<!--more-->
+
 # 监控系统资源和进程工具
 > top 命令
 
@@ -19,7 +28,7 @@ tags: ["Linux"]
 - M：按内存使用排序。按下 M 键后，top 命令会按照内存使用量的大小对进程进行排序，并显示最高的内存使用进程。
 - P：按 CPU 使用排序。按下 P 键后，top 命令会按照 CPU 使用率的大小对进程进行排序，并显示最高的 CPU 使用进程。
 
-## 内存
+## 一、内存
 内存相关名词释义
 
 1）Working Set
@@ -49,7 +58,7 @@ VmRSS:     31500 kB
 {{< /admonition >}}
 
 
-## IO
+## 二、IO
 - 查看磁盘io及传递状态
 ```shell script
 iostat -x 1 3
@@ -81,7 +90,7 @@ Actual DISK READ:      64.22 K/s | Actual DISK WRITE:    1934.59 K/s
  55873 be/4 systemd-    0.00 B/s    2.68 K/s  0.00 %  0.02 % mysqld
 ```
 
-## 监控进程使用情况
+## 三、监控进程使用情况
 pidstat 是一个用于监控进程资源使用情况的工具，可以提供有关 CPU、内存、磁盘IO、网络和上下文切换等方面的统计信息。以下是 pidstat 常用命令及其使用场景：
 
 > 1.查看特定进程的资源使用情况：
@@ -105,7 +114,7 @@ pidstat 命令常用于性能分析和资源监控，可以帮助定位和解决
 查找 CPU 密集型进程、监测内存泄漏、检测磁盘IO瓶颈、分析网络传输情况等。
 
 # 最佳实践
-## 手动清理缓存buffer/cache
+## 四、手动清理缓存buffer/cache
 1.清理pagecache(页面缓存)
 ```shell
 echo 1 > /proc/sys/vm/drop_caches #或者 sysctl -w vm.drop_caches=1
@@ -145,7 +154,7 @@ kill -9 父进程号
 
 我们可以在命令终端中通过top命令来查看系统进程和它的当前状态。
 
-## 查看进程占用的的物理内存大小指令
+## 五、查看进程占用的的物理内存大小指令
 ```shell
 cat /proc/`ps -ef|grep grafana|grep -v grep|awk '{print $2}'`/status |grep VmRSS
 ```
@@ -163,7 +172,7 @@ top -p 118581
 
 ```
 
-## 查看TCP连接数
+## 六、查看TCP连接数
 ```shell
 netstat -n | awk '/^tcp/ {++state[$NF]} END {for(key in state) print key,"\t",state[key]}'
 ```

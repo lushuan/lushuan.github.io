@@ -6,17 +6,26 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Helm"]
 tags: ["Helm"]
+slug: "helm-production-practice"
+featuredImage: "/images/helm/cover.jpg"
+summary: "记录 Helm 在生产环境中的实践经验，包括 Helm 与 Kubernetes 的版本兼容性对照、二进制安装部署方法以及 Charts 管理 Kubernetes 应用的使用要点。"
 ---
+
+Helm 相当于 Kubernetes 的包管理工具，可以帮助我们定义、安装和升级复杂的 Kubernetes 应用。本文记录 Helm 在生产中的实践，包括 Helm 与 Kubernetes 的版本兼容性对照、二进制安装方式，以及使用 Helm Charts 管理应用的要点。
+
+<!--more-->
+
 记录一下helm 在生产中的实践
 
 Helm 可以帮助我们管理 Kubernetes 应用程序 - Helm Charts 可以定义、安装和升级复杂的 Kubernetes 应用程序，Charts 包很容易创建、版本管理、分享和分布。
 
 Helm 对于 Kubernetes 来说就相当于 yum 对于 Centos 来说，如果没有 yum 的话，我们在 Centos 下面要安装一些应用程序是极度麻烦的，同样的，对于越来越复杂的 Kubernetes 应用程序来说，如果单纯依靠我们去手动维护应用程序的 YAML 资源清单文件来说，成本也是巨大的。
 
-## Helm 与 Kubernetes 版本兼容性对照
+## 一、Helm 与 Kubernetes 版本兼容性对照
 
 ### Helm 3 版本与 Kubernetes 兼容性
 
@@ -66,7 +75,7 @@ Helm 对于 Kubernetes 来说就相当于 yum 对于 Centos 来说，如果没�
 
 请注意，具体 Chart 可能对 Kubernetes 版本有额外要求，建议查看 Chart 的文档或 `requirements.yaml` 文件。
 
-## 安装
+## 二、安装
 由于 Helm V2 版本必须在 Kubernetes 集群中安装一个 Tiller 服务进行通信，这样大大降低了其安全性和可用性，所以在 V3 版本中移除了服务端，采用了通用的 Kubernetes CRD 资源来进行管理，这样就只需要连接上 Kubernetes 即可，而且 V3 版本已经发布了稳定版
 
 这里使用的是helm v3版本,[链接](https://github.com/helm/helm/releases)
@@ -83,7 +92,7 @@ $ mv linux-amd64/helm /usr/local/bin/helm
 ```
 
 
-## 示例
+## 三、示例
 Helm 其实就是读取的 kubeconfig 文件来访问集群的。
 
 
@@ -131,7 +140,7 @@ helm uninstall mysql-1575619811 --keep-history
 
 ```
 
-## 定制
+## 四、定制
 helm show values 命令来查看一个 chart 包的所有可配置的参数选项
 
 查看本地chart包可配置的参数选项
@@ -209,7 +218,7 @@ Environment:
 
 
 
-## 更多安装方式
+## 五、更多安装方式
 helm install 命令可以从多个源进行安装：
 
 - chart 仓库（类似于上面我们提到的）
@@ -218,7 +227,7 @@ helm install 命令可以从多个源进行安装：
 - 在线的 URL（helm install fool https://example.com/charts/foo-1.2.3.tgz）
 
 
-## 升级和回滚
+## 六、升级和回滚
 当新版本的 chart 包发布的时候，或者当你要更改 release 的配置的时候，你可以使用 helm upgrade 命令来操作。升级需要一个现有的 release，并根据提供的信息对其进行升级。因为 Kubernetes charts 可能很大而且很复杂，Helm 会尝试以最小的侵入性进行升级，它只会更新自上一版本以来发生的变化：
 ```shell
 $ helm upgrade -f config.yaml mysql stable/mysql

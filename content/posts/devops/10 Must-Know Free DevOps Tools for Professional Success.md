@@ -6,10 +6,18 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["DevOps","English Article"]
 tags: ["DevOps","English Article"]
+slug: "devops-free-tools"
+featuredImage: "/images/devops/cover.jpg"
+summary: "一篇英文文章，介绍 DevOps 的核心概念、关键组成部分与生命周期，并盘点 10 款值得掌握的免费开源 DevOps 工具，涵盖 CI/CD、容器化、基础设施即代码与监控等领域。"
 ---
+
+本文是一篇面向 DevOps 从业者的英文文章，先解释 DevOps 的概念、关键组成与生命周期，再盘点 10 款必备且免费开源的 DevOps 工具。这些工具覆盖 CI/CD、容器化、基础设施即代码、监控等环节，是每一位 DevOps 工程师值得掌握的技能。
+
+<!--more-->
 
 
 
@@ -29,7 +37,7 @@ These tools cover a range of needs, from continuous integration and delivery (CI
 Additionally, these tools have become essential for every DevOps engineer to know and use. Getting the hang of them can boost your career in the field. So, based on our hands-on industry experience, we’ve compiled this list for you. But before we go further, let’s address a fundamental question.
 
 ![devops](/images/devops/devops-periodic-table.png "Devops Periodic Table")
-## What is DevOps?
+## 一、What is DevOps?
 DevOps is a set of practices and methodologies that brings together the development (those who create software) and operations (those who deploy and maintain software) teams.
 
 Instead of working in separate silos, these teams collaborate closely throughout the entire software lifecycle, from design through the development process to production support.
@@ -44,13 +52,13 @@ DevOps ensures everyone works together from the start, shares responsibilities, 
 
 In other words, DevOps is the practice that ensures both teams are working in tandem and using the same playbook. The end game is to improve software quality and reliability and speed up the time it takes to deliver software to the end users.
 
-## Key Components of DevOps
+## 二、Key Components of DevOps
 - **Continuous Integration (CI)**: This practice involves developers frequently merging their code changes into a central repository, where automated builds and tests are run. The idea is to catch and fix integration errors quickly.
 - **Continuous Delivery (CD)**: Following CI, continuous delivery automates the delivery of applications to selected infrastructure environments. This ensures that the software can be deployed at any time with minimal manual intervention.
 - **Automation**: Automation is at the heart of DevOps. It applies to testing, deployment, and even infrastructure provisioning, helping reduce manual work, minimize errors, and speed up processes.
 - **Monitoring and Feedback**: Constant application and infrastructure performance monitoring is crucial. It helps quickly identify and address issues. Feedback loops allow for continuous improvement based on real user experiences.
 
-## DevOps Life Cycle
+## 三、DevOps Life Cycle
 Grasping the various stages of the DevOps life cycle is key to fully comprehending the essence of the DevOps methodology. So, if you’re just entering this field, we’ve broken them down below to clarify things.
 
 ![devops](/images/devops/devops-4.avif "DevOps Life Cycle")
@@ -65,7 +73,7 @@ Grasping the various stages of the DevOps life cycle is key to fully comprehendi
 
 However, to make this happen, we need specific software tools. The good news is that the top ones in the DevOps ecosystem are open-source! Here they are.
 
-## Linux: The DevOps’ Backbone
+## 四、Linux: The DevOps’ Backbone
 ![devops](/images/devops/devops-5.avif "Linux")
 
 We’ve left Linux out of the numbered list below of the key DevOps tools, not because it’s unimportant, but because calling it just a ‘tool’ doesn’t do it justice. Linux is the backbone of all DevOps activities, making everything possible.
@@ -228,7 +236,7 @@ On top of that, Grafana’s extensive customization options allow DevOps profess
 In conclusion, mastering Grafana equips DevOps professionals with the skills to monitor, analyze, and optimize their systems effectively. Because of this, the ability to harness Grafana’s power will continue to be a valuable asset in any DevOps professional’s toolkit.
 
 
-## Conclusion
+## 五、Conclusion
 This list,  reflects the industry’s best practices and highlights the essential tools that every DevOps engineer should be familiar with to achieve professional success in today’s dynamic technological landscape.
 
 Whether you are a newcomer or an experienced professional looking to enhance your skills, mastering these tools can significantly boost the trajectory of your DevOps career.

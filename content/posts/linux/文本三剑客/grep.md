@@ -6,17 +6,26 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Linux"]
 tags: ["Linux文本三剑客"]
+slug: "grep-guide"
+featuredImage: "/images/blog_cover/nature/7.jpg"
+summary: "介绍 grep 命令的作用与常用选项（忽略大小写、递归搜索、正则匹配、上下文输出等），并给出提取最后一次匹配上下文的实战技巧。"
 ---
-## 为什么使用Linux grep命令?
+
+grep 是按模式搜索文件内容并打印匹配行的命令行工具，支持文本和正则表达式匹配。本文汇总 -i、-r、-E、-A/-B/-C、-v、-o 等常用选项的示例，并给出用 tac + grep -m 1 提取文件中最后一次匹配上下文 200 行的实战技巧。
+
+<!--more-->
+
+## 一、为什么使用Linux grep命令?
 Grep是一个非常有用的命令行工具，可以用来在文件中查找指定的文本模式。通过使用grep命令，你可以快速定位和提取包含特定模式的行，从而加快查找和处理文本数据的效率。这是一个在日常工作中经常需要使用的任务，因此grep命令在Linux中非常流行。
 
-## Linux grep命令是什么？
+## 二、Linux grep命令是什么？
 Grep是一个在Linux和其他类Unix系统上可用的命令行实用程序，用于搜索和匹配文本。它的名字来自于全局正则表达式（global regular expression print），它的主要功能是根据给定的模式搜索文件中的文本，并打印匹配的行。grep命令支持使用简单的文本模式或正则表达式进行搜索，并且可以通过命令选项进行进一步的定制。
 
-## 如何使用Linux grep命令？
+## 三、如何使用Linux grep命令？
 要使用grep命令，在命令行中输入grep，后跟要搜索的模式和要搜索的文件的路径。下面是一些常用的grep命令选项和示例：
 
 示例列表 
@@ -37,7 +46,7 @@ Grep是一个在Linux和其他类Unix系统上可用的命令行实用程序，�
 
 ![grep](/images/linux/grep.jpg "grep")
 
-## 最佳实践
+## 四、最佳实践
 ### 搜索文件中最后匹配的一个关键词的上下200行
 ```bash
 $ tac file.txt | grep -m 1 "/enforcementGroupInfo/editPassword" -B 200 -A 200 | tac > /tmp/1.txt
@@ -75,5 +84,5 @@ tail -n 10 /tmp/1.txt | grep "/enforcementGroupInfo/editPassword"  # 确认包�
 4. 对于二进制文件，添加 `-a` 选项：`grep -a`
 
 
-## 参考
+## 五、参考
 1. [是真的很详细了！Linux中的Grep命令使用实例](https://cloud.tencent.com/developer/article/1554542)

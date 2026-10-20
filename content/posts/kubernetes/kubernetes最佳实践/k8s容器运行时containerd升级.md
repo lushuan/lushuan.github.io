@@ -6,14 +6,23 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Kubernetes"]
 tags: ["Kubernetes"]
+slug: "containerd-offline-upgrade"
+featuredImage: "/images/kubernetes/cover.jpg"
+summary: "本文记录离线环境下 Kubernetes 节点容器运行时 containerd/Docker 的升级实践，涵盖升级前提、节点驱逐、逐节点升级步骤及升级后检查，并补充说明 Docker 与 containerd 结合使用的原因。"
 ---
-## 背景
+
+在生产离线环境中升级 Kubernetes 节点的容器运行时，涉及 Docker 重启和容器漂移，需要先将节点置为维护状态再操作。本文完整记录了基于离线 YUM 源逐节点升级 containerd/Docker 的流程与检查要点。
+
+<!--more-->
+
+## 一、背景
 k8s 容器运行时是docker和containerd结合使用，且生产环境是离线环境将需要的containerd和docker版本相关的rpm包通过yum 进行升级，升级过程涉及到docker的重启，docker容器将会导致所有的容器进行重启，故升级前需要将k8s该节点先设置成维护状态，待升级结束再解除，本文对离线运行时升级进行一个记录，至于为什么需要将Docker和containerd进行结合使用参考下面补充介绍
 
-## 升级前提和影响
+## 二、升级前提和影响
 docker 版本低于 19.03.xx
 
 containerd 版本低于 1.3.9
@@ -53,7 +62,7 @@ $ containerd --version
 containerd containerd.io 1.3.9 ea765aba0d05254012b0b9e595e995c09186427f
 ```
 
-## 升级操作
+## 三、升级操作
 ### 获取升级前集群所有节点状态
 ```shell
 $ kubectl get nodes > before-update-node-status.txt 
@@ -139,12 +148,12 @@ $ sudo kubectl uncordon 10.45.80.44
 - 依次升级其它节点，按前面的升级步骤位次升级后续的节点，在升级后续节点的过程中，业务容器会在前面升级完成后的节点上调度
 
 
-## 升级后的节点状态检查
+## 四、升级后的节点状态检查
 ```shell
 $ kubectl get nodes 
 ```
 
-## 补充-为什么要将Docker和containerd进行结合使用？
+## 五、补充-为什么要将Docker和containerd进行结合使用？
 
 1. 更轻量级：containerd是一个更轻量级且专注于容器操作的运行时工具，相比于Docker具有更小的内存占用和更快的启动时间。
 
@@ -158,6 +167,6 @@ $ kubectl get nodes
 
 综上所述，使用Docker和containerd结合可以提供更轻量级、更稳定可靠、更灵活集成、更高性能和更好的兼容性。这使得它成为一个强大的容器运行时组合，适用于各种不同的容器化场景。
 
-## 参考
+## 六、参考
 [Docker 与 Containerd 并用配置](https://www.cnblogs.com/hahaha111122222/p/16451663.html)  
 [手把手教你搭建Linux离线YUM源环境](https://blog.csdn.net/weixin_43770382/article/details/118334644#)

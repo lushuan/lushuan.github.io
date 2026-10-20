@@ -6,17 +6,26 @@ lastmod: 2022-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Nginx"]
 tags: ["Nginx"]
+slug: "nginx-install"
+featuredImage: "/images/blog_cover/nature/4.jpg"
+summary: "介绍在 CentOS 7 上通过 yum 包管理器与源码预编译两种方式安装部署 Nginx 的完整步骤及服务管理方法。"
 ---
+
+本文介绍在 CentOS 7 上安装部署 Nginx 的两种方式：yum 包管理器安装与源码预编译安装，涵盖依赖安装、编译参数配置、启动验证与防火墙设置，并补充 systemctl 与原生命令的服务管理方法。
+
+<!--more-->
+
 - 方式一：yum 安装(Redhat)
 - 方式二：二进制预编译安装
 - 指定安装版本
 - 安装操作系统版本CentOs7.x
 
 
-## 方式一： yum 包管理器安装
+## 一、方式一： yum 包管理器安装
 这里选择通过yum 源进行安装，安装操作系统为Linux CentOS 7.9
 
 1. CentOs 配置阿里云 yum 源
@@ -78,7 +87,7 @@ curl 192.168.1.20
 systemctl stop firewalld
 ```
 
-## 方式二：二进制预编译安装
+## 二、方式二：二进制预编译安装
 在Linux系统上安装Nginx的二进制版本通常指的是从Nginx官方网站下载预编译的软件包，而不是通过包管理器（如`apt`或`yum`）进行安装。以下是针对Nginx 1.20.1版本的二进制安装步骤：
 
 ### 步骤 1: 下载 Nginx
@@ -187,7 +196,7 @@ source ~/.bashrc
 
 
 ![image-20240722133344836](/images/nginx/nginx-access.png "Nginx 访问首页")
-## Nginx 管理
+## 三、Nginx 管理
 ### 1. 通过`systemctl`或者`service`管理
 ```
 nginx -t

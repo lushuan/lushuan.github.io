@@ -6,11 +6,20 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Kubernetes"]
 tags: ["Kubernetes排障"]
+slug: "pod-troubleshooting-guide"
+featuredImage: "/images/kubernetes/cover.jpg"
+summary: "Kubernetes Pod 排障指南，按 ContainerCreating、Error、ImagePullBackOff、Pending 等异常状态分类梳理常见原因与排查方法，涵盖配置错误、磁盘爆满、镜像拉取失败、节点资源不足等典型场景。"
 ---
-## Pod 一直处于 ContainerCreating 或 Waiting 状态
+
+Pod 出现异常状态是 Kubernetes 使用中最常见的问题。本指南按 ContainerCreating、Error、ImagePullBackOff、Pending 等状态分类，梳理每种状态背后的典型原因（配置错误、磁盘爆满、limit 单位错误、镜像拉取失败、节点资源不足等）与对应的排查方法。
+
+<!--more-->
+
+## 一、Pod 一直处于 ContainerCreating 或 Waiting 状态
 ### Pod 配置错误
 - 检查是否打包了正确的镜像
 - 检查配置了正确的容器参数
@@ -47,7 +56,7 @@ to start sandbox container for pod ... Error response from daemon: OCI runtime c
 ### controller-manager 异常
 查看 master 上 kube-controller-manager 状态，异常的话尝试重启。
 
-## Pod 一直处于 Error 状态
+## 二、Pod 一直处于 Error 状态
 通常处于 Error 状态说明 Pod 启动过程中发生了错误。常见的原因包括：
 
 - 依赖的 ConfigMap、Secret 或者 PV 等不存在
@@ -56,7 +65,7 @@ to start sandbox container for pod ... Error response from daemon: OCI runtime c
 - 容器无权操作集群内的资源，比如开启 RBAC 后，需要为 ServiceAccount 配置角色绑定
 
 
-## Pod 一直处于 ImagePullBackOff 状态
+## 三、Pod 一直处于 ImagePullBackOff 状态
 ### http 类型 registry，地址未加入到 insecure-registry
 dockerd 默认从 https 类型的 registry 拉取镜像，如果使用 https 类型的 registry，则必须将它添加到 insecure-registry 参数中，然后重启或 reload dockerd 生效。
 
@@ -79,7 +88,7 @@ kubelet 日志：
 PullImage "imroc/test:v0.2" from image service failed: rpc error: code = Unknown desc = Error response from daemon: manifest for imroc/test:v0.2 not found
 ```
 
-## Pod 一直处于 Pending 状态
+## 四、Pod 一直处于 Pending 状态
 Pending 状态说明 Pod 还没有被调度到某个节点上，需要看下 Pod 事件进一步判断原因，比如:
 ```shell
 $ kubectl describe pod tikv-0
@@ -180,7 +189,7 @@ $ sudo kubectl -n kube-system get pod|grep kube-scheduler
 kube-scheduler-10.10.192.220              1/1     Running   183 (40d ago)   424d
 ```
 
-## Pod 一直处于 Terminating 状态
+## 五、Pod 一直处于 Terminating 状态
 ### 磁盘爆满
 如果 docker 的数据目录所在磁盘被写满，docker 无法正常运行，无法进行删除和创建操作，所以 kubelet 调用 docker 删除容器没反应，看 event 类似这样：
 ```
@@ -221,7 +230,7 @@ k8s 资源的 metadata 里如果存在 finalizers，那么该资源一般是由�
 
 处理建议：kubectl edit 手动编辑资源定义，删掉 finalizers，这时再看下资源，就会发现已经删掉了。通过prometheus-operator 创建prometheus时，最后无法删除namespace 也是此原因。
 
-## Pod 一直处于 Unknown 状态
+## 六、Pod 一直处于 Unknown 状态
 通常是节点失联，没有上报状态给 apiserver，到达阀值后 controller-manager 认为节点失联并将其状态置为 Unknown。
 
 可能原因:
@@ -231,7 +240,7 @@ k8s 资源的 metadata 里如果存在 finalizers，那么该资源一般是由�
 - 节点被关机
 - 网络不通
 
-## Pod 健康检查失败
+## 七、Pod 健康检查失败
 - Kubernetes 健康检查包含就绪检查(readinessProbe)和存活检查(livenessProbe)
 - pod 如果就绪检查失败会将此 pod ip 从 service 中摘除，通过 service 访问，流量将不会被转发给就绪检查失败的 pod
 - pod 如果存活检查失败，kubelet 将会杀死容器并尝试重启
@@ -254,7 +263,7 @@ cpu 占用高（比如跑满）会导致进程无法正常发包收包，通常�
 ```
 连接异常，从而健康检查失败。发生这种情况的原因可能在一个节点上启动了多个使用 hostNetwork 监听相同宿主机端口的 Pod，只会有一个 Pod 监听成功，但监听失败的 Pod 的业务逻辑允许了监听失败，并没有退出，Pod 又配了健康检查，kubelet 就会给 Pod 发送健康检查探测报文，但 Pod 由于没有监听所以就会健康检查失败。
 
-## Pod 处于 CrashLoopBackOff 状态
+## 八、Pod 处于 CrashLoopBackOff 状态
 Pod 如果处于 CrashLoopBackOff 状态说明之前是启动了，只是又异常退出了，应用实例状态为CrashLoopBackOff， 表现为实例不断重启，由ready状态变为Complete再变成CrashLoopBackOff。
 一般由于应用实例容器异常退出导致的实例异常，需要排查应用日志确定异常退出原因。
 ### 容器进程主动退出

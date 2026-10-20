@@ -6,12 +6,20 @@ lastmod: 2024-04-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Kubernetes"]
 tags: ["Kubernetes排障"]
+slug: "k8s-common-failures-troubleshooting"
+featuredImage: "/images/kubernetes/cover.jpg"
+summary: "系统整理 Kubernetes 常见故障的排查思路与解决方法，重点覆盖 Pod 各种异常状态（Pending、ContainerCreating、ImagePullBackOff、CrashLoopBackOff、Error、Terminating/Unknown 等）的成因分析与诊断命令，并介绍存活/就绪探针等健康检查机制。"
 ---
 
-## K8S 之连接异常——【集群故障】
+Kubernetes 集群故障多集中在资源配置、应用代码、网络和存储四个方面，其中 Pod 状态异常是最常见的问题。本文系统整理各类 Pod 异常状态（Pending、ImagePullBackOff、CrashLoopBackOff、Terminating 等）的成因与排查思路，并介绍通用的诊断命令和健康检查探针机制。
+
+<!--more-->
+
+## 一、K8S 之连接异常——【集群故障】
 Pod问题思考思路
 
 Kubernetes集群中Pod一般哪些方面容易出现问题呢？
@@ -202,7 +210,7 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 
 
-## K8S 之统信异常——【网络故障】
+## 二、K8S 之统信异常——【网络故障】
 ### 网络故障原因
 Kubernetes中的网络是非常重要的，整个k8s集群的通信调度都是通过网络插件实现的，kubernetes之上的网路通信主要有如下几种：
 
@@ -220,7 +228,7 @@ Kubernetes中的网络是非常重要的，整个k8s集群的通信调度都是�
 
 
 
-## K8S 之内部异常——【节点故障】
+## 三、K8S 之内部异常——【节点故障】
 ### 节点异常1: 集群节点NotReady
 一般是该节点上的kubelet 挂掉了，查看kubelet 状态
 ```
@@ -296,7 +304,7 @@ Pod超过节点资源限制分两种情况：
 - `top查看cpu`
 
 
-## K8S 之应用故障——【应用故障】
+## 四、K8S 之应用故障——【应用故障】
 
 ### 故障排查：Service访问异常
 Service是什么？为什么容易出现问题？

@@ -6,11 +6,20 @@ lastmod: 2024-12-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["K3s"]
 tags: ["K3s"]
+slug: "k3s-setup"
+featuredImage: "/images/scenery/cover-6.jpg"
+summary: "介绍轻量级 Kubernetes 发行版 K3s 的背景、发展历程与单进程架构特点，并详细演示 K3s server 与 agent 节点的离线安装部署过程。"
 ---
-## 背景
+
+K3s 是 Rancher 旗下面向物联网和边缘计算的经过认证的轻量级 Kubernetes 发行版，单个二进制包仅约 50MB。本文介绍 K3s 的适用场景、发展历程与基本架构，并详细演示 server 与 agent 节点的安装部署步骤。
+
+<!--more-->
+
+## 一、背景
 为物联网和边缘计算构建的经过认证的Kubernetes发行版，则是Rancher旗下产品
 
 Great for:
@@ -23,7 +32,7 @@ Great for:
 - Embedding k8s
 - Situations where a PhD in k8s clusterology is infeasible
 
-## 发展历程
+## 二、发展历程
 微型kubernetes发行版
 1. CNCF认证的Kubernetes发行版
 2. 50MB左右二进制包，500MB左右内存消耗
@@ -35,7 +44,7 @@ Great for:
 1. 多合一：将基础服务合并到了单一的进程中，如api-server,controller manager、scheduler和cloud-controller-manager合到了单一的进程中,简化了运维，降低了复杂度
 
 
-## 基本架构
+## 三、基本架构
 角色
 - k3s server
   - api-server
@@ -67,7 +76,7 @@ Great for:
   - kube-public
   - kube-node-release
 - k3s 资源文件目录：`/var/lib/rancher/k3s`
-## 安装部署
+## 四、安装部署
 ### server 部署
 ```shell
 $ mkdir /root/k3s && cd /root/k3s
@@ -149,7 +158,7 @@ node1    Ready    <none>                 64s   v1.24.9-rc1+k3s2
 ```
 
 
-## K3s 各名字空间介绍
+## 五、K3s 各名字空间介绍
 在Kubernetes中，包括K3s，命名空间（Namespaces）提供了一种机制来划分集群资源。它们对于组织和隔离工作负载非常有用，特别是在多用户环境中。以下是K3s中常见的几个命名空间及其作用：
 
 1. **`default`**：
@@ -178,7 +187,7 @@ Rancher的"catle-system"命名空间通常用于存储Rancher控制平面组件�
 当你提到洲除1oca1集群catt1e-system命名空间中的特定Pod和TLS密钥时，这意味着你可能正在清理测试环境或者准备进行维护操作。以
 
 
-## 生产环境参考
+## 六、生产环境参考
 - k3s 版本v1.22
 - 数据库：etcd
 - 容器运行时：containerd v1.5.9-k3s1
@@ -517,7 +526,7 @@ ExecStart=/usr/local/bin/k3s \
         'container-log-max-size=100Mi' \
 ```
 
-## 用户案例
+## 七、用户案例
 选择K3s的原因
 1. k3s与Kubernetes使用习惯完全一致:上手无代价
 2. 与其他同类产品比，无功能绑定
@@ -527,11 +536,11 @@ ExecStart=/usr/local/bin/k3s \
 6. 100% 开源，合作方式灵活
 7. 出错重启就可以了，不像k8s 出错重启也不一定能解决，哈哈
 
-## Q/A
+## 八、Q/A
 1. 使用k8s 替换k3s 有什么问题？
 如果只是普通的使用一些workload 是没有什么问题的，如果workload 中的一些应用使用了一些诸如自定义的cloud provider 是不适配的，一般应用于iot之类的场景
 
-## 参考
+## 九、参考
 1. [k3s官网](https://k3s.io/)
 2. [Rancher Product](https://www.rancher.cn/products)
 3. [K3s Document](https://docs.k3s.io/zh/architecture)

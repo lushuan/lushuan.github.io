@@ -6,10 +6,18 @@ lastmod: 2024-06-26T16:25:58+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Docker"]
 tags: ["Docker","Dockerfile"]
+slug: "dockerfile-guide"
+featuredImage: "/images/blog_cover/caoyuan/3.jpg"
+summary: "本文以 Go 1.20 项目为例讲解 Dockerfile 的常用指令、CMD 与 ENTRYPOINT 的区别、多阶段构建、构建缓存与镜像优化等生产实践，并集中整理 Dockerfile 相关常见面试题。"
 ---
+
+Dockerfile 是学习 Docker 时非常核心的一部分，真正掌握它的关键是理解应用如何从源码经过构建变成可运行的容器镜像。本文以 Go 1.20 项目为例，从基本概念开始逐步介绍常用指令、CMD 与 ENTRYPOINT 的区别、多阶段构建、构建缓存优化以及非 root 用户等生产实践，最后集中整理 Dockerfile 相关的常见面试问题。
+
+<!--more-->
 
 Dockerfile 是学习 Docker 时非常核心的一部分。真正掌握 Dockerfile，并不是把 `FROM`、`RUN`、`COPY`、`CMD` 等指令背下来，而是要理解：
 

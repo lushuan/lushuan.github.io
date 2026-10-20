@@ -5,13 +5,21 @@ date: 2025-06-14T12:06:37+08:00
 lastmod: 2025-06-26T12:06:37+08:00
 draft: false
 toc:
-enable: true
+  enable: true
+  auto: true
 weight: false
 categories: ["MySQL"]
 tags: ["MySQL","MySQL 8.0","数据库运维"]
+slug: "mysql-charset-design"
+featuredImage: "/images/blog_cover/nature/2.jpg"
+summary: "解析 MySQL 8.0 中 utf8mb4 字符集下 VARCHAR 长度与中文存储的关系，给出各类业务字段的类型与长度选型规范及蜜罐信息表示例。"
 ---
 
-## 🧩 一、VARCHAR 长度与中文存储关系
+本文解析 MySQL 8.0 中 utf8mb4 字符集下 VARCHAR 长度与中文、Emoji 存储的关系，给出各类业务字段的类型与长度选型规范和字段设计一般建议，并附蜜罐信息表的优化建表示例与常用字段长度总结。
+
+<!--more-->
+
+## 一、🧩 一、VARCHAR 长度与中文存储关系
 
 在 MySQL 8.0 中，推荐使用 **`utf8mb4` 字符集**（兼容 Emoji 和所有中日韩文字）。
 
@@ -36,7 +44,7 @@ description VARCHAR(10) CHARACTER SET utf8mb4;
 
 ---
 
-## 🧭 二、字段长度与类型选择建议
+## 二、🧭 二、字段长度与类型选择建议
 
 下面是根据**字段语义**推荐的字段类型与合理长度范围：
 
@@ -63,7 +71,7 @@ description VARCHAR(10) CHARACTER SET utf8mb4;
 
 ---
 
-## 🧠 三、字段设计的一般建议
+## 三、🧠 三、字段设计的一般建议
 
 1. **文本字段（VARCHAR / TEXT）**
 
@@ -98,7 +106,7 @@ description VARCHAR(10) CHARACTER SET utf8mb4;
 
 ---
 
-## 🔧 四、扩展示例：蜜罐信息表（优化版）
+## 四、🔧 四、扩展示例：蜜罐信息表（优化版）
 
 ```sql
 CREATE TABLE `honeypot_info` (
@@ -119,7 +127,7 @@ CREATE TABLE `honeypot_info` (
 
 ---
 
-## 📊 五、总结表（常用字段长度建议）
+## 五、📊 五、总结表（常用字段长度建议）
 
 | 字段类型           | 推荐长度            | 可存内容示例  |
 | -------------- | --------------- | ------- |

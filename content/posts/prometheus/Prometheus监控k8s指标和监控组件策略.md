@@ -6,11 +6,20 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Prometheus"]
 tags: ["Prometheus"]
+slug: "prometheus-k8s-metrics"
+featuredImage: "/images/scenery/cover-2.jpg"
+summary: "梳理 Prometheus 监控 Kubernetes 各组件的策略与采集指标，涵盖 cAdvisor、kube-apiserver、etcd、kube-scheduler、CoreDNS、kube-state-metrics 及节点的指标说明。"
 ---
-## 监控策略
+
+本文梳理 Prometheus 监控 Kubernetes 各组件的策略与采集指标，给出白盒/黑盒监控的服务发现方式与数据源对照表，并详细列出 cAdvisor、kube-apiserver、etcd、kube-scheduler、CoreDNS、kube-state-metrics 及节点等组件的指标含义与计算方式。
+
+<!--more-->
+
+## 一、监控策略
 |目标 |服务发现模式 |监控方法 |数据源|
 |---|---|---|---|
 |从集群各节点kubelet组件中获取节点kubelet的基本运行状态的监控指标|node |白盒监控|kubelet|
@@ -21,7 +30,7 @@ tags: ["Prometheus"]
 |获取集群中Service的访问地址，并通过Blackbox Exporter获取网络探测指标|service |黑盒监控|blackbox exporter|
 |获取集群中Ingress的访问信息，并通过Blackbox Exporter获取网络探测指标|ingress |黑盒监控|blackbox exporter|
 
-## k8s 插件采集指标说明
+## 二、k8s 插件采集指标说明
 包含夜莺指标做横向对比参考
 ### Cadvisor 指标说明
 

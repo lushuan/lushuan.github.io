@@ -5,10 +5,18 @@ draft: false
 
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Hugo"]
 tags: ["Hugo"]
+slug: "hugo-loveit-actions"
+featuredImage: "/images/scenery/cover-2.jpg"
+summary: "记录将 Hugo + LoveIt 主题博客从 GitHub Pages 的 Deploy from Branch 模式迁移到 GitHub Actions 的实战过程，总结双仓库推送、代理配置、私有仓库计费、Hugo 版本控制等 7 个避坑指南与最佳实践。"
 ---
+
+本站原使用 GitHub Pages 的 "Deploy from branch" 模式部署，随着站点复杂度增加，在构建环境隔离、Secrets 管理和多平台同步上逐渐力不从心。本文记录将 Hugo + LoveIt 主题项目完整迁移至 GitHub Actions 过程中踩过的 7 个坑及对应解法，涵盖双仓库推送、代理配置、计费陷阱与版本控制等最佳实践。
+
+<!--more-->
 
 这是一篇为您整理的完整技术博客文章，涵盖了从 Deploy from Branch 迁移到 GitHub Actions 过程中遇到的所有关键问题及解决方案。
 

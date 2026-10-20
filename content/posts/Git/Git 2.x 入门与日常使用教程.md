@@ -5,11 +5,19 @@ date: 2023-11-07T12:06:37+08:00
 lastmod: 2023-11-07T12:06:37+08:00
 draft: false
 toc:
-enable: true
+  enable: true
+  auto: true
 weight: false
 categories: ["Git"]
 tags: ["Git"]
+slug: "git-tutorial"
+featuredImage: "/images/git/cover.png"
+summary: "本文基于 Git 2.41 系统讲解 Git 的核心概念与日常操作，覆盖工作区/暂存区/仓库模型、提交与撤销、分支管理、stash 暂存、远程协作及现代 switch/restore 命令的完整入门教程。"
 ---
+
+这是一篇基于 Git 2.41 的入门与日常使用教程，目标不是记住几十条命令，而是建立"代码在哪里、改了什么、如何提交、如何回退、如何协作"的完整思维模型。内容覆盖工作区/暂存区/本地仓库/远程仓库四大核心概念、提交与撤销（restore/reset/revert/reflog）、分支与 stash、远程协作流程，以及现代 Git 推荐命令与老教程的差异。
+
+<!--more-->
 
 > 本文基于 Git 2.41 的使用方式进行整理。
 >

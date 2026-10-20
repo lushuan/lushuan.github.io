@@ -6,11 +6,19 @@ lastmod: 2022-06-27T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Nginx"]
 tags: ["Nginx"]
+slug: "nginx-daily-scripts"
+summary: "整理 Nginx 日常工作中常用的实用脚本与配置片段，包括日志切割脚本、图片防盗链、访问控制与丢弃不支持的文件扩展名请求。"
 ---
-## 日常工作中的奇淫技巧
+
+本文整理 Nginx 日常工作中常用的实用脚本与配置片段，包括日志切割 shell 脚本、图片防盗链配置、访问控制以及丢弃不受支持文件扩展名请求的规则。
+
+<!--more-->
+
+## 一、日常工作中的奇淫技巧
 ### 日志切割脚本
 ```
 #!/bin/bash

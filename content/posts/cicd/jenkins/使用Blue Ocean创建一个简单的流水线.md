@@ -6,11 +6,20 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Jenkins"]
 tags: ["Jenkins"]
+slug: "jenkins-blue-ocean-pipeline"
+featuredImage: "/images/cicd/cover.jpg"
+summary: "介绍 Jenkins Blue Ocean 插件的特性与安装方法，演示如何通过可视化界面认证 Git 仓库并创建流水线，以及查看任务进度和反向生成的 Pipeline 代码。"
 ---
-## 什么是 Blue Ocean?
+
+Blue Ocean 是 Jenkins 的开源子项目，为持续交付流水线提供了强大的可视化能力。本文介绍 Blue Ocean 的主要特性与安装方式，并演示如何通过可视化界面认证 Gitee/Gitlab 仓库、创建流水线以及查看任务运行进度与自动生成的 Pipeline 代码。
+
+<!--more-->
+
+## 一、什么是 Blue Ocean?
 
 Blue Ocean 是Jenkins的开源子项目，在保证原有强大的功能不变的基础下，对持续交付(CD)Pipeline过程的可视化方面相较于Jenkins 之前的经典界面有了很大的提升。
 
@@ -26,13 +35,13 @@ Blue Ocean 重新思考Jenkins的用户体验，从头开始设计Jenkins Pipeli
 
 - 本地集成分支和合并请求, 在与GitHub 和 Bitbucket中的其他人协作编码时实现最大程度的开发人员生产力。
 
-## 访问Blue Ocean
+## 二、访问Blue Ocean
 在系统管理>插件管理>可选插件中搜索 Blue Ocean >安装,安装成功之后，就可以在页面上看到Blue Ocean的图标,打开后注册git 仓库地址
 认证后就可以创建流水线了。
 
 ![jenkins-blue-ocean-4](/images/cicd/jenkins-blue-ocean-4.png "Blue Ocean")
 
-## 创建流水线
+## 三、创建流水线
 创建流水线前需要先安装对应的插件
 - Blue Ocean  
 
@@ -106,5 +115,5 @@ pipeline {
 
 
 
-## 参考
+## 四、参考
 - https://www.jenkins.io/zh/doc/book/blueocean/

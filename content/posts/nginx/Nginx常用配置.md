@@ -6,14 +6,23 @@ lastmod: 2022-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Nginx"]
 tags: ["Nginx"]
+slug: "nginx-common-config"
+featuredImage: "/images/blog_cover/nature/5.jpg"
+summary: "系统整理 Nginx 常用命令、常用模块与核心配置，并给出动静分离、反向代理、负载均衡、跨域、防盗链、高可用与 HTTPS 等场景化配置方案。"
 ---
-## 背景
+
+本文系统整理 Nginx 的常用命令、常用模块与核心配置，涵盖配置块嵌套与 location 指令的用法说明，并给出动静分离、反向代理、负载均衡、跨域、URLRewrite 伪静态、防盗链、高可用以及 HTTPS 加密访问等场景化配置方案与完整示例。
+
+<!--more-->
+
+## 一、背景
 整理在使用 Nginx 过程中频繁使用的Nginx 常用配置，另外补充一些常用命令和解决方案
 
-## Nginx 命令行常用命令
+## 二、Nginx 命令行常用命令
 - nginx -s reload # 向主进程发送信号，重新加载配置文件，热重启
 - nginx -s reopen # 重启 Nginx
 - nginx -s stop # 快速关闭
@@ -21,7 +30,7 @@ tags: ["Nginx"]
 - nginx -t # 查看当前 Nginx 配置是否有错误
 - nginx -t -c <配置路径> # 检查配置是否有问题，如果已经在配置目录，则不需要 - c
 
-## 常用模块
+## 三、常用模块
 nginx模块分为两种，官方和第三方，我们通过命令 nginx -V 查看 nginx已经安装的模块
 ```
 [root@www ~]# nginx -V
@@ -53,7 +62,7 @@ configure arguments: --prefix=/usr/share/nginx --sbin-path=/usr/sbin/nginx --mod
 | ngx_http_fastcgi_module     | 实现通过fastcgi协议将指定的客户端请求转发至php-fpm处理       |
 | ngx_http_flv_module         | 为flv伪流媒体服务端提供支持                                  |
 
-## Nginx 核心配置
+## 四、Nginx 核心配置
 ### 配置块嵌套
 ![nginx-configuration-inner](/images/nginx/nginx-configuration-inner.png "配置块嵌套")
 
@@ -189,7 +198,7 @@ location ~* \.(gif|jpg|jpeg)$ {
 " / "请求将匹配配置A， " /index.html "请求将匹配配置B， " /documents/document.html "请求将匹配配置C， " /images/1.gif "请求将匹配配置D， " /documents/1.jpg "请求将匹配配置E。
 {{< /admonition >}}
 
-## Nginx 场景方案
+## 五、Nginx 场景方案
 ### Nginx 配置动静分离
 #### 什么是动静分离
 - 在 Web 开发中，通常来说，动态资源其实就是指那些后台资源，而静态资源就是指 HTML，JavaScript，CSS，img 等文件。
@@ -1326,6 +1335,6 @@ https://nginx.org/en/docs/http/ngx_http_upstream_hc_module.html
 
 
 
-## 参考
+## 六、参考
 - https://nginx.org/en/docs/http/ngx_http_core_module.html#http
 - [Nginx Config](https://www.digitalocean.com/community/tools/nginx?global.app.lang=zhCN) 可以快速方便获得nginx的配置

@@ -6,12 +6,20 @@ lastmod: 2024-05-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Kubernetes"]
 tags: ["Kubernetes"]
+slug: "k8s-rbac"
+featuredImage: "/images/kubernetes/cover.jpg"
+summary: "本文系统介绍 Kubernetes RBAC 访问控制机制，涵盖 Role/ClusterRole、RoleBinding/ClusterRoleBinding、Service Account 及令牌等核心概念，并通过创建受限用户和服务账户的完整实例演示权限配置与验证方法。"
 ---
 
-## 前言 
+Kubernetes RBAC 是基于角色的访问控制模型，通过 Role、ClusterRole 及其绑定资源来界定"谁"能对"哪些对象"执行"什么操作"。本文从 Kubernetes API 基础讲起，梳理 RBAC 的核心概念与优势，并给出创建 Service Account、受限用户的完整实践示例。
+
+<!--more-->
+
+## 一、前言 
 在了解RBAC 之前先了解一下Kubernetes API 对象，RBAC 最终操作的对象还是Kubernetes API 对象，本质还是对Kubernetes API的访问控制，如下RBAC 是在 Api Server 中是通过授权插件默认引入的。
 ` /etc/kubernetes/manifests/kube-apiserver.yaml `
 ```
@@ -88,7 +96,7 @@ events                            ev
 ```
 
 下面就进入正体RBAC,以上的介绍就是为了说明RBAC 最终的操作还是kubernetes api 对象，当然也不止是kubernetes api 各类资源对象，还有非资源类型的URL.
-## RBAC 授权模型
+## 二、RBAC 授权模型
 
 kubernetes 系统的RBAC 授权插件将角色分为Role和ClusterRole两类，它们都是kubernetes 内置支持的API 资源类型，其中role 作用于名称空间级别，用于承载名称空间内的资源权限集合，而clusterrole 则能够同时承载名称空间和集群级别的资源权限集合。
 
@@ -472,14 +480,14 @@ Error from server (Forbidden): daemonsets.apps is forbidden: User "lushuan" cann
 我们可以看到没有权限获取，因为我们并没有为当前操作用户指定其他对象资源的访问权限，是符合我们的预期的。
 这样我们就创建了一个只有单个命名空间访问权限的普通 User。
 
-## 总结
+## 三、总结
 - Role 和 RoleBinding 用于同一个namespace
 - RoleBindings 可以存在于不同的命名空间，以授予服务账户权限。
 - RoleBinding 可以引用同一名称空间中的role,也可以引用集群级别的ClusterRole,但是引用ClusterRole的许可权限会降级到仅能在Rolebingding所在的名称空间生效。
 - ClusterRoleBinding 则用于将ClusterRole 绑定到用户和组，它作用于集群全局，可以访问集群所有资源，但是仅能够引用ClusterRole.
 - ClusterRoleBinding 不可以引用Role
 
-## 参考
+## 四、参考
 1. https://kubernetes.io/zh-cn/docs/reference/access-authn-authz/rbac/
 2. https://kubernetes.io/zh-cn/docs/reference/using-api/api-concepts/
 3. https://kubernetes.io/zh-cn/docs/tasks/administer-cluster/certificates/#openssl

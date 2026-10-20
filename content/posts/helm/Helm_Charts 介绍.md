@@ -6,15 +6,24 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Helm"]
 tags: ["Helm"]
+slug: "helm-charts-intro"
+featuredImage: "/images/helm/cover.jpg"
+summary: "介绍 Helm Charts 的包结构与基本概念，讲解 Chart.yaml 文件的字段含义，以及 templates 模板与 values 配置的工作机制。"
 ---
+
+Helm 使用 charts 包格式来描述一组相关的 Kubernetes 资源，是 Kubernetes 应用的包管理方式。本文介绍 chart 的目录结构、Chart.yaml 文件的必备字段，以及 templates 模板与 values 值的配合使用机制，帮助快速理解 Helm Charts 的编写基础。
+
+<!--more-->
+
 Helm 使用一种名为 charts 的包格式，一个 chart 是描述一组相关的 Kubernetes 资源的文件集合，单个 chart 可能用于部署简单的应用，比如 memcached pod，或者复杂的应用，比如一个带有 HTTP 服务、数据库、缓存等等功能的完整 web 应用程序。
 
 Charts 是创建在特定目录下面的文件集合，然后可以将它们打包到一个版本化的存档中来部署。接下来我们就来看看使用 Helm 构建 charts 的一些基本方法。
 
-## 文件结构
+## 一、文件结构
 chart 被组织为一个目录中的文件集合，目录名称就是 chart 的名称（不包含版本信息），下面是一个 WordPress 的 chart，会被存储在 wordpress/ 目录下面，基本结构如下所示：
 ```
 wordpress/
@@ -29,7 +38,7 @@ wordpress/
   templates/NOTES.txt # 可选: 包含简短使用使用的文本文件
 ```
 
-## Chart.yaml 文件
+## 二、Chart.yaml 文件
 对于一个 chart 包来说 Chart.yaml 文件是必须的，它包含下面的这些字段：
 ```yaml
 apiVersion: chart API 版本 (必须)
@@ -56,7 +65,7 @@ appVersion: 包含的应用程序版本 (可选). 不需要 SemVer 版本
 deprecated: chart 是否已被弃用 (可选, boolean)
 ```
 
-## TEMPLATES 和 VALUES
+## 三、TEMPLATES 和 VALUES
 Helm Chart 模板是用 Go template 语言 进行编写的，另外还额外增加了(【Sprig】](https://github.com/Masterminds/sprig)库中的50个左右的附加模板函数和一些其他[专用函数](https://helm.sh/docs/howto/charts_tips_and_tricks/)。
 
 所有模板文件都存储在 chart 的 templates/ 目录下面，当 Helm 渲染 charts 的时候，它将通过模板引擎传递该目录中的每个文件。模板的 Values 可以通过两种方式提供：

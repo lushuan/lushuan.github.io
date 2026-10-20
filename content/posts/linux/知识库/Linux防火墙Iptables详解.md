@@ -6,20 +6,29 @@ lastmod: 2024-11-20T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Linux"]
 tags: ["Linux","防火墙"]
+slug: "iptables-detail"
+featuredImage: "/images/linux/cover.jpg"
+summary: "系统梳理 Linux 防火墙 iptables：与 netfilter 的关系、表链规则结构、服务管理与内核模块激活，以及封端口、封 IP、NAT 上网与端口转发等常用配置。"
 ---
+
+iptables 是运维中的重点，是网站访问的大门。本文梳理 iptables 与 netfilter 的关系、Tables/Chains/Rules 的结构、4 表 5 链及优先级，介绍 iptables-services 的安装与 systemd 管理、内核模块的临时与永久加载，并总结封端口、封 IP、NAT 共享上网与端口转发等常用规则。
+
+<!--more-->
+
 iptables 是运维中的重点但不算是特别的难点，是网站访问的大门，本篇记录对 iptables 的常用梳理
 
-## 概述
+## 一、概述
 - 封端口
 - 封IP
 - 实现Nat上网
   - 共享上网
   - 端口映射(端口转发)，ip 映射
 
-## 核心解释
+## 二、核心解释
 - iptables适用linux所有发行版，yum安装方式为 "yum install iptables-services"
 - iptables基于linux netfilter, Netfilter是Linux 2.4.x引入的一个子系统，它作为一个通用的、抽象的框架，提供一整套的hook函数的管理机制，使得诸如数据包过滤、网络地址转换(NAT)和基于协议类型的连接跟踪成为了可能
 - linux 内核中，netfilter， nf_* 的配置都会影响netfilter的性能
@@ -30,10 +39,10 @@ iptables 是运维中的重点但不算是特别的难点，是网站访问的�
     - MASQUERADE是SNAT的一个特例，主要用于动态返回snat地址
 - 防火墙实例: (/etc/sysconfig/iptables）
 
-## iptables和netfilter的关系
+## 三、iptables和netfilter的关系
 Iptables和netfilter的关系是一个很容易让人搞不清的问题。很多的知道iptables却不知道netfilter。其实iptables只是Linux防火墙的管理工具而已，位于/sbin/iptables。真正实现防火墙功能的是netfilter，它是Linux内核中实现包过滤的内部结构。
 
-## iptables 管理
+## 四、iptables 管理
 安装了`iptables-service`后方便通过systemd管理iptables服务
 ```shell
 $ sudo yum install iptables-services
@@ -127,14 +136,14 @@ target     prot opt source               destination
 ```
 
 
-## iptables传输数据包的过程
+## 五、iptables传输数据包的过程
 1. 当一个数据包进入网卡时，它首先进入PREROUTING链，内核根据数据包目的IP判断是否需要转送出去。
 2. 如果数据包就是进入本机的，它就会沿着图向下移动，到达INPUT链。数据包到了INPUT链后，任何进程都会收到它。本机上运行的程序可以发送数据包，这些数据包会经过OUTPUT链，然后到达POSTROUTING链输出。
 3. 如果数据包是要转发出去的，且内核允许转发，数据包就会如图所示向右移动，经过FORWARD链，然后到达POSTROUTING链输出。
 
 ![iptables-process](/images/linux/iptables-process.png "iptables传输数据包的过程")
 
-## 4表-5链-规则
+## 六、4表-5链-规则
 
 ### 防火墙的种类及使用说明
 - 硬件：整个企业入口
@@ -188,7 +197,7 @@ target     prot opt source               destination
 
 备注：常用的规则链有INPUT、OUTPUT、FORWARD
 
-## 四表五链详解
+## 七、四表五链详解
 `iptables` 是 Linux 系统中用于配置防火墙规则的核心工具，基于 **Netfilter** 框架实现。它的核心逻辑围绕 **四表五链** 展开，用于控制网络数据包的传输和处理流程。
 
 ---
@@ -284,14 +293,14 @@ target     prot opt source               destination
 
 通过理解四表五链的作用和流程，可以更精准地控制网络行为，例如实现防火墙、NAT、流量标记等功能。
 
-## iptables 执行流程
+## 八、iptables 执行流程
 工作流程小结：
 1. 防火墙是层层过滤的，实际是按照配置规则的顺序从上到下，从前到后进行过滤的。
 2. 如果匹配成功规则，即明确表示是拒绝(DROP)还是接受(ACCEPT),数据包就不再向下匹配新的规则
 3. 如果规则中没有明确表明是阻止还是通过的，也就是没有匹配规则，向下进行匹配，直到匹配默认规则得到明确的阻止还是通过
 4. 防火墙的默认规则是所有规则都匹配完才会匹配的
 
-## 常用 `iptables` 参数缩写及含义
+## 九、常用 `iptables` 参数缩写及含义
 | **短选项** | **完整形式/含义**       | **功能说明**                                                                 |
 |------------|-------------------------|-----------------------------------------------------------------------------|
 | `-s`       | `--source`              | 匹配 **源 IP 地址或网段**（如 `-s 192.168.1.100` 或 `-s 10.0.0.0/24`）。     |
@@ -311,7 +320,7 @@ target     prot opt source               destination
 | `-N`       | `--new-chain`           | 创建自定义链（如 `iptables -N MY_CHAIN`）。                                   |
 
 
-## iptables filter 表案例
+## 十、iptables filter 表案例
 ```shell
 # 屏蔽单个IP的命令
 $ iptables -I INPUT -s 223.70.232.41 -j DROP
@@ -390,7 +399,7 @@ $ iptables -P INPUT DROP
 $ iptables-save
 ```
 
-## iptables 常用命令参数
+## 十一、iptables 常用命令参数
 `iptables` 是 Linux 系统下管理防火墙规则的核心工具，其参数用于定义规则的匹配条件、操作目标和规则管理。以下是常用参数分类及详细说明：
 
 ---
@@ -494,10 +503,10 @@ $ iptables -A INPUT -p icmp -j DROP
 
 掌握这些参数后，可以灵活配置防火墙规则，实现流量过滤、NAT 转换、日志记录等功能。
 
-## iptables 总结
+## 十二、iptables 总结
 iptables 在工作中也是常用到的服务，重要但是不是很复杂，这里找了一个iptables[面试参考](https://www.jianshu.com/p/19422676b854)，自己可以写一写，加深巩固下,在生产环境层面执行前最好是现在测试环境验证下
 
-## 参考
+## 十三、参考
 1. [iptables详细教程：基础、架构、清空规则、追加规则、应用实例](https://lesca.me/archives/iptables-tutorial-structures-configuratios-examples.html)
 
 

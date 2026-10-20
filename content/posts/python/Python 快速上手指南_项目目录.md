@@ -6,10 +6,18 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Python"]
 tags: ["Python"]
+slug: "python-project-layout"
+summary: "介绍 Python 项目通用的目录结构布局最佳实践，说明源码包、测试、文档及各配置文件的用途。"
 ---
+
+本文介绍 Python 项目通用的目录结构布局最佳实践，说明源码包、tests、docs、setup.py、requirements.txt 等各目录与配置文件的作用，帮助快速搭建规范的 Python 项目骨架。
+
+<!--more-->
+
 项目目录布局
 ```
 project_name

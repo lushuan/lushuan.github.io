@@ -5,11 +5,19 @@ date: 2026-06-01T12:06:37+08:00
 lastmod: 2026-06-01T12:06:37+08:00
 draft: false
 toc:
-enable: true
+  enable: true
+  auto: true
 weight: false
 categories: ["Kubernetes"]
 tags: ["Kubernetes排障"]
+slug: "vm-network-change-k8s-repair"
+featuredImage: "/images/blog_cover/lake/1.jpg"
+summary: "深度复盘虚拟机网络模式从桥接切换为 NAT 后 K8s 集群彻底瘫痪的根因分析与原地修复全过程，涵盖证书更新、kubeconfig 重建、静态 Pod 刷新、镜像源替换等关键步骤。"
 ---
+
+虚拟机 IP 没有变化，仅将 VMware 网络模式从桥接切换为 NAT，K8s 集群的控制平面却彻底瘫痪。本文按"网络 → 运行时 → 静态 Pod → Kubelet"的顺序记录完整的排查与原地修复过程，包括证书更新、kubeconfig 重建、静态 Pod 刷新和镜像地址替换，并剖析网络模式变更导致集群瘫痪的根本原因。
+
+<!--more-->
 
 ## 1. 灾难降临：故障现场现象
 本篇记录了网络模式变更，导致 k8s 集群异常的根因分析及修复全过程

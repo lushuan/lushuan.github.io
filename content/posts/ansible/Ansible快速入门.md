@@ -6,10 +6,19 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Ansible"]
 tags: ["Ansible"]
+slug: "ansible-quickstart"
+featuredImage: "/images/ansible/cover.jpg"
+summary: "本文介绍 Ansible 自动化运维工具的核心特点、典型使用场景与工作原理，并详细讲解 Ansible 的安装部署、SSH 免密配置以及 Ad-Hoc 命令与 Playbook 的快速入门用法。"
 ---
+
+Ansible 是一款基于 SSH 的开源 IT 自动化运维工具，无需在目标主机安装 Agent，通过 YAML 格式的 Playbook 即可实现配置管理、应用部署与任务编排。本文从 Ansible 的特点与使用场景讲起，逐步介绍安装部署、免密配置以及常用管理命令的使用方法，帮助读者快速上手 Ansible 自动化运维。
+
+<!--more-->
+
 ## 1. Ansible 简介
 Ansible是一个开源的IT自动化运维工具，用于配置管理、应用部署、任务执行和持续交付。其设计目标是简单易用，以帮助系统管理员更轻松地管理服务器基础设施。Ansible通过YAML（YAML Ain't Markup Language）格式的清晰易懂的文本定义配置（称为Playbook），这种格式有助于用户快速编写和阅读任务及配置信息。
 

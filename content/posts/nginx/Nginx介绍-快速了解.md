@@ -6,39 +6,47 @@ lastmod: 2022-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Nginx"]
 tags: ["Nginx"]
+slug: "nginx-intro"
+featuredImage: "/images/blog_cover/mountain/cover-1.jpg"
+summary: "快速了解 Nginx 的入门资料：介绍 Nginx 是什么、四个发行版本、特点与应用场景，并详解重要配置文件与配置语法。"
 ---
 
-## Nginx 是什么？
+本文是一篇快速了解 Nginx 的入门资料，介绍 Nginx 是什么、四个发行版本、为什么选择 Nginx 及其特点与应用场景，并详解重要配置文件说明、配置语法与 http 指令块等基础知识。
+
+<!--more-->
+
+## 一、Nginx 是什么？
 Nginx (engine x) 是一个高性能的HTTP和反向代理web服务器。
 Nginx是由伊戈尔·赛索耶夫为俄罗斯访问量第二的Rambler.ru站点（俄文：Рамблер）开发的.
 第一个公开版本0.1.0发布于2004年10月4日。
 
-## 四个发行版本
+## 二、四个发行版本
 1. 开源版：https://nginx.org/
 2. 商业版：https://nginx.com/ f5
 3. Openresty: https://openresty.org/cn/
 4. Tengine: https://tengine.taobao.org/
 
-## 为什么选择Nginx?
+## 三、为什么选择Nginx?
 互联网公司大都选择 Nginx
 1. Nginx 技术成熟，具备的功能是企业最常使用而且最需要的  
 2. 适合当前主流架构趋势, 微服务、云架构、中间层  
 3. 统一技术栈, 降低维护成本, 降低技术更新成本。  
-## Nginx 特点
+## 四、Nginx 特点
 1. 开源,可以从官网直接获取源代码
 2. 高并发：高性能,Nginx性能非常残暴,支持海量并发，顶住10万以上连接是没有问题的
 3. 低内存消耗：在高性能的同时，保持很低的内存消耗；
 4. 模块化：Nginx具有丰富的模块可以按需使用，并且有开发能力的技术人员还可以二次开发
 5. 热启动：例如当修改配置文件后，不需要停止与启动就可以让配置生效
 
-## Nginx 应用场景
+## 五、Nginx 应用场景
 
 ![image-20240721205413807](/images/nginx/nginx-usage-scenario-detail.png "Nginx 应用场景")
 
-## Nginx 的组成
+## 六、Nginx 的组成
 
 ![image-20240721205840420](/images/nginx/nginx-components.png "Nginx 应用场景")
 
@@ -171,7 +179,7 @@ Nginx 语法示例
 7. 测试配置文件是否有语法错误：-t -T
 8. 打印nginx 的版本信息、编译信息等：-v -V 
 
-## 参考
+## 七、参考
 - http://nginx.org/
 - https://www.nginx-cn.net/
 - https://matob.web.id/random/nginx/

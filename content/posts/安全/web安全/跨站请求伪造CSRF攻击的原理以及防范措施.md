@@ -6,10 +6,19 @@ lastmod: 2025-06-16T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["安全"]
 tags: ["安全","Web安全"]
+slug: "csrf-defense"
+featuredImage: "/images/security/cover.jpg"
+summary: "详解 CSRF 跨站请求伪造攻击的原理、核心要素与常见攻击手法，并深入讲解 CSRF Token、双重提交 Cookie、Origin/Referer 校验等防范措施。"
 ---
+
+跨站请求伪造（CSRF）是 Web 安全的核心威胁之一。本文详解 CSRF 攻击的原理、核心要素与常见的 GET/POST 请求伪造手法，深入讲解 CSRF Token、双重提交 Cookie 验证、Origin/Referer 头检查等防范措施，并总结实践防御建议。
+
+<!--more-->
+
 ### 前言
 跨站请求伪造(Cross-Site Request Forgery, CSRF)攻击。它与XSS攻击的目标不同，但危害同样巨大，是Web安全的核心威胁之一。
 

@@ -6,11 +6,20 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Grafana"]
 tags: ["Grafana"]
+slug: "grafana-intro"
+featuredImage: "/images/scenery/cover-1.jpg"
+summary: "介绍 Grafana 监控仪表系统的核心功能与架构，演示 Docker 与 Kubernetes 两种安装部署方式，并讲解数据源集成、Dashboard 导入及面板组件等实用内容。"
 ---
-## Grafana简介
+
+Grafana 是一款开源的监控仪表系统，能够基于多种数据源快速生成可视化大屏并提供告警能力。本文介绍 Grafana 的核心功能与架构，演示 Docker 与 Kubernetes 两种安装部署方式，并讲解数据源集成、Dashboard 导入以及面板、注释、告警等组件的实用知识。
+
+<!--more-->
+
+## 一、Grafana简介
 Grafana 是一个监控仪表系统，它是由 Grafana Labs 公司开源的的一个系统监测 (System Monitoring) 工具。它可以大大帮助你简化监控的复杂度，你只需要提供你需要监控的数据，它就可以帮你生成各种可视化仪表。同时它还有报警功能，可以在系统出现问题时通知你。
 
 Grafana 本身是非常轻量级的，不会占用大量资源，此外 Grafana 需要一个数据库来存储其配置数据，比如用户、数据源和仪表盘等，目前 Grafana 支持 SQLite、MySQL、PostgreSQL 3 种数据库，默认使用的是 SQLite，该数据库文件会存储在 Grafana 的安装位置，所以需要对 Grafana 的安装目录进行持久化。
@@ -20,7 +29,7 @@ Grafana 本身是非常轻量级的，不会占用大量资源，此外 Grafana 
 ### Grafana的核心功能和架构
 Grafana提供了一个丰富的图表库，包括时序数据图、柱状图、饼图等多种类型，使其能够展示各种指标数据。
 用户可以通过拖放的方式自定义仪表板，实现对数据的实时监控和分析。Grafana的前端界面使用AngularJS和React构建，后端则主要采用Go语言开发，确保了其高性能和灵活性。
-## Grafana的安装与初步配置
+## 二、Grafana的安装与初步配置
 Grafana支持多种安装方式，包括Docker容器、预编译的二进制包、源代码编译等，可以满足不同用户的需求。
 
 ### Docker 安装
@@ -180,7 +189,7 @@ service/grafana   NodePort   10.110.17.117   <none>        3000:30009/TCP   11m
 
 ![grafan-1](/images/grafana/grafana-1.png "grafana")
 
-## 访问功能界面
+## 三、访问功能界面
 `http://ip:30009` 登录是默认账号口令为`admin/admin`,第一次登录时提示修改密码
 ![grafan-2](/images/grafana/grafana-2.png "grafana")
 
@@ -188,12 +197,12 @@ service/grafana   NodePort   10.110.17.117   <none>        3000:30009/TCP   11m
 
 ![grafan-3](/images/grafana/grafana-3.png "grafana")
 
-## 数据源深入集成
+## 四、数据源深入集成
 ![grafan-4](/images/grafana/grafana-4.png "grafana")
 
 在Grafana中，数据源的集成是构建有效监控和分析系统的关键步骤。Grafana支持众多流行的数据存储和监控工具作为数据源，包括时序数据库Prometheus, InfluxDB，日志和文档存储如Elasticsearch，以及传统的SQL数据库如MySQL和PostgreSQL。
 
-## 导入 Dashboard
+## 五、导入 Dashboard
 为了能够快速对系统进行监控，我们可以直接复用别人的 Grafana Dashboard，在 Grafana 的官方网站上就有很多非常优秀的第三方 Dashboard，我们完全可以直接导入进来即可。
 比如我们想要对所有的集群节点进行监控，也就是 node-exporter 采集的数据进行展示，这里我们就可以导入 https://grafana.com/grafana/dashboards/8919 这个 Dashboard。
 
@@ -210,7 +219,7 @@ service/grafana   NodePort   10.110.17.117   <none>        3000:30009/TCP   11m
 ![grafan-7](/images/grafana/grafana-7.png "grafana")
 
 
-## Grafana 相关组件概念了解
+## 六、Grafana 相关组件概念了解
 ### 面板介绍
 
 面板（Panel）是 Grafana 中基本可视化构建块，每个面板都有一个特定于面板中选择数据源的查询编辑器，每个面板都有各种各样的样式和格式选项，面板可以在仪表板上拖放和重新排列，它们也可以调整大小。
@@ -262,6 +271,6 @@ Grafana 中提供了一个 Annotations 注释的方法，通过该方式可以�
 #### 告警
 Grafana 除了支持丰富的数据源和图表功能之外，还支持告警功能，该功能也使得 Grafana 从一个数据可视化工具成为了一个真正的监控利器。Grafana 可以通过 Alerting 模块的配置把监控数据中的异常信息进行告警，告警的规则可以直接基于现有的数据图表进行配置，在告警的时候也会把出现异常的图表进行通知，使得我们的告警通知更加友好。
 
-## 参考
+## 七、参考
 - [Grafana 官网](https://grafana.com/docs/grafana/latest/)
 - [Grafana Dashboard模板-官网](https://grafana.com/grafana/dashboards/?pg=hp&plcmt=lt-box-dashboards)

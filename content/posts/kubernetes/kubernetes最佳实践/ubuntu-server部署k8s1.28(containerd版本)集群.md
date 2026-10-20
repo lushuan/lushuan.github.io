@@ -6,10 +6,19 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Kubernetes"]
 tags: ["Kubernetes"]
+slug: "k8s-128-containerd-ubuntu"
+featuredImage: "/images/kubernetes/cover.jpg"
+summary: "完整记录在 Ubuntu Server 22.04 上以 containerd 为运行时部署 Kubernetes v1.28 集群的全过程，涵盖主机准备、containerd 配置、apt 源准备、集群初始化、节点加入、Calico 网络插件安装及应用验证。"
 ---
+
+本文记录在 Ubuntu Server 22.04 上使用容器运行时 containerd 1.7.11 部署 Kubernetes v1.28 集群的完整流程，从主机准备、运行时配置、集群初始化到 Calico 网络插件安装和应用验证，并针对镜像仓库不可用给出离线部署方案。
+
+<!--more-->
+
 ## 整体流程
 1. 部署准备
 2. k8s 集群容器运行时 Containerd 准备

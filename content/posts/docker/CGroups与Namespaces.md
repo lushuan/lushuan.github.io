@@ -6,10 +6,18 @@ lastmod: 2024-06-26T16:25:58+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Docker"]
 tags: ["Docker"]
+slug: "cgroups-namespaces-hands-on"
+featuredImage: "/images/docker/cover.jpg"
+summary: "本文不依赖任何容器工具，仅用 unshare、cgcreate 等原生 Linux 命令手动组合 Namespaces 隔离与 CGroups 资源限制，一步步还原 docker run 的底层过程，拆解容器技术的黑盒。"
 ---
+
+容器的本质是 Linux 内核两项基础能力的组合：Namespaces 负责隔离视图，CGroups 负责限制资源。本文不依赖 Docker 等任何容器工具，仅使用 unshare、cgcreate、cgset 等原生命令，动手还原一个最小化"容器"的完整构建过程。读完后你会理解 docker run 底层没有黑魔法，并掌握 CGroups v1/v2 的差异与 OOM、CPU 配额等限制机制。
+
+<!--more-->
 
 # 
 

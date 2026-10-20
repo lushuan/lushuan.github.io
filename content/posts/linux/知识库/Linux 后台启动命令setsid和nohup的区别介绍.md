@@ -5,15 +5,24 @@ date: 2025-04-19T12:06:37+08:00
 lastmod: 2025-04-20T12:06:37+08:00
 draft: false
 toc:
-enable: true
+  enable: true
+  auto: true
 weight: false
 categories: ["Linux"]
 tags: ["Linux"]
+slug: "setsid-vs-nohup"
+featuredImage: "/images/blog_cover/nature/2.jpg"
+summary: "对比 Linux 后台启动命令 nohup 与 setsid 的原理和区别：nohup 忽略 SIGHUP 信号，setsid 创建新会话彻底脱离控制终端，并给出实际使用建议。"
 ---
+
+nohup 和 setsid 都是 Linux/Unix 下常用的后台启动命令，但原理不同：nohup 通过忽略 SIGHUP 信号防止进程随终端关闭而终止，setsid 则创建新会话和进程组、彻底脱离控制终端。本文用对比表梳理两者的区别，并给出不同场景下的使用建议与组合用法。
+
+<!--more-->
+
 `setsid` 和 `nohup` 都是 **Linux/Unix 下常用的“后台启动命令”**，但它们的原理、作用范围和适用场景是不同的。下面系统梳理一下对比。
 
 
-## 🧩 一、nohup：防止进程收到挂断信号（SIGHUP）
+## 一、🧩 一、nohup：防止进程收到挂断信号（SIGHUP）
 
 ### ✅ 基本作用
 
@@ -45,7 +54,7 @@ nohup python3 app.py > app.log 2>&1 &
 
 ---
 
-## 🧩 二、setsid：创建新的会话（Session Leader）
+## 二、🧩 二、setsid：创建新的会话（Session Leader）
 
 ### ✅ 基本作用
 
@@ -74,7 +83,7 @@ setsid python3 app.py > app.log 2>&1 &
 
 ---
 
-## 🆚 三、nohup 与 setsid 的区别总结表
+## 三、🆚 三、nohup 与 setsid 的区别总结表
 
 | 对比项                | `nohup`              | `setsid`                   |
 | ------------------ | -------------------- | -------------------------- |
@@ -88,7 +97,7 @@ setsid python3 app.py > app.log 2>&1 &
 
 ---
 
-## 🧠 四、实际使用建议
+## 四、🧠 四、实际使用建议
 
 | 需求                        | 推荐命令                                         |
 | ------------------------- | -------------------------------------------- |
@@ -99,7 +108,7 @@ setsid python3 app.py > app.log 2>&1 &
 
 ---
 
-## ⚙️ 五、补充：可结合使用
+## 五、⚙️ 五、补充：可结合使用
 
 其实也可以 **组合** 使用：
 

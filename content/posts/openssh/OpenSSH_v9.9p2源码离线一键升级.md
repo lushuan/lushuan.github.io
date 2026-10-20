@@ -6,12 +6,20 @@ lastmod: 2025-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["OpenSSH"]
 tags: ["OpenSSH"]
+slug: "openssh-offline-upgrade"
+featuredImage: "/images/blog_cover/ocean/1.jpg"
+summary: "本文介绍在 CentOS 7 环境下通过源码编译方式将 OpenSSH 离线一键升级至 v9.9p2 的完整流程，包括 OpenSSL 1.1.1w 升级、备份策略、一键升级脚本及安装验证，用于修复 CVE-2025-26465/26466 等安全漏洞。"
 ---
 
-## 背景
+针对安全扫描发现的 OpenSSH 版本漏洞（CVE-2025-26465、CVE-2025-26466），本文记录在 CentOS 7.x 环境下将 OpenSSH 统一离线升级至 v9.9p2 的完整操作过程。内容涵盖 OpenSSL 1.1.1w 的源码编译升级、升级前的备份策略，以及一个包含依赖安装、zlib/OpenSSL 编译、OpenSSH 安装与最终验证的一键升级脚本。
+
+<!--more-->
+
+## 一、背景
 - Linux操作系统环境：CentOS 7.x
 
 {{< admonition type=info title="前言" >}}
@@ -20,7 +28,7 @@ tags: ["OpenSSH"]
 如果 OpenSSL 相对版本较低，这里建议先将OpenSS版本升级至OpenSSL 1.1.1w  11 Sep 2023，然后再升级 OpenSSH v9.9p2,如果你的主机当前的OpenSSH 版本为v9.9p1，则同样建议升级至v9.9p2，因为v9.9p1 含有两个中危漏洞，OpenSSH 安全漏洞(CVE-2025-26465 ) 和 OpenSSH 资源管理错误漏洞(CVE-2025-26466 )，此漏洞同样在 v9.9p2 版本进行了修复。
 {{< /admonition >}}
 
-## 相关安装包
+## 二、相关安装包
 {{< admonition type=quote title="地址" >}}
 openssh下载地址：http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/  
 openssl下载地址：https://www.openssl.org/source/  
@@ -28,7 +36,7 @@ zlib下载地址：http://www.zlib.net/
 openssl-1.1.1w: https://www.openssl.org/source/openssl-1.1.1w.tar.gz  
 {{< /admonition >}}
 
-## 升级 OpenSSL
+## 三、升级 OpenSSL
 查找openssl相关目录，然后备份  
 ```shell
 $ whereis openssl
@@ -68,7 +76,7 @@ $ openssl version
 OpenSSL 1.1.1w  11 Sep 2023
 ```
 
-## 升级 OpenSSH 至 v9.9p2
+## 四、升级 OpenSSH 至 v9.9p2
 ### 查看当前版本
 不同环境的ssh 版本会有所不同
 ```shell

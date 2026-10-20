@@ -6,10 +6,18 @@ lastmod: 2026-07-26T16:25:58+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Docker"]
 tags: ["Docker"]
+slug: "docker-compose-version-compatibility"
+featuredImage: "/images/docker/cover.jpg"
+summary: "本文梳理 Docker Engine 与 Docker Compose 的版本演进史和完整兼容矩阵，解析 Compose 从 V1、V2 到 V5 的架构差异与版本号跳跃原因，并给出 Docker 25.0.0 的适配推荐和生产环境选型建议。"
 ---
+
+Docker Engine 与 Docker Compose 的版本搭配是容器化部署中极易被忽视却至关重要的兼容性问题。本文梳理 Compose 从 V1（Python）到 V2（Go）再到 V5 的版本演进史与完整兼容矩阵，解释为何版本号从 v2.40 直接跳跃到 v5.x。同时给出 Docker 25.0.0 的最佳适配版本推荐、V1/V2 架构与功能差异对比，以及生产环境的版本选择决策树和升级路径。
+
+<!--more-->
 
 ## 一、前言
 

@@ -6,11 +6,20 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Linux"]
 tags: ["Linux"]
+slug: "linux-network-troubleshooting"
+featuredImage: "/images/blog_cover/nature/4.jpg"
+summary: "介绍 Linux 网络排障常用工具：netstat、sar、telnet、ss 的常用命令、参数含义与典型使用场景，帮助定位网络连接与性能问题。"
 ---
-## netstat
+
+本文汇总 Linux 网络排障的常用命令行工具：netstat 查看端口监听与路由、sar 监控系统资源与 socket 统计、telnet 测试远程端口连通性、ss 查看活动套接字详情。每个工具都给出常用命令与典型使用场景，便于日常排查网络问题。
+
+<!--more-->
+
+## 一、netstat
 netstat是一个常用的命令行网络工具，用于显示与网络连接、路由表和网络接口相关的信息。以下是一些常用的netstat命令：
 
 1. `netstat -tunlp`：显示所有TCP和UDP端口的监听情况，以及对应的进程信息。
@@ -21,7 +30,7 @@ netstat是一个常用的命令行网络工具，用于显示与网络连接、�
 6. `netstat -i`：显示网络接口信息，包括接口名称、MAC地址、IP地址和状态等。
 7. `netstat -c`：持续输出网络连接的信息，每隔一段时间刷新一次。
 
-## sar
+## 二、sar
 sar（System Activity Reporter）是一个性能监控工具，它可以提供系统资源使用情况的历史数据。以下是一些常用的sar命令和相应的使用场景：
 
 > `sar -u`：显示CPU使用情况。
@@ -72,7 +81,7 @@ Linux 4.4.115-1.el7.elrepo.x86_64 (chm)         2022年05月20日  _x86_64_     
 
 这些sar命令可用于监控系统资源的使用情况，帮助诊断性能问题和优化系统配置。您可以通过调整命令的参数来获取特定的监控数据，并结合其他工具和命令进行综合分析
 
-## telnet
+## 三、telnet
 telnet是一个用于远程登录和管理远程主机的网络协议和工具。以下是一些常用的telnet命令和相应的使用场景：
 
 > 1.telnet host：连接到指定的远程主机。
@@ -103,7 +112,7 @@ telnet命令可以用于远程登录和管理远程主机，但由于安全性�
 
 
 
-## ss
+## 四、ss
 ss（Socket Statistics）是一个Linux系统中用于显示当前活动套接字（socket）信息的命令。它可以提供更详细和全面的套接字统计数据。以下是一些常用的ss命令和相应的使用场景：
 
 > 1.ss -t：显示TCP套接字信息。

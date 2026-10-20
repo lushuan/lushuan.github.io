@@ -6,10 +6,19 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Kubernetes"]
 tags: ["Kubernetes"]
+slug: "k8s-basic-concepts"
+featuredImage: "/images/kubernetes/cover.jpg"
+summary: "系统梳理 Kubernetes 的基本概念和术语，围绕资源对象讲解 Master/Node 集群架构、Service 与 Pod、Label 与标签选择器、Deployment 等核心概念，适合入门者建立整体知识框架。"
 ---
+
+Kubernetes 的基本概念和术语大多围绕资源对象展开。本文系统梳理集群类（Master、Node）、应用类（Service、Pod、Label、Deployment）等核心概念，帮助入门者快速建立对 Kubernetes 整体架构和关键对象的认知。
+
+<!--more-->
+
 #  资源对象概述
 Kubernetes中的基本概念和术语大多是围绕资源对象（Resource Object）来说的，而资源对象在总体上可分为以下两类。
 
@@ -19,7 +28,7 @@ Kubernetes中的基本概念和术语大多是围绕资源对象（Resource Obje
 #   集群类
 集群（Cluster）表示一个由Master和Node组成的Kubernetes集群。
 
-## Master  
+## 一、Master  
 Master指的是集群的控制节点。在每个Kubernetes集群中都需要有一个或一组被称为Master的节点，来负责整个集群的管理和控制。Master通常占据一个独立的服务器（在高可用部署中建议至少使用3台服务器），是整个集群的"大脑"，如果它发生宕机或者不可用，那么对集群内容器应用的管理都将无法实施。
 
 在Master上运行着以下关键进程。
@@ -29,7 +38,7 @@ Master指的是集群的控制节点。在每个Kubernetes集群中都需要有�
 
 另外，在Master上通常还需要部署etcd服务
 
-## Node
+## 二、Node
 
 Kubernetes集群中除Master外的其他服务器被称为Node，Node在较早的版本中也被称为Minion。与Master一样，Node可以是一台物理主机，也可以是一台虚拟机。Node是Kubernetes集群中的工作负载节点，每个Node都会被Master分配一些工作负载（Docker容器），当某个Node宕机时，其上的工作负载会被Master自动转移到其他Node上。
 
@@ -41,14 +50,14 @@ Kubernetes集群中除Master外的其他服务器被称为Node，Node在较早�
 #  应用类
 Kubernetes中属于应用类的概念和相应的资源对象类型最多，所以应用类也是需要重点学习的一类。
 
-##  Service与Pod  
+## 三、 Service与Pod  
 应用类相关的资源对象主要是围绕Service（服务）和Pod这两个核心对象展开的。
 
 一般说来，Service指的是无状态服务，通常由多个程序副本提供服务，在特殊情况下也可以是有状态的单实例服务，比如MySQL这种数据存储类的服务。与我们常规理解的服务不同，Kubernetes里的Service具有一个全局唯一的虚拟ClusterIP地址，Service一旦被创建，Kubernetes就会自动为它分配一个可用的ClusterIP地址，而且在Service的整个生命周期中，它的ClusterIP地址都不会改变，客户端可以通过这个虚拟IP地址+服务的端口直接访问该服务，再通过部署Kubernetes集群的DNS服务，就可以实现Service Name（域名）到ClusterIP地址的DNS映射功能，我们只要使用服务的名称（DNS名称）即可完成到目标服务的访问请求。"服务发现"这个传统架构中的棘手问题在这里首次得以完美解决，同时，凭借ClusterIP地址的独特设计，Kubernetes进一步实现了Service的透明负载均衡和故障自动恢复的高级特性。
 
 通过分析、识别并建模系统中的所有服务为微服务——Kubernetes Service，我们的系统最终由多个提供不同业务能力而又彼此独立的微服务单元组成，服务之间通过TCP/IP进行通信，从而形成强大又灵活的弹性网格，拥有强大的分布式能力、弹性扩展能力、容错能力，程序架构也变得简单和直观许多
 
-## Pod
+## 四、Pod
 为什么Kubernetes会设计出一个全新的Pod概念并且Pod有这样特殊的组成结构？原因如下。
 
 - 为多进程之间的协作提供一个抽象模型，使用Pod作为基本的调度、复制等管理工作的最小单位，让多个应用进程能一起有效地调度和伸缩。
@@ -61,7 +70,7 @@ Pod其实有两种类型：普通的Pod及静态Pod（Static Pod）。后者比�
 Pod、容器与Node的关系
 ![Pod、容器与Node的关系](/images/kubernetes/basic/pod-node.png "Pod、容器与Node的关系")
 
-##  Label与标签选择器
+## 五、 Label与标签选择器
 Label（标签）是Kubernetes系统中的另一个核心概念，相当于我们熟悉的"标签"。一个Label是一个key=value的键值对，其中的key与value由用户自己指定。Label可以被附加到各种资源对象上，例如Node、Pod、Service、Deployment等，一个资源对象可以定义任意数量的Label，同一个Label也可以被添加到任意数量的资源对象上。Label通常在资源对象定义时确定，也可以在对象创建后动态添加或者删除。我们可以通过给指定的资源对象捆绑一个或多个不同的Label来实现多维度的资源分组管理功能，以便灵活、方便地进行资源分配、调度、配置、部署等管理工作，例如，部署不同版本的应用到不同的环境中，以及监控、分析应用（日志记录、监控、告警）等。一些常用的Label示例如下。
 
 - 版本标签：release：stable和release：canary。
@@ -75,10 +84,10 @@ Label也是Pod的重要属性之一，其重要性仅次于Pod的端口，我们
 Service很重要的一个属性就是标签选择器，如果我们不小心把标签选择器写错了，就会出现指鹿为马的闹剧。如果恰好匹
 配到了另一种Pod实例，而且对应的容器端口恰好正确，服务可以正常连接，则很难排查问题，特别是在有众多Service的复杂系统中。
 
-## Pod与Deployment
+## 六、Pod与Deployment
 前面提到，大部分Service都是无状态的服务，可以由多个Pod副本实例提供服务。通常情况下，每个Service对应的Pod服务实例数量都是固定的，如果一个一个地手工创建Pod实例，就太麻烦了，最好是用模板的思路，即提供一个Pod模板（Template），然后由程序根据我们指定的模板自动创建指定数量的Pod实例。这就是Deployment这个资源对象所要完成的事情了。
 
-## Service的ClusterIP地址
+## 七、Service的ClusterIP地址
 既然每个Pod都会被分配一个单独的IP地址，而且每个Pod都提供了一个独立的Endpoint（Pod IP+containerPort）以被客户端访问，那么现在多个Pod副本组成了一个集群来提供服务，客户端如何访问它们呢？传统的做法是部署一个负载均衡器（软件或硬件），为这组Pod开启一个对外的服务端口如8000端口，并且将这些Pod的Endpoint列表加入8000端口的转发列表中，客户端就可以通过负载均衡器的对外IP地址+8000端口来访问此服务了。Kubernetes也是类似的做法，Kubernetes内部在每个Node上都运行了一套全局的虚拟负载均衡器，自动注入并自动实时更新集群中所有Service的路由表，通过iptables或者IPVS机制，把对Service的请求转发到其后端对应的某个Pod实例上，并在内部实现服务的负载均衡与会话保持机制。不仅如此，Kubernetes还采用了一种很巧妙又影响深远的设计——ClusterIP地址。我们知道，Pod的Endpoint地址会随着Pod的销毁和重新创建而发生改变，因为新Pod的IP地址与之前旧Pod的不同。Service一旦被创建，Kubernetes就会自动为它分配一个全局唯一的虚拟IP地址——ClusterIP地址，而且在Service的整个生命周期内，其ClusterIP地址不会发生改变，这样一来，每个服务就变成了具备唯一IP地址的通信节点，远程服务之间的通信问题就变成了基础的TCP网络通信问题。
 
 之所以说ClusterIP地址是一种虚拟IP地址，原因有以下几点。    
@@ -86,7 +95,7 @@ Service很重要的一个属性就是标签选择器，如果我们不小心把�
 - 因为没有一个"实体网络对象"来响应，所以ClusterIP地址无法被Ping通。ClusterIP地址只能与Service Port组成一个具体的服务访问端点，单独的ClusterIP不具备TCP/IP通信的基础。
 - ClusterIP属于Kubernetes集群这个封闭的空间，集群外的节点要访问这个通信端口，则需要做一些额外的工作
 
-## Service的外网访问问题
+## 八、Service的外网访问问题
 前面提到，服务的ClusterIP地址在Kubernetes集群内才能被访问，那么如何让集群外的应用访问我们的服务呢？这也是一个相对复杂的问题。要弄明白这个问题的解决思路和解决方法，我们需要先弄明白
 
 Kubernetes的三种IP，这三种IP分别如下。
@@ -102,11 +111,11 @@ Kubernetes的三种IP，这三种IP分别如下。
 
 NodePort的实现方式是，在Kubernetes集群的每个Node上都为需要外部访问的Service开启一个对应的TCP监听端口，外部系统只要用任意一个Node的IP地址+NodePort端口号即可访问此服务，在任意Node上运行netstat命令，就可以看到有NodePort端口被监听。
 
-## NodePort 存在的一问题引出了Ingress对象  
+## 九、NodePort 存在的一问题引出了Ingress对象  
 
 NodePort的确功能强大且通用性强，但也存在一个问题，即每个Service都需要在Node上独占一个端口，而端口又是有限的物理资源，那能不能让多个Service共用一个对外端口呢？这就是后来增加的Ingress资源对象所要解决的问题。在一定程度上，我们可以把Ingress的实现机制理解为基于Nginx的支持虚拟主机的HTTP代理。
 
-## 有状态的应用集群
+## 十、有状态的应用集群
 我们知道，Deployment对象是用来实现无状态服务的多副本自动控制功能的，那么有状态的服务，比如ZooKeeper集群、MySQL高可用集群（3节点集群）、Kafka集群等是怎么实现自动部署和管理的呢？这个问题就复杂多了，这些一开始是依赖StatefulSet解决的，但后来发现对于一些复杂的有状态的集群应用来说，StatefulSet还是不够通用和强大，所以后面又出现了Kubernetes Operator。
 
 我们先说说StatefulSet。StatefulSet之前曾用过PetSet这个名称，很多人都知道，在IT世界里，有状态的应用被类比为宠物（Pet），无状态的应用则被类比为牛羊，每个宠物在主人那里都是"唯一的存在"，宠物生病了，我们是要花很多钱去治疗的，需要我们用心照料，而无差别的牛羊则没有这个待遇。总结下来，在有状态集群中一般有如下特殊共性。
@@ -131,13 +140,13 @@ ${podname}.${headless service name}
 
 StatefulSet的建模能力有限，面对复杂的有状态集群时显得力不从心，所以就有了后来的Kubernetes Operator框架和众多的Operator实现了。需要注意的是，Kubernetes Operator框架并不是面向普通用户的，而是面向Kubernetes平台开发者的。
 
-## 批处理应用
+## 十一、批处理应用
 除了无状态服务、有状态集群、常见的第三种应用，还有批处理应用。批处理应用的特点是一个或多个进程处理一组数据（图像、文件、视频等），在这组数据都处理完成后，批处理任务自动结束。为了支持这类应用，Kubernetes引入了新的资源对象——Job。
 
 Jobs控制器提供了两个控制并发数的参数：completions和parallelism，completions表示需要运行任务数的总数，parallelism表示并发运行的个数，例如设置parallelism为1，则会依次运行任务，在前面的任务运行后再运行后面的任务。Job所控制的Pod副本是短暂运行的，可以将其视为一组容器，其中的每个容器都仅运行一次。当Job控制的所有Pod副本都运行结束时，对应的Job也就结束了。Job在实现方式上与Deployment等副本控制器不同，Job生成的Pod副本是不能自动重启的，对应Pod副本的restartPolicy都被设置为Never，因此，当对应的Pod副本都执行完成时，相应的Job也就完成了控制使命。后来，Kubernetes增加了CronJob，可以周期性地执行某个任务。
 
 
-## 应用的配置问题
+## 十二、应用的配置问题
 
 通过前面的学习，我们初步理解了三种应用建模的资源对象，总结如下。
 - 无状态服务的建模：Deployment。
@@ -154,7 +163,7 @@ ConfigMap顾名思义，就是保存配置项（key=value）的一个Map，如�
 
 接下来说说Secret。Secret也用于解决应用配置的问题，不过它解决的是对敏感信息的配置问题，比如数据库的用户名和密码、应用的数字证书、Token、SSH密钥及其他需要保密的敏感配置。对于这类敏感信息，我们可以创建一个Secret对象，然后被Pod引用。Secret中的数据要求以BASE64编码格式存放。注意，BASE64编码并不是加密的，在Kubernetes 1.7版本以后，Secret中的数据才可以以加密的形式进行保存，更加安全。
 
-## 应用的运维问题
+## 十三、应用的运维问题
 最后说说与应用的自动运维相关的几个重要对象。
 
 首先就是HPA（Horizontal Pod Autoscaler），如果我们用Deployment来控制Pod的副本数量，则可以通过手工运行kubectl scale命令来实现Pod扩容或缩容。如果仅仅到此为止，则显然不符合谷歌对Kubernetes的定位目标——自动化、智能化。在谷歌看来，分布式系统要能够根据当前负载的变化自动触发水平扩容或缩容，因为这一过程可能是频繁发生、不可预料的，所以采用手动控制的方式是不现实的，因此就有了后来的HPA这个高级功能。我们可以将HPA理解为Pod横向自动扩容，即自动控制Pod数量的增加或减少。通过追踪分析指定Deployment控制的所有目标Pod的负载变化情况，来确定是否需要有针对性地调整目标Pod的副本数量，这是HPA的实现原理。Kubernetes内置了基于Pod的CPU利用率进行自动扩缩容的机制，应用开发者也可以自定义度量指标如每秒请求数，来实现自定义的HPA功能。
@@ -166,7 +175,7 @@ ConfigMap顾名思义，就是保存配置项（key=value）的一个Map，如�
 
 Volume是Pod中能够被多个容器访问的共享目录。Kubernetes中的Volume概念、用途和目的与Docker中的Volume比较类似，但二者不能等价。首先，Kubernetes中的Volume被定义在Pod上，被一个Pod里的多个容器挂载到具体的文件目录下；其次，Kubernetes中的Volume与Pod的生命周期相同，但与容器的生命周期不相关，当容器终止或者重启时，Volume中的数据也不会丢失；最后，Kubernetes支持多种类型的Volume，例如GlusterFS、Ceph等分布式文件系统。Volume的使用也比较简单，在大多数情况下，我们先在Pod上声明一个Volume，然后在容器里引用该Volume并将其挂载（Mount）到容器里的某个目录下。举例来说，若我们要给之前的Tomcat Pod增加一个名为datavol的Volume，并将其挂载到容器的某个路径/mydata-data目录下，则只对Pod的定义文件做下修正即可。
 
-## emptyDir
+## 十四、emptyDir
 一个emptyDir是在Pod分配到Node时创建的。从它的名称就可以看出，它的初始内容为空，并且无须指定宿主机上对应的目录文件，因为这是Kubernetes自动分配的一个目录，当Pod从Node上移除时，emptyDir中的数据也被永久移除。emptyDir的一些用途如下。
 - 临时空间，例如用于某些应用程序运行时所需的临时目录，且无须永久保留。
 - 长时间任务执行过程中使用的临时目录。
@@ -174,7 +183,7 @@ Volume是Pod中能够被多个容器访问的共享目录。Kubernetes中的Volu
 
 在默认情况下，emptyDir使用的是节点的存储介质，例如磁盘或者网络存储。还可以使用emptyDir.medium属性，把这个属性设置为"Memory"，就可以使用更快的基于内存的后端存储了。需要注意的是，这种情况下的emptyDir使用的内存会被计入容器的内存消耗，将受到资源限制和配额机制的管理。
 
-## hostPath
+## 十五、hostPath
 hostPath为在Pod上挂载宿主机上的文件或目录，通常可以用于以下几方面。  
 - 在容器应用程序生成的日志文件需要永久保存时，可以使用宿主机的高速文件系统对其进行存储。
 - 需要访问宿主机上Docker引擎内部数据结构的容器应用时，可以通过定义hostPath为宿主机/var/lib/docker目录，使容器内部的应用可以直接访问Docker的文件系统。
@@ -182,10 +191,10 @@ hostPath为在Pod上挂载宿主机上的文件或目录，通常可以用于以
 - 在不同的Node上具有相同配置的Pod，可能会因为宿主机上的目录和文件不同，而导致对Volume上目录和文件的访问结果不一致。
 - 如果使用了资源配额管理，则Kubernetes无法将hostPath在宿主机上使用的资源纳入管理。
 
-## 公有云Volume
+## 十六、公有云Volume
 公有云提供的Volume类型包括谷歌公有云提供的GCEPersistentDisk、亚马逊公有云提供的AWS Elastic Block Store（EBSVolume）等。当我们的Kubernetes集群运行在公有云上或者使用公有云厂家提供的Kubernetes集群时，就可以使用这类Volume。
 
-## 其他类型的Volume
+## 十七、其他类型的Volume
 - iscsi：将iSCSI存储设备上的目录挂载到Pod中。
 - nfs：将NFS Server上的目录挂载到Pod中。
 - glusterfs：将开源GlusterFS网络文件系统的目录挂载到Pod中。

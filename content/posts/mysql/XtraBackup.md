@@ -6,10 +6,19 @@ lastmod: 2025-01-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["MySQL"]
 tags: ["MySQL","XtraBackup"]
+slug: "mysql-xtrabackup"
+featuredImage: "/images/blog_cover/lake/5.jpg"
+summary: "介绍 Percona XtraBackup 工具的原理与版本对应规则，详解全量/增量备份及还原的操作步骤、常用参数与生产环境备份策略建议。"
 ---
+
+Percona XtraBackup 是主流的 MySQL 在线热备份工具，支持非阻塞备份与增量备份。本文介绍其原理与版本对应规则，详解全量/增量备份及还原的操作步骤、与 Binlog 备份的方案对比、常用参数说明，并给出生产环境的备份策略建议。
+
+<!--more-->
+
 ## 一、XtraDB Backup（Percona XtraBackup）介绍
 
 MySQL冷备、mysqldump、MySQL热拷贝都无法实现对数据库进行增量备份。在实际生产环境中增量备份是非常实用的，如果数据大于50G或100G，存储空间足够的情况下，可以每天进行完整备份，如果每天产生的数据量较大，需要定制数据备份策略。例如每周实用完整备份，周一到周六实用增量备份。而Percona-Xtrabackup就是为了实现增量备份而出现的一款主流备份工具，xtrabakackup有2个工具，分别是xtrabakup、innobakupe。

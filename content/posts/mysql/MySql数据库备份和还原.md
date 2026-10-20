@@ -6,14 +6,23 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["MySQL"]
 tags: ["MySQL"]
+slug: "mysql-backup-restore"
+featuredImage: "/images/blog_cover/lake/3.jpg"
+summary: "整理使用 mysqldump 进行数据库备份的各类场景与数据还原方法，并给出基于 crontab 的定时备份数据库脚本参考。"
 ---
-## 背景
+
+数据安全是企业生产的重中之重。本文整理使用 mysqldump 进行数据库备份的各类场景（全库、指定库表、仅结构或仅数据）与数据还原方法，并给出基于 crontab 的定时备份与清理数据库的 shell 脚本参考。
+
+<!--more-->
+
+## 一、背景
 数据是企业生产的重中之重，保护数据安全，防止数据丢失很关键
 
-## 使用 mysqldump 进行备份
+## 二、使用 mysqldump 进行备份
 备份的方案场景，列举部分场景
 
 1. 只备份某一个库，不要里面的表
@@ -316,7 +325,7 @@ mysqldump -u root -p -t test person > order.sql
 ```sql
 mysql -h127.0.0.1 -uroot -P3306 -p test < order.sql
 ```
-## 通过 crontab 定时备份指定数据库脚本参考
+## 三、通过 crontab 定时备份指定数据库脚本参考
 脚本验证适用环境Centos7.x
 ```shell
 #!/bin/bash

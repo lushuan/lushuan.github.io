@@ -5,11 +5,19 @@ date: 2026-06-02T12:06:37+08:00
 lastmod: 2026-06-02T12:06:37+08:00
 draft: false
 toc:
-enable: true
+  enable: true
+  auto: true
 weight: false
 categories: ["CNI"]
 tags: ["CNI","Calico"]
+slug: "calico-three-namespace-design"
+featuredImage: "/images/blog_cover/mountain/1.jpg"
+summary: "深度解析现代 Calico 为何拆分为 tigera-operator、calico-system、calico-apiserver 三个 Namespace，从打破网络插件部署死锁、管理面与数据面解耦、聚合 API 三个层面剖析这一架构设计的精妙之处。"
 ---
+
+现代版本的 Calico 不再把所有组件挤在 kube-system 中，而是通过 Tigera Operator 开辟了 tigera-operator、calico-system、calico-apiserver 三个独立 Namespace。本文用大白话逐层剖析这一"三权分立"设计：如何打破网络插件的部署死锁、如何实现管理面与数据面解耦、以及如何通过聚合 API 让 kubectl 原生管理 Calico 网络资源。
+
+<!--more-->
 
 老版本的 Calico 部署只需要一个简单的 YAML 文件，所有组件都挤在 `kube-system` 里面，简单直接。而到了现代 Kubernetes（如 v1.28+），Calico 官方却硬生生搞出了一个叫做 **Tigera Operator** 的东西，并且在集群里一口气开辟了三个全新的“独立包间”：`tigera-operator`、`calico-system` 和 `calico-apiserver`。
 
@@ -19,7 +27,7 @@ tags: ["CNI","Calico"]
 
 ---
 
-## 🛑 第一层：传统部署的“死锁”魔咒
+## 一、🛑 第一层：传统部署的“死锁”魔咒
 
 ### —— 为什么必须要引入 `tigera-operator` 空间？
 
@@ -40,7 +48,7 @@ tags: ["CNI","Calico"]
 
 ---
 
-## ⛓️ 第二层：管理与干活的彻底解耦
+## 二、⛓️ 第二层：管理与干活的彻底解耦
 
 ### —— 为什么需要第二个空间 `calico-system`？
 
@@ -59,7 +67,7 @@ tags: ["CNI","Calico"]
 
 ---
 
-## 🏛️ 第三层：让 K8s 官方看懂网络语言
+## 三、🏛️ 第三层：让 K8s 官方看懂网络语言
 
 ### —— 为什么还需要第三个空间 `calico-apiserver`？
 
@@ -86,7 +94,7 @@ kubectl get globalnetworkpolicies
 
 ---
 
-## 🎯 总结：三权分立的“现代网络帝国”
+## 四、🎯 总结：三权分立的“现代网络帝国”
 
 现在，我们把这三个看似冗余的 Namespace 串联起来，你就会发现一幅清晰的“三权分立”宏大政体架构图：
 

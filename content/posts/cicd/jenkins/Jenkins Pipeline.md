@@ -6,27 +6,36 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Jenkins"]
 tags: ["Jenkins"]
+slug: "jenkins-pipeline"
+featuredImage: "/images/cicd/cover.jpg"
+summary: "介绍 Jenkins Pipeline 的核心概念与优势，讲解 Jenkinsfile 的声明式与脚本式两种语法，并给出包含拉取代码、构建、部署等阶段的完整 Pipeline 模板。"
 ---
+
+Jenkins Pipeline 是运行在 Jenkins 上的工作流框架，可以将多个节点上的任务串联起来，实现复杂流程编排与可视化。本文介绍 Pipeline 的核心概念（Node、Stage、Step）、使用理由、创建方式，并提供一份可直接填充修改的 Jenkinsfile 流水线模板。
+
+<!--more-->
+
 要实现在 Jenkins 中的构建工作，可以有多种方式，我们这里采用比较常用的 Pipeline 这种方式。
 Pipeline，简单来说，就是一套运行在 Jenkins 上的工作流框架，将原来独立运行于单个或者多个节点的任务连接起来，实现单个任务难以完成的复杂流程编排和可视化的工作。
 
-## Pipeline是什么？
+## 一、Pipeline是什么？
 - Pipeline是Jenkins的核心功能，提供一组可扩展的工具。
 - 通过Pipeline 的DSL语法可以完成从简单到复杂的交付流水线实现。
 - jenkins的Pipeline是通过Jenkinsfile（文本文件）来实现的。
 - 这个文件可以定义Jenkins的执行步骤，例如检出代码。
 
-## Jenkins file
+## 二、Jenkins file
 - Jenkinsfile使用两种语法进行编写，分别是声明式和脚本式。
 - 声明式和脚本式的流水线从根本上是不同的。
 - 声明式是jenkins流水线更友好的特性。
 - 脚本式的流水线语法，提供更丰富的语法特性。
 - 声明式流水线使编写和读取流水线代码更容易设计。
 
-## 为什么要使用Pipeline?
+## 三、为什么要使用Pipeline?
 本质上，jenkins是一个自动化引擎，它支持许多自动模式。流水线向Jenkins添加了一组强大的工具，支持用例、简单的持续集成到全面的持续交付流水线。 
 通过对一系列的发布任务建立标准的模板，用户可以利用更多流水线的特性，比如： 
 - 代码化: 流水线是在代码中实现的，通常会存放到源代码控制，使团队具有编辑、审查和更新他们项目的交付流水线的能力。 
@@ -35,12 +44,12 @@ Pipeline，简单来说，就是一套运行在 Jenkins 上的工作流框架，
 - 解决复杂发布： 支持复杂的交付流程。例如循环、并行执行。 
 - 可扩展性： 支持扩展DSL和其他插件集成。
 
-## Jenkins Pipeline 几个核心概念
+## 四、Jenkins Pipeline 几个核心概念
 - Node：节点，一个 Node 就是一个 Jenkins 节点，Master 或者 Agent，是执行 Step 的具体运行环境
 - Stage：阶段，一个 Pipeline 可以划分为若干个 Stage，每个 Stage 代表一组操作，比如：Build、Test、Deploy，Stage 是一个逻辑分组的概念，可以跨多个 Node
 - Step：步骤，Step 是最基本的操作单元，可以是打印一句话，也可以是构建一个 Docker 镜像，由各类 Jenkins 插件提供，比如命令：sh 'make'，就相当于我们平时 shell 终端中执行 make 命令一样。
 
-## 创建Jenkins Pipeline
+## 五、创建Jenkins Pipeline
 - Pipeline 脚本是由 Groovy 语言实现的，但是我们没必要单独去学习 Groovy，当然你会的话最好
 - Pipeline 支持两种语法：Declarative(声明式)和 Scripted Pipeline(脚本式)语法
 - Pipeline 也有两种创建方法：可以直接在 Jenkins 的 Web UI 界面中输入脚本；也可以通过创建一个 Jenkinsfile 脚本文件放入项目源码库中
@@ -53,7 +62,7 @@ Pipeline，简单来说，就是一套运行在 Jenkins 上的工作流框架，
 
 - [参考项目](https://gitee.com/lu_shuan/spring-mytest)
 
-## Pipeline 模板
+## 六、Pipeline 模板
 可以根据以下模板进行动态的填充和修改
 ```
 // 所有的脚步命令都放在pipeline 中
@@ -186,7 +195,7 @@ pipeline{
 
 ```
 
-## 流水线基础语法
+## 七、流水线基础语法
 以下是简要的对流水线语法进行粗浅的人生，更详细的请登录[官网流水线语法参考](https://www.jenkins.io/zh/doc/book/pipeline/syntax/)进行查看
 
 - 简介pipeline 基础语法，声明式脚步式，节点步骤
@@ -338,7 +347,7 @@ pipeline {
 }
 ```
 
-## 参考
+## 八、参考
 - [Jenkins 流水线](https://www.jenkins.io/zh/doc/book/pipeline/)
 
 

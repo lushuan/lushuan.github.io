@@ -6,14 +6,22 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Kubernetes"]
 tags: ["Kubernetes"]
+slug: "kubelet-dir-disk-full"
+summary: "记录一次 /var/lib/kubelet 目录空间占满的排查过程，通过 du 逐层定位到 Prometheus 容器使用 emptyDir 挂载 /data 导致磁盘占用过大。"
 ---
-## 现象
+
+某台主机 /var/lib/kubelet 目录使用率超过 80%，占用 40 多 G 存储。本文记录通过 du 命令逐层定位，最终发现是 Prometheus 容器使用 emptyDir 挂载内部 /data 目录导致的磁盘占用问题。
+
+<!--more-->
+
+## 一、现象
 k8s 某台主机的/var/lib/kubelet目录存储使用率超过80% 使用了40多G存储
 
-## 分析
+## 二、分析
 1. 申请root权限  
 2. cd /var/lib/kubelet
 执行du -h -d 1

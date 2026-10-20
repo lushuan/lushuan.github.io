@@ -5,12 +5,19 @@ date: 2026-06-02T12:06:37+08:00
 lastmod: 2026-06-02T12:06:37+08:00
 draft: false
 toc:
-enable: true
+  enable: true
+  auto: true
 weight: false
 categories: ["Kubernetes"]
 tags: ["Kubernetes排障"]
+slug: "cni-taint-deadlock-calico"
+featuredImage: "/images/kubernetes/cover.jpg"
+summary: "记录节点因 CNI 网络插件未部署而持续 NotReady 的修复全过程，包括 Calico Operator 方式的在线与离线部署、Kubelet 系统污点引发的部署死锁分析，并延伸探讨 Operator 部署模式的优势。"
 ---
 
+控制平面修复后节点仍处于 NotReady 状态，根因是 CNI 网络插件没有部署。本文完整记录 NotReady 的排查思路、Calico 以 Operator 方式在线/离线部署的操作步骤，并深入分析 Kubelet 系统污点引发 CNI 部署死锁的原因及 Operator 模式如何破局。
+
+<!--more-->
 
 # Kubelet 系统污点引发的 CNI 部署死锁排查实录
 

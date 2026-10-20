@@ -6,10 +6,18 @@ lastmod: 2025-04-02T16:25:58+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Docker"]
 tags: ["Docker"]
+slug: "docker-internals-explained"
+featuredImage: "/images/docker/cover.jpg"
+summary: "本文从 Namespace 与 CGroup 两大内核原语出发讲透容器的本质，给出深入理解 Docker 的五个认知层级，并深度拆解 host 网络、OOM Kill、PID 1 信号等最让新手困惑的实战场景。"
 ---
+
+会用 Docker 和懂 Docker 之间，隔着一层对 Linux 内核原语的理解。本文用通俗类比讲透容器的两大基石——Namespace（隔离视图）和 CGroup（限制资源），并给出从命令使用者到架构设计者的五个认知层级。最后深度拆解 host 网络端口映射、OverlayFS 磁盘不释放、PID 1 杀不死、内存 OOM、compose down -v 数据丢失等最让新手困惑的实战场景。
+
+<!--more-->
 
 ## 引言：你会用Docker，但你真的懂它吗？
 

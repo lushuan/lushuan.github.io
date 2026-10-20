@@ -6,11 +6,20 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Shell"]
 tags: ["Shell"]
+slug: "shell-ch5-loops"
+featuredImage: "/images/scenery/cover-17.jpg"
+summary: "总结 shell 中 for、while、until 三种循环的多种写法与示例，包括遍历参数、C 风格循环、序列区间、条件循环等。"
 ---
-## for 循环
+
+本文汇总 shell 循环的常见写法：for 循环的四种形式（遍历参数、C 风格、{1..5} 序列、带步长区间）及批量编译示例，while 循环的条件控制，以及 until 循环的反向条件用法。
+
+<!--more-->
+
+## 一、for 循环
 ### for 循环一
 ```shell
 #遍历输出脚本的参数
@@ -47,7 +56,7 @@ done
    gcc -o ${f%.c} $f
  done
 ```
-## while 循环
+## 二、while 循环
 ```shell
 while [ "$ans" != "yes" ]
 do
@@ -65,7 +74,7 @@ done
 
 ```
 
-## until 循环
+## 三、until 循环
 ```shell
 num=1
 #  当command不为0时循环

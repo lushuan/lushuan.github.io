@@ -6,10 +6,18 @@ lastmod: 2023-02-16T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Nginx"]
 tags: ["Nginx"]
+slug: "nginx-static-mirror-site"
+featuredImage: "/images/blog_cover/nature/5.jpg"
+summary: "基于 Nginx 构建高性能静态镜像下载站的完整实践，涵盖场景选型评估、部署流程、关键参数深度解析与生产环境避坑指南。"
 ---
+
+本文介绍基于 Nginx 构建高性能静态镜像下载站的完整实践，涵盖适用场景与选型决策评估、目录权限与站点配置的部署流程、安全/性能/缓存类关键参数深度解析，以及生产环境的高频踩坑清单与排障方法。
+
+<!--more-->
 
 # 前言
 

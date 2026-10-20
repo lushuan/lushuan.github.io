@@ -6,12 +6,20 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Python"]
 tags: ["Python"]
+slug: "python-quickstart"
+featuredImage: "/images/python/cover.jpg"
+summary: "Python3 快速上手教程，涵盖语言简介与特点、安装与虚拟环境配置、基础语法、数据结构、面向对象、模块包、文件操作及常用标准库等内容。"
 ---
 
-## 介绍
+本文是一篇 Python3 快速上手教程，介绍 Python 的语言特点、安装方法与虚拟环境配置，系统讲解变量、控制流、函数、异常处理等基础语法，以及数据结构、面向对象编程、模块和包、文件操作、常用标准库与进阶话题，并附实际应用示例与学习资源。
+
+<!--more-->
+
+## 一、介绍
 ### Python 简介
 {{< admonition abstract >}}
 Python 是一个高层次的结合了解释性、编译性、互动性和面向对象的脚本语言。
@@ -42,7 +50,7 @@ Python 是初学者的语言：Python 对初级程序员而言，是一种伟大
 {{< /admonition >}}
 
 
-## 安装 Python 3
+## 二、安装 Python 3
 Python最新源码，二进制文档，新闻资讯等可以在Python的官网查看到：
 
 Python官网：https://www.python.org/
@@ -55,7 +63,7 @@ Python文档下载地址：https://www.python.org/doc/
 
 打开 WEB 浏览器访问https://www.python.org/downloads/windows/
 
-## 设置开发环境
+## 三、设置开发环境
 ### 使用虚拟环境（virtualenv 或 venv）命令行
 - venv，Python官方用于创建虚拟环境的工具。
 
@@ -91,7 +99,7 @@ Python文档下载地址：https://www.python.org/doc/
 
 ![virtualenv](/images/python/pycharm-1.png "virtualenv")
 
-## 基础语法
+## 四、基础语法
 ### 变量
 变量规则
 1. 变量只能包含字母、数字和下划线
@@ -275,7 +283,7 @@ finally:
 $ python test.py 
 Error: 没有找到文件或读取文件失败
 ```
-## 数据结构
+## 五、数据结构
 ### 列表（List）
 列表式什么?
 
@@ -506,7 +514,7 @@ another_set = set([5, 6, 7, 8, 9])
 - 哈希性：集合中的元素必须是可哈希的，即不可变类型，如整数、浮点数、元组、字符串等。
 
 
-## 面向对象编程
+## 六、面向对象编程
 Python从设计之初就已经是一门面向对象的语言，正因为如此，在Python中创建一个类和对象是很容易的。
 #### 面向对象技术简介
 1. 类(Class): 用来描述具有相同的属性和方法的对象的集合。它定义了该集合中每个对象所共有的属性和方法。对象是类的实例。
@@ -587,7 +595,7 @@ class 派生类名(基类名)
 3、Python 总是首先查找对应类型的方法，如果它不能在派生类中找到对应的方法，它才开始到基类中逐个查找。（先在本类中查找调用的方法，找不到才去基类中找）。
 
 
-## 模块和包
+## 七、模块和包
 Python 模块(Module)，是一个 Python 文件，以 .py 结尾，包含了 Python 对象定义和Python语句。
 
 模块让你能够有逻辑地组织你的 Python 代码段。
@@ -617,7 +625,7 @@ from modname import *
 ```
 
 
-## 文件操作
+## 八、文件操作
 ### 打开和关闭文件
 Python 提供了必要的函数和方法进行默认情况下的文件基本操作。你可以用 file 对象做大部分的文件操作。
 #### open 函数
@@ -682,24 +690,24 @@ with open('example.txt', 'r') as file:
 # 在退出 with 块后，文件会自动关闭，即使出现异常也能保证资源的释放
 ```
 
-## 常用标准库
+## 九、常用标准库
 - 操作系统接口（os 模块）
 - 文件路径操作（pathlib 模块）
 - 时间和日期处理（datetime 模块）
 - 正则表达式（re 模块）
 
 [Python 常用模块和常用第三方模块示例](https://gitee.com/lu_shuan/python-demo/tree/master)
-## 进阶话题
+## 十、进阶话题
 - 并发编程（多线程和多进程）
 - 异步编程（asyncio 模块）
 - 数据库访问（sqlite3、SQLAlchemy 等）
 
-## 实际应用示例
+## 十一、实际应用示例
 - 简单的 Web 开发（使用 Flask 或 Django）
 - 数据分析与可视化（使用 Pandas 和 Matplotlib）
 
 
-## 资源推荐
+## 十二、资源推荐
 - [官方文档链接](https://www.python.org/)
 - [谷歌Python代码风格指南 中文翻译](https://github.com/shendeguize/GooglePythonStyleGuideCN)
 - [30个Python常用极简代码，拿走就用](https://www.51cto.com/article/620877.html)

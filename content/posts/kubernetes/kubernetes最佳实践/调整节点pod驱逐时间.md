@@ -6,18 +6,26 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Kubernetes"]
 tags: ["Kubernetes"]
+slug: "tune-pod-eviction-timeout"
+summary: "介绍 Kubernetes 节点故障时 Pod 驱逐时间的调整方法，梳理 kubelet 状态更新的相关参数（如 --pod-eviction-timeout），并给出修改 kube-controller-manager 配置以加快 Pod 迁移的操作步骤。"
 ---
-## 问题描述
+
+当 Node 节点故障、kubelet 无法工作时，Pod 会自动迁移到其他节点，迁移时长直接影响业务恢复速度与集群压力。本文梳理 kubelet 状态更新流程中的关键参数，并演示如何通过修改 kube-controller-manager 的 --pod-eviction-timeout 调整 Pod 驱逐时间。
+
+<!--more-->
+
+## 一、问题描述
 {{< admonition question >}}
 在高可用的k8s集群中，当Node节点挂掉，kubelet无法提供工作的时候，pod将会自动调度到其他的节点上去，
 而调度到节点上的时间需要我们慎重考量，因为它决定了生产的稳定性、可靠性，更快的迁移可以减少我们业务的影响性，
 但是有可能会对集群造成一定的压力，从而造成集群崩溃。
 {{< /admonition >}}
 
-## Kubelet 状态更新的基本流程
+## 二、Kubelet 状态更新的基本流程
 
 1. kubelet 自身会定期更新状态到 apiserver，通过参数--node-status-update-frequency指定上报频率，默认是 10s 上报一次。
 2. kube-controller-manager 会每隔--node-monitor-period时间去检查 kubelet 的状态，默认是 5s。

@@ -6,11 +6,20 @@ lastmod: 2022-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Kafka"]
 tags: ["Kafka"]
+slug: "kafka-intro"
+featuredImage: "/images/scenery/cover-3.jpg"
+summary: "介绍 Apache Kafka 分布式消息系统的由来、适用场景与核心优势，并详细解析 Broker、Topic、Partition、Replica、Producer 与 Consumer Group 等核心概念。"
 ---
-## kafka 简介
+
+Kafka 是 Apache 基金会旗下的开源分布式消息系统，具备高吞吐、可水平扩展、容错可靠等优势，广泛用于实时数据管道与流处理场景。本文介绍 Kafka 的名字由来、适用场景与消息模型，并详细解析 Broker、Topic、Partition、Replica、Producer、Consumer 等核心概念。
+
+<!--more-->
+
+## 一、kafka 简介
 Kafka 被称为下一代分布式消息系统，是非营利性组织ASF(Apache Software Foundation，简称为ASF)基金会中的一个开源项目，比如HTTP Server、Hadoop、ActiveMQ、Tomcat等开源软件都属于Apache基金会的开源软件，类似的消息系统还有RbbitMQ、ActiveMQ、ZeroMQ，最主要的优势是其具备分布式功能、并且结合zookeeper可以实现动态扩容。
 
 ![kafka-vs-others](/images/kafka/kafka-vs-others.png "kafka 竞品比较")
@@ -34,7 +43,7 @@ kafka的诞生，是为了解决linkedin的数据管道问题，起初linkedin�
 3. hortonworks kafka 偏大数据解决方案
 
 
-## 消息模型
+## 二、消息模型
 - JMS 规范
     - 队列-点对点
     - 主题-发布订阅
@@ -49,7 +58,7 @@ kafka的诞生，是为了解决linkedin的数据管道问题，起初linkedin�
   - Spring AMQP与Spring JMS 
 - MQTT
 
-##  Kafka中的相关概念
+##  三、Kafka中的相关概念
 
 在Kafka集群(Cluster)中，一个Kafka节点就是一个Broker，消息由Topic来承载，可以存储在1个或多个Partition中。发布消息的应用为Producer、消费消息的应用为Consumer，多个Consumer可以促成Consumer Group共同消费一个Topic中的消息。
 
@@ -82,7 +91,7 @@ kafka的诞生，是为了解决linkedin的数据管道问题，起初linkedin�
 Consume消费者来读取Kafka中的消息，可以消费任何Topic的数据，多个Consume组成一个消费者组，一般的一个消费者必须有一个组（Group）名，如果没有的话会被分一个默认的组名。
 
 
-## kafka 集群架构
+## 四、kafka 集群架构
 Kafka是作为一个集群建立和运行的——一组服务器或代理管理两种类型的客户端，生产者和消费者(一般Pub/Sub术语中的发布者和订阅者)之间的通信。
 
 根据硬件特性的不同，即使一个broker代理也足以形成一个每秒处理数万甚至数十万个事件的集群。但是为了获得高可用性和防止数据丢失，建议至少设置三个broker代理。
@@ -100,7 +109,7 @@ Kafka是作为一个集群建立和运行的——一组服务器或代理管理
 上图该kafka集群A,该集群有8个实例broker节点，集群中的主题有8个分区(p0-p7),副本因子是3，也就是说每份数据存3份，每个分区都有1个leader 和2个follwer,以第一个broker为例，该broker 有3个分区，p1 分区为leader,p1分区上的所有读写请求都是由这个broker 进行处理的，p0和p2 分区是follwer,因此该broker 只负责p0和p2 从p1 中同步数据，而不处理这两个follwer 分区的读写请求。
 
 
-## 环境搭建-本地伪分布式安装
+## 五、环境搭建-本地伪分布式安装
 一台主机部署3个broker的伪分布式集群实例演示，演示版本为 kafka_2.12-2.1.0,[下载地址](https://kafka.apache.org/downloads.html)，Kafka启动方式有Zookeeper和Kraft，两种方式只能选择其中一种启动，不能同时使用。这里选择的是zookeeper
 ```shell
 cd /usr/local
@@ -196,7 +205,7 @@ advertised.listeners: 对外发布的访问IP和端口，注册到zookeeper 中�
 
 更多详细配置请参考[KAFAK 配置内外网分流，实现同时支持内网，外网，其他网络](https://www.cnblogs.com/wangcc7/p/17718020.html)
 
-## kafka 消息模型
+## 六、kafka 消息模型
 - 点对点
 - 发布订阅
 - 消息传播语义
@@ -226,7 +235,7 @@ advertised.listeners: 对外发布的访问IP和端口，注册到zookeeper 中�
 
 
 
-## Kafka API
+## 七、Kafka API
 
 | Producer API                     | Allows applications to send streams of data to topics in the Kafka cluster. |
 | -------------------------------- | ------------------------------------------------------------ |
@@ -243,7 +252,7 @@ Kafka API提供了一个编程接口，允许应用程序实时生成、消费�
 
 ![Kafka-API-architecture](/images/kafka/Kafka-API-architecture.png "Kafka API 架构")
 
-## 序列化
+## 八、序列化
 - 序列化与反序列化
 - 常用消息格式
   - csv 适合简单的消息
@@ -265,7 +274,7 @@ Kafka API提供了一个编程接口，允许应用程序实时生成、消费�
 [关于序列化和反序列参考](https://data-flair.training/blogs/kafka-serialization-and-deserialization/)
 
 
-## 参考
+## 九、参考
 - https://kafka1x.apachecn.org/intro.html
 - https://kafka.apache.org/
 - https://developer.confluent.io/quickstart/kafka-on-confluent-cloud/

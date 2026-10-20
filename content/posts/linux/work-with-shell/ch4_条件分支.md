@@ -6,13 +6,22 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Shell"]
 tags: ["Shell"]
+slug: "shell-ch4-conditions"
+featuredImage: "/images/scenery/cover-16.jpg"
+summary: "讲解 shell 中的条件分支写法，包括 if/elif/else 结构、多条件组合（-o/-a、||/&&）以及 case 分支，并总结常见注意事项。"
 ---
+
+本文介绍 shell 脚本中的条件分支：如何利用命令返回值 0 判断执行结果，if/elif/else 的写法，多条件的组合方式（-o、-a、||、&&），以及 case 分支的语法。文末总结了 [] 空格、then 关键字、$? 易变等常见注意事项。
+
+<!--more-->
+
 一般说明，如果命令执行成功，则其返回值为0，否则为非0，因此，可以通过下面的方式判断上条命令的执行结果：
 
-##  if 分支
+## 一、 if 分支
 ```shell
 if [ $? -eq 0 ]
 then
@@ -47,7 +56,7 @@ fi
 - ! 非
 
 
-##  case 分支
+## 二、 case 分支
 ```shell
 name="aa"
 

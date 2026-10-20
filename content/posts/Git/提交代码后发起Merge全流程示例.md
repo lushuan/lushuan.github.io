@@ -5,18 +5,27 @@ date: 2025-05-17T12:06:37+08:00
 lastmod: 2025-05-17T12:06:37+08:00
 draft: false
 toc:
-enable: true
+  enable: true
+  auto: true
 weight: false
 categories: ["Git"]
 tags: ["Git"]
+slug: "git-merge-workflow"
+featuredImage: "/images/blog_cover/road/1.jpg"
+summary: "本文以团队协作场景为例，用纯命令行演示员工开发提交、发起 Merge Request，技术经理 Code Review、合并、清理分支以及出问题后回滚的完整 Git Merge 流程。"
 ---
-## 背景
+
+本文以一个团队协作场景为例，全程使用命令行演示 Git 提交代码后发起 Merge 的完整流程。内容分为四个阶段：员工创建功能分支并提交推送、发起 Merge Request；技术经理进行 Code Review、测试验收与合并；合并后发现问题时的 revert/reset 回滚方案；以及分支命名与提交说明等日常维护规范。
+
+<!--more-->
+
+## 一、背景
 
 * 场景：一个团队中，**员工负责开发功能并提交合并请求 (Merge Request)**
 * **技术经理** 负责 **Code Review → Merge → 验收 → 回滚（如有问题）**
 * **全程用命令行 git 操作**，没有 GUI。
 ---
-## 🧭 场景说明
+## 二、🧭 场景说明
 * **主分支**：`master`
 * **开发分支命名规则**：`feature/<功能名>`，例如：`feature/add-login-api`
 * **远程仓库**：`origin`
@@ -27,9 +36,9 @@ tags: ["Git"]
 
 ---
 
-# 🌱 第一阶段：员工开发流程
+## 三、🌱 第一阶段：员工开发流程
 
-## 1️⃣ 克隆项目
+### 1️⃣ 克隆项目
 
 ```bash
 git clone git@github.com:company/project.git
@@ -40,7 +49,7 @@ cd project
 
 ---
 
-## 2️⃣ 从 master 拉取最新代码
+### 2️⃣ 从 master 拉取最新代码
 
 ```bash
 git checkout master
@@ -51,7 +60,7 @@ git pull origin master
 
 ---
 
-## 3️⃣ 创建自己的功能分支
+### 3️⃣ 创建自己的功能分支
 
 ```bash
 git checkout -b feature/add-login-api
@@ -61,7 +70,7 @@ git checkout -b feature/add-login-api
 
 ---
 
-## 4️⃣ 编写代码、提交更改
+### 4️⃣ 编写代码、提交更改
 
 ```bash
 git add .
@@ -73,7 +82,7 @@ git commit -m "feat: add login API with JWT authentication"
 
 ---
 
-## 5️⃣ 推送到远程分支
+### 5️⃣ 推送到远程分支
 
 ```bash
 git push origin feature/add-login-api
@@ -83,7 +92,7 @@ git push origin feature/add-login-api
 
 ---
 
-## 6️⃣ 发起 Merge Request
+### 6️⃣ 发起 Merge Request
 
 登录 GitLab/GitHub/Gitee →
 发起一个从 `feature/add-login-api` → `master` 的 **Merge Request (MR)**。
@@ -99,9 +108,9 @@ git push origin feature/add-login-api
 
 ---
 
-# 🔍 第二阶段：技术经理 Code Review + 合并流程
+## 四、🔍 第二阶段：技术经理 Code Review + 合并流程
 
-## 1️⃣ 拉取最新远程分支
+### 1️⃣ 拉取最新远程分支
 
 ```bash
 git fetch origin
@@ -111,7 +120,7 @@ git fetch origin
 
 ---
 
-## 2️⃣ 检查员工的分支
+### 2️⃣ 检查员工的分支
 
 ```bash
 git checkout feature/add-login-api
@@ -131,13 +140,13 @@ git diff master
 
 ---
 
-## 3️⃣ 本地测试 / 验收
+### 3️⃣ 本地测试 / 验收
 
 > 在本地编译、运行单元测试，确认功能正常、无冲突。
 
 ---
 
-## 4️⃣ 合并到 master
+### 4️⃣ 合并到 master
 
 切回 master 分支：
 
@@ -156,7 +165,7 @@ git merge --no-ff feature/add-login-api -m "merge: add login API feature"
 
 ---
 
-## 5️⃣ 推送合并结果到远程 master
+### 5️⃣ 推送合并结果到远程 master
 
 ```bash
 git push origin master
@@ -167,18 +176,18 @@ git push origin master
 
 ---
 
-## 6️⃣ 清理无用分支
+### 6️⃣ 清理无用分支
 
 合并完成后，可以删除本地和远程的 feature 分支：
 
 ```bash
-git branch -d feature/add-login-api          # 删除本地分支
-git push origin --delete feature/add-login-api  # 删除远程分支
+git branch -d feature/add-login-api          ## 删除本地分支
+git push origin --delete feature/add-login-api  ## 删除远程分支
 ```
 
 ---
 
-# 🚨 第三阶段：合并后发现问题 → 回滚方案
+## 五、🚨 第三阶段：合并后发现问题 → 回滚方案
 
 假设技术经理合并后发现 master 出了问题。
 
@@ -186,7 +195,7 @@ git push origin --delete feature/add-login-api  # 删除远程分支
 
 ---
 
-### 🧩 情况 1：只想撤销最近一次合并提交
+#### 🧩 情况 1：只想撤销最近一次合并提交
 
 1️⃣ 查看提交历史：
 
@@ -213,7 +222,7 @@ git push origin master
 
 ---
 
-### 🧨 情况 2：回滚到某个稳定版本（比如上一个成功的 commit）
+#### 🧨 情况 2：回滚到某个稳定版本（比如上一个成功的 commit）
 
 查看提交历史：
 
@@ -233,7 +242,7 @@ git push origin master --force
 
 ---
 
-# 🧹 第四阶段：日常维护建议
+## 六、🧹 第四阶段：日常维护建议
 
 * 每次合并前，务必：
 
@@ -260,7 +269,7 @@ git push origin master --force
 
 ---
 
-# ✅ 总结：完整命令流程复盘
+## 七、✅ 总结：完整命令流程复盘
 
 | 角色   | 操作步骤     | 命令                                                                                         |
 | ---- | -------- | ------------------------------------------------------------------------------------------ |

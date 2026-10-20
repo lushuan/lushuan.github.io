@@ -6,13 +6,22 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Linux"]
 tags: ["Linux文本三剑客"]
+slug: "awk-guide"
+featuredImage: "/images/blog_cover/nature/6.jpg"
+summary: "介绍文本处理工具 awk 的特性、适用场景、内置函数、条件判断与循环语法，并汇总大量常用 awk 单行命令示例。"
 ---
+
+awk 是 Linux/Unix 下强大的文本处理工具，可按字段操作、支持条件判断与循环、结合正则进行模式匹配。本文整理 awk 的内置函数、判断与循环语法，并汇总几十条常用单行命令示例，覆盖列求和、去重、求最大最小值、字段替换等高频场景。
+
+<!--more-->
+
 awk 是 Linux/Unix 系统中的一个强大的文本处理工具,主要用于处理文本文件和字符串。
 
-## 特性
+## 一、特性
 awk 的一些关键特性:
 
 - 可以根据字段进行操作,如打印指定列、求列的总和等
@@ -20,10 +29,10 @@ awk 的一些关键特性:
 - 使用正则表达式进行模式匹配和内容提取
 - 内置字符串操作函数,如匹配、替换、截取等
 
-## 适用场景
+## 二、适用场景
 awk 适用于报表生成、格式转换、数学运算等场景。掌握了 awk,可以大大提高 Bash 脚本的文本处理能力
 
-## 内置函数
+## 三、内置函数
 内置函数
 
 |command | 释义|
@@ -39,17 +48,17 @@ awk 适用于报表生成、格式转换、数学运算等场景。掌握了 awk
 | substr(s,p)        | 返回字符串s中从p开始的后缀部分 | 
 | substr(s,p,n)      | 返回字符串s中从p开始长度为n的后缀部分 |
 
-## awk 判断
+## 四、awk 判断
 - awk '{print ($1>$2)?"第一排"$1:"第二排"$2}'      # 条件判断 括号代表if语句判断 "?"代表then ":"代表else
 - awk '{max=($1>$2)? $1 : $2; print max}'          # 条件判断 如果$1大于$2,max值为为$1,否则为$2
 - awk '{if ( $6 > 50) print $1 " Too high" ;else print "Range is OK"}' file
 - awk '{if ( $6 > 50) { count++;print $3 } else { x+5; print $2 } }' file
 
-## awk 循环
+## 五、awk 循环
 - awk '{i = 1; while ( i <= NF ) { print NF, $i ; i++ } }' file
 - awk '{ for ( i = 1; i <= NF; i++ ) print NF,$i }' file
 
-## 示例
+## 六、示例
 - awk '{print $1, $3}' file.txt   每行按空格分割成多个字段,输出第1个和第3个字段   
 - awk '{sum+=$1*$1} END {print sum}' file.txt    求第一列的平方和    
 - awk 'length > 80' file.txt    查找长度大于80的行    
@@ -187,7 +196,7 @@ awk '{a[i++]=$0} END {for (j=i-1; j>=0;) print a[j--] }'
 seq 9 | sed 'H;g' | awk -v RS='' '{for(i=1;i<=NF;i++)printf("%dx%d=%d%s", i, NR, i*NR, i==NR?"\n":"\t")}'
 ```
 
-## 思维导图
+## 七、思维导图
 ![常用参数和常用内置变量](/images/linux/akw-1.jpg "awk")
 
 

@@ -6,17 +6,26 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Helm"]
 tags: ["Helm"]
+slug: "helm-chart-template-guide"
+featuredImage: "/images/helm/cover.jpg"
+summary: "以 test-cmdb 应用为例说明 Helm Charts 模板的编写方法，介绍 chart 目录结构与各文件作用，以及应用名称、镜像、环境变量等资源项的配置方式。"
 ---
-## 预置条件
+
+本文以部署在 Kubernetes 中的 web 应用 test-cmdb 为例，说明 Helm Charts 模板的编写方法。内容包括 chart 的目录结构与各文件职责，以及如何通过 values.yaml 配置应用名称、镜像 tag、环境变量、资源限额、端口映射与配置文件等资源项。
+
+<!--more-->
+
+## 一、预置条件
 
 适用于Kubernetes v1.12.1及以上，Helm v3.4.2及以上。
 
 以`test-cmdb`应用为例进行说明,`test-cmdb`为部署在k8s中的web 应用
 
-## 目录结构
+## 二、目录结构
 ```
 test-cmdb  
 ├── Chart.yaml  
@@ -52,7 +61,7 @@ test-cmdb
 
 其中，类型：D，目录；F，文件。
 
-## 配置资源
+## 三、配置资源
 
 一个完整的应用部署通常由应用名称、镜像名称及tag、环境变量、资源限额、端口监听、端口映射、目录/文件挂载、配置文件、网关规则等组成。通过helm将应用模板化，仅需要简单配置些许地方即可。
 
@@ -148,7 +157,7 @@ test-cmdb
     | values.yaml | ingress.hosts.paths.pathType |
     | values.yaml | ingress.hosts.paths.port |
 
-## 部署测试
+## 四、部署测试
 
 将准备好的chart放到ZCM部署主机`$HELM_PATH/charts`目录下，镜像推送到对应环境的镜像仓库中，并在`$HELM_PATH/charts/values.yaml`中配置镜像信息，
 如镜像`10.45.80.1/iplatform/zcm-crms:T_20220411015401`，需配置对应的信息如下：

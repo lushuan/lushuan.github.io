@@ -6,14 +6,20 @@ lastmod: 2023-03-07T16:25:58+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Docker"]
 tags: ["Docker"]
+slug: "docker-guide"
+featuredImage: "/images/docker/cover.jpg"
+summary: "本文介绍 Docker 的基本概念、镜像管理、容器运行以及 Dockerfile 编写。"
 ---
 
-## Docker 入门指南：从核心概念到容器化应用实践
+本文介绍 Docker 的基本概念、镜像管理与容器运行。
+<!--more-->
 
-### 一、Docker 是什么？
+
+## 一、Docker 是什么？
 
 Docker 是一种用于运行和管理容器化应用的技术。
 

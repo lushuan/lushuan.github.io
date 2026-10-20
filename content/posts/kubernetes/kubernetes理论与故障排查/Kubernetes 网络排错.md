@@ -6,12 +6,20 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Kubernetes"]
 tags: ["Kubernetes排障"]
+slug: "k8s-network-debug"
+summary: "记录 Kubernetes 网络问题的常见场景与排查方向，包括 DNS 解析 5 秒延时、解析超时以及 Service 无法解析等问题的诊断步骤和命令。"
 ---
+
+本文记录 Kubernetes 集群中常见的网络问题场景及排查方向，包括 DNS 查询 5 秒延时（conntrack 冲突）、DNS 解析超时、Service 无法解析等问题，并给出检查 DNS 服务状态、Endpoint 及 Pod 与 DNS 之间连通性的具体命令。
+
+<!--more-->
+
 记录一下kuberntes 遇到的问题场景及排查方向
-## DNS 解析异常
+## 一、DNS 解析异常
 5 秒延时
 如果DNS查询经常延时5秒才返回，通常是遇到内核 conntrack 冲突导致的丢包
 
@@ -19,7 +27,7 @@ tags: ["Kubernetes排障"]
 如果容器内报 DNS 解析超时，先检查下集群 DNS 服务 (kube-dns/coredns) 的 Pod 是否 Ready，如果不是，查看日志信息。如果运行正常，再具体看下超时现象。
 
 
-## Service 无法解析
+## 二、Service 无法解析
 集群 DNS 没有正常运行(kube-dns或CoreDNS)
 
 检查集群 DNS 是否运行正常:

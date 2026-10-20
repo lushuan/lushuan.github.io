@@ -6,13 +6,22 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Linux"]
 tags: ["Linux"]
+slug: "linux-time-sync"
+featuredImage: "/images/linux/cover.jpg"
+summary: "介绍 Linux 服务器时间校正的方法：用 date/hwclock 手动设置时间，以及用 ntpdate 同步、配置 ntpd 服务开机自启，并附国内外常用 NTP 服务器列表。"
 ---
+
+Linux 服务器长时间运行后系统时间会产生误差，数据库集群分片等场景对多机时间差有严格要求。本文介绍两种时间校正方式：用 date 和 hwclock 手动设置时间，以及通过 ntpdate 同步时间服务器、配置 ntpd 服务并设置开机自启，文末附国内外常用 NTP 服务器列表。
+
+<!--more-->
+
 Linux服务器运行久时，系统时间就会存在一定的误差，一般情况下可以使用date命令进行时间设置，但在做数据库集群分片等操作时对多台机器的时间差是有要求的，此时就需要使用ntpdate进行时间同步
 
-## 手动修改
+## 一、手动修改
 手动设置时间，需要使用 sudo 权限用户
 ```shell
 # 当前时区具体的时间
@@ -22,7 +31,7 @@ hwclock --systohc
 ```
 手动修改时间会有误差，建议使用下面的时间服务器进行同步更新
 
-##  通过时间服务器校正
+## 二、 通过时间服务器校正
 ```shell
 sudo yum install ntpdate -y
 ```

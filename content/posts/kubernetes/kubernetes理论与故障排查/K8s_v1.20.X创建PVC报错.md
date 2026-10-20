@@ -6,18 +6,26 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Kubernetes"]
 tags: ["Kubernetes排障"]
+slug: "pvc-pending-selflink-v120"
+summary: "记录 Kubernetes v1.20 以上版本创建 PVC 一直 Pending 的排障过程：因默认禁用 selfLink 导致，通过在 kube-apiserver 添加 --feature-gates=RemoveSelfLink=false 解决。"
 ---
-## 故障描述
+
+在 Kubernetes v1.20 以上版本中创建 PVC 时状态一直显示 Pending，原因是新版本默认禁止使用 selfLink。本文记录该故障的分析与解决方法：为 kube-apiserver 添加 --feature-gates=RemoveSelfLink=false 配置并重启后 PVC 恢复 Bound。
+
+<!--more-->
+
+## 一、故障描述
 {{< admonition warning >}}
 PVC 显示创建不成功：kubectl get pvc -n efk 显示 Pending，这是由于版本太高导致的。k8sv1.20 以上版本默认禁止使用 selfLink。
 (selfLink：通过 API 访问资源自身的 URL，例如一个 Pod 的 link 可能是 /api/v1/namespaces/ns36aa8455/pods/sc-cluster-test-1-6bc58d44d6-r8hld)。
 {{< /admonition >}}
 
 
-## 故障解决
+## 二、故障解决
 ``` shell
 $ vi /etc/kubernetes/manifests/kube-apiserver.yaml
 apiVersion: v1

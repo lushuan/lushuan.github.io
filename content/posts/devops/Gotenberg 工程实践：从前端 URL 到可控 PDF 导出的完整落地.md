@@ -6,10 +6,19 @@ lastmod: 2026-09-19T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["DevOps"]
 tags: ["PDF","Chromium","Gotenberg"]
+slug: "gotenberg-pdf-export"
+featuredImage: "/images/blog_cover/forest/1.jpg"
+summary: "记录基于 Gotenberg 实现前端 URL 到可控 PDF 导出的完整工程实践，涵盖技术选型、POC 验证、登录态传递、打印模式、A4 动态分页、waitForExpression 参数调优与批量导出等踩坑经验。"
 ---
+
+在很多后台系统中，"导出 PDF" 看似一个按钮，实则需要一条完整的渲染链路。本文记录一次基于 Gotenberg 的工程实践：从需求与技术选型出发，到 URL 转 PDF、登录态传递、前端打印模式、动态分页与 waitForExpression，再到 POC 验证、参数调优、批量导出与踩坑经验，抽取出可复用的落地思路。
+
+<!--more-->
+
 
 > Gotenberg、Chromium、URL 转 PDF、Vue SPA、ECharts、A4 分页、`waitForExpression`
 

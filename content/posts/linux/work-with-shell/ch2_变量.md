@@ -6,13 +6,22 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Shell"]
 tags: ["Shell"]
+slug: "shell-ch2-variables"
+featuredImage: "/images/scenery/cover-15.jpg"
+summary: "系统讲解 shell 变量的定义、系统变量、引用技巧、字符串替换与截取、默认值处理、单双引号差异，并附常用变量操作命令总结表。"
 ---
+
+本文系统整理 shell 变量的用法：从变量定义与 declare 类型声明，到 $0、$#、$$ 等系统变量，再到 ${name#pattern} 等引用与截取技巧、变量替换、默认值处理以及单双引号的区别。文末附有常用变量操作命令的速查总结表，适合作为日常脚本编写的参考手册。
+
+<!--more-->
+
 给变量赋值，使用等号即可，但是等号两边千万不要有空格，等号右边有空格的字符串也必须用引号引起来
 
-## 变量定义
+## 一、变量定义
 ```shell
 para1="hello world" #字符串直接赋给变量para1
 #unset用于取消变量
@@ -28,7 +37,7 @@ declare 或 typeset
 
 `declare -i n=0`
 
-## 系统变量
+## 二、系统变量
 |command | 释义|
 |---|---|
 |$0   |  脚本启动名(包括路径) | 
@@ -40,7 +49,7 @@ declare 或 typeset
 |$!   |  执行上一个指令的PID | 
 |$?   |  执行上一个指令的返回值 | 
 
-## 变量引用技巧
+## 三、变量引用技巧
 |command | 释义|
 |---|---|
 |${name:+value}        | 如果设置了name,就把value显示,未设置则为空 | 
@@ -71,7 +80,7 @@ declare 或 typeset
 - % 是去掉右边(在键盘上 % 在 $ 之右边)
 - 单一符号是最小匹配﹔两个符号是最大匹配
 
-## 操作变量
+## 四、操作变量
 ```shell
 echo "para1 is $para1"
 #将会输出 para1 is hello world
@@ -125,7 +134,7 @@ string="I'm a fan of dogs."
 echo ${string:6:3}           # 打印 fan
 ```
 
-## 是否存在默认值
+## 五、是否存在默认值
 ```shell
 username=shuan_lu
 unset username
@@ -152,7 +161,7 @@ echo ${cache:=2048}   # 打印 1024
 echo $cache           # 打印 1024
 ```
 
-## 单引号和双引号
+## 六、单引号和双引号
 - shell 会忽略单引号中所有的特殊字符，其中的所有内容都会被当作一个元素
 - 双引号几乎与单引号相似。这里之所以说“几乎”是因为他们也会忽略所有特殊字符，除了：
   - 美元符号：$
@@ -166,7 +175,7 @@ bar="Hello, $world"
 echo $foo            # 打印 Hello, $world!
 echo $bar            # 打印 Hello, Earth
 ```
-## 总结
+## 七、总结
 |command | 释义|
 |---|---|
 |A="a b c def"           |  将字符串复制给变量 | 

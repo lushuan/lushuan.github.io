@@ -6,11 +6,20 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Kubernetes"]
 tags: ["Kubernetes"]
+slug: "configmap-multi-file-mount"
+featuredImage: "/images/kubernetes/cover.jpg"
+summary: "介绍 Kubernetes ConfigMap 的设计理念与配置中心价值，并通过实例演示如何利用 subPath 将一个 ConfigMap 中的多个文件分别挂载到 Pod 内不同目录。"
 ---
-## 理解ConfigMap
+
+ConfigMap 是 Kubernetes 提供的无侵入式配置管理机制，可以把 etcd 中的配置数据自动映射为 Pod 内的配置文件。本文先从 Docker 配置管理的痛点讲起解释 ConfigMap 的设计，再通过完整 YAML 实例演示用 subPath 将一个 ConfigMap 内的多个文件挂载到 Pod 内不同目录。
+
+<!--more-->
+
+## 一、理解ConfigMap
 为了能够准确和深刻理解Kubernetes ConfigMap的功能和价值，我们需要从Docker说起。我们知道，Docker通过将程序、依赖库、数据及配置文件“打包固化”到一个不变的镜像文件中的做法，解决了应用的部署的难题，但这同时带来了棘手的问题，即配置文件中的参数在运行期如何修改的问题。我们不可能在启动Docker容器后再修改容器里的配置文件，然后用新的配置文件重启容器里的用户主进程。为了解决这个问题，Docker提供了两种方式：
 
 在运行时通过容器的环境变量来传递参数；
@@ -19,11 +28,11 @@ tags: ["Kubernetes"]
 
 首先，把所有的配置项都当作keyvalue字符串，当然value可以来自某个文本文件，比如配置项password=123456、user=root、host=192.168.8.4用于表示连接FTP服务器的配置参数。这些配置项可以作为Map表中的一个项，整个Map的数据可以被持久化存储在Kubernetes的Etcd数据库中，然后提供API以方便Kubernetes相关组件或客户应用CRUD操作这些数据，上述专门用来保存配置参数的Map就是Kubernetes ConfigMap资源对象。
 
-## 痛点改进
+## 二、痛点改进
 接下来，Kubernetes提供了一种内建机制，将存储在etcd中的ConfigMap通过Volume映射的方式变成目标Pod内的配置文件，不管目标Pod被调度到哪台服务器上，都会完成自动映射。进一步地，如果ConfigMap中的key/value数据被修改，则映射到Pod中的“配置文件”也会随之自动更新。于是，Kubernetes
 ConfigMap就成了分布式系统中最为简单（使用方法简单，但背后实现比较复杂）且对应用无侵入的配置中心。
 
-## 实践
+## 三、实践
 需求
 将一个configmap 内的两个文件挂载在一个pod的不同目录下
 

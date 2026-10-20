@@ -6,21 +6,29 @@ lastmod: 2024-10-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["MySQL"]
 tags: ["MySQL"]
+slug: "mysql-replication"
+featuredImage: "/images/blog_cover/lake/4.jpg"
+summary: "完整记录 MySQL 5.7 主从集群的部署过程，涵盖 RPM 安装、主从节点配置、密码修改与安全加固、主从同步开启与验证以及卸载方法。"
 ---
 
-## 背景信息
+本文以 MySQL 5.7 为例，完整记录主从集群的部署过程，涵盖 RPM 包安装、主从节点 my.cnf 配置、root 密码修改与安全加固、主从复制的开启与同步验证，最后补充 MySQL 的卸载方法。
+
+<!--more-->
+
+## 一、背景信息
 为了增加数据的冗余备份，增强服务的高可用性，从传统的单服务应用升级到集群服务应用是一个合适方案，这里介绍一下MySQL 5.7 版本的部署，5.7 版本也是目前大多数企业当前在用的版本，虽然也有很多企业升级到了8.0 版本，不过从安装部署的角度来看其实是大同小异的
-## 环境准备
+## 二、环境准备
 
 | 操作系统版本 | cpu  | 内存 | 磁盘 | IP              | 部署方式 | MySQL版本 |主从节点 |
 | ------------ | ---- | ---- | ---- | --------------- | -------- | --------- |---------  |
 | centos 7.9   | 2c   | 4G   | 40G  | 192.168.143.101 | rpm      | 5.7.20    | Master|
 | centos 7.9   | 2c   | 4G   | 40G  | 192.168.143.102 | rpm      | 5.7.20    | Slave|
 
-## 安装MySQL 5.7
+## 三、安装MySQL 5.7
 1、下载安装包
 ```
 $ cd /path/to/directory
@@ -119,7 +127,7 @@ sudo rpm -ivh *.rpm
    - 作用：这是核心包，负责处理 SQL 查询并管理数据库。
 
 
-## 配置主服务器
+## 四、配置主服务器
 MySQL 的主配置文件通常位于 `/etc/my.cnf` 或 `/etc/mysql/my.cnf`，具体取决于你的操作系统。对于某些发行版或自定义安装，配置文件可能位于其他位置，如 `/etc/my.cnf.d/` 目录下的某个文件中。你可以使用以下命令来查找配置文件的位置：
 
 ```bash
@@ -229,7 +237,7 @@ $ sudo systemctl enable mysqld --now
 $ sudo systemctl status mysqld
 ```
 
-## 配置从服务器
+## 五、配置从服务器
 创建安装目录`/data/mysql`
 ```bash
 mkdir -p /data/mysql/binlog
@@ -252,7 +260,7 @@ auto_increment_offset = 2   # 可根据需要调整，确保从节点与主节�
 $ sudo systemctl enable mysqld --now
 $ sudo systemctl status mysqld
 ```
-## 修改登录密码
+## 六、修改登录密码
 ### 快捷操作
 ```shell
 MYSQL_OLDPASSWORD=`awk '/A temporary password/{print $NF}' /data/mysql/mysqld.log`
@@ -398,7 +406,7 @@ Thanks for using MySQL!
 {{< admonition type=note >}}
 安装过程有问题查看服务日志，`/data/mysql/mysqld.log`
 {{< /admonition >}}
-## 安装后验证
+## 七、安装后验证
 - 可以尝试通过 MySQL 客户端登录到服务器。
 - 使用 `mysqladmin` 工具验证服务器是否正在运行：
 ```bash
@@ -419,7 +427,7 @@ Uptime:                 14 min 46 sec
 
 Threads: 1  Questions: 12  Slow queries: 0  Opens: 106  Flush tables: 1  Open tables: 99  Queries per second avg: 0.013
 ```
-## 开启主从同步
+## 八、开启主从同步
 ### Master 节点
 ```shell
 # 登录到 MySQL 主节点
@@ -469,7 +477,7 @@ SHOW SLAVE STATUS\G;
 - `Slave_SQL_Running`: 应该是 `Yes`
 - `Last_Error`: 应为空或无错误信息
 
-## 测试主从同步
+## 九、测试主从同步
 在Master主服务器上创建数据库和表，并插入数据：
 ```
 mysql> create database test;
@@ -494,7 +502,7 @@ mysql> select * from test.test;
 1 row in set (0.00 sec)
 ```
 以上操作确保了主服务器的数据成功复制到从服务器，实现了主从同步。
-## 卸载 MySQL
+## 十、卸载 MySQL
 卸载或者卸载重新安装
 ```shell
 systemctl stop mysqld
@@ -519,7 +527,7 @@ sudo rm -rf /etc/my.cnf
 sudo rm -f /var/log/mysqld.log
 ```
 
-## 参考
+## 十一、参考
 1. [MySQL v5.7 rpm 安装包]( https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.29-1.el7.x86_64.rpm-bundle.tar)
 3. [MySQL 官网各个版本安装包](https://downloads.mysql.com/archives/community/)
 

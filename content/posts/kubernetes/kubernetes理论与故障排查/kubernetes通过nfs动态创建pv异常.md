@@ -6,14 +6,22 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Kubernetes"]
 tags: ["Kubernetes排障"]
+slug: "nfs-dynamic-pv-selflink"
+summary: "记录 StatefulSet 通过 NFS 动态创建 PV 失败的排障过程，梳理 PVC 无法绑定 PV 的常见原因，并说明 v1.20 后 selfLink 字段默认移除对 NFS 动态供应的影响及开启方法。"
 ---
-## 背景
+
+StatefulSet 通过 NFS 动态创建 PV 时发现 PVC 一直无法绑定。本文梳理 NFS 动态供应失败的常见原因，并重点说明 Kubernetes v1.20 之后 selfLink 字段默认被移除导致的问题，以及通过 --feature-gates=RemoveSelfLink=false 显式开启的方法。
+
+<!--more-->
+
+## 一、背景
 statefulset 通过nfs 动态创建pv，发现无法创建成功
 
-## 报错日志
+## 二、报错日志
 ```
  Warning  FailedMount  2m50s (x6 over 6m4s)  kubelet  Unable to attach or mount volumes: unmounted volumes=[data], unattached volumes=[kube-api-access-8p8wf data]: error processing PVC kube-logging/data-es-cluster-0: PVC is not bound
 ```
@@ -48,7 +56,7 @@ StatefulSet 的 volumeClaimTemplates 需要与 PVC 的定义相匹配。
 
 存储卷需要有读写权限,避免因权限问题无法挂载。
 
-## nfs 在kubernetes中动态创建pv和版本的关系
+## 三、nfs 在kubernetes中动态创建pv和版本的关系
 
 在早期的 Kubernetes 版本中(如 v1.11 之前),NFS  provisioner 并不包含在默认部署中,这会导致通过 NFS 存储类无法动态创建 PV。
 

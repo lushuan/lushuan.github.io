@@ -6,10 +6,18 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Kubernetes"]
 tags: ["Kubernetes排障"]
+slug: "namespace-terminating-stuck"
+summary: "记录 Kubernetes 删除 Namespace 一直处于 Terminating 状态的处理方法：通过清空 finalizers 字段强制完成删除，并补充讲解 K8s Finalizers 删除拦截机制的原理。"
 ---
+
+删除 Kubernetes Namespace 时命令长时间无响应、状态一直停留在 Terminating，强制删除也无效。本文记录该问题的排查过程和一行命令清空 finalizers 的解决方法，并补充讲解 Finalizers 删除拦截机制的工作原理。
+
+<!--more-->
+
 k8s namespace 无法删除记录
 
 名字空间yaml 文件
@@ -60,7 +68,7 @@ metadata.deletionGracePeriodSeconds 的取值控制对更新的轮询周期
 
  当 finalizers 字段为空时，k8s 认为删除已完成。
 
-## 参考
+## 一、参考
 1. [k8s 如何让 ns 无法删除](https://blog.csdn.net/shenyuanhaojie/article/details/126249072)
 2. [kubernetes_Namespace无法删除的解决方法](https://blog.csdn.net/Wqr_18390921824/article/details/124208510?spm=1001.2101.3001.6650.1&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-1-124208510-blog-115963541.235%5Ev38%5Epc_relevant_sort_base2&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-1-124208510-blog-115963541.235%5Ev38%5Epc_relevant_sort_base2&utm_relevant_index=2)
 3. [K8S从懵圈到熟练 - 我们为什么会删除不了集群的命名空间？](http://www.taodudu.cc/news/show-1094934.html?action=onClick)

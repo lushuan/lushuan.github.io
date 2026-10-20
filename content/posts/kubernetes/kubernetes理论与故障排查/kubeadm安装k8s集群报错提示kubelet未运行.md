@@ -6,12 +6,19 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Kubernetes"]
 tags: ["Kubernetes排障"]
+slug: "kubeadm-kubelet-cgroup-driver"
+summary: "记录 kubeadm 安装 Kubernetes v1.20 集群时报错 kubelet 未运行的排障过程：根因是 Docker 与 kubelet 的 cgroup 驱动不一致，通过将 Docker 驱动改为 systemd 解决。"
 ---
 
-## 背景
+使用 kubeadm init 安装 Kubernetes v1.20 集群时报错提示 kubelet 未运行或健康检查失败。本文记录排查过程：根因是 Docker 默认 cgroupfs 驱动与 kubelet 的 systemd 驱动不一致，修改 /etc/docker/daemon.json 统一为 systemd 后解决。
+
+<!--more-->
+
+## 一、背景
 通过 kubeadm 安装k8s v1.20 集群报错
 操作系统环境信息
 ```Bash
@@ -55,13 +62,13 @@ kubeadm init 安装报错信息
                 Once you have found the failing container, you can inspect its logs with:
                 - 'docker logs CONTAINERID'
 ```
-## 排查思路
+## 二、排查思路
 查看官网介绍为 docker 和 kubelet  服务中的 cgroup 驱动不一致，有两种方法  
 方式一：驱动向 docker 看齐  
 方式二：驱动为向 kubelet 看齐  
 如果docker 不方便重启则统一向 kubelet看齐，并重启对应的服务即可
 
-## 解决方式
+## 三、解决方式
 ### docker 配置文件
 这里采取的是方式二，docker 默认驱动为 cgroupfs ,只需要添加
 ```
@@ -96,7 +103,7 @@ cgroupDriver: systemd
 
 
 
-## 参考
+## 四、参考
 
 - [配置cgroup驱动](https://kubernetes.io/zh/docs/setup/production-environment/tools/kubeadm/install-kubeadm/#configure-cgroup-driver)  
 - [Docker中的Cgroup Driver:Cgroupfs 与 Systemd](https://www.cnblogs.com/hongdada/p/9771857.html)  

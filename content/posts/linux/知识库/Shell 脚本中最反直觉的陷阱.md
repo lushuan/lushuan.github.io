@@ -6,10 +6,19 @@ lastmod: 2025-11-12T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Shell"]
 tags: ["Shell"]
+slug: "shell-exit-code-trap"
+featuredImage: "/images/blog_cover/sunset/1.jpg"
+summary: "深入解析 Shell 脚本中最反直觉的陷阱：退出码 0 表示 True、非 0 表示 False，结合真实运维脚本案例讲清底层原理与正确的心智模型。"
 ---
+
+从 Python、Java 等语言转向 Shell 编程，最容易在 if 语句上栽跟头：Shell 的布尔逻辑与主流语言完全相反，退出码 0 表示成功（True），非 0 表示失败（False）。本文通过真实的部署脚本案例，拆解这一陷阱的底层原理、常见踩坑场景和正确心智模型。
+
+<!--more-->
+
 
 ### 前言
 

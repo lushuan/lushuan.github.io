@@ -6,10 +6,19 @@ lastmod: 2023-04-15T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Linux"]
 tags: ["Linux"]
+slug: "getent-guide"
+featuredImage: "/images/linux/cover.jpg"
+summary: "详解 getent 命令的原理与实战用法：基于 NSS 查询用户/组信息，能覆盖 LDAP、SSSD 等远程数据源，是部署脚本实现幂等检查的首选工具。"
 ---
+
+部署脚本中常用 `getent group docker` 而非 `grep /etc/passwd` 做幂等检查，核心原因是 getent 具备 NSS 感知能力，能"看全"本地文件、LDAP、SSSD 缓存等多个数据源中的用户和组信息。本文从 NSS 原理讲到与传统方式的对比、真实翻车案例和实战用法，彻底讲透这个被低估的命令。
+
+<!--more-->
+
 
 ### 前言
 

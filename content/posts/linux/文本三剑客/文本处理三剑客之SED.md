@@ -6,10 +6,19 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Linux"]
 tags: ["Linux文本三剑客"]
+slug: "sed-guide"
+featuredImage: "/images/blog_cover/nature/8.jpg"
+summary: "系统讲解流编辑器 sed 的工作原理与用法，涵盖常用选项、地址定界、编辑命令（增删查改）、查找替换及大量实战示例。"
 ---
+
+sed 是一种流编辑器，一次处理一行内容，基于"模式空间"完成文本的增删查改。本文从工作原理讲起，系统整理 sed 的常用选项、地址定界方式、d/p/a/i/c 等编辑命令和 s/// 查找替换语法，并附上大量基于 /etc/passwd 的实战示例。
+
+<!--more-->
+
 # 文本处理三剑客之SED
 - Stream EDitor, 流编辑器
 - sed是一种流编辑器，它一次处理一行内容。处理时，把当前处理的行存储在临时缓冲区中，称为"模式空间"（pattern space），接着用sed命令处理缓冲区中的内容，处理完成后，把缓冲区的内容送往屏幕。然后读入下行，执行下一个循环。如果没有使诸如‘D’的特殊命令，那会在两个循环之间清空模式空间，但不会清空保留空间。这样不断重复，直到文件末尾。文件内容并没有改变，除非你使用重定向存储输出。
@@ -18,7 +27,7 @@ tags: ["Linux文本三剑客"]
 
 简单的说sed主要是用来编辑文件，那么可以从四个角度来学这个命令，增删查改
 
-## 初体验
+## 一、初体验
 在行首添加一行
 ```shell
 sed '1i\AAA' aa.txt
@@ -29,7 +38,7 @@ sed '$a\AAA' aa.txt  
 ```
 
 
-## 基础
+## 二、基础
 ### 用法
 用法：  
 `sed [option]... 'script' inputfile...`
@@ -102,10 +111,10 @@ sed '$a\AAA' aa.txt  
 | sed -e 's/dog/cat/' -e 's/hi/lo/' pets | 多个正则匹配| 
 | sed –i 's/dog/cat/g' pets   | 替换生效| 
 
-## 总结
+## 三、总结
 添加使用append,insert命令，删除使用delete,修改使用copy,subsitute命令,查看print 结合-n 静默输出，可以覆盖百分之八十以上的场景
 
-## 高级编辑命令
+## 四、高级编辑命令
 - P： 打印模式空间开端至\n内容，并追加到默认输出之前
 - h: 把模式空间中的内容覆盖至保持空间中
 - H：把模式空间中的内容追加至保持空间中
@@ -119,7 +128,7 @@ sed '$a\AAA' aa.txt  
 不包含换行符，则会像发出d命令那样启动正常的新循环
 
 
-## 练习
+## 五、练习
 - 1、删除centos7系统/etc/grub2.cfg文件中所有以空白开头的行行首的空白字符
 - 2、删除/etc/fstab文件中所有以#开头，后面至少跟一个空白字符的行的行首的#和空白字符
 - 3、在centos6系统/root/install.log每一行行首增加#号
@@ -130,11 +139,11 @@ sed '$a\AAA' aa.txt  
 - 8、统计/etc/init.d/functions文件中每个单词的出现次数，并排序（用grep和sed两种方法分别实现）
 - 9、将文本文件的n和n+1行合并为一行，n为奇数行
 
-## 思维导图
+## 六、思维导图
 ![sed](/images/linux/sed-1.jpg "sed")
 
 
-## 参考
+## 七、参考
 1. [linux-sed-command](https://www.linuxprobe.com/linux-sed-command.html)
 2. [sed常用命令](https://blog.csdn.net/qq_33326449/article/details/117868811)
 

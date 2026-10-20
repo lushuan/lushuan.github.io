@@ -6,11 +6,20 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Kubernetes"]
 tags: ["Kubernetes"]
+slug: "kube-dns-to-coredns"
+featuredImage: "/images/kubernetes/cover.jpg"
+summary: "本文介绍将 Kubernetes 集群 DNS 从 kube-dns 切换为 CoreDNS 的实践步骤，包括版本适配、镜像准备、部署操作，并对比 CoreDNS 与 kube-dns 的差异，附完整 CoreDNS 部署 YAML。"
 ---
-## kube-dns切换为coredns
+
+CoreDNS 相比 kube-dns 更轻量灵活，插件化架构支持更丰富的 DNS 功能。本文记录将集群 DNS 从 kube-dns 平滑切换为 CoreDNS 的完整操作步骤，并附上不同版本适配表和部署 YAML。
+
+<!--more-->
+
+## 一、kube-dns切换为coredns
 k8s版本及其dns适配版本
 
 | k8s版本| coredns版本|镜像|镜像yaml|
@@ -20,24 +29,24 @@ k8s版本及其dns适配版本
 
 coredns/coredns:1.6.7/1.8.4
 
-## 操作
+## 二、操作
 根据版本选择对应的dns镜像以及yaml文件上传到其中一台master主机，以1.8.4 版本为例
 
 如果是内网则将coredns-1.6.7/1.8.4.tar.gz 压缩包进行解压并上传至现场的harbor仓库，如果可以连接外网则直接修改 coredns-1.8.4.yaml 文件，将站位符{{ image_address }} 进行修改
 
-## 将原有的 kube-dns 停止
+## 三、将原有的 kube-dns 停止
 ```shell
 $ kubectl scale deploy kube-dns  --replicas=0 -n kube-system
 $ kubectl scale deploy kube-dns-autoscaler  --replicas=0 -n kube-system
 ```
-## 部署coredns
+## 四、部署coredns
 ```shell
 $ kubectl apply -f coredns.yaml
 ```
 
 
 
-## 补充: kube-dns vs CoreDNS
+## 五、补充: kube-dns vs CoreDNS
 CoreDNS和kube-dns都是用于Kubernetes集群中的DNS解析服务，它们在不同方面有一些区别，适用于不同的场景。
 另外还有一个方面是早期版本的 kube-dns 在 Kubernetes 中主要支持 IPv4。IPv6 的支持不如 CoreDNS 完善，并且在实际应用中可能会遇到限制。
 
@@ -54,10 +63,10 @@ CoreDNS：
 
 综上所述，CoreDNS适用于更通用的环境和场景，可以满足更多的功能需求，而kube-dns是Kubernetes集群中的默认解析器，适用于基本的服务发现和域名解析需求。具体使用哪个取决于特定的需求和场景。
 
-## 参考
+## 六、参考
 [【kubernetes】部署-CoreDNS-服务](https://blog.csdn.net/qq_36073886/article/details/131117066)
 
-## coredns-1.6.7.yaml
+## 七、coredns-1.6.7.yaml
 ```yaml
 apiVersion: v1
 kind: ServiceAccount

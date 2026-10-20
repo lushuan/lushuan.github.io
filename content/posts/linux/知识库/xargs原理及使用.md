@@ -6,11 +6,20 @@ lastmod: 2022-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Linux"]
 tags: ["Linux"]
+slug: "xargs-guide"
+featuredImage: "/images/scenery/cover-20.jpg"
+summary: "介绍 xargs 命令的原理与参数用法：把标准输入转换为命令行参数，解决 ls、rm 等命令不支持管道传参的问题，详解 -0、-I、-n、-d、-p 等常用选项。"
 ---
-##  简介
+
+很多 Linux 命令（如 ls、rm）从命令行参数而非标准输入接受输入，xargs 就是为此设计的"参数转换器"，把 stdin 的输入按分隔符切分后作为参数调用后续命令。本文讲解 xargs 的原理，并结合 find 演示 -print0/-0、-I {} 占位符、-n、-d、-p 等常用参数的用法与示例。
+
+<!--more-->
+
+## 一、 简介
 之所以能用到这个命令，是由于很多 linux 命令不支持用管道传递参数，xargs 可以理解为参数转换器，例如
 
 ```shell
@@ -26,7 +35,7 @@ find /sbin -perm +700 |xargs ls -l
 
 xargs 默认的分隔符：空格 或 回车
 
-##  参数使用
+## 二、 参数使用
 想把所有.jpg文件删除，当然你可以 rm *.jpg，但是如果要递归操作所有子目录下的文件呢？
 
 可以这样：
@@ -133,7 +142,7 @@ aaa  bbb ccc  ddd
 a b
 ```
 
-##  xargs 结合find 使用
+## 三、 xargs 结合find 使用
 举例
 
 ```shell
@@ -158,7 +167,7 @@ $find ~ -name ‘*.log’ -print0 | xargs -i -0 rm -f {}
 # ls *.jpg | xargs -n1 -i cp {} /external-hard-drive/directory
 ```
 
-## 总结  
+## 四、总结  
 
 |命令|解释|
 |---|---|

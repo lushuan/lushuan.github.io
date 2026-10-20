@@ -6,11 +6,19 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Ansible"]
 tags: ["Ansible"]
+slug: "ansible-ssh-auth-error"
+summary: "记录 Ansible 通过 SSH 连接目标主机时出现 Permission denied (UNREACHABLE) 报错的排查过程，并给出基于 ssh-keygen 与 ssh-copy-id 的免密认证解决方案。"
 ---
-## 问题描述
+
+在使用 Ansible ping 多台主机时遇到 SSH Permission denied 导致 UNREACHABLE 的报错。本文记录该问题的排查过程，并通过 ssh-keygen 生成密钥、ssh-copy-id 分发公钥的方式实现免密认证，最终验证问题解决。
+
+<!--more-->
+
+## 一、问题描述
 通过ansible命令直接ping多台机器的网络状态，提示报错
 
 {{< admonition failure >}}
@@ -20,7 +28,7 @@ tags: ["Ansible"]
     "unreachable": true
 }
 {{< /admonition >}}
-## 问题处理
+## 二、问题处理
 解决方式：单向的ssh验证
 
 ssh-keygen一路回车,主要是用来免密通信的
@@ -59,7 +67,7 @@ Number of key(s) added: 1
 Now try logging into the machine, with:   "ssh '172.16.24.220'"
 and check to make sure that only the key(s) you wanted were added.
 ```
-## 验证
+## 三、验证
 再次验证，成功
 ```shell
 [root@chm log]# ansible 172.16.24.220 -m ping 

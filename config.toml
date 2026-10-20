@@ -656,7 +656,8 @@ defaultContentLanguage = "zh-cn"
 # Permalinks 配置
 [Permalinks]
   # posts = ":year/:month/:filename"
-  posts = ":filename"
+  #posts = ":filename"
+  posts = "/:slug/"
 
 # 隐私信息配置
 [privacy]

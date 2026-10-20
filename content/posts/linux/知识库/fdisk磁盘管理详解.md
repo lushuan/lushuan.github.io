@@ -6,14 +6,23 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Linux"]
 tags: ["Linux"]
+slug: "fdisk-guide"
+featuredImage: "/images/scenery/cover-18.jpg"
+summary: "以给服务器划分逻辑卷分区为背景，详解 fdisk 磁盘分区工具：fdisk -l 查看分区、主分区与扩展分区概念、交互式划分新分区的完整过程。"
 ---
+
+本文以一次真实运维操作为背景：服务器磁盘余量大但未分区，导致无法创建逻辑卷。借此详解 fdisk 命令的用法，包括用 fdisk -l 查看磁盘分区、主分区与扩展分区的概念，以及交互式划分新分区 /dev/sda3 的完整过程。
+
+<!--more-->
+
 打算给一台服务器做逻辑卷分区，发现磁盘未做分区，且磁盘空间余量较大，本篇记录一下 fdisk 磁盘分区划分的过程
 
 ![fdisk-1](/images/linux/fdisk-1.jpg "fdisk")
-## 事情的起因
+## 一、事情的起因
 通过`pvcreate` 创建逻辑卷组提示报错
 报错信息
 
@@ -45,7 +54,7 @@ Disk identifier: 0x0003eb01
 
 ![fdisk-2](/images/linux/fdisk-2.jpg "fdisk")
 
-## 划分磁盘分区
+## 二、划分磁盘分区
 ### 首先了解什么是 fdisk 命令
 fdisk 的意思是 固定磁盘(Fixed Disk) 或 格式化磁盘(Format Disk)，它是命令行下允许用户对分区进行查看、创建、调整大小、删除、移动和复制的工具。它支持 MBR、Sun、SGI、BSD 分区表，但是它不支持 GUID 分区表（GPT）。它不是为操作大分区设计的。
 
@@ -79,7 +88,7 @@ fdisk -l /dev/sda
 |x| 扩展应用，专家功能   | 否  | 
 关注一下常用命令即可
 
-## 创建扩展分区
+## 三、创建扩展分区
 列出当前操作硬盘的分区情况，用 p
 ```shell
 $ fdisk /dev/sda

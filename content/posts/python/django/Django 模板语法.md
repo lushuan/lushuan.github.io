@@ -6,11 +6,20 @@ lastmod: 2024-06-26T12:06:37+08:00
 draft: false
 toc:
   enable: true
+  auto: true
 weight: false
 categories: ["Django"]
 tags: ["Django"]
+slug: "django-templates"
+featuredImage: "/images/python/cover.jpg"
+summary: "基于 Django 3.2 详解模板引擎 DTL 与模板语法，涵盖模板目录配置、render 渲染本质、常用模板语法、自定义过滤器与静态文件处理。"
 ---
-## Django 模板语法
+
+本文基于 Django 3.2 详解 Django 内置模板引擎 DTL 与模板语法，涵盖模板目录配置、render 函数的内部本质、变量与常用模板语法的简单案例，以及自定义过滤器和静态文件的处理方法。
+
+<!--more-->
+
+## 一、Django 模板语法
 模板引擎是一种可以让开发者把服务端数据填充到html网页中完成渲染效果的技术。它实现了把前端代码和服务端代码分离的作用，让项目中的业务逻辑代码和数据表现代码分离，让前端开发者和服务端开发者可以更好的完成协同开发。
 
 {{< admonition info >}}
