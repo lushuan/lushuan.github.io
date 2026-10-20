@@ -19,7 +19,7 @@ Linux 服务器长时间运行后系统时间会产生误差，数据库集群�
 
 <!--more-->
 
-Linux服务器运行久了，系统时间就会存在一定的误差，一般情况下可以使用date命令进行时间设置，但在做数据库集群分片等操作时对多台机器的时间差是有要求的，此时就需要使用ntpdate进行时间同步
+Linux 服务器运行久了，系统时间就会存在一定的误差，一般情况下可以使用 date 命令进行时间设置，但在做数据库集群分片等操作时对多台机器的时间差是有要求的，此时就需要使用 ntpdate 进行时间同步
 
 ## 一、手动修改
 手动设置时间，需要使用有 sudo 权限的用户
@@ -31,7 +31,7 @@ hwclock --systohc
 ```
 手动修改时间会有误差，建议使用下面的时间服务器进行同步更新
 
-## 二、 通过时间服务器校正
+## 二、通过时间服务器校正
 ```shell
 sudo yum install ntpdate -y
 ```
@@ -41,7 +41,7 @@ sudo yum install ntpdate -y
 sudo ntpdate -b time1.aliyun.com
 ```
 
-###  配置启动ntpd
+###  配置启动 ntpd
 
 ```shell
 $ vi /etc/ntp.conf
@@ -101,7 +101,6 @@ keys /etc/ntp/keys
 # CVE-2013-5211 for more details.
 # Note: Monitoring will not be disabled with the limited restriction flag.
 ```
-
 ###  设置开机自启
 ```shell
 sudo systemctl status ntpd;
@@ -111,25 +110,21 @@ sudo systemctl enable ntpd;
 
 ### ntp 常用服务器
 #### 国内
-- cn.pool.ntp.org  中国开源免费NTP服务器
-- ntp1.aliyun.com 阿里云NTP服务器
-- ntp2.aliyun.com 阿里云NTP服务器
-- time1.aliyun.com 阿里云NTP服务器
-- time2.aliyun.com 阿里云NTP服务器
+- cn.pool.ntp.org  中国开源免费 NTP 服务器
+- ntp1.aliyun.com 阿里云 NTP 服务器
+- ntp2.aliyun.com 阿里云 NTP 服务器
+- time1.aliyun.com 阿里云 NTP 服务器
+- time2.aliyun.com 阿里云 NTP 服务器
 
-  
 #### 国外
-- time1.apple.com 苹果NTP服务器
-- time2.apple.com 苹果NTP服务器
-- time3.apple.com 苹果NTP服务器
-- time4.apple.com 苹果NTP服务器
-- time5.apple.com 苹果NTP服务器
-- time1.google.com 谷歌NTP服务器
-- time2.google.com 谷歌NTP服务器
-- time3.google.com 谷歌NTP服务器
-- time4.google.com 谷歌NTP服务器
-- pool.ntp.org 开源免费NTP服务器
-
-
-
-
+- time1.apple.com 苹果 NTP 服务器
+- time2.apple.com 苹果 NTP 服务器
+- time3.apple.com 苹果 NTP 服务器
+- time4.apple.com 苹果 NTP 服务器
+- time5.apple.com 苹果 NTP 服务器
+- time1.google.com 谷歌 NTP 服务器
+- time2.google.com 谷歌 NTP 服务器
+- time3.google.com 谷歌 NTP 服务器
+- time4.google.com 谷歌 NTP 服务器
+- pool.ntp.org 开源免费 NTP 服务器
+

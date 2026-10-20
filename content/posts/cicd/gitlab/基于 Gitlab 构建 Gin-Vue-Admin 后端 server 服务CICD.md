@@ -15,26 +15,26 @@ featuredImage: "/images/cicd/cover.jpg"
 summary: "基于 Gitlab CE 与 Gitlab Runner 为 Gin-Vue-Admin 后端服务搭建完整 CI/CD 流水线，涵盖环境准备、镜像构建、推送 Harbor、Kubernetes 部署与钉钉通知的全流程实践。"
 ---
 
-本文记录基于 Gitlab 社区版搭建 CI/CD 的完整实践，适用于中小团队。以 Gin-Vue-Admin 后端 server 服务为例，实现代码 push/merge 到 master 后自动完成镜像构建、推送 Harbor、Kubernetes 部署以及钉钉通知的全流程，并详细介绍 Gitlab Runner 的部署与配置。
+本文记录基于 GitLab 社区版搭建 CI/CD 的完整实践，适用于中小团队。以 Gin-Vue-Admin 后端 server 服务为例，实现代码 push/merge 到 master 后自动完成镜像构建、推送 Harbor、Kubernetes 部署以及钉钉通知的全流程，并详细介绍 GitLab Runner 的部署与配置。
 
 <!--more-->
 
 ## 一、🚀 前言
-记录基于 Gitlab 社区版搭建CI/CD，适用于中小团队的开发，功能包含prepare->build->push->deploy->dingTalk notify
+记录基于 GitLab 社区版搭建 CI/CD，适用于中小团队的开发，功能包含 prepare->build->push->deploy->dingTalk notify
 
 ![gitlab-pipeline-demo](/images/cicd/gitlab/gitlab-pipeline-1.png "Gitlab Pipelines")
 
 ## 二、🧩 环境信息
 
-1. 操作系统：Kylin v10 (Ubuntu / CentOS 均可)
+1. 操作系统：Kylin v10（Ubuntu / CentOS 均可）
 2. Kubernetes v1.28.0
 3. Docker 24.0.5
-4. Gitlab CE v14.1.8       (192.168.1.10)
+4. GitLab CE v14.1.8       (192.168.1.10)
 5. gitlab-runner v18.4.0   (192.168.1.100)
 6. Harbor v2.0             (192.168.1.20)
 7. [Gin-Vue-Admin v2.8.6](https://github.com/flipped-aurora/gin-vue-admin/tree/v2.8.6)
 
-目标：push/merge 到 master → 自动 build + push + k8s 部署 + 钉钉通知
+目标：push/merge 到 master → 自动 build + push + K8s 部署 + 钉钉通知
 
 ## 三、🧱 总体流程
 
@@ -53,10 +53,9 @@ summary: "基于 Gitlab CE 与 Gitlab Runner 为 Gin-Vue-Admin 后端服务搭�
      ↓
  访问 NodePort 端口
 ```
-
-## 四、🧰 Gitlab Runner 介绍和部署
-篇幅有限，默认在搭建整个ci/cd 工具链中，其它组件已经提前部署好，这里选型gitlab-runner v18.4.0，理论上来讲建议Gitlab CE和gitlab-runner 版本相匹配，
-这里直接选择了gitlab-runner v18.4.0 较高版本，在验证的过程中发现也是可以，并且插件版本向后兼容，并且还会介绍基于传统常见的Redhat 系列和Debian 系列的在线安装方式，
+## 四、🧰 GitLab Runner 介绍和部署
+篇幅有限，默认在搭建整个 ci/cd 工具链中，其它组件已经提前部署好，这里选型 gitlab-runner v18.4.0，理论上来讲建议 GitLab CE 和 gitlab-runner 版本相匹配，
+这里直接选择了 gitlab-runner v18.4.0 较高版本，在验证的过程中发现也是可以，并且插件版本向后兼容，并且还会介绍基于传统常见的 Redhat 系列和 Debian 系列的在线安装方式，
 但是在国产操作系统部署，这里选择二进制的方式进行部署
 
 ### 🧩 一、GitLab Runner 是什么？
@@ -98,13 +97,13 @@ Runner 拉取代码执行 Job
 | 执行器类型                      | 说明                         | 适用场景      |
 | -------------------------- | -------------------------- | --------- |
 | **shell**                  | 直接在宿主机执行命令                 | 简单测试、本地环境 |
-| **docker**                 | 每个 Job 启动一个独立的 Docker 容器执行 | 推荐、最常用    |
-| **docker+machine**         | 动态创建临时 VM 执行任务             | 云环境       |
-| **kubernetes**             | 在 K8s 集群中调度 Pod 执行 Job     | 云原生平台     |
-| **ssh**                    | 通过 SSH 登录远程主机执行            | 异地部署或私有主机 |
+| **Docker**                 | 每个 Job 启动一个独立的 Docker 容器执行 | 推荐、最常用    |
+| **Docker+machine**         | 动态创建临时 VM 执行任务             | 云环境       |
+| **Kubernetes**             | 在 K8s 集群中调度 Pod 执行 Job     | 云原生平台     |
+| **SSH**                    | 通过 SSH 登录远程主机执行            | 异地部署或私有主机 |
 | **virtualbox / parallels** | 虚拟机方式执行                    | 桌面实验环境    |
 
-> 💡 大多数团队使用 `docker` executor，因为它最干净、易隔离、易复现。 这里使用ssh executor 执行器
+> 💡 大多数团队使用 `docker` executor，因为它最干净、易隔离、易复现。这里使用 SSH executor 执行器
 
 ### 🧰 四、Runner 的三种类型
 
@@ -119,7 +118,7 @@ Runner 拉取代码执行 Job
 #### 1️⃣ 安装 GitLab Runner
 
 在 172.16.2.118 上执行：
-Gitlab-runner 安装推荐和Gitlab 版本保持一致
+Gitlab-runner 安装推荐和 GitLab 版本保持一致
 ```bash
 # ubuntu 在线安装
 sudo apt update
@@ -151,7 +150,6 @@ gitlab-runner uninstall
 > 🔧 直接安装官方「单文件二进制版」，不依赖任何 RPM 包。
 > 此方法已在国产麒麟、统信、中标麒麟等系统上实测通过。
 
-
 ```bash
 # 下载二进制文件
 sudo curl -L --output /usr/local/bin/gitlab-runner \
@@ -170,8 +168,6 @@ sudo gitlab-runner start
 # 检查版本
 gitlab-runner --version
 ```
-
-
 - [gitlab-runner 官方下载地址](https://packages.gitlab.com/runner/gitlab-runner)
 - [gitlab-runner 官网部署文档](https://gitlab.cn/docs/runner/install/)
 - [gitlab-runner 官网使用二进制手动部署，可以适配国产操作系统](https://docs.gitlab.com/runner/install/linux-manually/#using-binary-file)
@@ -183,7 +179,6 @@ gitlab-runner --version
 sudo gitlab-runner register --url http://192.168.1.10/ --registration-token bixxxxxxhj8-xQ4V4
 
 ```
-
 然后根据提示输入：
 
 ```
@@ -217,7 +212,6 @@ Runner registered successfully. Feel free to start it, but if it's running alrea
  
 Configuration (with the authentication token) was saved in "/etc/gitlab-runner/config.toml" 
 ```
-
 填写信息（示例）：
 
 | 提示                                         | 示例输入                                        |
@@ -225,12 +219,12 @@ Configuration (with the authentication token) was saved in "/etc/gitlab-runner/c
 | Please enter the gitlab-ci coordinator URL | `http://your.gitlab.domain/`                |
 | Please enter the gitlab-ci token           | 从 GitLab 项目 → Settings → CI/CD → Runners 获取 |
 | Please enter the gitlab-ci description     | `kylin-runner`                              |
-| Please enter the gitlab-ci tags            | `gva` 可以理解为给gitlab runner实例命名               |
+| Please enter the gitlab-ci tags            | `gva` 可以理解为给 GitLab runner 实例命名               |
 | Please enter the executor                  | `shell`                                     |
 
 注册完成后，Runner 会出现在 GitLab → `Settings → CI/CD → Runners` 中。
 
-#### 启动并验证：
+#### 启动并验证
 
 ```bash
 sudo systemctl enable gitlab-runner
@@ -238,14 +232,11 @@ sudo systemctl start gitlab-runner
 sudo systemctl status gitlab-runner
 sudo gitlab-runner status
 ```
-
 然后执行：
 
 ```bash
 gitlab-runner list
 ```
-
-
 ### 🧩 六、Runner 与 `.gitlab-ci.yml` 的关系
 
 在你的 `.gitlab-ci.yml` 文件中：
@@ -258,7 +249,6 @@ build:
   script:
     - echo "Build project"
 ```
-
 🔹 GitLab 会根据 `tags: [gva]` 匹配到相应 Runner 来执行此 job。
 如果没有匹配标签的 Runner，Job 会一直处于 *pending* 状态。
 
@@ -470,16 +460,16 @@ notify:
 ```
 
 注意：
-- `.gitlab-ci.yaml` 脚本的密钥环境变量推荐配置到gitlab 项目下的Variables下,项目->Settings->CI/CD->Variables,当然写死在`Gitlab-ci.yaml`中也可以
+- `.gitlab-ci.yaml` 脚本的密钥环境变量推荐配置到 GitLab 项目下的 Variables 下，项目->Settings->CI/CD->Variables，当然写死在 `Gitlab-ci.yaml` 中也可以
 
 ![gitlab-pipeline-demo](/images/cicd/gitlab/gitlab-pipeline-2.png "Gitlab Variables")
 
 ## 六、🐳 Dockerfile 示例（放在项目根目录）
-如果你已有官方 GVA 项目，可参考下方后端构建 Dockerfile，该Dockerfile 优化了如下问题
+如果你已有官方 GVA 项目，可参考下方后端构建 Dockerfile，该 Dockerfile 优化了如下问题
 1. DNS 解析不稳定问题
 2. 使用国内镜像源进行加速代理
 3. 优化框架依赖缓存，解决每次构建拉取时间较长的问题
-4. 优化构建后的image size 大小问题，减少一半
+4. 优化构建后的 image size 大小问题，减少一半
 
 ```
 FROM golang:alpine as builder
@@ -525,7 +515,7 @@ COPY --from=0 /app/config.yaml ./
 EXPOSE 8888
 ENTRYPOINT ["./server", "-c", "config.yaml"]
 ```
-## 七、🧩 K8S 部署示例
+## 七、🧩 K8s 部署示例
 ```
 apiVersion: v1
 kind: ConfigMap
@@ -606,7 +596,6 @@ git add .
 git commit -m "test gitlab ci"
 git push origin master
 ```
-
 2️⃣ 打开 GitLab 项目→ **CI/CD → Pipelines**
 可看到：
 
@@ -620,32 +609,29 @@ git push origin master
 kubectl get pods
 kubectl get svc
 ```
-
 访问：
 
 ```
 http://k8s_master_vip:30088
 ```
-
 查看钉钉构建通知
 ![gitlab-pipeline-demo](/images/cicd/gitlab/gitlab-pipeline-3.png "DingTalk Notify")
-
 
 ## 九、🧩 常见问题排查
 
 | 问题                          | 解决方法                                      |
 | --------------------------- | ----------------------------------------- |
-| `docker: command not found` | 在 Runner 节点安装 docker 并配置到 PATH。           |
-| `kubectl not found`         | 确认已安装 kubectl 且能访问 k8s 集群。                |
+| `docker: command not found` | 在 Runner 节点安装 Docker 并配置到 PATH。           |
+| `kubectl not found`         | 确认已安装 kubectl 且能访问 K8s 集群。                |
 | Job 一直 pending              | 检查 Runner 是否注册到项目、是否有 tag 匹配。             |
 | 镜像无法拉取                      | 将 `imagePullPolicy` 设置为 `Never` 或推送到私有仓库。 |
 
 ## 十、🧩 踩坑
-在提交`.gitlab-ci.yaml` 调试的过程中，一直提示如下报错
+在提交 `.gitlab-ci.yaml` 调试的过程中，一直提示如下报错
 ```
 Syntax is incorrect. CI configuration validated, including all configuration added with the includes keyword
 ```
-### 原因分析:
+### 原因分析
 GitLab CI 的 YAML 解析器在 14.x 的某些版本里，对 script 中包含冒号 : 的行解析异常
 尤其是这种形式
 ```
@@ -674,10 +660,10 @@ script:
 
 | 模块    | 技术                      |
 | ----- | ----------------------- |
-| CI 触发 | GitLab 内置 webhook       |
+| CI 触发 | GitLab 内置 Webhook       |
 | 执行器   | GitLab Runner（shell 模式） |
 | 构建方式  | Dockerfile 构建           |
-| 部署方式  | kubectl apply 到 k8s     |
+| 部署方式  | kubectl apply 到 K8s     |
 | 暴露方式  | NodePort 服务             |
 | 整体特性  | 零轮询、自动触发、可视化、可扩展        |
-
+

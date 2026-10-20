@@ -19,20 +19,20 @@ summary: "对 Kubernetes 常用命令进行分类整理，涵盖集群管理、P
 
 <!--more-->
 
-使用 kubernetes 经常会用到命令行，这里对命令行进行分类整理
+使用 Kubernetes 经常会用到命令行，这里对命令行进行分类整理
 
 - 集群管理
   - kubectl cluster-info
   - kubectl config
   - kubectl version
-  - kubectl api-versions 查看当前集群支持的api版本
+  - kubectl api-versions 查看当前集群支持的 API 版本
   - kubectl get node
   - kubectl get pod
   - kubectl get service
   - kubectl cordon 命令：用于标记某个节点不可调度
   - kubectl uncordon 命令：用于标记节点可以调度
-  - kubectl drain 命令： 用于在维护期间排除节点。
-  - kubectl taint 命令：用于给某个Node节点设置污点 
+  - kubectl drain 命令：用于在维护期间排除节点。
+  - kubectl taint 命令：用于给某个 Node 节点设置污点 
 - Pod 管理
   - kubectl create pod
   - kubectl get pod
@@ -46,7 +46,7 @@ summary: "对 Kubernetes 常用命令进行分类整理，涵盖集群管理、P
   - kubectl top pods
   - kubectl get quota
   - kubectl describe
-- Service管理
+- Service 管理
   - kubectl create service
   - kubectl get service
   - kubectl expose
@@ -60,7 +60,7 @@ summary: "对 Kubernetes 常用命令进行分类整理，涵盖集群管理、P
   - kubectl get secret
   - kubectl describe configmap
   - kubectl describe secret
-- Deployment管理
+- Deployment 管理
   - kubectl create deployment
   - kubectl get deployment
   - kubectl scale deployment
@@ -76,7 +76,7 @@ summary: "对 Kubernetes 常用命令进行分类整理，涵盖集群管理、P
   - kubectl delete namespace
   - kubectl apply -n <namespace>
   - kubectl switch -n <namespace>
-- kubeadm管理
+- kubeadm 管理
   - kubeadm init 启动引导一个 Kubernetes 主节点
   - kubeadm join 启动引导一个 Kubernetes 工作节点并且将其加入到集群
   - kubeadm upgrade 更新 Kubernetes 集群到新版本
@@ -85,8 +85,7 @@ summary: "对 Kubernetes 常用命令进行分类整理，涵盖集群管理、P
   - kubeadm reset 还原之前使用 kubeadm init 或者 kubeadm join 对节点所作改变
   - kubeadm version 打印出 kubeadm 版本
   - kubeadm alpha 预览一组可用的新功能以便从社区搜集反馈
-  - kubeadm token create --print-join-command 创建node加入口令
-
+  - kubeadm token create --print-join-command 创建 node 加入口令
 
 ## 一、命令说明
 ### 1. kubectl expose 和 kubectl port-forward 的区别
@@ -103,53 +102,47 @@ kubectl apply 用于在 Kubernetes 集群上部署或更新资源对象，可以
 
 kubectl switch 可以方便地在多个集群之间切换，目的是为了方便用户在不同的集群之间进行操作。因此，kubectl apply 用于部署和更新资源对象，而 kubectl switch 用于切换当前操作的集群。它们是两个不同的命令，用途和功能不同。
 
-### 3. kubectl scale 和 kubectl autoscale的区别
-kubectl scale和kubectl autoscale是用于扩容或缩容Kubernetes Deployment或ReplicaSet的命令，但它们有一些区别。
+### 3. kubectl scale 和 kubectl autoscale 的区别
+kubectl scale 和 kubectl autoscale 是用于扩容或缩容 Kubernetes Deployment 或 ReplicaSet 的命令，但它们有一些区别。
 
-kubectl scale命令允许通过手动指定副本数量来更新Deployment或ReplicaSet的副本数量。例如，可以使用以下命令将副本数量设置为3：
+kubectl scale 命令允许通过手动指定副本数量来更新 Deployment 或 ReplicaSet 的副本数量。例如，可以使用以下命令将副本数量设置为 3：
 
 ```shell
 kubectl scale deployment/my-deployment --replicas=3
 ```
-
-kubectl autoscale命令则是根据指定的CPU使用率来自动扩容或缩容Deployment。它会创建一个HorizontalPodAutoscaler(HPA)对象，该对象会根据CPU的使用情况动态地增加或减少Pod的副本数量以满足指定的CPU目标使用率。例如，可以使用以下命令将Pod的副本数量自动调整为至少2个，当CPU使用率超过50%时：
+kubectl autoscale 命令则是根据指定的 CPU 使用率来自动扩容或缩容 Deployment。它会创建一个 HorizontalPodAutoscaler（HPA）对象，该对象会根据 CPU 的使用情况动态地增加或减少 Pod 的副本数量以满足指定的 CPU 目标使用率。例如，可以使用以下命令将 Pod 的副本数量自动调整为至少 2 个，当 CPU 使用率超过 50% 时：
 
 ```shell
 kubectl autoscale deployment/my-deployment --min=2 --max=10 --cpu-percent=50
 ```
+总结起来，kubectl scale 用于手动指定副本数量来更新 Deployment 或 ReplicaSet 的副本数量，而 kubectl autoscale 用于根据 CPU 使用率自动扩容或缩容 Pod 的副本数量。
 
-总结起来，kubectl scale用于手动指定副本数量来更新Deployment或ReplicaSet的副本数量，而kubectl autoscale用于根据CPU使用率自动扩容或缩容Pod的副本数量。
+### 4. kubectl exec 和 kubectl attach 的区别
+kubectl exec 和 kubectl attach 是用于与正在运行的 Pod 进行交互的命令，但它们在使用方式和功能上有一些区别。
 
-### 4. kubectl exec和kubectl attach 的区别
-kubectl exec和kubectl attach是用于与正在运行的Pod进行交互的命令，但它们在使用方式和功能上有一些区别。
-
-kubectl exec命令用于在正在运行的Pod中执行命令。它可以连接到正在运行的容器，并在容器中执行指定的命令。例如，可以使用以下命令在名为my-pod的Pod中执行echo命令：
+kubectl exec 命令用于在正在运行的 Pod 中执行命令。它可以连接到正在运行的容器，并在容器中执行指定的命令。例如，可以使用以下命令在名为 my-pod 的 Pod 中执行 echo 命令：
 
 ```shell
 kubectl exec -it my-pod -- echo "Hello, World!"
 ```
-
-kubectl attach命令用于将本地终端连接到正在运行的Pod中的某个容器的标准输入、输出和错误流。它可以与容器建立交互式会话。例如，可以使用以下命令将本地终端连接到名为my-pod的Pod中的第一个容器：
+kubectl attach 命令用于将本地终端连接到正在运行的 Pod 中的某个容器的标准输入、输出和错误流。它可以与容器建立交互式会话。例如，可以使用以下命令将本地终端连接到名为 my-pod 的 Pod 中的第一个容器：
 
 ```shell
 kubectl attach -it my-pod
 ```
+总结起来，kubectl attach 命令类似于 kubectl exec，但它附加到容器中运行的主进程，而不是运行额外的进程。
 
-总结起来，kubectl attach命令类似于kubectl exec，但它附加到容器中运行的主进程，而不是运行额外的进程。
+### 5. kubectl patch 和 kubectl replace 的区别
+kubectl patch 和 kubectl replace 是用于部分更新和替换更新 Kubernetes 资源的命令，但它们在更新方式和行为上有一些区别。
 
-### 5. kubectl patch和kubectl replace的区别
-kubectl patch和kubectl replace是用于部分更新和替换更新Kubernetes资源的命令，但它们在更新方式和行为上有一些区别。
-
-kubectl patch命令用于部分更新Kubernetes资源的特定字段。它可以通过提供一个JSON或YAML文件、一个JSON或YAML字符串，或者使用特定的操作类型（如add、remove、replace等）来更新资源的字段。例如，可以使用以下命令为名为my-deployment的Deployment资源的labels字段添加一个新的标签：
+kubectl patch 命令用于部分更新 Kubernetes 资源的特定字段。它可以通过提供一个 JSON 或 YAML 文件、一个 JSON 或 YAML 字符串，或者使用特定的操作类型（如 add、remove、replace 等）来更新资源的字段。例如，可以使用以下命令为名为 my-deployment 的 Deployment 资源的 labels 字段添加一个新的标签：
 
 ```shell
 kubectl patch deployment/my-deployment -p '{"spec":{"template":{"metadata":{"labels":{"new-label":"value"}}}}}'
 ```
-
-kubectl replace命令用于替换更新整个Kubernetes资源。它会基于提供的配置文件完全替换现有资源的内容。例如，可以使用以下命令将名为my-deployment的Deployment资源替换为一个新的配置文件：
+kubectl replace 命令用于替换更新整个 Kubernetes 资源。它会基于提供的配置文件完全替换现有资源的内容。例如，可以使用以下命令将名为 my-deployment 的 Deployment 资源替换为一个新的配置文件：
 
 ```shell
 kubectl replace -f new-deployment.yaml
 ```
-
-总结起来，kubectl patch用于部分更新Kubernetes资源的特定字段，而kubectl replace用于完全替换更新整个Kubernetes资源。
+总结起来，kubectl patch 用于部分更新 Kubernetes 资源的特定字段，而 kubectl replace 用于完全替换更新整个 Kubernetes 资源。

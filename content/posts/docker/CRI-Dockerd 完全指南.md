@@ -23,11 +23,11 @@ Kubernetes v1.24 正式移除 dockershim 之后，"K8s 不再原生支持 Docker
 
 在 Kubernetes v1.24 正式移除 dockershim 之后，整个容器生态经历了一次重大的架构调整。许多运维工程师在面对“K8s 不再原生支持 Docker”这一事实时，产生了大量的困惑与焦虑。CRI-Dockerd 正是在这一历史转折点诞生的关键组件。
 
-本文将从背景、原理、部署决策及生产实践四个维度，彻底讲透 CRI-Dockerd的前世今生。
+本文将从背景、原理、部署决策及生产实践四个维度，彻底讲透 CRI-Dockerd 的前世今生。
 
 ---
 
-### 一、 历史背景：为什么需要 CRI-Dockerd？
+### 一、历史背景：为什么需要 CRI-Dockerd？
 
 要理解 CRI-Dockerd，必须先理清 Kubernetes 容器运行时的演进史：
 
@@ -56,7 +56,6 @@ Kubernetes v1.24 正式移除 dockershim 之后，"K8s 不再原生支持 Docker
                                      Unix Socket
                                   /var/run/cri-dockerd.sock
 ```
-
 -   **对 kubelet 而言**：CRI-Dockerd 是一个标准的 CRI 实现，与 containerd、CRI-O 没有区别。
 -   **对 Docker Engine 而言**：CRI-Dockerd 只是一个普通的 Docker API 客户端，和 `docker` CLI 一样调用 dockerd。
 -   **对 Pod 而言**：完全无感知，容器依然由 Docker 创建和管理。
@@ -71,7 +70,7 @@ Kubernetes v1.24 正式移除 dockershim 之后，"K8s 不再原生支持 Docker
 
 ---
 
-### 三、 灵魂拷问：现在部署 K8s，还需要 CRI-Dockerd 吗？
+### 三、灵魂拷问：现在部署 K8s，还需要 CRI-Dockerd 吗？
 
 这是最关键的问题。答案取决于你的**具体场景**：
 
@@ -101,7 +100,7 @@ Kubernetes v1.24 正式移除 dockershim 之后，"K8s 不再原生支持 Docker
 
 ---
 
-### 四、 版本兼容矩阵与使用范围
+### 四、版本兼容矩阵与使用范围
 
 #### 版本对应关系
 
@@ -122,7 +121,7 @@ Kubernetes v1.24 正式移除 dockershim 之后，"K8s 不再原生支持 Docker
 
 ---
 
-### 五、 扩展知识点：生产环境避坑指南
+### 五、扩展知识点：生产环境避坑指南
 
 #### 1. CRI-Dockerd vs Containerd 性能对比
 
@@ -153,7 +152,6 @@ journalctl -u cri-dockerd -f --no-pager
 # 5. 验证 Docker Engine 本身是否正常
 docker info && docker ps
 ```
-
 #### 3. 从 Docker 迁移到 containerd 的渐进策略
 
 如果你计划最终摆脱 CRI-Dockerd，建议分三步走：
@@ -170,7 +168,7 @@ docker info && docker ps
 
 ---
 
-### 六、 总结
+### 六、总结
 
 | 问题 | 结论 |
 | :--- | :--- |

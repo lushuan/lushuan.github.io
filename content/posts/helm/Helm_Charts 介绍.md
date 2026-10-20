@@ -66,13 +66,12 @@ deprecated: chart 是否已被弃用 (可选, boolean)
 ```
 
 ## 三、TEMPLATES 和 VALUES
-Helm Chart 模板是用 Go template 语言 进行编写的，另外还额外增加了 [Sprig](https://github.com/Masterminds/sprig) 库中的50个左右的附加模板函数和一些其他[专用函数](https://helm.sh/docs/howto/charts_tips_and_tricks/)。
+Helm Chart 模板是用 Go template 语言 进行编写的，另外还额外增加了 [Sprig](https://github.com/Masterminds/sprig) 库中的 50 个左右的附加模板函数和一些其他[专用函数](https://helm.sh/docs/howto/charts_tips_and_tricks/)。
 
 所有模板文件都存储在 chart 的 templates/ 目录下面，当 Helm 渲染 charts 的时候，它将通过模板引擎传递该目录中的每个文件。模板的 Values 可以通过两种方式提供：
 
 - Chart 开发人员可以在 chart 内部提供一个名为 values.yaml 的文件，该文件可以包含默认的 values 值内容。
 - Chart 用户可以提供包含 values 值的 YAML 文件，可以在命令行中通过 helm install 来指定该文件
 
-
 当用户提供自定义 values 值的时候，这些值将覆盖 chart 中 values.yaml 文件中的相应的值。
-
+

@@ -14,12 +14,11 @@ tags: [""]
 ---
 人的一生中最大的问题不是找不到正确的方法而是在实践中长久的悖逆人性
 {{< admonition type=note title="最淡的墨水也胜过最强的记忆" >}}
-About Persistence(最淡的墨水也胜过最强的记忆)
+About Persistence（最淡的墨水也胜过最强的记忆）
 
 Nothing in the world can take the place of Persistence. Talent will not; nothing is more common than unsuccessful men with talent. Genius will not; 
 unrewarded genius is almost a proverb. Education will not; the world is full of educated derelicts. Persistence and Determination alone are omnipotent. The slogan “Press On” has solved and will always solve the problems of the human race.
 {{< /admonition >}}
-
 
 ## 个人介绍
 你好，我是 **lushuan**，目前在南京，现从事 **网络安全开发工程师** 工作，主要参与 **安全蜜罐产品** 的功能开发与迭代，也承接一部分信创安全项目从需求到交付的工作。
@@ -42,7 +41,6 @@ unrewarded genius is almost a proverb. Education will not; the world is full of 
 - 兴趣爱好：篮球、音乐、阅读、掼蛋、旅游等
 - 邮箱：`lushuan2071@126.com`
 
-
 技能说明：下面这些内容基本都是我在实际工作里持续接触过的方向。
 - **云原生与容器平台**：熟悉 `Kubernetes`、`Docker`、`Helm`，做过集群搭建、配置管理、部署维护、问题排查等工作。
 - **监控与可观测性**：长期接触 `Prometheus`、`Grafana`、`InfluxDB`、`Kapacitor` 等技术，参与过监控平台研发与运维，支持过多个业务组的监控接入、告警处理和异常排查。
@@ -50,4 +48,4 @@ unrewarded genius is almost a proverb. Education will not; the world is full of 
 - **开发语言与工程实践**：目前以 `Go` 为主，日常会接触 `Gin`、`Gorm`；过去较多使用 `Java`、`Python`，也有 `SpringBoot`、`Django`、`Vue` 等相关经验。
 - **系统与数据库**：熟悉 `Linux` 日常运维和部署环境搭建，接触过 `CentOS`、`Ubuntu`、`openEuler`、`SUSE` 等系统，以及 `MySQL`、`Redis`、`DM`、`TiDB` 等数据库。
 - **当前工作侧重点**：主要围绕蜜罐产品功能迭代、安全项目落地，以及 Go 方向的持续提升。
-
+

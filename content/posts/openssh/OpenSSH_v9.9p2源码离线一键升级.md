@@ -20,24 +20,24 @@ summary: "本文介绍在 CentOS 7 环境下通过源码编译方式将 OpenSSH 
 <!--more-->
 
 ## 一、背景
-- Linux操作系统环境：CentOS 7.x
+- Linux 操作系统环境：CentOS 7.x
 
 {{< admonition type=info title="前言" >}}
-由于安全扫描发现不同主机的 OpenSSH 版本不一，有些版本存在安全漏洞问题，现将 OpenSSH 统一升级至v9.9p2 版本，这里记录下整个操作的过程。
+由于安全扫描发现不同主机的 OpenSSH 版本不一，有些版本存在安全漏洞问题，现将 OpenSSH 统一升级至 v9.9p2 版本，这里记录下整个操作的过程。
 
-如果 OpenSSL 相对版本较低，这里建议先将OpenSSL版本升级至OpenSSL 1.1.1w  11 Sep 2023，然后再升级 OpenSSH v9.9p2,如果你的主机当前的OpenSSH 版本为v9.9p1，则同样建议升级至v9.9p2，因为v9.9p1 含有两个中危漏洞，OpenSSH 安全漏洞(CVE-2025-26465 ) 和 OpenSSH 资源管理错误漏洞(CVE-2025-26466 )，此漏洞同样在 v9.9p2 版本进行了修复。
+如果 OpenSSL 相对版本较低，这里建议先将 OpenSSL 版本升级至 OpenSSL 1.1.1w  11 Sep 2023，然后再升级 OpenSSH v9.9p2，如果你的主机当前的 OpenSSH 版本为 v9.9p1，则同样建议升级至 v9.9p2，因为 v9.9p1 含有两个中危漏洞，OpenSSH 安全漏洞（CVE-2025-26465） 和 OpenSSH 资源管理错误漏洞（CVE-2025-26466），此漏洞同样在 v9.9p2 版本进行了修复。
 {{< /admonition >}}
 
 ## 二、相关安装包
 {{< admonition type=quote title="地址" >}}
-openssh下载地址：http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/  
-openssl下载地址：https://www.openssl.org/source/  
-zlib下载地址：http://www.zlib.net/  
+openssh 下载地址：http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/  
+openssl 下载地址：https://www.openssl.org/source/  
+zlib 下载地址：http://www.zlib.net/  
 openssl-1.1.1w: https://www.openssl.org/source/openssl-1.1.1w.tar.gz  
 {{< /admonition >}}
 
 ## 三、升级 OpenSSL
-查找openssl相关目录，然后备份  
+查找 openssl 相关目录，然后备份  
 ```shell
 $ whereis openssl
 #openssl: /usr/bin/openssl /usr/lib64/openssl /usr/include/openssl /usr/share/man/man1/openssl.1ssl.gz
@@ -46,7 +46,7 @@ $ cp -rp /usr/lib64/openssl /usr/lib64/openssl`date '+%Y%m%d'`
 $ cp -rp /usr/include/openssl /usr/include/openssl`date '+%Y%m%d'`
 ```
 
-### 卸载旧版本 OpenSSL(可选)
+### 卸载旧版本 OpenSSL（可选）
 ```shell
 $ yum -y remove openssl
 ```
@@ -78,7 +78,7 @@ OpenSSL 1.1.1w  11 Sep 2023
 
 ## 四、升级 OpenSSH 至 v9.9p2
 ### 查看当前版本
-不同环境的ssh 版本会有所不同
+不同环境的 SSH 版本会有所不同
 ```shell
 $ ssh -V
 OpenSSH_8.0p1, OpenSSL 1.1.1k  FIPS 25 Mar 2021
@@ -99,7 +99,7 @@ $ cp -p /etc/ssh/sshd_config /etc/ssh/sshd_config`date '+%Y%m%d'`
 $ cp -p /etc/pam.d/sshd /etc/pam.d/sshd`date '+%Y%m%d'`
 ```
 
-### 卸载旧版OpenSSH 
+### 卸载旧版 OpenSSH 
 ```
 yum -y remove openssh
 ```
@@ -251,7 +251,6 @@ main() {
 # 执行主函数
 main
 ```
-
 ###  执行
 ```
 $ chmod +x upgrade_openssh.sh
@@ -264,4 +263,4 @@ $ ssh -V  # 应显示 "OpenSSH_9.9p2"
 OpenSSH_9.9p2, OpenSSL 1.1.1j  16 Feb 2021
 $ systemctl status sshd
 ```
-
+

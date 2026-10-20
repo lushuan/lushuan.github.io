@@ -21,9 +21,9 @@ summary: "以 test-cmdb 应用为例说明 Helm Charts 模板的编写方法，�
 
 ## 一、预置条件
 
-适用于Kubernetes v1.12.1及以上，Helm v3.4.2及以上。
+适用于 Kubernetes v1.12.1 及以上，Helm v3.4.2 及以上。
 
-以`test-cmdb`应用为例进行说明,`test-cmdb`为部署在k8s中的web 应用
+以 `test-cmdb` 应用为例进行说明，`test-cmdb` 为部署在 K8s 中的 web 应用
 
 ## 二、目录结构
 ```
@@ -47,23 +47,23 @@ test-cmdb
 | 类型 | 名称 | 描述 |
 | ---- | ---- | ---- |
 | D | test-cmdb | 应用名称，根据实际业务应用进行命名。 |
-| F | Chart.yaml | 文件包含了该chart的描述。 |
+| F | Chart.yaml | 文件包含了该 chart 的描述。 |
 | D | files | 配置文件目录 |
 | F | application.properties | 配置文件 |
-| D | templates | 目录包括了模板文件。当Helm评估chart时，会通过模板渲染引擎将所有文件发送到templates/目录中。 然后收集模板的结果并发送给Kubernetes。 |
-| F | configmap.yaml | configmap模板 |
-| F | deployment.yaml | deployment模板 |
-| F | _helpers.tpl | 放置可以通过chart复用的模板辅助对象 |
-| F | ingress.yaml | ingress模板。 |
-| F | NOTES.txt | chart的"帮助文本"。会在用户执行helm install时展示。 |
-| F | service.yaml | service模板。 |
-| F | values.yaml | chart的默认值。会在用户执行helm install 或 helm upgrade时被覆盖。 |
+| D | templates | 目录包括了模板文件。当 Helm 评估 chart 时，会通过模板渲染引擎将所有文件发送到 templates/目录中。然后收集模板的结果并发送给 Kubernetes。 |
+| F | configmap.yaml | configmap 模板 |
+| F | deployment.yaml | deployment 模板 |
+| F | _helpers.tpl | 放置可以通过 chart 复用的模板辅助对象 |
+| F | ingress.yaml | ingress 模板。 |
+| F | NOTES.txt | chart 的"帮助文本"。会在用户执行 helm install 时展示。 |
+| F | service.yaml | service 模板。 |
+| F | values.yaml | chart 的默认值。会在用户执行 helm install 或 helm upgrade 时被覆盖。 |
 
 其中，类型：D，目录；F，文件。
 
 ## 三、配置资源
 
-一个完整的应用部署通常由应用名称、镜像名称及tag、环境变量、资源限额、端口监听、端口映射、目录/文件挂载、配置文件、网关规则等组成。通过helm将应用模板化，仅需要简单配置些许地方即可。
+一个完整的应用部署通常由应用名称、镜像名称及 tag、环境变量、资源限额、端口监听、端口映射、目录/文件挂载、配置文件、网关规则等组成。通过 helm 将应用模板化，仅需要简单配置些许地方即可。
 
 * 应用名称
     
@@ -72,14 +72,14 @@ test-cmdb
     | Chart.yaml | name |
     | values.yaml | fullnameOverride |
     
-* 镜像名称及tag
+* 镜像名称及 tag
     
     | 文件名 | key |
     | ---- | ---- |
     | values.yaml | image.repository |
     | values.yaml | image.tag |
     
-    当前的模板默认是以镜像名称与应用名称保持一致为前提的，如镜像`10.45.80.1/iplatform/test-cmdb:C_20220214144619`的名称为`test-cmdb`与应用名称`test-cmdb`保持一致。假如实际的应用名与镜像名称不一致，请自行修改`_helpers.tpl`中的fullimage部分。
+    当前的模板默认是以镜像名称与应用名称保持一致为前提的，如镜像 `10.45.80.1/iplatform/test-cmdb:C_20220214144619` 的名称为 `test-cmdb` 与应用名称 `test-cmdb` 保持一致。假如实际的应用名与镜像名称不一致，请自行修改 `_helpers.tpl` 中的 fullimage 部分。
     
     修改前
     ```
@@ -93,7 +93,7 @@ test-cmdb
     {{- .Values.global.repository }}/{{ .Values.image.repository }}:{{ index .Values "name-template" "image" "tag" | default .Chart.AppVersion }}  
     {{- end }}
     ```
-    其中，`name-template`为实际的镜像名称，该镜像信息配置在`$HELM_PATH/charts/values.yaml`中，如果该文件中没有匹配的信息，在部署时会提示异常。
+    其中，`name-template` 为实际的镜像名称，该镜像信息配置在 `$HELM_PATH/charts/values.yaml` 中，如果该文件中没有匹配的信息，在部署时会提示异常。
     
 * 环境变量
     
@@ -159,8 +159,8 @@ test-cmdb
 
 ## 四、部署测试
 
-将准备好的chart放到ZCM部署主机`$HELM_PATH/charts`目录下，镜像推送到对应环境的镜像仓库中，并在`$HELM_PATH/charts/values.yaml`中配置镜像信息，
-如镜像`10.45.80.1/iplatform/zcm-crms:T_20220411015401`，需配置对应的信息如下：
+将准备好的 chart 放到 ZCM 部署主机 `$HELM_PATH/charts` 目录下，镜像推送到对应环境的镜像仓库中，并在 `$HELM_PATH/charts/values.yaml` 中配置镜像信息，
+如镜像 `10.45.80.1/iplatform/zcm-crms:T_20220411015401`，需配置对应的信息如下：
 ```
 zcm-crms:  
   image:  

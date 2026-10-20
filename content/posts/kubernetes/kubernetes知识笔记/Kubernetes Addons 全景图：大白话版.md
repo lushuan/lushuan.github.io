@@ -53,7 +53,6 @@ Kubernetes 官方在 [Installing Addons](https://kubernetes.io/docs/concepts/clu
 │     + MetalLB + KEDA + Falco                               │
 └─────────────────────────────────────────────────────────────┘
 ```
-
 ---
 
 ## 一、🌐 网络插件（CNI）—— 必选，集群的"水电煤"
@@ -342,7 +341,6 @@ CNI（Calico/Cilium/Flannel）
 + Prometheus + Grafana（kube-prometheus-stack）
 + 日志方案（Loki 或 Fluent Bit）
 ```
-
 其余 Addon 根据业务需要逐步添加。先跑起来，再慢慢完善。
 
 ---

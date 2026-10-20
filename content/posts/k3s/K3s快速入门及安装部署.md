@@ -20,7 +20,7 @@ K3s 是 Rancher 旗下面向物联网和边缘计算的经过认证的轻量级 
 <!--more-->
 
 ## 一、背景
-为物联网和边缘计算构建的经过认证的Kubernetes发行版，是Rancher旗下产品
+为物联网和边缘计算构建的经过认证的 Kubernetes 发行版，是 Rancher 旗下产品
 
 Great for:
 
@@ -29,20 +29,19 @@ Great for:
 - CI
 - Development
 - ARM
-- Embedding k8s
-- Situations where a PhD in k8s clusterology is infeasible
+- Embedding K8s
+- Situations where a PhD in K8s clusterology is infeasible
 
 ## 二、发展历程
-微型kubernetes发行版
-1. CNCF认证的Kubernetes发行版
-2. 50MB左右二进制包，500MB左右内存消耗
-3. 单一进程包含Kubernetes master,Kubelet,和 containerd
-4. 支持SQLite/Mysql/PostgreSQL/Dqlite和etcd
-5. 同时为x86_64、Arm64和Armv7平台发布
+微型 Kubernetes 发行版
+1. CNCF 认证的 Kubernetes 发行版
+2. 50MB 左右二进制包，500MB 左右内存消耗
+3. 单一进程包含 Kubernetes master,Kubelet，和 containerd
+4. 支持 SQLite/Mysql/PostgreSQL/Dqlite 和 etcd
+5. 同时为 x86_64、Arm64 和 Armv7 平台发布
 
 变更
-1. 多合一：将基础服务合并到了单一的进程中，如api-server,controller manager、scheduler和cloud-controller-manager合到了单一的进程中,简化了运维，降低了复杂度
-
+1. 多合一：将基础服务合并到了单一的进程中，如 api-server,controller manager、scheduler 和 cloud-controller-manager 合到了单一的进程中，简化了运维，降低了复杂度
 
 ## 三、基本架构
 角色
@@ -55,7 +54,7 @@ Great for:
   - k3s-agent
 - k3s agent
   - k3s-agent
-  - containerd|docker(optional)
+  - containerd|Docker(optional)
   - 
 
 ![k3s-arch](/images/k3s/k3s-arch.png "K3s 架构")
@@ -63,14 +62,14 @@ Great for:
 技术亮点
 - 单进程架构简化部署
 - 移除各种非必须代码，减小资源占用
-- TLS证书管理
-- 内置Containerd
-- 内置自运行rootfs
-- 内置Helm Chart管理机制
-- 内置L4/L7 LB支持
+- TLS 证书管理
+- 内置 Containerd
+- 内置自运行 rootfs
+- 内置 Helm Chart 管理机制
+- 内置 L4/L7 LB 支持
 
 其它
-- 默认使用containerd
+- 默认使用 containerd
 - 默认命名空间
   - kube-system
   - kube-public
@@ -157,38 +156,35 @@ master   Ready    control-plane,master   25m   v1.24.9-rc1+k3s2
 node1    Ready    <none>                 64s   v1.24.9-rc1+k3s2
 ```
 
-
 ## 五、K3s 各名字空间介绍
-在Kubernetes中，包括K3s，命名空间（Namespaces）提供了一种机制来划分集群资源。它们对于组织和隔离工作负载非常有用，特别是在多用户环境中。以下是K3s中常见的几个命名空间及其作用：
+在 Kubernetes 中，包括 K3s，命名空间（Namespaces）提供了一种机制来划分集群资源。它们对于组织和隔离工作负载非常有用，特别是在多用户环境中。以下是 K3s 中常见的几个命名空间及其作用：
 
 1. **`default`**：
-   - 这是Kubernetes集群中的默认命名空间。如果你没有特别指定一个命名空间，那么你的Pod、服务等资源将会被创建在这个命名空间中。
+   - 这是 Kubernetes 集群中的默认命名空间。如果你没有特别指定一个命名空间，那么你的 Pod、服务等资源将会被创建在这个命名空间中。
 
 2. **`kube-system`**：
-   - 该命名空间包含了由Kubernetes系统自身创建的所有组件，如核心DNS服务（CoreDNS）、各种控制器和服务代理（kube-proxy）。此外，如果使用了某些网络插件或存储插件，相关的Pod也会出现在这个命名空间中。
+   - 该命名空间包含了由 Kubernetes 系统自身创建的所有组件，如核心 DNS 服务（CoreDNS）、各种控制器和服务代理（kube-proxy）。此外，如果使用了某些网络插件或存储插件，相关的 Pod 也会出现在这个命名空间中。
 
 3. **`kube-public`**：
-   - 这个命名空间是一个特殊的命名空间，旨在供所有用户（包括那些未认证的用户）读取。它通常用于放置所有人都可以访问的信息，例如集群引导令牌（bootstrap tokens）。在标准配置下，此命名空间内只有一个ConfigMap对象，名为`cluster-info`，它包含了关于API服务器的信息。
+   - 这个命名空间是一个特殊的命名空间，旨在供所有用户（包括那些未认证的用户）读取。它通常用于放置所有人都可以访问的信息，例如集群引导令牌（bootstrap tokens）。在标准配置下，此命名空间内只有一个 ConfigMap 对象，名为 `cluster-info`，它包含了关于 API 服务器的信息。
 
 4. **`kube-node-lease`**：
-   - 这个命名空间是从Kubernetes 1.16版本开始引入的，用来存放节点租约（Node Lease）对象。这些对象允许节点定期更新其活跃状态，从而优化了节点健康检查的过程，使得集群能够更快地检测到不健康的节点。
+   - 这个命名空间是从 Kubernetes 1.16 版本开始引入的，用来存放节点租约（Node Lease）对象。这些对象允许节点定期更新其活跃状态，从而优化了节点健康检查的过程，使得集群能够更快地检测到不健康的节点。
 
 5. **其他命名空间**：
    - 用户可以根据需要创建更多的命名空间来组织不同的应用或者团队的工作负载。这有助于资源管理和配额控制，并且可以在不同项目之间提供一定程度的隔离。
 
-6. **特定于K3s的命名空间**：
-   - 在一些情况下，K3s可能会引入额外的命名空间以支持特定的功能或集成。例如，当启用某些附加组件时，可能会自动创建相应的命名空间来托管这些组件。
+6. **特定于 K3s 的命名空间**：
+   - 在一些情况下，K3s 可能会引入额外的命名空间以支持特定的功能或集成。例如，当启用某些附加组件时，可能会自动创建相应的命名空间来托管这些组件。
 
-  
 ### 其他名字空间
 1. cattle-system  
-Rancher的"cattle-system"命名空间通常用于存储Rancher控制平面组件的资源，如Webhook服务(rancher-webhook pod)和与安全相关的配置，比如TLS证书(cattle-webhook-tls)。这些组件是Rancher管理集群自动化部署和操作的核心部分。
+Rancher 的"cattle-system"命名空间通常用于存储 Rancher 控制平面组件的资源，如 Webhook 服务（rancher-webhook pod）和与安全相关的配置，比如 TLS 证书（cattle-webhook-tls）。这些组件是 Rancher 管理集群自动化部署和操作的核心部分。
 
-当你提到删除local集群cattle-system命名空间中的特定Pod和TLS密钥时，这意味着你可能正在清理测试环境或者准备进行维护操作。
-
+当你提到删除 local 集群 cattle-system 命名空间中的特定 Pod 和 TLS 密钥时，这意味着你可能正在清理测试环境或者准备进行维护操作。
 
 ## 六、生产环境参考
-- k3s 版本v1.22
+- k3s 版本 v1.22
 - 数据库：etcd
 - 容器运行时：containerd v1.5.9-k3s1
 
@@ -349,11 +345,11 @@ ExecStart=/usr/local/bin/k3s \
 
 - `--token secret`：设置用于加入新节点到集群的令牌。这个令牌是所有希望加入集群的节点都需要提供的共享密钥。
 
-- `--kubelet-arg=container-log-max-files=5` 和 `--kubelet-arg=container-log-max-size=100Mi`：这些参数传递给 kubelet，用来限制容器日志文件的数量和大小。在这个例子中，设置了每个容器最多保留5个日志文件，每个文件的最大大小为100MB。
+- `--kubelet-arg=container-log-max-files=5` 和 `--kubelet-arg=container-log-max-size=100Mi`：这些参数传递给 kubelet，用来限制容器日志文件的数量和大小。在这个例子中，设置了每个容器最多保留 5 个日志文件，每个文件的最大大小为 100MB。
 
 - `--kube-proxy-arg proxy-mode=ipvs`：将 kube-proxy 的代理模式设置为 IPVS 模式。IPVS 是一种更高效的网络负载均衡机制，适用于较大规模的集群。
 
-- `--kubelet-arg eviction-hard=nodefs.available<10%`：传递给 kubelet 的参数，用来设置驱逐策略。这里配置的是当节点文件系统的可用空间低于10%时触发驱逐操作，以防止磁盘满导致的问题。
+- `--kubelet-arg eviction-hard=nodefs.available<10%`：传递给 kubelet 的参数，用来设置驱逐策略。这里配置的是当节点文件系统的可用空间低于 10% 时触发驱逐操作，以防止磁盘满导致的问题。
 
 通过以上参数，你可以看到这个命令是用来配置一个高度定制化的 K3s 服务器实例，它与外部 etcd 集群集成，启用了特定的日志管理策略，并调整了某些组件的行为以适应特定的需求。
 
@@ -374,7 +370,7 @@ configs:
     tls:
       insecure_skip_verify: true
 ```
-6. node 注册到server passwd
+6. node 注册到 server passwd
 Agent 将使用节点集群 Secret 以及随机生成的节点密码注册到 Server，密码存储在 /etc/rancher/node/password 中。Server 会将各个节点的密码存储为 Kubernetes Secret，后续的任何尝试都必须使用相同的密码
 ```shell
 $ pwd
@@ -382,7 +378,7 @@ $ pwd
 $ cat password 
 a04fffdf1effc0e03f593a3xxxxxxxxx
 ```
-7. 查看k3s 当前配置
+7. 查看 k3s 当前配置
 ```
 $ /usr/local/bin/k3s check-config
 
@@ -527,26 +523,26 @@ ExecStart=/usr/local/bin/k3s \
 ```
 
 ## 七、用户案例
-选择K3s的原因
-1. k3s与Kubernetes使用习惯完全一致:上手无代价
+选择 K3s 的原因
+1. k3s 与 Kubernetes 使用习惯完全一致：上手无代价
 2. 与其他同类产品比，无功能绑定
-3. 兼容Arm设备
-4. 通过导入Rancher进行统一纳管
+3. 兼容 Arm 设备
+4. 通过导入 Rancher 进行统一纳管
 5. 无厂商锁定，无需绑定硬件
 6. 100% 开源，合作方式灵活
-7. 出错重启就可以了，不像k8s 出错重启也不一定能解决，哈哈
+7. 出错重启就可以了，不像 K8s 出错重启也不一定能解决，哈哈
 
 ## 八、Q/A
-1. 使用k8s 替换k3s 有什么问题？
-如果只是普通的使用一些workload 是没有什么问题的，如果workload 中的一些应用使用了一些诸如自定义的cloud provider 是不适配的，一般应用于iot之类的场景
+1. 使用 K8s 替换 k3s 有什么问题？
+如果只是普通的使用一些 workload 是没有什么问题的，如果 workload 中的一些应用使用了一些诸如自定义的 cloud provider 是不适配的，一般应用于 iot 之类的场景
 
 ## 九、参考
-1. [k3s官网](https://k3s.io/)
+1. [k3s 官网](https://k3s.io/)
 2. [Rancher Product](https://www.rancher.cn/products)
 3. [K3s Document](https://docs.k3s.io/zh/architecture)
 4. [Kubernetes Document](https://kubernetes.io/docs/home/)
-5. [K3s Github](https://github.com/k3s-io/k3s/)
-6. [从0到1基础入门 全面了解k3s](https://www.bilibili.com/video/BV1g7411G7By/?spm_id_from=333.337.search-card.all.click&vd_source=7e8c74e6ef5f4645e4247ef4120b7971)
-7. [一文搞定全场景K3s离线安装](https://mp.weixin.qq.com/s/pfUM6tr2HDeFyJExFVAc4Q)
-8. [k3s安装指定版本以及离线安装（docker)](https://blog.csdn.net/weixin_45056021/article/details/142848836)
-9. [11-K3S 安装-仪表盘及卸载K3s](https://blog.csdn.net/weixin_40274679/article/details/130155847)
+5. [K3s GitHub](https://github.com/k3s-io/k3s/)
+6. [从 0 到 1 基础入门 全面了解 k3s](https://www.bilibili.com/video/BV1g7411G7By/?spm_id_from=333.337.search-card.all.click&vd_source=7e8c74e6ef5f4645e4247ef4120b7971)
+7. [一文搞定全场景 K3s 离线安装](https://mp.weixin.qq.com/s/pfUM6tr2HDeFyJExFVAc4Q)
+8. [k3s 安装指定版本以及离线安装（Docker)](https://blog.csdn.net/weixin_45056021/article/details/142848836)
+9. [11-K3S 安装-仪表盘及卸载 K3s](https://blog.csdn.net/weixin_40274679/article/details/130155847)

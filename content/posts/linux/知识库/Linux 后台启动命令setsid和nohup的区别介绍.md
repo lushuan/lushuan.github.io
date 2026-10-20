@@ -21,7 +21,6 @@ nohup 和 setsid 都是 Linux/Unix 下常用的后台启动命令，但原理不
 
 `setsid` 和 `nohup` 都是 **Linux/Unix 下常用的“后台启动命令”**，但它们的原理、作用范围和适用场景是不同的。下面系统梳理一下对比。
 
-
 ## 一、🧩 nohup：防止进程收到挂断信号（SIGHUP）
 
 ### ✅ 基本作用
@@ -35,7 +34,6 @@ nohup 和 setsid 都是 Linux/Unix 下常用的后台启动命令，但原理不
 ```bash
 nohup python3 app.py > app.log 2>&1 &
 ```
-
 说明：
 
 * `nohup`：防止退出终端后程序退出；
@@ -47,7 +45,7 @@ nohup python3 app.py > app.log 2>&1 &
 | 特点   | 说明                                |
 | ---- | --------------------------------- |
 | 信号保护 | 忽略 `SIGHUP`，终端关闭程序仍运行             |
-| 会话关系 | 进程仍属于当前 **会话(session)**           |
+| 会话关系 | 进程仍属于当前 **会话（session）**           |
 | 输出   | 默认输出到 `nohup.out`（除非重定向）          |
 | 常见用途 | 启动后台任务（如脚本、守护进程）                  |
 | 可移植性 | 适用于所有类 Unix 系统（Linux、macOS、BSD 等） |
@@ -61,7 +59,7 @@ nohup python3 app.py > app.log 2>&1 &
 `setsid` 的全称是 **“set session id”**。
 它的作用是：
 
-> 创建一个新的 **会话(session)**、**进程组(process group)**，并脱离原控制终端（controlling terminal）。
+> 创建一个新的 **会话（session）**、**进程组（process group）**，并脱离原控制终端（controlling terminal）。
 
 换句话说，它让进程彻底与当前终端分离，不再属于当前用户会话。
 
@@ -70,7 +68,6 @@ nohup python3 app.py > app.log 2>&1 &
 ```bash
 setsid python3 app.py > app.log 2>&1 &
 ```
-
 ### ✅ 常见特点
 
 | 特点   | 说明                                            |
@@ -115,6 +112,4 @@ setsid python3 app.py > app.log 2>&1 &
 ```bash
 nohup setsid ./app > app.log 2>&1 &
 ```
-
 这样既避免挂起信号，又彻底脱离控制终端，是最稳妥的后台方式之一（尤其在嵌入式或无人值守设备上）。
-

@@ -66,7 +66,6 @@ your-diagnostic-command --options
 
 ```
 
-
 * **核心破局点 1**：你通过查看哪些隐蔽的日志、残留文件或内核参数，推翻了表象，抓到了第一个真实根因？
 
 ### 2.2 阶段二：遭遇 [复合死锁/次生故障] 拦截
@@ -78,7 +77,6 @@ your-diagnostic-command --options
 your-logs-command -p
 
 ```
-
 
 * **死锁逻辑链剖析**：清晰地画出或用文字理出系统陷入的**循环死锁逻辑**（例如：因为 A 挂了导致 B 不通，因为 B 不通导致 A 无法启动）。
 
@@ -102,7 +100,6 @@ spec:
       crucial_config_parameter: true 
 
 ```
-
 ### 3.3 见证奇迹的时刻
 
 * **状态刷绿**：描述打入补丁/执行操作后，系统是如何像多米诺骨牌一样，一层一层传导并最终恢复正常的。
@@ -112,8 +109,6 @@ spec:
 your-success-check-command
 
 ```
-
-
 
 ---
 
@@ -127,8 +122,6 @@ your-success-check-command
 * **管理面与数据面的解耦**
 * **最小特权原则与安全隔离**
 * **故障自愈（Self-healing）与平滑升级能力**
-
-
 
 ---
 

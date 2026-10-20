@@ -36,7 +36,6 @@ Docker Compose version v2.24.1
 REPOSITORY   TAG       IMAGE ID       CREATED         SIZE
 mysql        8.0       6c55ddbef969   22 months ago   591MB
 ```
-
 ---
 
 ## 一、安装 MySQL 客户端
@@ -50,7 +49,6 @@ yum install -y mariadb
 # 或者（RHEL 8+ / Kylin V10 SP2+）
 dnf install -y mariadb
 ```
-
 安装完成后验证：
 
 ```bash
@@ -58,7 +56,6 @@ dnf install -y mariadb
 mysql  Ver 8.0.26 for Linux on x86_64 (Source distribution)
 # 输出示例：mysql  Ver 15.1 Distrib 10.x.x-MariaDB, for Linux (x86_64)
 ```
-
 > 💡 **说明**：MariaDB 客户端与 MySQL 8.0 完全兼容，可正常连接和操作 MySQL 8.0 服务。Kylin V10 默认源中已包含该包，离线环境可使用 `rpm -ivh` 安装。
 
 ---
@@ -141,7 +138,6 @@ default-character-set    = utf8mb4
 default-character-set    = utf8mb4
 EOF
 ```
-
 > ⚠️ `innodb_buffer_pool_size` 调优参考：数据库专用机设为物理内存的 60%~70%，混部场景设为 30%~40%。
 
 ---
@@ -190,7 +186,6 @@ services:
         max-file: "3"
 EOF
 ```
-
 ---
 
 ## 五、启动服务
@@ -207,14 +202,12 @@ docker compose ps
 # 查看初始化日志
 docker compose logs -f mysql
 ```
-
 等待 `docker compose ps` 中 STATUS 显示 **`(healthy)`** 即表示 MySQL 已就绪：
 
 ```
 NAME      IMAGE       STATUS                   PORTS
 mysql8    mysql:8.0   Up 30 seconds (healthy)  0.0.0.0:3306->3306/tcp
 ```
-
 ---
 
 ## 六、验证部署
@@ -227,7 +220,6 @@ mysql8    mysql:8.0   Up 30 seconds (healthy)  0.0.0.0:3306->3306/tcp
 # 进入 MySQL 命令行
 docker exec -it mysql8 mysql -uroot -p'YourStr0ng!Pass@2026'
 ```
-
 在 MySQL 终端中执行验证：
 
 ```sql
@@ -249,7 +241,6 @@ SELECT user, host FROM mysql.user;
 -- 退出
 exit;
 ```
-
 ### 6.2 第二步：使用宿主机 MySQL 客户端连接（日常运维）
 
 验证容器内部正常后，后续统一使用宿主机安装的 `mysql` 客户端进行操作：
@@ -258,7 +249,6 @@ exit;
 # 注意：必须使用 -h 127.0.0.1，不能省略（否则走 socket 会报错）
 mysql -h 127.0.0.1 -uroot -p'YourStr0ng!Pass@2026' -P3306 -e "SELECT VERSION();"
 ```
-
 输出：
 ```
 +-----------+
@@ -283,7 +273,6 @@ source /etc/profile.d/mysql-alias.sh
 # 之后直接使用
 mysql -uroot -p'YourStr0ng!Pass@2026' -e "SHOW DATABASES;"
 ```
-
 ---
 
 ## 七、运维常用命令
@@ -300,7 +289,6 @@ docker compose down         # 停止并删除容器（数据保留）
 docker compose logs -f --tail=100 mysql   # 查看日志
 docker stats mysql8 --no-stream            # 资源占用
 ```
-
 ### 7.2 日常 SQL 操作
 
 ```bash
@@ -316,7 +304,6 @@ mysql -h 127.0.0.1 -uroot -p'YourStr0ng!Pass@2026' -e "SHOW FULL PROCESSLIST;"
 # 查看慢查询数
 mysql -h 127.0.0.1 -uroot -p'YourStr0ng!Pass@2026' -e "SHOW GLOBAL STATUS LIKE 'Slow_queries';"
 ```
-
 ### 7.3 日志查看
 
 ```bash
@@ -329,7 +316,6 @@ tail -f /opt/docker/mysql/logs/error.log
 # 慢查询日志
 tail -f /opt/docker/mysql/logs/slow.log
 ```
-
 ### 7.4 备份与恢复
 
 ```bash
@@ -347,7 +333,6 @@ mysqldump -h 127.0.0.1 -uroot -p'YourStr0ng!Pass@2026' \
 gunzip < /opt/docker/mysql/backup/app_db_20260811.sql.gz \
   | mysql -h 127.0.0.1 -uroot -p'YourStr0ng!Pass@2026' app_db
 ```
-
 ### 7.5 自动备份脚本
 
 ```bash
@@ -372,7 +357,6 @@ chmod +x /opt/docker/mysql/backup.sh
 # 添加定时任务：每天凌晨 2 点执行
 echo "0 2 * * * /opt/docker/mysql/backup.sh" | crontab -
 ```
-
 ### 7.6 配置变更
 
 ```bash
@@ -386,7 +370,6 @@ docker compose restart mysql
 mysql -h 127.0.0.1 -uroot -p'YourStr0ng!Pass@2026' \
   -e "SET GLOBAL max_connections = 1000;"
 ```
-
 ---
 
 ## 八、生产环境使用建议
@@ -440,7 +423,6 @@ EOF
 
 chmod 600 /opt/docker/mysql/.env
 ```
-
 `docker-compose.yml` 中引用：
 
 ```yaml
@@ -450,7 +432,6 @@ environment:
   MYSQL_USER: ${MYSQL_USER}
   MYSQL_PASSWORD: ${MYSQL_PASSWORD}
 ```
-
 > 好处：密码不进入 Git 仓库，`.env` 文件加入 `.gitignore`。
 
 ---
@@ -481,7 +462,6 @@ environment:
 ├── logs/                   # 日志（自动产生）
 └── backup/                 # 备份文件
 ```
-
 ---
 
 *部署完成后，您即拥有一套数据持久化、自动拉起、定时备份、日志可追溯的生产级 MySQL 8.0 容器化实例。*

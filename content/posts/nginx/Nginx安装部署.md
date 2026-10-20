@@ -19,14 +19,13 @@ summary: "介绍在 CentOS 7 上通过 yum 包管理器与源码预编译两种�
 
 <!--more-->
 
-- 方式一：yum 安装(Redhat)
+- 方式一：yum 安装（Redhat）
 - 方式二：二进制预编译安装
 - 指定安装版本
-- 安装操作系统版本CentOS7.x
-
+- 安装操作系统版本 CentOS7.x
 
 ## 一、方式一： yum 包管理器安装
-这里选择通过yum 源进行安装，安装操作系统为Linux CentOS 7.9
+这里选择通过 yum 源进行安装，安装操作系统为 Linux CentOS 7.9
 
 1. CentOS 配置阿里云 yum 源
 ```
@@ -47,7 +46,7 @@ yum list
 ```
 yum install openssl-devel pcre-devel epel-release -y
 ```
-3. 安装nginx 服务
+3. 安装 Nginx 服务
 ```
 # 查看安装提供的版本
 $ sudo yum list nginx --showduplicates | sort -r
@@ -88,16 +87,15 @@ systemctl stop firewalld
 ```
 
 ## 二、方式二：二进制预编译安装
-在Linux系统上安装Nginx的二进制版本通常指的是从Nginx官方网站下载预编译的软件包，而不是通过包管理器（如`apt`或`yum`）进行安装。以下是针对Nginx 1.20.1版本的二进制安装步骤：
+在 Linux 系统上安装 Nginx 的二进制版本通常指的是从 Nginx 官方网站下载预编译的软件包，而不是通过包管理器（如 `apt` 或 `yum`）进行安装。以下是针对 Nginx 1.20.1 版本的二进制安装步骤：
 
 ### 步骤 1: 下载 Nginx
 
-首先，你需要访问[Nginx官方网站](https://nginx.org/en/download.html)找到1.20.1版本的下载链接。对于稳定版，你可以使用wget命令直接下载：
+首先，你需要访问[Nginx 官方网站](https://nginx.org/en/download.html)找到 1.20.1 版本的下载链接。对于稳定版，你可以使用 wget 命令直接下载：
 
 ```bash
 wget https://nginx.org/download/nginx-1.20.1.tar.gz
 ```
-
 ### 步骤 2: 解压下载的文件
 
 下载完成后，解压缩文件到当前目录：
@@ -105,62 +103,54 @@ wget https://nginx.org/download/nginx-1.20.1.tar.gz
 ```bash
 tar -zxvf nginx-1.20.1.tar.gz
 ```
-
-这将创建一个名为`nginx-1.20.1`的文件夹。
+这将创建一个名为 `nginx-1.20.1` 的文件夹。
 
 ### 步骤 3: 配置和编译
 
-进入解压后的目录并准备编译Nginx。首先运行配置脚本以设置编译环境：
+进入解压后的目录并准备编译 Nginx。首先运行配置脚本以设置编译环境：
 
 ```bash
 cd nginx-1.20.1
 ./configure
 ```
-
 默认情况下，上述命令会使用默认配置进行编译。如果你想自定义安装路径或其他选项，可以添加相应的参数。例如，指定不同的安装前缀路径：
 
 ```bash
 ./configure --prefix=/data/nginx --with-http_ssl_module --with-http_v2_module --with-http_realip_module --with-http_addition_module --with-http_sub_module --with-http_stub_status_module --with-http_gzip_static_module --with-http_addition_module --with-pcre --with-stream
 ```
-
 配置完成后，编译源代码：
 
 ```bash
 make
 ```
-
 ### 步骤 4: 安装
 
-编译成功后，执行以下命令安装Nginx：
+编译成功后，执行以下命令安装 Nginx：
 
 ```bash
 sudo make install
 ```
-
-这将会把Nginx安装到你之前配置时指定的位置，默认情况下是`/data/nginx`。
+这将会把 Nginx 安装到你之前配置时指定的位置，默认情况下是 `/data/nginx`。
 
 ### 步骤 5: 设置软链接（可选）
 
-如果你希望简化Nginx命令的调用，可以为Nginx创建一个软链接到系统的`sbin`目录中：
+如果你希望简化 Nginx 命令的调用，可以为 Nginx 创建一个软链接到系统的 `sbin` 目录中：
 
 ```bash
 sudo ln -s /data/nginx/sbin/nginx /usr/local/sbin/nginx
 ```
-
-这样，你就可以直接使用`nginx`命令来管理和操作Nginx服务器了。
-
+这样，你就可以直接使用 `nginx` 命令来管理和操作 Nginx 服务器了。
 
 ### 步骤 6: 启动 Nginx
 
-安装完成后，可以通过以下命令启动Nginx：
+安装完成后，可以通过以下命令启动 Nginx：
 
 ```bash
 nginx
 # 指定配置文件
 nginx -c /data/nginx/conf/nginx.conf
 ```
-
-如果你想检查Nginx配置是否正确，可以在启动前使用如下命令测试配置文件：
+如果你想检查 Nginx 配置是否正确，可以在启动前使用如下命令测试配置文件：
 
 ```bash
 nginx -t
@@ -169,35 +159,32 @@ nginx -t
 ```shell
 sudo nginx -t -c /path/to/your/nginx.conf
 ```
-重新加载Nginx配置
+重新加载 Nginx 配置
 ```shell
 sudo nginx -s reload -c /path/to/your/nginx.conf
 ```
 
-
-### 步骤7 添加到shell 配置文件中
-添加到你的shell配置文件（如`.bashrc`或`.profile`）中
+### 步骤 7 添加到 shell 配置文件中
+添加到你的 shell 配置文件（如 `.bashrc` 或 `.profile`）中
 ```shell
 echo 'export PATH=$PATH:/usr/local/sbin' >> ~/.bashrc
 source ~/.bashrc
 ```
 
-### 步骤 8: 配置防火墙和SELinux（如果适用）
+### 步骤 8: 配置防火墙和 SELinux（如果适用）
 
-根据你的服务器安全设置，可能需要调整防火墙规则允许HTTP(S)流量，并且如果启用了SELinux，则可能还需要对其进行适当的配置以便让Nginx正常工作。
+根据你的服务器安全设置，可能需要调整防火墙规则允许 HTTP（S）流量，并且如果启用了 SELinux，则可能还需要对其进行适当的配置以便让 Nginx 正常工作。
 
 ### 注意事项
 
-- **依赖库**：确保系统已安装必要的依赖库，如PCRE、Zlib和OpenSSL等，这些对于Nginx的一些功能是必需的。如果你在`./configure`阶段遇到缺少依赖的问题，你可能需要先安装这些依赖。
-- **更新与维护**：虽然可以从二进制安装开始，但后续的更新可能会比通过包管理器更加复杂。建议定期检查Nginx官网获取最新的安全补丁和版本更新。
+- **依赖库**：确保系统已安装必要的依赖库，如 PCRE、Zlib 和 OpenSSL 等，这些对于 Nginx 的一些功能是必需的。如果你在 `./configure` 阶段遇到缺少依赖的问题，你可能需要先安装这些依赖。
+- **更新与维护**：虽然可以从二进制安装开始，但后续的更新可能会比通过包管理器更加复杂。建议定期检查 Nginx 官网获取最新的安全补丁和版本更新。
 
-通过以上步骤，你应该能够成功地在Linux系统上安装Nginx 1.20.1的二进制版本。
-
-
+通过以上步骤，你应该能够成功地在 Linux 系统上安装 Nginx 1.20.1 的二进制版本。
 
 ![image-20240722133344836](/images/nginx/nginx-access.png "Nginx 访问首页")
 ## 三、Nginx 管理
-### 1. 通过`systemctl`或者`service`管理
+### 1. 通过 `systemctl` 或者 `service` 管理
 ```
 nginx -t
 systemctl start nginx
@@ -206,81 +193,73 @@ systemctl restart nginx
 systemctl stop nginx
 ```
 
-### 2. 通过nginx原生命令管理
-#### 设置nginx 软连接
+### 2. 通过 Nginx 原生命令管理
+#### 设置 Nginx 软连接
 ```shell
 sudo ln -s /PATH/nginx/sbin/nginx /usr/local/sbin/nginx
 ```
-#### 查找Nginx二进制文件的位置
-通常，Nginx的二进制文件位于`/usr/sbin/nginx`，但这也可能根据你的安装位置有所不同。如果不确定，可以使用`which nginx`或`whereis nginx`来查找。
+#### 查找 Nginx 二进制文件的位置
+通常，Nginx 的二进制文件位于 `/usr/sbin/nginx`，但这也可能根据你的安装位置有所不同。如果不确定，可以使用 `which nginx` 或 `whereis nginx` 来查找。
 
 ```bash
 which nginx
 ```
-
 或者
 
 ```bash
 whereis nginx
 ```
-
-#### 检查Nginx配置文件语法是否正确
-在启动或重新加载Nginx之前，建议先检查配置文件的语法是否有误。
+#### 检查 Nginx 配置文件语法是否正确
+在启动或重新加载 Nginx 之前，建议先检查配置文件的语法是否有误。
 
 ```bash
 $ nginx -t
 ```
-
 这将测试配置文件的有效性，并告知你是否存在任何语法错误。
 
-#### 启动Nginx
-要启动Nginx，请使用以下命令：
+#### 启动 Nginx
+要启动 Nginx，请使用以下命令：
 
 ```bash
 $ nginx
 ```
-
-如果没有指定配置文件路径，Nginx会默认寻找位于`/etc/nginx/nginx.conf`的主配置文件。如果你想指定一个不同的配置文件，可以使用`-c`选项：
+如果没有指定配置文件路径，Nginx 会默认寻找位于 `/etc/nginx/nginx.conf` 的主配置文件。如果你想指定一个不同的配置文件，可以使用 `-c` 选项：
 
 ```bash
 $ nginx -c /path/to/nginx.conf
 ```
+#### 停止 Nginx
+有几种方式可以停止 Nginx：
 
-#### 停止Nginx
-有几种方式可以停止Nginx：
-
-1. **快速停止**：立即停止Nginx，不等待当前处理的请求完成。
+1. **快速停止**：立即停止 Nginx，不等待当前处理的请求完成。
    ```bash
    $ nginx -s stop
    ```
 
-2. **优雅地停止**（推荐）：允许Nginx完成当前正在处理的所有请求后再停止。
+2. **优雅地停止**（推荐）：允许 Nginx 完成当前正在处理的所有请求后再停止。
    ```bash
    $ nginx -s quit
    ```
 
-#### 重新加载Nginx配置
-当你修改了Nginx配置文件并希望重新加载而不中断现有连接时，可以使用以下命令：
+#### 重新加载 Nginx 配置
+当你修改了 Nginx 配置文件并希望重新加载而不中断现有连接时，可以使用以下命令：
 
 ```bash
 $ nginx -s reload
 ```
+这个命令会告诉 Nginx 重新加载其配置文件。如果有任何语法错误，Nginx 将忽略此命令并不会重新加载配置。
 
-这个命令会告诉Nginx重新加载其配置文件。如果有任何语法错误，Nginx将忽略此命令并不会重新加载配置。
-
-#### 重启Nginx
-虽然没有直接的“重启”命令，但你可以组合使用上述命令实现类似的效果。例如，先发送停止信号再启动Nginx：
+#### 重启 Nginx
+虽然没有直接的“重启”命令，但你可以组合使用上述命令实现类似的效果。例如，先发送停止信号再启动 Nginx：
 
 ```bash
 $ nginx -s quit && /usr/sbin/nginx
 ```
-
-不过，更常用的是简单地使用`reload`命令，它可以在大多数情况下满足需求而不需要完全重启服务。
+不过，更常用的是简单地使用 `reload` 命令，它可以在大多数情况下满足需求而不需要完全重启服务。
 
 #### 注意事项
 
-- 在执行这些操作前，确保有足够的权限。通常需要以root用户或使用`sudo`执行这些命令。
-- 直接使用Nginx命令行工具进行管理时，注意不要与`systemctl`或`service`同时使用，以免造成冲突或意外的服务状态变化。
-- 总是先检查配置文件的正确性（使用`nginx -t`），然后再尝试重新加载或重启服务，以避免因配置错误导致服务无法正常启动。
-
-
+- 在执行这些操作前，确保有足够的权限。通常需要以 root 用户或使用 `sudo` 执行这些命令。
+- 直接使用 Nginx 命令行工具进行管理时，注意不要与 `systemctl` 或 `service` 同时使用，以免造成冲突或意外的服务状态变化。
+- 总是先检查配置文件的正确性（使用 `nginx -t`），然后再尝试重新加载或重启服务，以避免因配置错误导致服务无法正常启动。
+

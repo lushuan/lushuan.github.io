@@ -19,8 +19,8 @@ summary: "实践记录通过给 Deployment 添加 configmap-hash 标签的方式
 <!--more-->
 
 ## 一、前言
-通过Helm部署应用，修改configmap后，Deployment 副本控制器不会自动生效，需要手动删除pod 重建一下才会生效。
-这里实践通过添加标签的方式，通过只修改configmap也能联动Deployment自动重建
+通过 Helm 部署应用，修改 configmap 后，Deployment 副本控制器不会自动生效，需要手动删除 pod 重建一下才会生效。
+这里实践通过添加标签的方式，通过只修改 configmap 也能联动 Deployment 自动重建
 
 ## 二、安装应用
 ```shell
@@ -43,17 +43,17 @@ grafana-6cc56576dc-97bvw   1/1     Running   0          138m
 ```shell
 vim grafana/templates/deployment.yaml
 ```
-2、添加label
+2、添加 label
 ```shell
 labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
     app.kubernetes.io/component: grafana
     configmap-hash: "{{ .Values.config | toYaml | sha256sum  | trunc 63 }}"  # 添加configmap-hash
 ```
-3、修改configmap
+3、修改 configmap
 ```shell
 vim grafana/templates/configmap.yaml
 ```
-data 内容添加一行测试数据`GF_TEST: /opt/test`
+data 内容添加一行测试数据 `GF_TEST: /opt/test`
 ```shell
 root@k8s-master01:~/helm# kubectl get cm grafana-envvars -o yaml
 apiVersion: v1
@@ -80,4 +80,4 @@ grafana-6cc56576dc-97bvw   1/1     Running   0          145m
 grafana-7b8869fd4f-6jrd5   0/1     Running   0          4s
 ```
 ## 四、总结
-Helm借助添加标签hash化，动态更新deployment
+Helm 借助添加标签 hash 化，动态更新 deployment

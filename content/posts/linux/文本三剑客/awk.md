@@ -19,38 +19,38 @@ awk 是 Linux/Unix 下强大的文本处理工具，可按字段操作、支持�
 
 <!--more-->
 
-awk 是 Linux/Unix 系统中一个强大的文本处理工具,主要用于处理文本文件和字符串。
+awk 是 Linux/Unix 系统中一个强大的文本处理工具，主要用于处理文本文件和字符串。
 
 ## 一、特性
-awk 的一些关键特性:
+awk 的一些关键特性：
 
-- 可以根据字段进行操作,如打印指定列、求列的总和等
-- 支持条件判断和循环语句,可以实现复杂的文本处理
+- 可以根据字段进行操作，如打印指定列、求列的总和等
+- 支持条件判断和循环语句，可以实现复杂的文本处理
 - 使用正则表达式进行模式匹配和内容提取
-- 内置字符串操作函数,如匹配、替换、截取等
+- 内置字符串操作函数，如匹配、替换、截取等
 
 ## 二、适用场景
-awk 适用于报表生成、格式转换、数学运算等场景。掌握了 awk,可以大大提高 Bash 脚本的文本处理能力
+awk 适用于报表生成、格式转换、数学运算等场景。掌握了 awk，可以大大提高 Bash 脚本的文本处理能力
 
 ## 三、内置函数
 内置函数
 
 |command | 释义|
 |---|---|
-| gsub(r,s)          | 在整个$0中用s替代r   相当于 sed 's///g' | 
-| gsub(r,s,t)        | 在整个t中用s替代r | 
-| index(s,t)         | 返回s中字符串t的第一位置 | 
-| length(s)          | 返回s长度 | 
-| match(s,r)         | 测试s是否包含匹配r的字符串 | 
-| split(s,a,fs)      | 在fs上将s分成序列a | 
-| sprint(fmt,exp)    | 返回经fmt格式化后的exp | 
-| sub(r,s)           | 用$0中最左边最长的子串代替s   相当于 sed 's///' | 
-| substr(s,p)        | 返回字符串s中从p开始的后缀部分 | 
-| substr(s,p,n)      | 返回字符串s中从p开始长度为n的后缀部分 |
+| gsub(r,s)          | 在整个$0 中用 s 替代 r   相当于 sed 's///g' | 
+| gsub(r,s,t)        | 在整个 t 中用 s 替代 r | 
+| index(s,t)         | 返回 s 中字符串 t 的第一位置 | 
+| length(s)          | 返回 s 长度 | 
+| match(s,r)         | 测试 s 是否包含匹配 r 的字符串 | 
+| split(s,a,fs)      | 在 fs 上将 s 分成序列 a | 
+| sprint(fmt,exp)    | 返回经 fmt 格式化后的 exp | 
+| sub(r,s)           | 用$0 中最左边最长的子串代替 s   相当于 sed 's///' | 
+| substr(s,p)        | 返回字符串 s 中从 p 开始的后缀部分 | 
+| substr(s,p,n)      | 返回字符串 s 中从 p 开始长度为 n 的后缀部分 |
 
 ## 四、awk 判断
-- awk '{print ($1>$2)?"第一排"$1:"第二排"$2}'      # 条件判断 括号代表if语句判断 "?"代表then ":"代表else
-- awk '{max=($1>$2)? $1 : $2; print max}'          # 条件判断 如果$1大于$2,max值为为$1,否则为$2
+- awk '{print ($1>$2)?"第一排"$1:"第二排"$2}'      # 条件判断 括号代表 if 语句判断 "?"代表 then ":"代表 else
+- awk '{max=($1>$2)? $1 : $2; print max}'          # 条件判断 如果$1 大于$2,max 值为为$1，否则为$2
 - awk '{if ( $6 > 50) print $1 " Too high" ;else print "Range is OK"}' file
 - awk '{if ( $6 > 50) { count++;print $3 } else { x+5; print $2 } }' file
 
@@ -59,9 +59,9 @@ awk 适用于报表生成、格式转换、数学运算等场景。掌握了 awk
 - awk '{ for ( i = 1; i <= NF; i++ ) print NF,$i }' file
 
 ## 六、示例
-- awk '{print $1, $3}' file.txt   每行按空格分割成多个字段,输出第1个和第3个字段   
+- awk '{print $1, $3}' file.txt   每行按空格分割成多个字段，输出第 1 个和第 3 个字段   
 - awk '{sum+=$1*$1} END {print sum}' file.txt    求第一列的平方和    
-- awk 'length > 80' file.txt    查找长度大于80的行    
+- awk 'length > 80' file.txt    查找长度大于 80 的行    
 - awk '/regex/ {print $0}' log.txt    使用正则表达式匹配内容    
 - awk '{print $NF}' file.txt     打印最后一列   
 - awk '{print $(NF-1) }' file.txt    打印倒数第二列    
@@ -69,24 +69,24 @@ awk 适用于报表生成、格式转换、数学运算等场景。掌握了 awk
 - awk '{if(NR==3){print $0} else {print "不是第三行"}}' file.txt    打印指定行    
 - awk 'NR==1||NR==3{print $0}' test.txt    打印第一行或者第三行  
 - awk '/Tom/' file               # 打印匹配到得行
-- awk '/^Tom/{print $1}'         # 匹配Tom开头的行 打印第一个字段
-- awk '$1 !~ /ly$/'              # 显示所有第一个字段不是以ly结尾的行
-- awk '$3 <40'                   # 如果第三个字段值小于40才打印
-- awk '$4==90{print $5}'         # 取出第四列等于90的第五列
-- awk '/^(no|so)/' test          # 打印所有以模式no或so开头的行
-- awk '$3 * $4 > 500'            # 算术运算(第三个字段和第四个字段乘积大于500则显示)
+- awk '/^Tom/{print $1}'         # 匹配 Tom 开头的行 打印第一个字段
+- awk '$1 !~ /ly$/'              # 显示所有第一个字段不是以 ly 结尾的行
+- awk '$3 <40'                   # 如果第三个字段值小于 40 才打印
+- awk '$4==90{print $5}'         # 取出第四列等于 90 的第五列
+- awk '/^(no|so)/' test          # 打印所有以模式 no 或 so 开头的行
+- awk '$3 * $4 > 500'            # 算术运算（第三个字段和第四个字段乘积大于 500 则显示）
 - awk '{print NR" "$0}'          # 加行号
-- awk '/tom/,/suz/'              # 打印tom到suz之间的行
+- awk '/tom/,/suz/'              # 打印 tom 到 suz 之间的行
 - awk '{a+=$1}END{print a}'      # 列求和
-- awk 'sum+=$1{print sum}'       # 将$1的值叠加后赋给sum
+- awk 'sum+=$1{print sum}'       # 将$1 的值叠加后赋给 sum
 - awk '{a+=$1}END{print a/NR}'   # 列求平均值
 - awk '!s[$1 $3]++' file         # 根据第一列和第三列过滤重复行
-- awk -F'[ :\t]' '{print $1,$2}'           # 以空格、:、制表符Tab为分隔符
+- awk -F'[ :\t]' '{print $1,$2}'           # 以空格、:、制表符 Tab 为分隔符
 - awk '{print "'"$a"'","'"$b"'"}'          # 引用外部变量
-- awk '{if(NR==52){print;exit}}'           # 显示第52行
+- awk '{if(NR==52){print;exit}}'           # 显示第 52 行
 - awk '/关键字/{a=NR+2}a==NR {print}'      # 取关键字下第几行
 - awk 'gsub(/liu/,"aaaa",$1){print $0}'    # 只打印匹配替换后的行
-- ll | awk -F'[ ]+|[ ][ ]+' '/^$/{print $8}'             # 提取时间,空格不固定
+- ll | awk -F'[ ]+|[ ][ ]+' '/^$/{print $8}'             # 提取时间，空格不固定
 - awk '{$1="";$2="";$3="";print}'                        # 去掉前三列
 - echo aada:aba|awk '/d/||/b/{print}'                    # 匹配两内容之一
 - echo aada:abaa|awk -F: '$1~/d/||$2~/b/{print}'         # 关键列匹配两内容之一
@@ -94,17 +94,17 @@ awk 适用于报表生成、格式转换、数学运算等场景。掌握了 awk
 - echo aada:aaba|awk '/d/&&/b/{print}'                   # 同时匹配两条件
 - awk 'length($1)=="4"{print $1}'                        # 字符串位数
 - awk '{if($2>3){system ("touch "$1)}}'                  # 执行系统命令
-- awk '{sub(/Mac/,"Macintosh",$0);print}'                # 用Macintosh替换Mac
-- awk '{gsub(/Mac/,"MacIntosh",$1); print}'              # 第一个域内用Macintosh替换Mac
-- awk -F '' '{ for(i=1;i<NF+1;i++)a+=$i  ;print a}'      # 多位数算出其每位数的总和.比如 1234， 得到 10
-- awk '{ i=$1%10;if ( i == 0 ) {print i}}'               # 判断$1是否整除(awk中定义变量引用时不能带 $ )
-- awk 'BEGIN{a=0}{if ($1>a) a=$1 fi}END{print a}'        # 列求最大值  设定一个变量开始为0，遇到比该数大的值，就赋值给该变量，直到结束
+- awk '{sub(/Mac/,"Macintosh",$0);print}'                # 用 Macintosh 替换 Mac
+- awk '{gsub(/Mac/,"MacIntosh",$1); print}'              # 第一个域内用 Macintosh 替换 Mac
+- awk -F '' '{ for(i=1;i<NF+1;i++)a+=$i  ;print a}'      # 多位数算出其每位数的总和。比如 1234，得到 10
+- awk '{ i=$1%10;if ( i == 0 ) {print i}}'               # 判断$1 是否整除（awk 中定义变量引用时不能带 $）
+- awk 'BEGIN{a=0}{if ($1>a) a=$1 fi}END{print a}'        # 列求最大值  设定一个变量开始为 0，遇到比该数大的值，就赋值给该变量，直到结束
 - awk 'BEGIN{a=11111}{if ($1<a) a=$1 fi}END{print a}'    # 求最小值
 - awk '{if(A)print;A=0}/regexp/{A=1}'                    # 查找字符串并将匹配行的下一行显示出来，但并不显示匹配行
 - awk '/regexp/{print A}{A=$0}'                          # 查找字符串并将匹配行的上一行显示出来，但并不显示匹配行
-- awk '{if(!/mysql/)gsub(/1/,"a");print $0}'             # 将1替换成a，并且只在行中未出现字串mysql的情况下替换
+- awk '{if(!/mysql/)gsub(/1/,"a");print $0}'             # 将 1 替换成 a，并且只在行中未出现字串 MySQL 的情况下替换
 - awk 'BEGIN{srand();fr=int(100*rand());print fr;}'      # 获取随机数
-- awk '{if(NR==3)F=1}{if(F){i++;if(i%7==1)print}}'       # 从第3行开始，每7行显示一次
+- awk '{if(NR==3)F=1}{if(F){i++;if(i%7==1)print}}'       # 从第 3 行开始，每 7 行显示一次
 - awk '{if(NF<1){print i;i=0} else {i++;print $0}}'      # 显示空行分割各段的行数
 - echo +null:null  |awk -F: '$1!~"^+"&&$2!="null"{print $0}'       # 关键列同时匹配
 - awk -v RS=@ 'NF{for(i=1;i<=NF;i++)if($i) printf $i;print ""}'    # 指定记录分隔符
@@ -112,16 +112,16 @@ awk 适用于报表生成、格式转换、数学运算等场景。掌握了 awk
 - awk '{ i=($1%100);if ( $i >= 0 ) {print $0,$i}}'                 # 求余数
 - awk '{b=a;a=$1; if(NR>1){print a-b}}'                            # 当前行减上一行
 - awk '{a[NR]=$1}END{for (i=1;i<=NR;i++){print a[i]-a[i-1]}}'      # 当前行减上一行
-- awk -F: '{name[x++]=$1};END{for(i=0;i<NR;i++)print i,name[i]}'   # END只打印最后的结果,END块里面处理数组内容
-- awk '{sum2+=$2;count=count+1}END{print sum2,sum2/count}'         # $2的总和  $2总和除个数(平均值)
-- awk -v a=0 -F 'B' '{for (i=1;i<NF;i++){ a=a+length($i)+1;print a  }}'     # 打印所以B的所在位置
-- awk 'BEGIN{ "date" | getline d; split(d,mon) ; print mon[2]}' file        # 将date值赋给d，并将d设置为数组mon，打印mon数组中第2个元素
-- awk 'BEGIN{info="this is a test2010test!";print substr(info,4,10);}'      # 截取字符串(substr使用)
-- awk 'BEGIN{info="this is a test2010test!";print index(info,"test")?"ok":"no found";}'      # 匹配字符串(index使用)
-- awk 'BEGIN{info="this is a test2010test!";print match(info,/[0-9]+/)?"ok":"no found";}'    # 正则表达式匹配查找(match使用)
-- awk '{for(i=1;i<=4;i++)printf $i""FS; for(y=10;y<=13;y++)  printf $y""FS;print ""}'        # 打印前4列和后4列
+- awk -F: '{name[x++]=$1};END{for(i=0;i<NR;i++)print i,name[i]}'   # END 只打印最后的结果，END 块里面处理数组内容
+- awk '{sum2+=$2;count=count+1}END{print sum2，sum2/count}'         # $2 的总和  $2 总和除个数（平均值）
+- awk -v a=0 -F 'B' '{for (i=1;i<NF;i++){ a=a+length($i)+1;print a  }}'     # 打印所以 B 的所在位置
+- awk 'BEGIN{ "date" | getline d; split(d,mon) ; print mon[2]}' file        # 将 date 值赋给 d，并将 d 设置为数组 mon，打印 mon 数组中第 2 个元素
+- awk 'BEGIN{info="this is a test2010test!";print substr(info,4,10);}'      # 截取字符串（substr 使用）
+- awk 'BEGIN{info="this is a test2010test!";print index(info,"test")?"ok":"no found";}'      # 匹配字符串（index 使用）
+- awk 'BEGIN{info="this is a test2010test!";print match(info,/[0-9]+/)?"ok":"no found";}'    # 正则表达式匹配查找（match 使用）
+- awk '{for(i=1;i<=4;i++)printf $i""FS; for(y=10;y<=13;y++)  printf $y""FS;print ""}'        # 打印前 4 列和后 4 列
 - awk 'BEGIN{for(n=0;n++<9;){for(i=0;i++<n;)printf i"x"n"="i*n" ";print ""}}'                # 乘法口诀
-- awk 'BEGIN{info="this is a test";split(info,tA," ");print length(tA);for(k in tA){print k,tA[k];}}'             # 字符串分割(split使用)
+- awk 'BEGIN{info="this is a test";split(info,tA," ");print length(tA);for(k in tA){print k,tA[k];}}'             # 字符串分割（split 使用）
 - awk '{if (system ("grep "$2" tmp/* > /dev/null 2>&1") == 0 ) {print $1,"Y"} else {print $1,"N"} }' a            # 执行系统命令判断返回状态
 - awk  '{for(i=1;i<=NF;i++) a[i,NR]=$i}END{for(i=1;i<=NF;i++) {for(j=1;j<=NR;j++) printf a[i,j] " ";print ""}}'   # 将多行转多列
 
@@ -195,50 +195,6 @@ awk '{a[i++]=$0} END {for (j=i-1; j>=0;) print a[j--] }'
 #打印99乘法表
 seq 9 | sed 'H;g' | awk -v RS='' '{for(i=1;i<=NF;i++)printf("%dx%d=%d%s", i, NR, i*NR, i==NR?"\n":"\t")}'
 ```
-
 ## 七、思维导图
 ![常用参数和常用内置变量](/images/linux/akw-1.jpg "awk")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+

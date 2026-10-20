@@ -21,28 +21,28 @@ summary: "完整记录在 Ubuntu Server 22.04 上以 containerd 为运行时部�
 
 ## 整体流程
 1. 部署准备
-2. k8s 集群容器运行时 Containerd 准备
-3. k8s 集群部署
-   1. k8s 集群软件 apt 源准备
-   2. k8s 集群软件安装
-   3. k8s 集群初始化
-   4. k8s 集群worker 节点加入
-4. k8s 集群网络插件 Calico 准备
+2. K8s 集群容器运行时 Containerd 准备
+3. K8s 集群部署
+   1. K8s 集群软件 apt 源准备
+   2. K8s 集群软件安装
+   3. K8s 集群初始化
+   4. K8s 集群 worker 节点加入
+4. K8s 集群网络插件 Calico 准备
 5. 部署应用验证集群可用性
 
 ## 集群环境信息
-- 操作系统Ubuntu22.04
-- 部署 k8s 版本为v1.28
+- 操作系统 Ubuntu22.04
+- 部署 K8s 版本为 v1.28
 - 容器运行时为 Containerd 1.7.11
 
 ## 1. 主机准备
-虚拟机是通过vmware 创建的，搭建的k8s 集群是非高可用模式，下方提供部署脚本。
-部署过程中由于2024年6月份 docker 镜像仓库不再对大陆提供服务，需要进行离线部署，主要是 calico 这一块会有镜像源缺失,对应章节会有补充说明及解决方案
+虚拟机是通过 vmware 创建的，搭建的 K8s 集群是非高可用模式，下方提供部署脚本。
+部署过程中由于 2024 年 6 月份 Docker 镜像仓库不再对大陆提供服务，需要进行离线部署，主要是 Calico 这一块会有镜像源缺失，对应章节会有补充说明及解决方案
 
 ### 1.1 操作系统
 | 操作系统 | 版本                             | 说明   |
 | :------- | :------------------------------- | :----- |
-| ubuntu   | ubuntu-22.04.4-live-server-amd64 | 最小化 |
+| Ubuntu   | ubuntu-22.04.4-live-server-amd64 | 最小化 |
 ### 1.2 主机硬件配置说明
 
 | ip           | CPU  | 内存 | 硬盘 | 角色   | 主机名        |
@@ -59,8 +59,8 @@ hostnamectl set-hostname k8s-nastert01
 #ndoe 节点
 hostnamectl set-hostname k8s-node01
 ```
-#### 1.3.2 主机ip 地址配置
-vmware 创建虚拟机网络适配器选择桥接模式(自动)，需要手动配置ip地址，否则当虚拟机重启后ip 地址会发生变化
+#### 1.3.2 主机 ip 地址配置
+vmware 创建虚拟机网络适配器选择桥接模式（自动），需要手动配置 ip 地址，否则当虚拟机重启后 ip 地址会发生变化
 k8s-master01 节点
 ```shell
 sudo cp /etc/netplan/00-installer-config.yaml  /etc/netplan/00-installer-config.yaml_before
@@ -107,7 +107,7 @@ EOF
 # 使配置生效
 sudo netplan apply
 ```
-#### 1.3.3 主机名和ip 地址解析
+#### 1.3.3 主机名和 ip 地址解析
 
 ```shell
 cat >> /etc/hosts << EOF
@@ -115,7 +115,7 @@ cat >> /etc/hosts << EOF
 > 192.168.1.7 k8s-node01
 > EOF
 ```
-#### 1.3.4 chrony时间同步配置
+#### 1.3.4 chrony 时间同步配置
 k8s-master01 节点执行
 ```shell
 $ cp /etc/chrony/chrony.conf  /etc/chrony/chrony.conf_bak
@@ -148,7 +148,7 @@ $ systemctl enable chrony
 # 查看 chronyd 时间同步服务的源的统计信息
 $ chronyc sourcestats -v
 ```
-k8s-node01 节点执行,修改 server 为 master 节点ip
+k8s-node01 节点执行，修改 server 为 master 节点 ip
 ```shell
 $ cp /etc/chrony/chrony.conf  /etc/chrony/chrony.conf_bak
 $ cat > /etc/chrony/chrony.conf << EOF
@@ -209,7 +209,7 @@ $ sysctl net.bridge.bridge-nf-call-iptables net.bridge.bridge-nf-call-ip6tables 
 # or
 $ sudo sysctl --system
 ```
-#### 1.3.6 安装ipset和ipvsadm
+#### 1.3.6 安装 ipset 和 ipvsadm
 ```shell
 $ apt install ipset ipvsadm -y
 
@@ -229,8 +229,8 @@ $ modprobe -- ip_vs_wrr
 $ modprobe -- ip_vs_sh
 $ modprobe -- nf_conntrack
 ```
-#### 1.3.7 关闭SWAP分区
-k8s 集群所有节点
+#### 1.3.7 关闭 SWAP 分区
+K8s 集群所有节点
 ```shell
 # 临时关闭
 $ swapoff -a
@@ -255,7 +255,7 @@ $ sudo systemctl stop ufw
 #禁止防火墙开机启动
 $ sudo systemctl disable ufw
 ```
-## 2. 部署Containerd 服务
+## 2. 部署 Containerd 服务
 所有主机都要执行
 ### 2.1 下载及安装
 
@@ -266,10 +266,10 @@ $ wget https://github.com/containerd/containerd/releases/download/v1.7.11/cri-co
 $ sudo tar -zxvf cri-containerd-cni-1.7.11-linux-amd64.tar.gz -C /
 ```
 {{< admonition warning >}}
-这里选择的适配k8s 容器运行时的containerd,有一个前缀cri(container runtime interface)，另外根据自己的操作系统选择对应的架构，常用的是amd64
+这里选择的适配 K8s 容器运行时的 containerd，有一个前缀 CRI（container runtime interface），另外根据自己的操作系统选择对应的架构，常用的是 amd64
 {{< /admonition >}}
 
-### 2.2  配置Containerd服务
+### 2.2  配置 Containerd 服务
 ```shell
 $ mkdir -p /etc/containerd
 $ containerd config default > /etc/containerd/config.toml
@@ -280,15 +280,15 @@ $ sed -i 's/SystemdCgroup = false/SystemdCgroup = true/g' /etc/containerd/config
 $ sed -i 's/disabled_plugins/#disabled_plugins/g' /etc/containerd/config.toml
 
 ```
-### 2.3 设置containerd开机自启动
+### 2.3 设置 containerd 开机自启动
 ```shell
 $ systemctl enable --now containerd
 #验证版本
 $ containerd --version
 ```
-## 3. k8s集群部署
+## 3. K8s 集群部署
 所有节点都执行
-### 3.1  k8s配置集群软件apt源及安装
+### 3.1  K8s 配置集群软件 apt 源及安装
 ```shell
 #下载用于 Kubernetes 软件包仓库的公共签名密钥。所有仓库都使用相同的签名密钥，因此你可以忽略URL中的版本
 curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
@@ -310,13 +310,13 @@ $ apt-cache madison kubeadm
 $ sudo apt-mark hold kubelet kubeadm kubectl
 
 ```
-### 3.2 查看apt 仓库是否缓存k8s 安装组件
+### 3.2 查看 apt 仓库是否缓存 K8s 安装组件
 ```shell
 apt-cache policy kubeadm|head - 10
 ```
-### 3.3 部署k8s 集群
+### 3.3 部署 K8s 集群
 #### master 节点
-1. 修改kubeadm 初始化配置文件
+1. 修改 kubeadm 初始化配置文件
 ```shell
 #默认初始化配置文件生成
 $ kubeadm config print init-defaults > kube-config.yaml
@@ -328,7 +328,7 @@ $ sed -i "s/imageRepository: registry.k8s.io/imageRepository: $ registry.cn-hang
 # 追加制定pod ip网段
 $ sed -i  '/serviceSubnet/a\  podSubnet: 10.244.0.0/16' kube-config.yaml
 ```
-2. 添加ipvs 和 kubelet 配置,`kube-config.yaml`为生成的配置文件
+2. 添加 ipvs 和 kubelet 配置，`kube-config.yaml` 为生成的配置文件
 
 ```shell
 $ cat << EOF >> kube-config.yaml
@@ -351,7 +351,7 @@ $ kubeadm config images pull --image-repository registry.aliyuncs.com/google_con
 # 查看下载的镜像，镜像保存在k8s.io namesapce 下
 $ ctr -n=k8s.io i ls
 ```
-4. 开始部署，并将log 打印到本地文件中
+4. 开始部署，并将 log 打印到本地文件中
 ```shell
 # 使用部署配置文件初始化k8s 集群
 $ kubeadm init --config  kube-config.yaml|tee -a kubeadm_init.log
@@ -387,7 +387,7 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 export KUBECONFIG=/etc/kubernetes/admin.conf
 ```
 {{< admonition tip >}}
-执行失败查看报错后调整，使用`kubeadm reset`还原后重新执行
+执行失败查看报错后调整，使用 `kubeadm reset` 还原后重新执行
 {{< /admonition >}}
 
 5. master 节点验证
@@ -446,26 +446,26 @@ apiVersion: kubelet.config.k8s.io/v1beta1
 cgroupDriver: systemd
 ```
 #### node 节点 join
-这里手动指定cri-socket
+这里手动指定 cri-socket
 ```shell
 kubeadm join 192.168.1.11:6443 --token abcdef.0123456789abcdef \
         --discovery-token-ca-cert-hash \
         --cri-socket=unix:///run/containerd/containerd.sock
 ```
-## 4. k8s集群部署网络插件 calico
-常见的网络插件有多种，比如flannel、Calico和Cilium，本次实验使用Calico。
+## 4. K8s 集群部署网络插件 Calico
+常见的网络插件有多种，比如 Flannel、Calico 和 Cilium，本次实验使用 Calico。
 
-首先访问Calico帮助文档https://docs.tigera.io/calico/latest/getting-started/kubernetes/quickstart
+首先访问 Calico 帮助文档 https://docs.tigera.io/calico/latest/getting-started/kubernetes/quickstart
 
 ### master 节点
-calico 部署使用的是operator 的方式，且不再和kube-system 共用一个namespace，另起了一个namespace calico-system,引入了istio 相关组件服务，详情可以看下calico官网
+Calico 部署使用的是 operator 的方式，且不再和 kube-system 共用一个 namespace，另起了一个 namespace calico-system，引入了 Istio 相关组件服务，详情可以看下 Calico 官网
 
 配置插件需要的环境
 ```shell
 wget https://raw.githubusercontent.com/projectcalico/calico/v3.27.2/manifests/tigera-operator.yaml
 kubectl create -f tigera-operator.yaml
 ```
-下载客户端资源文件并修改pod 网段地址，因为我们的pod的网段和配置文件不一样
+下载客户端资源文件并修改 pod 网段地址，因为我们的 pod 的网段和配置文件不一样
 ```shell
 # 下载客户端资源文件
 curl -LO https://raw.githubusercontent.com/projectcalico/calico/v3.27.2/manifests/custom-resources.yaml
@@ -473,17 +473,17 @@ curl -LO https://raw.githubusercontent.com/projectcalico/calico/v3.27.2/manifest
 sed -i 's/cidr: 192.168.0.0/cidr: 10.244.0.0/g' custom-resources.yaml
 kubectl create -f custom-resources.yaml
 ```
-查看集群 calico pod 创建过程，大约会耗时三分钟,部署成功后，所有node 节点为Ready 状态
+查看集群 Calico pod 创建过程，大约会耗时三分钟，部署成功后，所有 node 节点为 Ready 状态
 ```shell
 watch kubectl get all -o wide -n calico-system
 ```
 {{< admonition tip >}}
-以上方法是在dockerhub 网络仓库正常访问情况下执行的，如果dockerhub 网络仓库访问异常可以使用离线部署的方式
+以上方法是在 dockerhub 网络仓库正常访问情况下执行的，如果 dockerhub 网络仓库访问异常可以使用离线部署的方式
 
-2024.6 月份docker hub 被墙了后，就不能方便的下载 docker 镜像了，这里使用离线的方式进行部署。
+2024.6 月份 Docker hub 被墙了后，就不能方便的下载 Docker 镜像了，这里使用离线的方式进行部署。
 {{< /admonition >}}
 
-calico v3.27 相关镜像列表
+Calico v3.27 相关镜像列表
 ```
 docker.io/calico/cni:v3.27.2
 docker.io/calico/kube-controllers:v3.27.2
@@ -515,8 +515,8 @@ sudo ctr -n k8s.io images import node-driver-registrar.tar
 
 参考：[calico_3.27 quick install 官网](https://docs.tigera.io/calico/3.27/getting-started/kubernetes/quickstart)
 
-## 5. 部署nginx 验证k8s 集群可用性
-nginx-deploy yaml 文件
+## 5. 部署 Nginx 验证 K8s 集群可用性
+nginx-deploy YAML 文件
 ```yaml
 cat << EOF > nginx-deploy.yaml
 apiVersion: apps/v1
@@ -566,10 +566,10 @@ kubectl apply -f nginx-deploy.yaml
 # 然后访问你任何一个节点的IP地址加上nodeport 30080就可以访问这个部署的nginx
 kubectl get service -o wide
 ```
-浏览器访问`http://192.168.1.11:30080` 提示 `Welcome to nginx!` 表示生效成功
+浏览器访问 `http://192.168.1.11:30080` 提示 `Welcome to nginx!` 表示生效成功
 
-## 6. 部署crictl(optional)
-crictl 是Kubelet容器接口（CRI）的CLI和验证工具: 这里部署一下 containerd客户端crictl
+## 6. 部署 crictl(optional)
+crictl 是 Kubelet 容器接口（CRI）的 CLI 和验证工具：这里部署一下 containerd 客户端 crictl
 ```
 $ VERSION="v1.28.0"
 $ wget https://github.com/kubernetes-sigs/cri-tools/releases/download/$VERSION/crictl-$VERSION-linux-amd64.tar.gz
@@ -599,7 +599,7 @@ docker.io/calico/typha                                            v3.27.2       
 ....
 ```
 ## 完整部署脚本
-以作参考,环境不同，相应参数需要手动调整
+以作参考，环境不同，相应参数需要手动调整
 ```
 #！/bin/bash
 

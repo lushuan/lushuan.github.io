@@ -20,15 +20,15 @@ summary: "完整记录 MySQL 5.7 主从集群的部署过程，涵盖 RPM 安装
 <!--more-->
 
 ## 一、背景信息
-为了增加数据的冗余备份，增强服务的高可用性，从传统的单服务应用升级到集群服务应用是一个合适方案，这里介绍一下MySQL 5.7 版本的部署，5.7 版本也是目前大多数企业当前在用的版本，虽然也有很多企业升级到了8.0 版本，不过从安装部署的角度来看其实是大同小异的
+为了增加数据的冗余备份，增强服务的高可用性，从传统的单服务应用升级到集群服务应用是一个合适方案，这里介绍一下 MySQL 5.7 版本的部署，5.7 版本也是目前大多数企业当前在用的版本，虽然也有很多企业升级到了 8.0 版本，不过从安装部署的角度来看其实是大同小异的
 ## 二、环境准备
 
-| 操作系统版本 | cpu  | 内存 | 磁盘 | IP              | 部署方式 | MySQL版本 |主从节点 |
+| 操作系统版本 | CPU  | 内存 | 磁盘 | IP              | 部署方式 | MySQL 版本 |主从节点 |
 | ------------ | ---- | ---- | ---- | --------------- | -------- | --------- |---------  |
-| centos 7.9   | 2c   | 4G   | 40G  | 192.168.143.101 | rpm      | 5.7.20    | Master|
-| centos 7.9   | 2c   | 4G   | 40G  | 192.168.143.102 | rpm      | 5.7.20    | Slave|
+| CentOS 7.9   | 2c   | 4G   | 40G  | 192.168.143.101 | RPM      | 5.7.20    | Master|
+| CentOS 7.9   | 2c   | 4G   | 40G  | 192.168.143.102 | RPM      | 5.7.20    | Slave|
 
-## 三、安装MySQL 5.7
+## 三、安装 MySQL 5.7
 1、下载安装包
 ```
 $ cd /path/to/directory
@@ -46,19 +46,19 @@ $ sudo yum install  ncurses-compat-libs -y
 $ sudo yum install libaio numactl-libs -y
 ```
 3、[服务器时间校正](https://blog.dazhongma.top/linux%E6%97%B6%E9%97%B4%E6%A0%A1%E6%AD%A3/)  
-4、关闭防火墙和安全(主从)
+4、关闭防火墙和安全（主从）
 ```
 $ setenforce 0
 $ systemctl stop firewalld
 $ systemctl disable firewalld
 ```
-4.1 (可选)如果你的仓库中没有 ncurses-compat-libs，你可能需要添加一个额外的仓库，例如 EPEL (Extra Packages for Enterprise Linux)：
+4.1（可选）如果你的仓库中没有 ncurses-compat-libs，你可能需要添加一个额外的仓库，例如 EPEL（Extra Packages for Enterprise Linux）：
 ```
 $ sudo yum install epel-release  -y
 $ sudo yum install ncurses-compat-libs  -y
 ```
-4.2 (可选) 检验系统是否包含mariadb-lib
-检验系统是否包含mariadb-lib,如果有需要卸载，否则mysql 无法安装
+4.2（可选） 检验系统是否包含 mariadb-lib
+检验系统是否包含 mariadb-lib，如果有需要卸载，否则 MySQL 无法安装
 ```shell
 rpm -qa | grep mariadb
 rpm -e --nodeps mariadb-libs-5.5.68-1.el7.x86_64
@@ -102,7 +102,6 @@ Updating / installing...
 sudo rpm -ivh *.rpm
 ```
 
-
 ### 安装包功能和作用
 部署 MySQL 5.7.20 版本的 RPM 包时，需要确保按照正确的顺序安装这些包，因为它们之间存在依赖关系。以下是各个包的功能作用和推荐的安装顺序：
 
@@ -126,7 +125,6 @@ sudo rpm -ivh *.rpm
    - 功能：提供 MySQL 数据库服务器。
    - 作用：这是核心包，负责处理 SQL 查询并管理数据库。
 
-
 ## 四、配置主服务器
 MySQL 的主配置文件通常位于 `/etc/my.cnf` 或 `/etc/mysql/my.cnf`，具体取决于你的操作系统。对于某些发行版或自定义安装，配置文件可能位于其他位置，如 `/etc/my.cnf.d/` 目录下的某个文件中。你可以使用以下命令来查找配置文件的位置：
 
@@ -135,16 +133,16 @@ $ mysql --help | grep "Default options" -A 1
 Default options are read from the following files in the given order:
 /etc/my.cnf /etc/mysql/my.cnf /usr/etc/my.cnf ~/.my.cnf 
 ```
-调整需要将数据放到`/data/mysql` 目录下，该目录为外挂磁盘，磁盘空间较大，而不是安装在默认的系统磁盘目录下
+调整需要将数据放到 `/data/mysql` 目录下，该目录为外挂磁盘，磁盘空间较大，而不是安装在默认的系统磁盘目录下
 
-创建安装目录`/data/mysql`
+创建安装目录 `/data/mysql`
 ```bash
 mkdir -p /data/mysql/binlog
 chown -R mysql:mysql /data/mysql
 chomod -R 755 /data/mysql
 ```
 
-修改`/etc/my.cnf`配置文件
+修改 `/etc/my.cnf` 配置文件
 ```
 [mysqld]
 user = mysql
@@ -231,21 +229,21 @@ auto_increment_offset = 1
 socket = /data/mysql/mysql.sock
 port = 3306
 ```
-启动mysqld服务，并设置开机自启
+启动 mysqld 服务，并设置开机自启
 ```shell
 $ sudo systemctl enable mysqld --now
 $ sudo systemctl status mysqld
 ```
 
 ## 五、配置从服务器
-创建安装目录`/data/mysql`
+创建安装目录 `/data/mysql`
 ```bash
 mkdir -p /data/mysql/binlog
 chown -R mysql:mysql /data/mysql
 chomod -R 755 /data/mysql
 ```
 
-修改`/etc/my.cnf`配置文件
+修改 `/etc/my.cnf` 配置文件
 ```
 [mysqld]
 # 设置server_id,注意要唯一
@@ -255,7 +253,7 @@ server_id = 1
 auto_increment_increment = 1
 auto_increment_offset = 2   # 可根据需要调整，确保从节点与主节点的 AUTO_INCREMENT 值不冲突
 ```
-启动mysqld服务，并设置开机自启
+启动 mysqld 服务，并设置开机自启
 ```shell
 $ sudo systemctl enable mysqld --now
 $ sudo systemctl status mysqld
@@ -270,7 +268,7 @@ mysqladmin -u root -p$MYSQL_OLDPASSWORD password $MYSQL_ROOT_PASSWORD &>/dev/nul
 ```
 ### 分步操作
 1、获取临时密码
-默认是在`/var/log/mysqld.log` 文件下，这里修改了安装目录为`/data/mysql`
+默认是在 `/var/log/mysqld.log` 文件下，这里修改了安装目录为 `/data/mysql`
 ```bash
 sudo grep 'temporary password' /data/mysq/mysqld.log
 # grep 'temporary password' /var/log/mysqld.log
@@ -282,7 +280,7 @@ mysql -u root -p
 ```
 3、登录后修改默认密码并进行安全配置：
 首次登录后，建议立即更改 root 密码并执行 `mysql_secure_installation` 脚本来提高安全性。
-登录后修改root密码
+登录后修改 root 密码
 ```
 ALTER USER 'root'@'%' IDENTIFIED BY 'your_password';
 
@@ -319,7 +317,7 @@ mysql> select host, user, authentication_string, plugin from user;
 4 rows in set (0.00 sec)
 
 ```
-4、mysql_secure_installation MySQL 安全设置(可选)  
+4、mysql_secure_installation MySQL 安全设置（可选）  
 mysql_secure_installation 是一个用于提高 MySQL 安装安全性的脚本。它可以帮助你执行一系列的安全设置，例如设置 root 密码、移除匿名用户、禁用远程 root 登录、移除测试数据库等。以下是执行 mysql_secure_installation 脚本的详细步骤：
 ```
 [root@localhost mysql]<20241225 14:42:33># sudo mysql_secure_installation
@@ -345,10 +343,10 @@ Enter password for user root:
   移除匿名用户可以提高安全性，推荐选择 `Y`。
 
 - **Disallow root login remotely? [Y/n]**
-  禁止 root 用户从远程登录通常是个好主意，除非你需要远程管理 MySQL，推荐选择 `Y`。测试环境也可以选择`n`
+  禁止 root 用户从远程登录通常是个好主意，除非你需要远程管理 MySQL，推荐选择 `Y`。测试环境也可以选择 `n`
 
 - **Remove test database and access to it? [Y/n]**
-  移除测试数据库及其访问权限也是提高安全性的措施之一，推荐选择 `Y`。测试环境也可以选择`n`
+  移除测试数据库及其访问权限也是提高安全性的措施之一，推荐选择 `Y`。测试环境也可以选择 `n`
 
 - **Reload privilege tables now? [Y/n]**
   重新加载权限表以使更改立即生效，推荐选择 `Y`。
@@ -450,7 +448,7 @@ SHOW MASTER STATUS;
 | mysql-bin.000001 | 154       | your_database_name |                |
 +------------------+----------+--------------+------------------+
 ```
-记下 `File`二进制文件（例如：`mysql-bin.000001`）和 `Position`偏移量（例如：`154`）的值。
+记下 `File` 二进制文件（例如：`mysql-bin.000001`）和 `Position` 偏移量（例如：`154`）的值。
 
 ### Slave 节点
 ```shell
@@ -478,7 +476,7 @@ SHOW SLAVE STATUS\G;
 - `Last_Error`: 应为空或无错误信息
 
 ## 九、测试主从同步
-在Master主服务器上创建数据库和表，并插入数据：
+在 Master 主服务器上创建数据库和表，并插入数据：
 ```
 mysql> create database test;
 mysql> use test;
@@ -528,13 +526,6 @@ sudo rm -f /var/log/mysqld.log
 ```
 
 ## 十一、参考
-1. [MySQL v5.7 rpm 安装包]( https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.29-1.el7.x86_64.rpm-bundle.tar)
+1. [MySQL v5.7 RPM 安装包]( https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.29-1.el7.x86_64.rpm-bundle.tar)
 3. [MySQL 官网各个版本安装包](https://downloads.mysql.com/archives/community/)
-
-
-
-
-
-
-
-
+

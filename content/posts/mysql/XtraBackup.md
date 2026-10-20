@@ -21,7 +21,7 @@ Percona XtraBackup 是主流的 MySQL 在线热备份工具，支持非阻塞备
 
 ## 一、XtraDB Backup（Percona XtraBackup）介绍
 
-MySQL冷备、mysqldump、MySQL热拷贝都无法实现对数据库的增量备份。在实际生产环境中增量备份是非常实用的，如果数据大于50G或100G，存储空间足够的情况下，可以每天进行完整备份，如果每天产生的数据量较大，需要定制数据备份策略。例如每周使用完整备份，周一到周六使用增量备份。而Percona-Xtrabackup就是为了实现增量备份而出现的一款主流备份工具，xtrabackup有2个工具，分别是xtrabackup、innobackupex。
+MySQL 冷备、mysqldump、MySQL 热拷贝都无法实现对数据库的增量备份。在实际生产环境中增量备份是非常实用的，如果数据大于 50G 或 100G，存储空间足够的情况下，可以每天进行完整备份，如果每天产生的数据量较大，需要定制数据备份策略。例如每周使用完整备份，周一到周六使用增量备份。而 Percona-Xtrabackup 就是为了实现增量备份而出现的一款主流备份工具，xtrabackup 有 2 个工具，分别是 xtrabackup、innobackupex。
 
 **XtraBackup** 是由 Percona 开发的开源工具，专门用于 MySQL 及兼容数据库（如 MariaDB、Percona Server）的**在线热备份**。它支持 InnoDB/XtraDB 存储引擎的高效备份，具有以下核心特性：
 
@@ -32,13 +32,12 @@ MySQL冷备、mysqldump、MySQL热拷贝都无法实现对数据库的增量备�
 5. **自动实现备份检验**
 6. **开源，免费**
 
-
 ### XtraBackup 对备份 MySQL 数据表类型的支持
-众所周知，Xtrabackup是一个对InnoDB做数据备份的工具，支持在线热备份（备份时不影响数据读写），是商业备份工具InnoDB Hotbackup的一个很好的替代品。但是在公司生产环境常用的版本还是MySQL v5.7 及之前的版本，也有一些业务升级到了MySQL 8.0版本，不同的业务使用的表类型不同，在使用Xtrabackup时我们要了解它的适用范围以及会有哪些影响。
+众所周知，Xtrabackup 是一个对 InnoDB 做数据备份的工具，支持在线热备份（备份时不影响数据读写），是商业备份工具 InnoDB Hotbackup 的一个很好的替代品。但是在公司生产环境常用的版本还是 MySQL v5.7 及之前的版本，也有一些业务升级到了 MySQL 8.0 版本，不同的业务使用的表类型不同，在使用 Xtrabackup 时我们要了解它的适用范围以及会有哪些影响。
 
 在 **Percona XtraBackup** 的历史版本中，**2.4 版本** 是最后一个支持同时备份 **InnoDB** 和 **MyISAM** 表的版本。  
 
-#### 关键点：
+#### 关键点
 1. XtraBackup 2.4：
    - 支持 **InnoDB**（包括 XtraDB）的热备份（不锁表）。
    - 支持 **MyISAM** 的备份，但会短暂锁定表（`FLUSH TABLES WITH READ LOCK`）。
@@ -48,35 +47,33 @@ MySQL冷备、mysqldump、MySQL热拷贝都无法实现对数据库的增量备�
    - 从 **XtraBackup 8.0** 开始，Percona 移除了对 **MyISAM** 表的支持，仅专注于 **InnoDB** 和 **Percona Server** 的增强功能。  
    - 适用于 **MySQL 8.0** 及更高版本。  
 
-#### 建议：
+#### 建议
 - 如果你的数据库包含 **MyISAM** 表，并且需要完整备份，请使用 **XtraBackup 2.4**。  
 - 如果只有 **InnoDB** 表，建议使用最新的 **XtraBackup 8.0+** 以获得更好的性能和兼容性。  
 
-#### 额外说明：
+#### 额外说明
 - **XtraBackup 2.4** 仍然可以备份 **MyISAM** 表，但备份期间会短暂锁表，可能影响写入操作。  
 - 对于纯 **InnoDB** 环境，推荐升级到 **XtraBackup 8.0+** 以支持 MySQL 8.0 的新特性（如 **redo log** 格式变更）。  
 
-
 ### XtraBackup 工具介绍
-xtrabackup工具文件组成:
-- Xtrabackup2.2 版之前包括4个可执行文件:
+xtrabackup 工具文件组成：
+- Xtrabackup2.2 版之前包括 4 个可执行文件：
 - innobackupex: Perl 脚本
 - xtrabackup: C/C++，编译的二进制程序
 - xbcrypt: 加解密
 - xbstream: 支持并发写的流文件格式
  
-xtrabackup 是用来备份 InnoDB 表的，不能备份非InnoDB 表，和 MySQLServer 没有交互
+xtrabackup 是用来备份 InnoDB 表的，不能备份非 InnoDB 表，和 MySQLServer 没有交互
 
-innobackupex 脚本用来备份非InnoDB 表，同时会调用 xtrabackup 命令来备份 InnoDB 表，还会向 MySQLServer 发送命令进行交互，如加全局读锁(FTWRL)、获取位点(SHOW SLAVESTATUS)等。即innobackupex是在 xtrabackup 之上做了一层封装实现的
+innobackupex 脚本用来备份非 InnoDB 表，同时会调用 xtrabackup 命令来备份 InnoDB 表，还会向 MySQLServer 发送命令进行交互，如加全局读锁（FTWRL）、获取位点（SHOW SLAVESTATUS）等。即 innobackupex 是在 xtrabackup 之上做了一层封装实现的
 
-**xtrabackup的新版变化**
+**xtrabackup 的新版变化**
 
-xtrabackup版本升级到2.4后，相比之前的2.1有了比较大的变化:innobackupex 功能全部集成到 xtrabackup 里面，只有一个 binary程序，另外为了兼容考虑，innobackupex作为xtrabackup的软链接，即xtrabackup现在支持非Innodb表备份，并且Innobackupex在下一版本中移除，建议通过xtrabackup替换innobackupex
+xtrabackup 版本升级到 2.4 后，相比之前的 2.1 有了比较大的变化:innobackupex 功能全部集成到 xtrabackup 里面，只有一个 binary 程序，另外为了兼容考虑，innobackupex 作为 xtrabackup 的软链接，即 xtrabackup 现在支持非 Innodb 表备份，并且 Innobackupex 在下一版本中移除，建议通过 xtrabackup 替换 innobackupex
 
-### xtrabackup备份流程图
+### xtrabackup 备份流程图
 
 ![xtrabackup-backup-process](/images/mysql/xtrabackup-backup-process.png "xtrabackup备份流程图")
-
 
 ---
 
@@ -88,7 +85,7 @@ xtrabackup版本升级到2.4后，相比之前的2.1有了比较大的变化:inn
 | **2.4.x**            | MySQL 5.6、5.7、Percona 5.7 | 支持 MySQL 5.6/5.7，**不兼容 MySQL 8.0**                                 |
 | **2.3.x 及以下**     | MySQL 5.5 或更早版本         | 已逐渐淘汰                                                              |
 
-#### 关键注意事项：
+#### 关键注意事项
 1. **MySQL 8.0 必须使用 XtraBackup 8.0+**，否则备份会直接报错（例如 `Unsupported redo log format`）。
 2. **MySQL 5.7 建议使用 XtraBackup 2.4.x**，部分 8.0 版本可能兼容但需验证。
 3. **Percona Server 需与 XtraBackup 版本对齐**（如 Percona Server 5.7 → XtraBackup 2.4）。
@@ -168,9 +165,8 @@ xtrabackup --version
 ```
 
 {{< admonition type=note >}}
-xtrabackup 和 mysql 数据库版本是有对应关系的
+xtrabackup 和 MySQL 数据库版本是有对应关系的
 {{< /admonition >}}
-
 
 ## 三、使用 XtraBackup 进行增量备份及还原
 ### 1. 全量备份
@@ -191,7 +187,6 @@ cat /path/to/full_backup/xtrabackup_info
 cat /path/to/full_backup/backup-my.cnf
 ```
 
-
 #### 2. 备份文件结构
 - 全量备份：包含所有数据文件。
 - 增量备份：仅含变化的数据页（文件后缀 `.delta` 和 `.meta`）。
@@ -199,8 +194,8 @@ cat /path/to/full_backup/backup-my.cnf
 ---
 
 ### 2. 还原全量备份
-- 还原前需要停掉MySQL 服务
-- 确保MySQL 数据目录是清空状态
+- 还原前需要停掉 MySQL 服务
+- 确保 MySQL 数据目录是清空状态
 #### 1. 预整理
 预整理，目的是将未完成的事务进行回滚
 ```bash
@@ -210,7 +205,6 @@ xtrabackup --prepare  --target-dir=/path/to/full_backup
 {{< admonition type=note >}}
 适合单纯地进行全量备份的恢复，并且没有打算在其上应用任何增量备份
 {{< /admonition >}}
-
 
 #### 2. 最终准备并恢复数据
 ```bash
@@ -229,7 +223,7 @@ xtrabackup --copy-back --target-dir=/path/to/full_backup
 ```shell
 chown -R mysql:mysql /var/lib/mysql
 ```
-- `/var/lib/mysql` 是默认目录，可通过`/etc/my.cnf`来进行查看，如有修改动态调整
+- `/var/lib/mysql` 是默认目录，可通过 `/etc/my.cnf` 来进行查看，如有修改动态调整
 
 #### 5.启动服务
 ```shell
@@ -254,19 +248,19 @@ xtrabackup --backup --target-dir=/path/to/inc_backup_2 \
           
 ```
 - `--incremental-basedir`：指向上次备份的目录（全量或增量）。
-- 备份生成三个备份目录`/path/to/{full_backup,inc_backup_1,inc_backup_2}`
+- 备份生成三个备份目录 `/path/to/{full_backup,inc_backup_1,inc_backup_2}`
 
 ### MySQL 增量备份（基于 xtrabackup）还原
-- 还原前需要停掉MySQL 服务
-- 确保MySQL 数据目录是清空状态
+- 还原前需要停掉 MySQL 服务
+- 确保 MySQL 数据目录是清空状态
 #### 1. 准备全量备份
 预准备：确保数据一致，阻止回滚未完成的事务
 ```bash
 xtrabackup --prepare --apply-log-only --target-dir=/path/to/full_backup
 ```
-- --apply-log-only阻止回滚未完成的事务，它仅执行redo日志的应用而不执行undo操作。这意味着事务不会被回滚。
+- --apply-log-only 阻止回滚未完成的事务，它仅执行 redo 日志的应用而不执行 undo 操作。这意味着事务不会被回滚。
 
-**适用场景**：当计划应用增量备份（Incremental Backup）到全量备份时，需要先使用这个命令来准备全量备份。这样做是为了确保后续的增量备份可以正确地应用到基础备份上。 也就是说你的恢复策略包括先做一次全量备份，然后在此基础上应用一个或多个增量备份，则首先需要使用第一个命令（带--apply-log-only选项）准备全量备份，之后按照顺序逐一准备并应用每个增量备份（同样使用--apply-log-only直到最后一个增量备份）。最后，使用不带--apply-log-only选项的命令来完成准备过程，使得整个备份集（包括全量和所有增量部分）可以用于恢复。
+**适用场景**：当计划应用增量备份（Incremental Backup）到全量备份时，需要先使用这个命令来准备全量备份。这样做是为了确保后续的增量备份可以正确地应用到基础备份上。也就是说你的恢复策略包括先做一次全量备份，然后在此基础上应用一个或多个增量备份，则首先需要使用第一个命令（带--apply-log-only 选项）准备全量备份，之后按照顺序逐一准备并应用每个增量备份（同样使用--apply-log-only 直到最后一个增量备份）。最后，使用不带--apply-log-only 选项的命令来完成准备过程，使得整个备份集（包括全量和所有增量部分）可以用于恢复。
 
 #### 2. 还原合并增量备份
 合并增量备份到全量备份：
@@ -287,9 +281,8 @@ xtrabackup --copy-back --target-dir=/path/to/full_backup
 - 这里也可以使用 cp 命令进行复制
 
 {{< admonition type=note >}}
-数据库目录必须为空，且MySQL服务不能启动
+数据库目录必须为空，且 MySQL 服务不能启动
 {{< /admonition >}}
-
 
 #### 4.还原属性
 修改所属者和所属组
@@ -302,7 +295,6 @@ chown -R mysql:mysql /var/lib/mysql
 ```shell
 systemctl start mysqld
 ```
-
 
 ### MySQL 增量备份（基于 Binlog）
 
@@ -421,7 +413,7 @@ xtrabackup --prepare \
 #### 补充 安装 qpress 解压缩
 qpress 便携式高速文件归档器
 
-当全量备份进行压缩后，在还原时解压需要`qpress`命令
+当全量备份进行压缩后，在还原时解压需要 `qpress` 命令
 ```shell
 $ wget -d --user-agent="Mozilla/5.0 (Windows NT x.y; rv:10.0) Gecko/20100101 Firefox/10.0" https://docs-tencentdb-1256569818.cos.ap-guangzhou.myqcloud.com/qpress-11-linux-x64.tar
 
@@ -499,7 +491,6 @@ $ source /etc/profile
 - 监控备份任务状态，确保无失败或遗漏。  
 - 定期演练恢复流程（如每季度一次），验证备份有效性。
 
-
 ### 四、典型场景调整建议
 | **场景**               | **全量备份频率** | **增量备份频率**      | **备注**                          |
 |------------------------|------------------|-----------------------|-----------------------------------|
@@ -507,7 +498,6 @@ $ source /etc/profile
 | 中型数据库（100GB~1TB）| 每周 1 次        | 每日 1 次（或 12h/次）| 增量频率可根据白天/夜间负载调整。 |
 | 大型数据库（> 1TB）    | 每周 1 次        | 每日 2-4 次           | 缩短增量间隔，避免单次增量过大。  |
 | 超高写入负载数据库     | 每 3 天 1 次     | 每小时 1 次           | 通过更频繁全量备份减少增量链长度。|
-
 
 ### 总结
 - **核心原则**：全量备份频率由数据量和恢复时间容忍度决定，增量备份频率由数据变更速度决定。  
@@ -533,5 +523,5 @@ $ source /etc/profile
 1. [XtraDB Backup 官网](https://www.percona.com/mysql/software/percona-xtrabackup)
 2. [Percona Operator for MySQL based on Percona Server for MySQL](https://docs.percona.com/percona-server/5.7/)
 3. [XtraDB Backup 下载](https://www.percona.com/downloads)
-4. [github autoxtrabackup script](https://github.com/gstorme/autoxtrabackup/tree/master) 
+4. [GitHub autoxtrabackup script](https://github.com/gstorme/autoxtrabackup/tree/master) 
 5. [gitee autoxtrabackup script](https://gitee.com/lu_shuan/autoxtrabackup) 

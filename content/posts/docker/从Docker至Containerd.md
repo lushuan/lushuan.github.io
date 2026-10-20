@@ -14,37 +14,37 @@ slug: "docker-to-containerd"
 summary: "本文整理了容器运行时从 Docker 迁移至 containerd 后的常用命令对照，包括 ctr/crictl 的命名空间差异、未使用镜像清理以及本地与容器间文件拷贝等日常操作。"
 ---
 
-在将容器运行时从 Docker 迁移至 containerd 之后，日常运维命令也随之变化。本文整理了 ctr、crictl 与 docker 命令的对应关系和注意事项，包括命名空间概念的差异、清理未使用镜像释放本地空间，以及本地文件与容器内文件之间的拷贝方法。
+在将容器运行时从 Docker 迁移至 containerd 之后，日常运维命令也随之变化。本文整理了 ctr、crictl 与 Docker 命令的对应关系和注意事项，包括命名空间概念的差异、清理未使用镜像释放本地空间，以及本地文件与容器内文件之间的拷贝方法。
 
 <!--more-->
 
-平时较多使用的是docker，项目将容器运行时迁移至了containerd，这里整理下相关的操作命令
+平时较多使用的是 Docker，项目将容器运行时迁移至了 containerd，这里整理下相关的操作命令
 
 ## 一、常用指令对比
-ctr是containerd自带的工具，有命名空间的概念
-crictl是k8s社区的专用CLI工具，所有操作都在命名空间k8s.io
-所以使用ctr操作时注意指定-n k8s.io
+ctr 是 containerd 自带的工具，有命名空间的概念
+crictl 是 K8s 社区的专用 CLI 工具，所有操作都在命名空间 k8s.io
+所以使用 ctr 操作时注意指定-n k8s.io
 
 ![docker-containerd-k8s](../../images/kubernetes/docker-containerd-k8s.png "Docker vs Containerd")
 
 ## 二、清理未被使用的镜像，一般用于释放本地空间
-docker 场景
+Docker 场景
 ```
 docker image prune -a
 ```
-containerd场景（需要高版本crictl）
+containerd 场景（需要高版本 crictl）
 ```
 crictl rmi --prune
 ```
 
 ## 三、本地文件和容器内文件间拷贝
-docker 场景
+Docker 场景
 ```
 docker cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|-
 docker cp [OPTIONS] SRC_PATH|- CONTAINER:DEST_PATH
 ```
 
-使用kubectl cp 
+使用 kubectl cp 
 ```
 Copy files and directories to and from containers.
 
@@ -74,7 +74,4 @@ Usage:
 
 Use "kubectl options" for a list of global command-line options (applies to all commands).
 ```
-
-
-
-
+

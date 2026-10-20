@@ -20,12 +20,12 @@ summary: "本文记录在 openEuler/CentOS 等 Linux 系统上部署 NVIDIA 显�
 <!--more-->
 
 ## 背景
-部署通义千问大模型`qwen2.5-7b-awq`基础环境预安装
+部署通义千问大模型 `qwen2.5-7b-awq` 基础环境预安装
 
 ## 服务器配置
-- 操作环境：openEuler 22.03 (欧拉-LTS-SP1)
-- cpu: 40c        memory: 186G  disk: 2T
-- GPU物理机，显卡型号为NVIDIA Tesla T4 (Tesla T4 被广泛应用于云端推理服务、虚拟桌面基础设施(VDI)、视频转码等领域)
+- 操作环境：openEuler 22.03（欧拉-LTS-SP1）
+- CPU: 40c        memory: 186G  disk: 2T
+- GPU 物理机，显卡型号为 NVIDIA Tesla T4（Tesla T4 被广泛应用于云端推理服务、虚拟桌面基础设施（VDI）、视频转码等领域）
 
 查看 GPU 型号
 ```
@@ -70,13 +70,13 @@ $ sudo apt install -y g++ gcc gcc-c++ make build-essential pciutils  bzip2 dkms
 # redhat
 $ sudo yum install -y g++ gcc gcc-c++  make  pciutils  bzip2 dkms
 ```
-查看是否已安装gcc和pciutils
+查看是否已安装 gcc 和 pciutils
 ```
 # 验证系统是否有GCC编译环境
 $ gcc --version
 $ lspci
 ```
-查看内核版本和GPU
+查看内核版本和 GPU
 ```
 $ uname -a
 # 查找与 NVIDIA 相关的硬件设备显卡
@@ -99,7 +99,6 @@ kernel-tools-3.10.0-1160.119.1.el7.x86_64
 查看内核版本是否匹配，如果匹配则跳过重新安装，不匹配需要重新安装进行匹配
 {{< /admonition >}}
 
-
 在线安装
 ```
 # optional可选
@@ -107,7 +106,7 @@ sudo yum remove kernel-devel-$(uname -r) kernel-headers-$(uname -r)
 # 安装
 sudo yum install kernel-devel-$(uname -r) kernel-headers-$(uname -r)
 ```
-离线安装下载centos源码包
+离线安装下载 CentOS 源码包
 ```
 devel地址：http://rpmfind.net/linux/rpm2html/search.php?query=kernel-devel
 headers地址：http://rpmfind.net/linux/rpm2html/search.php?query=kernel-headers
@@ -117,8 +116,6 @@ headers地址：http://rpmfind.net/linux/rpm2html/search.php?query=kernel-header
 $ rpm -ivh kernel-devel-3.10.0-1160.119.1.el7.x86_64.rpm --nodeps --force
 $ rpm -ivh kernel-rpm -ivh kernel-headers-3.10.0-1160.119.1.el7.x86_64.rpm --force
 ```
-
-
 
 ## 2. 检查显卡
 查看显卡信息和驱动信息
@@ -148,24 +145,24 @@ $ lspci -s 03:00.0 -v
 ```
 
 ## 3. 安装
-安装先检查有没有 cuda 支持的GPU
+安装先检查有没有 CUDA 支持的 GPU
 ```
 $ lspci | grep -i nvidia
 3b:00.0 3D controller: NVIDIA Corporation TU104GL [Tesla T4] (rev a1)
 ```
-### Nouveau开源图形驱动禁用
+### Nouveau 开源图形驱动禁用
 后面安装时的告警信息，提前预知
 ```
 WARNING: The Nouveau kernel driver is currently in use by your system.  This driver is incompatible with
 the NVIDIA driver，and must be disabled before proceeding.
 ```
-警告：您的系统当前正在使用Nouveau内核驱动程序。此驱动程序与NVIDIA驱动程序不兼容，必须先禁用才能继续。
+警告：您的系统当前正在使用 Nouveau 内核驱动程序。此驱动程序与 NVIDIA 驱动程序不兼容，必须先禁用才能继续。
 
 解释：  
-Nouveau是由第三方为NVIDIA显卡提供的开源图形驱动，但它与NVIDIA官方提供的驱动可能不兼容，尤其在运行特定的游戏或应用程序时可能会出现性能问题。如果系统报告Nouveau驱动正在使用中，可能意味着你的系统没有使用NVIDIA官方提供的驱动，这可能会降低图形性能或者导致系统不稳定。
+Nouveau 是由第三方为 NVIDIA 显卡提供的开源图形驱动，但它与 NVIDIA 官方提供的驱动可能不兼容，尤其在运行特定的游戏或应用程序时可能会出现性能问题。如果系统报告 Nouveau 驱动正在使用中，可能意味着你的系统没有使用 NVIDIA 官方提供的驱动，这可能会降低图形性能或者导致系统不稳定。
 
 解决方法：  
-1. 禁用Nouveau驱动：  
+1. 禁用 Nouveau 驱动：  
 Nouveau 是一个开源的图形驱动程序，用于支持 NVIDIA 显卡在 Linux 系统上的使用。它是由社区开发的，旨在提供对 NVIDIA 显卡的开源驱动支持，以便在 Linux 系统上实现图形加速和其他相关功能。在安装专有的 NVIDIA 驱动之前，通常需要禁用 Nouveau 驱动
 
 创建文件/etc/modprobe.d/blacklist-nouveau.conf，并添加以下内容：
@@ -190,7 +187,7 @@ $ sudo vi /etc/modprobe.d/blacklist-nouveau.conf
 blacklist nouveau
 options nouveau modeset=0
 ```
-禁用Nouveau驱动后更新initramfs：
+禁用 Nouveau 驱动后更新 initramfs：
 
 修改模块黑名单后，需要更新 initramfs 以确保更改生效
 
@@ -200,7 +197,6 @@ sudo update-initramfs -u
 # redhat
 sudo dracut --force
 ```
-
 备份当前的镜像并建立新的镜像
 ```
 #备份当前的镜像
@@ -213,7 +209,7 @@ $ sudo reboot
 $ lsmod | grep nouveau
 ```
 
-2. 要卸载nouveau驱动并清除相关配置文件，请执行以下命令：(可选)
+2. 要卸载 nouveau 驱动并清除相关配置文件，请执行以下命令：（可选）
 禁用掉即可
 ```
 # debian
@@ -222,7 +218,7 @@ sudo apt-get remove --purge nouveau
 sudo yum t remove --purge nouveau
 ```
 
-### 安装Nvidia驱动
+### 安装 NVIDIA 驱动
 GPU 云服务器正常工作需安装正确的基础设施软件，对 NVIDIA 系列 GPU 而言，有两个层次的软件包需要安装：
 
 - 驱动 GPU 工作的硬件驱动程序。
@@ -234,7 +230,7 @@ GPU 云服务器正常工作需安装正确的基础设施软件，对 NVIDIA �
 
 禁用 Secure Boot 会降低系统对恶意内核代码的防护能力，但允许加载未签名的驱动（如 NVIDIA 驱动）
 
- **方法1. 检查是否启用 Secure Boot**
+ **方法 1. 检查是否启用 Secure Boot**
 ```shell
 # 安装 mokutil（如果未安装）
 $ sudo yum install mokutil -y
@@ -247,7 +243,7 @@ Platform is in Setup Mode
   - **`SecureBoot enabled`** 表示已启用。  
   - **`SecureBoot disabled`** 表示已禁用。
 
-**方法2.检查 UEFI 变量文件**
+**方法 2.检查 UEFI 变量文件**
 ```bash
 # 确认系统使用 UEFI 启动（非传统 BIOS）
 ls /sys/firmware/efi
@@ -275,14 +271,12 @@ Secure Boot 是 UEFI 固件的功能，禁用需进入主板的 **BIOS/UEFI 设�
 **步骤 4：验证禁用结果**
 重启后回到 CentOS 7，再次运行检查命令（如 `sudo mokutil --sb-state`），确认输出为 **`SecureBoot disabled`**。
 
+####  安装驱动后缀分为.run 和.rpm
+1.打开 NVIDIA 驱动下载链接 [Advanced Driver Search | NVIDIA](https://www.nvidia.cn/drivers/lookup/)。
 
+2.选择支持 RPM 或者 RUN 的操作系统，并获取该包的下载链接。例如：选择 CentOS 7.x，得到下载链接：[Download NVIDIA, GeForce, Quadro, and Tesla Drivers](https://www.nvidia.cn/geforce/drivers/) 可选安装
 
-####  安装驱动后缀分为.run和.rpm
-1.打开 NVIDIA 驱动下载链接 [Advanced Driver Search | NVIDIA](https://www.nvidia.cn/drivers/lookup/) 。
-
-2.选择支持 RPM 或者RUN的操作系统，并获取该包的下载链接。例如：选择 CentOS 7.x， 得到下载链接：[Download NVIDIA, GeForce, Quadro, and Tesla Drivers](https://www.nvidia.cn/geforce/drivers/) 可选安装
-
-3. 安装NVIDIA官方驱动
+3. 安装 NVIDIA 官方驱动
 关闭图形界面以避免冲突：
 ```
 sudo systemctl isolate multi-user.target
@@ -291,7 +285,7 @@ sudo systemctl isolate multi-user.target
 运行安装脚本：
 
 确定你的显卡型号。
-从NVIDIA官网下载对应显卡的驱动程序。
+从 NVIDIA 官网下载对应显卡的驱动程序。
 安装驱动请查看以下文章：
 
 ```
@@ -326,7 +320,7 @@ Would you like to register the kernel module sources with DKMS? This will allow 
 Would you like to run the nvidia-xconfig utility to automatically update your X configuration file so that the NVIDIA X driver is used when you restart X?
 ```
 - 如果您计划使用图形界面，建议选择“是”。这将确保 X Server 启动时使用 NVIDIA 驱动。
-3. 32位兼容库
+3. 32 位兼容库
 如果您在一个 64 位系统上安装驱动，安装程序可能会询问是否安装 32 位兼容库：
 ```
 Install NVIDIA's 32-bit compatibility libraries?
@@ -387,11 +381,11 @@ $ nvidia-smi pmon -s u -d 1
 {{< /admonition >}}
 
 ### 安装 CUDA（可选）
-CUDA (Compute Unified Device Architecture) 是显卡厂商 NVIDIA 推出的运算平台。 CUDA™ 是一种由 NVIDIA 推出的通用并行计算架构，该架构使 GPU 能够解决复杂的计算问题。 它包含了 CUDA 指令集架构（ISA）以及 GPU 内部的并行计算引擎。 开发人员现在可以使用 C 语言, C++ , FORTRAN 来为 CUDA™ 架构编写程序，所编写出的程序可以在支持 CUDA™ 的处理器上以超高性能运行。
+CUDA（Compute Unified Device Architecture） 是显卡厂商 NVIDIA 推出的运算平台。 CUDA™ 是一种由 NVIDIA 推出的通用并行计算架构，该架构使 GPU 能够解决复杂的计算问题。它包含了 CUDA 指令集架构（ISA）以及 GPU 内部的并行计算引擎。开发人员现在可以使用 C 语言， C++ , FORTRAN 来为 CUDA™ 架构编写程序，所编写出的程序可以在支持 CUDA™ 的处理器上以超高性能运行。
 GPU 云服务器采用 NVIDIA 显卡，需要安装 CUDA 开发运行环境。
 
-1.[CUDA驱动下载](https://developer.nvidia.com/cuda-75-downloads-arch) 
-2.选择操作系统和安装包，以CentOS 7为例
+1.[CUDA 驱动下载](https://developer.nvidia.com/cuda-75-downloads-arch) 
+2.选择操作系统和安装包，以 CentOS 7 为例
 
 ```
 Installation Instructions:
@@ -399,26 +393,24 @@ Installation Instructions:
 `sudo yum clean all`
 `sudo yum install cuda`
 ```
-在/usr/local/cuda/samples/1_Utilities/deviceQuery目录下，执行make命令，可以编译出deviceQuery程序。
+在/usr/local/cuda/samples/1_Utilities/deviceQuery目录下，执行 make 命令，可以编译出 deviceQuery 程序。
 ```
 $ cd /usr/local/cuda/samples/1_Utilities/deviceQuery
 $ make 
 ```
-执行deviceQuery正常显示设备信息，此刻认为CUDA安装正确。
+执行 deviceQuery 正常显示设备信息，此刻认为 CUDA 安装正确。
 
 {{< admonition type=note >}}
-如果使用rpm文件报错，则考虑使用run文件进行安装(runfile(local))
+如果使用 RPM 文件报错，则考虑使用 run 文件进行安装(runfile(local))
 {{< /admonition >}}
-
 
 ```
 # 下载run文件进行安装
 sh cuda_*.run
 ```
-建议最好不要使用GUI图形化界面操作，容易报错。
+建议最好不要使用 GUI 图形化界面操作，容易报错。
 
-
-####  驱动程序和 CUDA 的关系：
+####  驱动程序和 CUDA 的关系
 
 可以把 **驱动程序（Driver）** 和 **CUDA** 想象成 **“汽车引擎”** 和 **“赛车配件包”** 的关系：
 
@@ -479,16 +471,15 @@ sh cuda_*.run
 - **关系**：驱动是“汽油”，CUDA 是“赛车改装套件”——想飙车？两者缺一不可！
 
 ## 安装 NVIDIA container toolkit 配套工具
-**NVIDIA Container Toolkit介绍：**
-NVIDIA Container Toolkit(容器工具包)使用户能够构建和运行 GPU 加速的容器，该工具包括一个容器运行时库和实用程序，用于自动配置容器以利用 NVIDIA GPU。
+**NVIDIA Container Toolkit 介绍：**
+NVIDIA Container Toolkit（容器工具包）使用户能够构建和运行 GPU 加速的容器，该工具包括一个容器运行时库和实用程序，用于自动配置容器以利用 NVIDIA GPU。
 
 **使用背景**
 在使用大模型的时候，很多情况需要经常更新模型或者使用平台，所以时常更新代码或环境。
-但是若在实体机更新导致环境混乱，维护不便，所以使用 docker 环境进行更新。
-使用 docker 运行模型的时候要让其支持 GPU 需要使用 nvidia-container-toolkit 工具。
+但是若在实体机更新导致环境混乱，维护不便，所以使用 Docker 环境进行更新。
+使用 Docker 运行模型的时候要让其支持 GPU 需要使用 nvidia-container-toolkit 工具。
 
 NVIDIA Container Toolkit 为容器化 GPU 加速工作提供了高效且便捷的解决方案，是深度学习和科学计算等场景的核心工具之一。
-
 
 **核心功能**
 1. GPU 加速支持：
@@ -524,8 +515,7 @@ NVIDIA Container Toolkit 为容器化 GPU 加速工作提供了高效且便捷�
 - NVIDIA 驱动程序：确保主机已安装支持的 NVIDIA 驱动程序。
 - Docker：安装 Docker，版本需为 19.03 或更高。
 
-
-检查`nvidia-container-toolkit`  NVIDIA 容器工具包是否安装
+检查 `nvidia-container-toolkit`  NVIDIA 容器工具包是否安装
 ```
 # debian
 $ dpkg -l | grep nvidia-container-toolkit
@@ -583,8 +573,8 @@ NVIDIA Container Runtime Hook version 1.14.6
 commit: 5605d191332dcfeea802c4497360d60a65c7887e
 ```
 {{< admonition type=note >}}
-- docker v20+ 以上用 nvidia-container-toolkit 代替 nvidia-docker2
-- nvidia-container-runtime现在叫 nvidia-container-toolkit
+- Docker v20+ 以上用 nvidia-container-toolkit 代替 nvidia-docker2
+- nvidia-container-runtime 现在叫 nvidia-container-toolkit
 {{< /admonition >}}
 
 ## 容器运行时配置
@@ -596,7 +586,7 @@ INFO[0000] Wrote updated config to /etc/docker/daemon.json
 INFO[0000] It is recommended that docker daemon be restarted. 
 ```
 
-这个命令实际上是对 docker 的配置文件/etc/docker/daemon.json进行修改，内容如下：
+这个命令实际上是对 Docker 的配置文件/etc/docker/daemon.json进行修改，内容如下：
 ```
 # 新增配置：
 {
@@ -612,7 +602,7 @@ INFO[0000] It is recommended that docker daemon be restarted.
   ...
 }
 ```
-修改后重启docker
+修改后重启 Docker
 ```
 $ sudo systemctl daemon-reload 
 $ systemctl restart docker containerd
@@ -707,30 +697,30 @@ sslcacert=/etc/pki/tls/certs/ca-bundle.crt
 EOF
 yum install -y nvidia-container-toolkit
 ```
-### nvidia docker, nvidia docker2, nvidia container toolkits区别
-在docker容器中用GPU时，查阅了网上许多教程，教程之间概念模糊不清，相互矛盾，过时的教程和新的教程混杂在一起。主要原因是Nvidia对docker容器的支持发生了好几代变更，api发生了不少变化。
+### NVIDIA Docker, NVIDIA docker2, NVIDIA container toolkits 区别
+在 Docker 容器中用 GPU 时，查阅了网上许多教程，教程之间概念模糊不清，相互矛盾，过时的教程和新的教程混杂在一起。主要原因是 NVIDIA 对 Docker 容器的支持发生了好几代变更，API 发生了不少变化。
 
 **省流版总结**  
-凡是使用了命令nvidia docker或者在docker中引入了--runtime=nvidia参数的都是过时教程，最新方法只需要下载nvidia-container-toolkits，在docker中引入--gpus参数即可。
+凡是使用了命令 NVIDIA Docker 或者在 Docker 中引入了--runtime=NVIDIA 参数的都是过时教程，最新方法只需要下载 nvidia-container-toolkits，在 Docker 中引入--gpus 参数即可。
 
-#### nvidia docker(不推荐)
-nvidia docker是NVIDIA第一代支持docker容器内使用GPU资源的项目。运行时用nvidia-docker命令。
+#### NVIDIA Docker（不推荐）
+NVIDIA Docker 是 NVIDIA 第一代支持 Docker 容器内使用 GPU 资源的项目。运行时用 nvidia-docker 命令。
 
-根据nvidia docker在github ( https://github.com/NVIDIA/nvidia-docker )上的描述，已经不再使用了
+根据 NVIDIA Docker 在 GitHub（https://github.com/NVIDIA/nvidia-docker）上的描述，已经不再使用了
 
-#### nvidia docker2(不推荐)
-nvidia docker2是NVIDIA第二代支持docker容器内使用GPU资源的项目。运行时用nvidia-docker命令，且需要指定参数--runtime=nvidia.
+#### NVIDIA docker2（不推荐）
+NVIDIA docker2 是 NVIDIA 第二代支持 Docker 容器内使用 GPU 资源的项目。运行时用 nvidia-docker 命令，且需要指定参数--runtime=nvidia.
 
-根据 github (https://github.com/NVIDIA/nvidia-docker#backward-compatibility) 的描述，一代和二代之间有如下兼容性。
+根据 GitHub（https://github.com/NVIDIA/nvidia-docker#backward-compatibility） 的描述，一代和二代之间有如下兼容性。
 ```
 Backward compatibility To help transitioning code from 1.0 to 2.0, a bash script is provided in /usr/bin/nvidia-docker for backward compatibility. It will automatically inject the --runtime=nvidia argument and convert NV_GPU to NVIDIA_VISIBLE_DEVICES.
 ```
-也就是说，在二代中，既可以使用nvidia docker命令，这会自动引入参数--runtime=nvidia，也可以使用docker命令，手动指定参数--runtime=nvidia
+也就是说，在二代中，既可以使用 NVIDIA Docker 命令，这会自动引入参数--runtime=NVIDIA，也可以使用 Docker 命令，手动指定参数--runtime=NVIDIA
 
-#### nvidia-container-toolkits(推荐)
-根据github这是最新的支持方案，如帖子描述，nvidia docker2 被Nvidia container toolkits取代，无需指定--runtime参数，只需要传递--gpus参数
+#### nvidia-container-toolkits（推荐）
+根据 GitHub 这是最新的支持方案，如帖子描述，NVIDIA docker2 被 NVIDIA container toolkits 取代，无需指定--runtime 参数，只需要传递--gpus 参数
 
-## k8s 部署nvidia设备插件(扩展)
+## K8s 部署 NVIDIA 设备插件（扩展）
 ```
 $ kubectl apply -f https://raw.githubusercontent.com/NVIDIA/k8s-device-plugin/1.0.0-beta4/nvidia-device-plugin.yml
 # 或者安装 NVIDIA GPU Operator，适用K8S版本 1.23版本以上
@@ -743,8 +733,8 @@ $ helm install -n gpu-operator --create-namespace gpu-operator nvidia/gpu-operat
   --set driver.vgpu.enabled=true \
   --set migStrategy=mixed
 ```
-### k8s 调度GPU 任务测试
-**测试一`gpu.yaml`**
+### K8s 调度 GPU 任务测试
+**测试一 `gpu.yaml`**
 
 ```
 apiVersion: v1
@@ -763,7 +753,6 @@ spec:
       memory: 512Mi
       nvidia.com/gpu: 1 # requesting 1 GPU
 ```
-
 **测试二 `cat cuda-vectoradd.yaml`**
 
 ```
@@ -790,33 +779,30 @@ $ docker run -d  --gpus all--name pytorch  swr.cn-south-1.myhuaweicloud.com/myj-
 `docker exec -it pytorch  bash  执行 python3,调用cuda 计算显卡`
 
 **测试四**
-进pod 里面执行nvidia-smi 是否有输出，有输出说明成功了
-
+进 pod 里面执行 nvidia-smi 是否有输出，有输出说明成功了
 
 ## 排错答疑
 {{< admonition type=question >}}
 1. `could not select device driver "" with capabilities: [[gpu]]`
-- 通常是由于 Docker 没有正确识别到 GPU，或者 NVIDIA Docker 配置不正确。可能是 `nvidia-container-toolkit` 工具包没有安装，docker配置文件中的默认运行时没有添加nvidia配置
+- 通常是由于 Docker 没有正确识别到 GPU，或者 NVIDIA Docker 配置不正确。可能是 `nvidia-container-toolkit` 工具包没有安装，Docker 配置文件中的默认运行时没有添加 NVIDIA 配置
 
 2. `Is there a difference between: nvidia-docker run and docker run --runtime=nvidia ?`  
 - `docker run --runtime=nvidia is only available since nvidia-docker v2.`
 {{< /admonition >}}
 
-
-
 ## 参考
-1. [下载安装NVIDIA驱动程序](https://www.nvidia.cn/Download/index.aspx?lang=cn)
+1. [下载安装 NVIDIA 驱动程序](https://www.nvidia.cn/Download/index.aspx?lang=cn)
 2. [kernel 内核源码包](https://rpmfind.net/linux/rpm2html/search.php?query=kernel-devel)
-3. [Installation Guide Linux :: CUDA Toolkit Documentation](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html) 这里查看受支持的Linux版本
+3. [Installation Guide Linux :: CUDA Toolkit Documentation](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html) 这里查看受支持的 Linux 版本
 4. [NVIDIA Container Toolkit 介绍及安装 by Unbuntu ](https://blog.csdn.net/gs80140/article/details/144581141)
-5. [欧拉openEuler 22.03 (LTS-SP1)安装NVIDIA Driver](https://www.cnblogs.com/boradviews/p/18567780)
+5. [欧拉 openEuler 22.03 (LTS-SP1)安装 NVIDIA Driver](https://www.cnblogs.com/boradviews/p/18567780)
 6. [Installing the NVIDIA Container Toolkit 官网](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html)
 7. [Openeuler v22.03 AI 大模型服务镜像使用指南](https://docs.openeuler.org/zh/docs/22.03_LTS_SP4/docs/AI/AI%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%9C%8D%E5%8A%A1%E9%95%9C%E5%83%8F%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97.html)
-8. [nvidia-container-toolkit github](https://github.com/NVIDIA/nvidia-container-toolkit)
+8. [nvidia-container-toolkit GitHub](https://github.com/NVIDIA/nvidia-container-toolkit)
 9. [NVIDIA Container 运行时库 USTC 中科大官方镜像](https://mirrors.ustc.edu.cn/help/libnvidia-container.html)
-10. [CUDA  和GPU 驱动型兼容性](https://docs.nvidia.com/deploy/cuda-compatibility/)
+10. [CUDA  和 GPU 驱动型兼容性](https://docs.nvidia.com/deploy/cuda-compatibility/)
 
 {{< admonition type=info >}}
 本文档所提供的指引和参考主要基于特定实践设备的操作经验。由于不同设备在硬件配置、软件版本、使用场景等方面可能存在差异，因此，当您在使用其他设备时，所遇到的问题可能与此文档所述有所不同。尽管如此，大部分设备的安装方法和基本步骤仍然保持相似。
 {{< /admonition >}}
-
+

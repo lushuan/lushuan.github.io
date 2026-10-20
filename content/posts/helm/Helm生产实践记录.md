@@ -19,11 +19,11 @@ Helm 相当于 Kubernetes 的包管理工具，可以帮助我们定义、安装
 
 <!--more-->
 
-记录一下helm 在生产中的实践
+记录一下 helm 在生产中的实践
 
 Helm 可以帮助我们管理 Kubernetes 应用程序 - Helm Charts 可以定义、安装和升级复杂的 Kubernetes 应用程序，Charts 包很容易创建、版本管理、分享和分发。
 
-Helm 对于 Kubernetes 来说就相当于 yum 对于 Centos 来说，如果没有 yum 的话，我们在 Centos 下面要安装一些应用程序是极度麻烦的，同样的，对于越来越复杂的 Kubernetes 应用程序来说，如果单纯依靠我们去手动维护应用程序的 YAML 资源清单文件，成本也是巨大的。
+Helm 对于 Kubernetes 来说就相当于 yum 对于 CentOS 来说，如果没有 yum 的话，我们在 CentOS 下面要安装一些应用程序是极度麻烦的，同样的，对于越来越复杂的 Kubernetes 应用程序来说，如果单纯依靠我们去手动维护应用程序的 YAML 资源清单文件，成本也是巨大的。
 
 ## 一、Helm 与 Kubernetes 版本兼容性对照
 
@@ -46,7 +46,7 @@ Helm 对于 Kubernetes 来说就相当于 yum 对于 Centos 来说，如果没�
 | Helm 3.1.x  | 1.13 - 1.16 | |
 | Helm 3.0.x  | 1.13 - 1.16 | 初始 Helm 3 版本 |
 
-### Helm 2 版本与 Kubernetes 兼容性 (已弃用)
+### Helm 2 版本与 Kubernetes 兼容性（已弃用）
 
 | Helm 版本 | 支持的 Kubernetes 版本范围 | 状态 |
 |-----------|---------------------------|------|
@@ -78,9 +78,9 @@ Helm 对于 Kubernetes 来说就相当于 yum 对于 Centos 来说，如果没�
 ## 二、安装
 由于 Helm V2 版本必须在 Kubernetes 集群中安装一个 Tiller 服务进行通信，这样大大降低了其安全性和可用性，所以在 V3 版本中移除了服务端，采用了通用的 Kubernetes CRD 资源来进行管理，这样就只需要连接上 Kubernetes 即可，而且 V3 版本已经发布了稳定版
 
-这里使用的是helm v3版本,[链接](https://github.com/helm/helm/releases)
+这里使用的是 helm v3 版本，[链接](https://github.com/helm/helm/releases)
 
-根据kubernetes 版本选择安装合适的helm 版本，这里使用二进制的方式进行安装，安装v3.10.0 版本
+根据 Kubernetes 版本选择安装合适的 helm 版本，这里使用二进制的方式进行安装，安装 v3.10.0 版本
 ```shell
 # 1. 下载安装包
 $ wget https://get.helm.sh/helm-v3.10.0-linux-amd64.tar.gz
@@ -91,10 +91,8 @@ $ mv linux-amd64/helm /usr/local/bin/helm
 
 ```
 
-
 ## 三、示例
 Helm 其实就是读取的 kubeconfig 文件来访问集群的。
-
 
 ```shell
 # 查看版本
@@ -139,11 +137,10 @@ helm uninstall mysql-1575619811
 helm uninstall mysql-1575619811 --keep-history
 
 ```
-
 ## 四、定制
 helm show values 命令来查看一个 chart 包的所有可配置的参数选项
 
-查看本地chart包可配置的参数选项
+查看本地 chart 包可配置的参数选项
 ```shell
 $ helm show values ./nms-grafana/ -n zcm9
 # Default values for nms-grafana.
@@ -158,7 +155,7 @@ restartPolicy: Always
 ....
 ```
 
-查看仓库chart包的所有可配置的参数选项,安装之前先看下镜像源是否可先pull下来，以及镜像的版本号
+查看仓库 chart 包的所有可配置的参数选项，安装之前先看下镜像源是否可先 pull 下来，以及镜像的版本号
 
 ```shell
 $ helm show values stable/mysql
@@ -175,7 +172,6 @@ busybox:
   image: "busybox"
 
 ```
-
 上面我们看到的所有参数都是可以用自己的数据来覆盖的，可以在安装的时候通过 YAML 格式的文件来传递这些参数
 ```shell
 $ cat config.yaml
@@ -196,7 +192,7 @@ MySQL can be accessed via port 3306 on the following DNS name from within your c
 mysql.default.svc.cluster.local
 ```
 
-release 安装成功后查看对应的Pod信息
+release 安装成功后查看对应的 Pod 信息
 ```shell
 $ kubectl get pod -l release=mysql
 NAME                    READY   STATUS            RESTARTS   AGE
@@ -216,8 +212,6 @@ Environment:
 - --values（或者 -f）：指定一个 YAML 文件来覆盖 values 值，可以指定多个值，最后边的文件优先
 - --set：在命令行上指定覆盖的配置
 
-
-
 ## 五、更多安装方式
 helm install 命令可以从多个源进行安装：
 
@@ -225,7 +219,6 @@ helm install 命令可以从多个源进行安装：
 - 本地 chart 压缩包（helm install foo-0.1.1.tgz）
 - 本地解压缩的 chart 目录（helm install foo path/to/foo）
 - 在线的 URL（helm install fool https://example.com/charts/foo-1.2.3.tgz）
-
 
 ## 六、升级和回滚
 当新版本的 chart 包发布的时候，或者当你要更改 release 的配置的时候，你可以使用 helm upgrade 命令来操作。升级需要一个现有的 release，并根据提供的信息对其进行升级。因为 Kubernetes charts 可能很大而且很复杂，Helm 会尝试以最小的侵入性进行升级，它只会更新自上一版本以来发生的变化：
@@ -252,8 +245,7 @@ mysqlUser: user0
 persistence:
   enabled: false
 ```
-
-另外如生产环境基本上是只替换镜像tag
+另外如生产环境基本上是只替换镜像 tag
 ```shell
 $ sudo helm get values nms-grafana -n zcm9
 USER-SUPPLIED VALUES:
@@ -270,7 +262,7 @@ nms-grafana:
 ...
 ```
 
-查看当前release 当前版本信息以及查看某个release 的历史
+查看当前 release 当前版本信息以及查看某个 release 的历史
 ```shell
 $ sudo helm -n zcm9 ls
 NAME                    NAMESPACE       REVISION        UPDATED                                 STATUS          CHART                           APP VERSION
@@ -292,5 +284,4 @@ REVISION        UPDATED                         STATUS          CHART           
 # 上面可知本地安装的应用nms-grafana 迭代至了版本29,如果要回滚至指定版本可以通过一下方式
 $ helm -n zcm9 rollback nms-grafana  21
 ```
-
-
+

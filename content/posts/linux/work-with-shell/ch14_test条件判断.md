@@ -19,7 +19,6 @@ test 是 shell 内置的条件检测命令，常与 if 语句配合使用，也�
 
 <!--more-->
 
-
 ## 一、介绍
 test 是 Shell 内置命令，用来检测某个条件是否成立。test 通常和 if 语句一起使用，并且大部分 if 语句都依赖 test。
 
@@ -27,34 +26,28 @@ test 命令有很多选项，可以进行数值、字符串和文件三个方面
 
 Shell test 命令的用法为：
 
-
 ```shell
 test expression
 ```
-
-
 当 test 判断 expression 成立时，退出状态为 0，否则为非 0 值。
 
 test 命令也可以简写为[]，它的用法为：
 
-
 ```shell
 [ expression ]
 ```
-
-注意[]和expression之间的空格，这两个空格是必须的，否则会导致语法错误。[]的写法更加简洁，比 test 使用频率高。
+注意[]和 expression 之间的空格，这两个空格是必须的，否则会导致语法错误。[]的写法更加简洁，比 test 使用频率高。
 
 test 和 [] 是等价的，后续我们会交替使用 test 和 []，以让读者尽快熟悉。
-
 
 ## 二、字符串操作
 |command | 释义|
 |---|---|
-|-z "$str1"           | str1是否为空字符串 |
-|-n "$str1"           | str1是否不是空字符串 |
-|"$str1" == "$str2"   | str1是否与str2相等 |
-|"$str1" != "$str2"   | str1是否与str2不等 |
-|"$str1" =~ "str2"    | str1是否包含str2 |
+|-z "$str1"           | str1 是否为空字符串 |
+|-n "$str1"           | str1 是否不是空字符串 |
+|"$str1" == "$str2"   | str1 是否与 str2 相等 |
+|"$str1" != "$str2"   | str1 是否与 str2 不等 |
+|"$str1" =~ "str2"    | str1 是否包含 str2 |
 
 ## 三、整数操作
 |command | 释义|
@@ -93,10 +86,9 @@ test 和 [] 是等价的，后续我们会交替使用 test 和 []，以让读�
 |command | 释义|
 |---|---|
 | test 10 -lt 5       | 判断大小 |
-| echo $?             | 查看上句test命令返回状态  # 结果0为真,1为假 |
-| test -n "hello"     | 判断字符串长度是否为0 |
-| [ $? -eq 0 ] && echo "success" &#124;&#124; exit　 |　　# 判断成功提示,失败则退出 |
-
+| echo $?             | 查看上句 test 命令返回状态  # 结果 0 为真，1 为假 |
+| test -n "hello"     | 判断字符串长度是否为 0 |
+| [ $? -eq 0 ] && echo "success" &#124;&#124; exit　 |　　# 判断成功提示，失败则退出 |
 
 ## 六、判断
 ###  整数判断
@@ -107,12 +99,12 @@ test 和 [] 是等价的，后续我们会交替使用 test 和 []，以让读�
 - -ge 前者是否大于等于后者（greater than or equal）
 - -le 前者是否小于等于后者（less than or equal）
 
-###  字符串判断str1 exp str2：
-- -z "$str1" str1是否为空字符串
-- -n "$str1" str1是否不是空字符串
-- "$str1" == "$str2" str1是否与str2相等
-- "$str1" != "$str2" str1是否与str2不等
-- "$str1" =~ "str2" str1是否包含str2
+###  字符串判断 str1 exp str2
+- -z "$str1" str1 是否为空字符串
+- -n "$str1" str1 是否不是空字符串
+- "$str1" == "$str2" str1 是否与 str2 相等
+- "$str1" != "$str2" str1 是否与 str2 不等
+- "$str1" =~ "str2" str1 是否包含 str2
 
 ###  文件目录判断
 - -f $filename 是否为文件

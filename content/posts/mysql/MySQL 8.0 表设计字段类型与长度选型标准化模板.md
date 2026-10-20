@@ -27,7 +27,7 @@ summary: "给出 MySQL 8.0 表设计的标准化模板，涵盖基础配置建�
 | 排序规则   | `utf8mb4_general_ci`             | 性能与兼容性均衡                   |
 | 存储引擎   | `InnoDB`                         | 默认事务型引擎                    |
 | 时间精度   | `DATETIME(3)` / `TIMESTAMP(3)`   | 毫秒精度时间戳                    |
-| 主键类型   | `BIGINT UNSIGNED AUTO_INCREMENT` | 高并发安全、自增ID                 |
+| 主键类型   | `BIGINT UNSIGNED AUTO_INCREMENT` | 高并发安全、自增 ID                 |
 | 默认命名规范 | 全小写+下划线                          | 例：`user_info`、`created_at` |
 
 ---
@@ -40,9 +40,9 @@ summary: "给出 MySQL 8.0 表设计的标准化模板，涵盖基础配置建�
 | `created_at` | `DATETIME(3)`                    | `CURRENT_TIMESTAMP(3)`                                  | 创建时间       |
 | `updated_at` | `DATETIME(3)`                    | `CURRENT_TIMESTAMP(3)` ON UPDATE `CURRENT_TIMESTAMP(3)` | 更新时间       |
 | `deleted_at` | `DATETIME(3)`                    | `NULL`                                                  | 删除时间（逻辑删除） |
-| `created_by` | `BIGINT UNSIGNED`                | `NULL`                                                  | 创建人ID      |
-| `updated_by` | `BIGINT UNSIGNED`                | `NULL`                                                  | 更新人ID      |
-| `deleted_by` | `BIGINT UNSIGNED`                | `NULL`                                                  | 删除人ID      |
+| `created_by` | `BIGINT UNSIGNED`                | `NULL`                                                  | 创建人 ID      |
+| `updated_by` | `BIGINT UNSIGNED`                | `NULL`                                                  | 更新人 ID      |
+| `deleted_by` | `BIGINT UNSIGNED`                | `NULL`                                                  | 删除人 ID      |
 | `remark`     | `VARCHAR(255)`                   | `NULL`                                                  | 备注信息       |
 
 ---
@@ -61,8 +61,8 @@ summary: "给出 MySQL 8.0 表设计的标准化模板，涵盖基础配置建�
 | **性别**       | gender                        | ENUM('male','female','unknown')              | -         | 性别枚举             |
 | **状态**       | status                        | ENUM('enabled','disabled','pending','error') | -         | 业务状态             |
 | **IP 地址**    | ip / cluster_ip / external_ip | VARCHAR(45)                                  | 45        | 兼容 IPv4 / IPv6   |
-| **URL / 链接** | url                           | VARCHAR(2083)                                | 2083      | 浏览器最大 URL 长度     |
-| **UUID**     | uuid                          | CHAR(36)                                     | 36        | 36位 UUID 格式      |
+| **URL / 链接** | URL                           | VARCHAR(2083)                                | 2083      | 浏览器最大 URL 长度     |
+| **UUID**     | uuid                          | CHAR(36)                                     | 36        | 36 位 UUID 格式      |
 | **金额**       | amount / price                | DECIMAL(10,2)                                | -         | 最大 99999999.99   |
 | **数量**       | count / total                 | INT UNSIGNED                                 | -         | 整数统计值            |
 | **布尔状态**     | is_active / enabled           | TINYINT(1)                                   | -         | 0 / 1 表示真假       |
@@ -140,7 +140,6 @@ CREATE TABLE `user_account` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户账户信息表';
 ```
-
 ---
 
 ## 六、🧾 附录：长度选择经验法则
@@ -154,5 +153,4 @@ CREATE TABLE `user_account` (
 | `VARCHAR(512)` | 中等长度内容        |        |
 | `TEXT`         | 长文本、日志、配置文件   |        |
 | `JSON`         | 动态结构数据（如端口映射） |        |
-
-
+

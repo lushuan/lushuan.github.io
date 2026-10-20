@@ -38,7 +38,6 @@ Dockerfile 是学习 Docker 时非常核心的一部分。真正掌握 Dockerfil
 ```bash
 docker build
 ```
-
 Docker 就会读取 Dockerfile，根据其中的指令一步一步构建镜像。
 
 例如一个 Go 项目的整个过程可以理解为：
@@ -58,7 +57,6 @@ docker run
     ↓
 Container
 ```
-
 Docker 官方将 Dockerfile 定义为：
 
 > 一个包含构建 Docker 镜像所需指令的文本文件。
@@ -78,7 +76,6 @@ USER
 CMD
 ENTRYPOINT
 ```
-
 以及 `HEALTHCHECK`、`LABEL`、`VOLUME` 等。[Docker Documentation](https://docs.docker.com/reference/dockerfile?utm_source=chatgpt.com)
 
 ---
@@ -90,13 +87,11 @@ ENTRYPOINT
 ```text
 myapp
 ```
-
 在服务器上直接运行可能是：
 
 ```bash
 ./myapp
 ```
-
 但如果需要部署到不同服务器，就可能遇到：
 
 ```text
@@ -106,7 +101,6 @@ Linux 发行版是否一致？
 配置是否一致？
 启动方式是否一致？
 ```
-
 Docker 希望解决的就是：
 
 > **把应用程序以及它运行所需要的环境一起打包。**
@@ -116,13 +110,11 @@ Docker 希望解决的就是：
 ```text
 Docker Image
 ```
-
 然后无论在哪台支持 Docker 的机器上：
 
 ```bash
 docker run myapp
 ```
-
 都可以按照相同方式启动。
 
 因此 Dockerfile 的核心价值不是“写几个 Docker 命令”，而是：
@@ -143,7 +135,6 @@ hello-go/
 ├── main.go
 └── Dockerfile
 ```
-
 `main.go`：
 
 ```go
@@ -166,31 +157,26 @@ func main() {
 	}
 }
 ```
-
 初始化 Go 项目：
 
 ```bash
 go mod init hello-go
 ```
-
 然后直接运行：
 
 ```bash
 go run .
 ```
-
 访问：
 
 ```text
 http://127.0.0.1:8080
 ```
-
 得到：
 
 ```text
 Hello Docker!
 ```
-
 现在程序已经能够正常运行。
 
 接下来就是：
@@ -214,7 +200,6 @@ EXPOSE 8080
 
 CMD ["/app/hello-go"]
 ```
-
 它表达的意思非常直观：
 
 ```text
@@ -238,7 +223,6 @@ CMD
  ↓
 容器启动的时候运行什么？
 ```
-
 Dockerfile 实际上就是按照这样的顺序描述：
 
 > **我需要什么环境 → 放入什么文件 → 做什么处理 → 最终运行什么程序。**
@@ -252,7 +236,6 @@ Dockerfile 实际上就是按照这样的顺序描述：
 ```dockerfile
 FROM ubuntu:22.04
 ```
-
 表示：
 
 > 基于 Ubuntu 22.04 创建新的镜像。
@@ -262,7 +245,6 @@ FROM ubuntu:22.04
 ```dockerfile
 FROM golang:1.20
 ```
-
 它的意义是：
 
 > 使用已经安装好 Go 1.20 的镜像。
@@ -272,13 +254,11 @@ FROM golang:1.20
 ```dockerfile
 FROM golang:1.20
 ```
-
 后面就可以直接执行：
 
 ```dockerfile
 RUN go build
 ```
-
 因为基础镜像中已经存在 Go 编译环境。
 
 ---
@@ -295,7 +275,6 @@ ubuntu
 distroless
 scratch
 ```
-
 它们承担的角色并不完全相同。
 
 例如：
@@ -317,7 +296,6 @@ scratch
    ↓
 几乎什么都没有
 ```
-
 所以实际项目中经常出现：
 
 ```text
@@ -329,7 +307,6 @@ alpine / distroless / scratch
    ↓
 运行
 ```
-
 这就是后面要介绍的**多阶段构建**。
 
 ---
@@ -341,13 +318,11 @@ alpine / distroless / scratch
 ```dockerfile
 WORKDIR /app
 ```
-
 之后 Dockerfile 中很多操作都会以：
 
 ```text
 /app
 ```
-
 作为当前工作目录。
 
 例如：
@@ -361,13 +336,11 @@ RUN go build -o server .
 
 CMD ["./server"]
 ```
-
 可以理解为：
 
 ```bash
 cd /app
 ```
-
 然后执行后面的操作。
 
 相比：
@@ -375,13 +348,11 @@ cd /app
 ```dockerfile
 RUN cd /app
 ```
-
 更推荐使用：
 
 ```dockerfile
 WORKDIR /app
 ```
-
 因为 `WORKDIR` 会明确设置后续指令使用的工作目录。[Docker Documentation](https://docs.docker.com/reference/dockerfile?utm_source=chatgpt.com)
 
 ---
@@ -393,7 +364,6 @@ WORKDIR /app
 ```dockerfile
 COPY . .
 ```
-
 表示：
 
 > 把构建上下文中的文件复制到当前工作目录。
@@ -405,7 +375,6 @@ WORKDIR /app
 
 COPY . .
 ```
-
 最终：
 
 ```text
@@ -425,19 +394,16 @@ hello-go/
 ├── main.go
 └── Dockerfile
 ```
-
 也可以指定具体文件：
 
 ```dockerfile
 COPY go.mod go.sum ./
 ```
-
 或者：
 
 ```dockerfile
 COPY server /app/server
 ```
-
 ---
 
 ## 八、RUN：构建镜像时执行命令
@@ -447,7 +413,6 @@ COPY server /app/server
 ```dockerfile
 RUN go build -o server .
 ```
-
 这条命令非常重要。
 
 它不是：
@@ -463,7 +428,6 @@ RUN go build -o server .
 ```bash
 docker build
 ```
-
 过程中执行。
 
 所以：
@@ -471,13 +435,11 @@ docker build
 ```dockerfile
 RUN go build -o server .
 ```
-
 最终产生：
 
 ```text
 /app/server
 ```
-
 然后这个文件会成为镜像的一部分。
 
 可以简单记：
@@ -487,7 +449,6 @@ RUN
 ↓
 docker build 时执行
 ```
-
 而：
 
 ```text
@@ -495,7 +456,6 @@ CMD
 ↓
 docker run 时执行
 ```
-
 ---
 
 ## 九、CMD：容器启动时默认运行什么
@@ -505,7 +465,6 @@ docker run 时执行
 ```dockerfile
 CMD ["./server"]
 ```
-
 意思是：
 
 > 创建容器时，如果没有指定其他命令，就运行 `./server`。
@@ -515,13 +474,11 @@ CMD ["./server"]
 ```bash
 docker run hello-go:1.0
 ```
-
 默认运行：
 
 ```text
 ./server
 ```
-
 但是 `CMD` 是可以被覆盖的。
 
 例如：
@@ -529,19 +486,16 @@ docker run hello-go:1.0
 ```bash
 docker run -it hello-go:1.0 sh
 ```
-
 此时 Docker 不再使用原来的：
 
 ```text
 ./server
 ```
-
 而执行：
 
 ```text
 sh
 ```
-
 所以可以简单理解：
 
 > **CMD 是默认启动命令。**
@@ -557,7 +511,6 @@ Docker 官方文档也明确说明，`CMD` 用于提供容器运行时的默认�
 ```dockerfile
 ENTRYPOINT ["./server"]
 ```
-
 它和 `CMD` 有一定区别。
 
 如果：
@@ -565,31 +518,26 @@ ENTRYPOINT ["./server"]
 ```dockerfile
 ENTRYPOINT ["./server"]
 ```
-
 然后执行：
 
 ```bash
 docker run hello-go:1.0
 ```
-
 运行：
 
 ```text
 ./server
 ```
-
 如果：
 
 ```bash
 docker run hello-go:1.0 --port=9090
 ```
-
 那么最终相当于：
 
 ```text
 ./server --port=9090
 ```
-
 因此可以用一个非常简单的方式理解：
 
 ```text
@@ -601,7 +549,6 @@ CMD
     ↓
 默认给我什么参数？
 ```
-
 例如：
 
 ```dockerfile
@@ -609,25 +556,21 @@ ENTRYPOINT ["/app/server"]
 
 CMD ["--port=8080"]
 ```
-
 默认：
 
 ```text
 /app/server --port=8080
 ```
-
 如果：
 
 ```bash
 docker run hello-go:1.0 --port=9090
 ```
-
 则：
 
 ```text
 /app/server --port=9090
 ```
-
 这也是实际项目中很常见的写法。
 
 ---
@@ -641,7 +584,6 @@ ENTRYPOINT = 固定程序
 
 CMD        = 默认参数
 ```
-
 例如：
 
 ```dockerfile
@@ -649,32 +591,27 @@ ENTRYPOINT ["/app/server"]
 
 CMD ["--config=/etc/server/config.yaml"]
 ```
-
 正常运行：
 
 ```bash
 docker run server:1.0
 ```
-
 相当于：
 
 ```text
 /app/server --config=/etc/server/config.yaml
 ```
-
 如果临时换配置：
 
 ```bash
 docker run server:1.0 \
     --config=/etc/server/test.yaml
 ```
-
 则变成：
 
 ```text
 /app/server --config=/etc/server/test.yaml
 ```
-
 这种方式特别适合：
 
 ```text
@@ -684,7 +621,6 @@ Agent
 Exporter
 Worker
 ```
-
 等类型的程序。
 
 Docker 官方也推荐在需要固定可执行程序时使用 `ENTRYPOINT`，再配合 `CMD` 提供默认参数。[Docker Documentation](https://docs.docker.com/reference/dockerfile?utm_source=chatgpt.com)
@@ -698,7 +634,6 @@ Docker 官方也推荐在需要固定可执行程序时使用 `ENTRYPOINT`，再
 ```dockerfile
 EXPOSE 8080
 ```
-
 表示：
 
 > 这个应用预计监听 8080 端口。
@@ -712,7 +647,6 @@ docker run \
     -p 8080:8080 \
     hello-go:1.0
 ```
-
 这里：
 
 ```text
@@ -720,19 +654,16 @@ docker run \
     ↓
 容器 8080
 ```
-
 因此：
 
 ```dockerfile
 EXPOSE 8080
 ```
-
 和：
 
 ```bash
 -p 8080:8080
 ```
-
 是两个不同概念。
 
 ---
@@ -744,31 +675,26 @@ EXPOSE 8080
 ```dockerfile
 ENV APP_ENV=prod
 ```
-
 容器启动后：
 
 ```bash
 echo $APP_ENV
 ```
-
 得到：
 
 ```text
 prod
 ```
-
 Go 程序中也可以读取：
 
 ```go
 os.Getenv("APP_ENV")
 ```
-
 得到：
 
 ```text
 prod
 ```
-
 因此 `ENV` 更偏向：
 
 > **运行时配置。**
@@ -782,7 +708,6 @@ prod
 ```dockerfile
 ARG VERSION=1.0
 ```
-
 构建：
 
 ```bash
@@ -790,13 +715,11 @@ docker build \
     --build-arg VERSION=2.0 \
     -t hello-go:2.0 .
 ```
-
 Dockerfile 中可以使用：
 
 ```dockerfile
 RUN echo "build version: ${VERSION}"
 ```
-
 因此可以简单理解：
 
 ```text
@@ -808,7 +731,6 @@ ENV
  ↓
 容器运行阶段
 ```
-
 这也是 Dockerfile 面试中的常见问题。
 
 ---
@@ -822,7 +744,6 @@ Docker 容器默认情况下可能以 root 用户运行。
 ```dockerfile
 USER root
 ```
-
 对于生产环境的业务程序，更推荐使用非 root 用户。
 
 例如：
@@ -830,7 +751,6 @@ USER root
 ```dockerfile
 USER 65532:65532
 ```
-
 具体使用哪个 UID/GID，要根据基础镜像和应用需求决定。
 
 核心思想是：
@@ -848,7 +768,6 @@ USER 65532:65532
 ```dockerfile
 COPY . .
 ```
-
 Docker 会把构建上下文中的文件发送给构建器。
 
 因此建议配合：
@@ -856,7 +775,6 @@ Docker 会把构建上下文中的文件发送给构建器。
 ```text
 .dockerignore
 ```
-
 例如：
 
 ```text
@@ -878,7 +796,6 @@ coverage/
 
 node_modules/
 ```
-
 这样可以避免：
 
 ```text
@@ -889,7 +806,6 @@ IDE 配置
 构建产物
 测试覆盖率
 ```
-
 等无用内容进入构建上下文。
 
 ---
@@ -909,13 +825,11 @@ Go Compiler
 依赖
 构建工具
 ```
-
 但程序运行的时候可能只需要：
 
 ```text
 server
 ```
-
 如果直接：
 
 ```dockerfile
@@ -927,7 +841,6 @@ RUN go build -o server .
 
 CMD ["./server"]
 ```
-
 最终镜像里面仍然存在完整的：
 
 ```text
@@ -937,7 +850,6 @@ Go Compiler
 依赖
 server
 ```
-
 但是运行一个已经编译好的 Go 程序：
 
 > 根本不需要整个 Go SDK。
@@ -989,7 +901,6 @@ EXPOSE 8080
 
 ENTRYPOINT ["./server"]
 ```
-
 整个过程：
 
 ```text
@@ -1017,7 +928,6 @@ ENTRYPOINT ["./server"]
         │    Alpine     │
         └───────────────┘
 ```
-
 最终运行镜像不再包含完整 Go 编译环境。
 
 ---
@@ -1029,19 +939,16 @@ ENTRYPOINT ["./server"]
 ```dockerfile
 FROM golang:1.20 AS builder
 ```
-
 这里给第一个构建阶段起了一个名字：
 
 ```text
 builder
 ```
-
 后面：
 
 ```dockerfile
 COPY --from=builder /app/server ./server
 ```
-
 意思就是：
 
 > 从 `builder` 这个阶段中，把 `/app/server` 复制到当前阶段。
@@ -1051,13 +958,11 @@ COPY --from=builder /app/server ./server
 ```text
 AS builder
 ```
-
 和：
 
 ```text
 COPY --from=builder
 ```
-
 是一组非常重要的知识点。
 
 ---
@@ -1090,7 +995,6 @@ EXPOSE 8080
 
 ENTRYPOINT ["/server"]
 ```
-
 此时最终镜像非常简单：
 
 ```text
@@ -1098,7 +1002,6 @@ scratch
   +
 server
 ```
-
 因为 `scratch` 本身几乎没有用户空间工具。
 
 但是它也意味着：
@@ -1110,7 +1013,6 @@ server
 没有 curl
 没有 wget
 ```
-
 因此：
 
 > **镜像越小不等于一定越好。**
@@ -1123,7 +1025,6 @@ server
 可调试性
 运行依赖
 ```
-
 之间进行权衡。
 
 ---
@@ -1141,7 +1042,6 @@ COPY . .
 
 RUN go build -o server .
 ```
-
 为什么不直接：
 
 ```dockerfile
@@ -1151,7 +1051,6 @@ RUN go mod download
 
 RUN go build -o server .
 ```
-
 因为 Go 项目开发过程中：
 
 ```text
@@ -1160,7 +1059,6 @@ service.go
 handler.go
 model.go
 ```
-
 等源码经常发生变化。
 
 但是：
@@ -1169,7 +1067,6 @@ model.go
 go.mod
 go.sum
 ```
-
 变化频率相对较低。
 
 因此把：
@@ -1178,7 +1075,6 @@ go.sum
 COPY go.mod go.sum ./
 RUN go mod download
 ```
-
 放到前面，可以提高 Docker 构建缓存的利用率。
 
 例如：
@@ -1205,7 +1101,6 @@ COPY source
        ↓
 重新 go build
 ```
-
 这样可以避免每次修改代码都重新下载 Go 依赖。
 
 ---
@@ -1263,13 +1158,11 @@ USER 65532:65532
 
 ENTRYPOINT ["/app/server"]
 ```
-
 然后：
 
 ```bash
 docker build -t hello-go:1.0 .
 ```
-
 运行：
 
 ```bash
@@ -1278,25 +1171,21 @@ docker run -d \
     -p 8080:8080 \
     hello-go:1.0
 ```
-
 查看：
 
 ```bash
 docker ps
 ```
-
 查看日志：
 
 ```bash
 docker logs hello-go
 ```
-
 测试：
 
 ```bash
 curl http://127.0.0.1:8080
 ```
-
 ---
 
 ## 二十三、Dockerfile 实际开发中的优化思路
@@ -1308,49 +1197,41 @@ curl http://127.0.0.1:8080
 ```text
 是否使用了不必要的大镜像？
 ```
-
 ### 2. 构建环境和运行环境
 
 ```text
 是否可以使用多阶段构建？
 ```
-
 ### 3. 构建缓存
 
 ```text
 COPY 顺序是否合理？
 ```
-
 ### 4. 构建上下文
 
 ```text
 是否存在 .dockerignore？
 ```
-
 ### 5. 运行权限
 
 ```text
 是否必须使用 root？
 ```
-
 ### 6. 镜像内容
 
 ```text
 最终镜像是否包含不需要的编译器、源码、工具？
 ```
-
 ### 7. 启动方式
 
 ```text
 CMD 和 ENTRYPOINT 是否合理？
 ```
-
 ### 8. 进程信号
 
 ```text
 应用程序是不是容器的 PID 1？
 ```
-
 尤其是 Go Web 服务，在 Kubernetes 中运行时，`SIGTERM`、优雅退出等问题最终都可能和容器的进程模型联系起来。
 
 Docker 官方文档也特别指出，`ENTRYPOINT` 的 exec form 更适合将应用作为容器的可执行入口；shell form 可能导致应用不是 PID 1，并影响信号传递。[Docker Documentation](https://docs.docker.com/reference/dockerfile?utm_source=chatgpt.com)
@@ -1372,19 +1253,16 @@ CMD
 ↓
 容器启动时执行
 ```
-
 例如：
 
 ```dockerfile
 RUN go build -o server .
 ```
-
 是：
 
 ```bash
 docker build
 ```
-
 阶段执行。
 
 而：
@@ -1392,13 +1270,11 @@ docker build
 ```dockerfile
 CMD ["./server"]
 ```
-
 是：
 
 ```bash
 docker run
 ```
-
 阶段使用。
 
 ---
@@ -1414,7 +1290,6 @@ CMD：
 ENTRYPOINT：
 定义容器的主要执行程序。
 ```
-
 常见组合：
 
 ```dockerfile
@@ -1422,25 +1297,21 @@ ENTRYPOINT ["/app/server"]
 
 CMD ["--port=8080"]
 ```
-
 默认：
 
 ```text
 /app/server --port=8080
 ```
-
 执行：
 
 ```bash
 docker run app --port=9090
 ```
-
 变成：
 
 ```text
 /app/server --port=9090
 ```
-
 ---
 
 ### 3. CMD 和 ENTRYPOINT 可以同时使用吗？
@@ -1452,7 +1323,6 @@ ENTRYPOINT ["/app/server"]
 
 CMD ["--config=/etc/app/config.yaml"]
 ```
-
 理解成：
 
 ```text
@@ -1460,7 +1330,6 @@ ENTRYPOINT = 程序
 
 CMD = 默认参数
 ```
-
 ---
 
 ### 4. CMD 和 ENTRYPOINT 有哪些写法？
@@ -1470,13 +1339,11 @@ CMD = 默认参数
 ```dockerfile
 CMD ["./server"]
 ```
-
 以及：
 
 ```dockerfile
 CMD ./server
 ```
-
 前者是：
 
 > exec form
@@ -1490,7 +1357,6 @@ CMD ./server
 ```dockerfile
 ENTRYPOINT ["/app/server"]
 ```
-
 这种 exec form。
 
 ---
@@ -1508,13 +1374,11 @@ ENTRYPOINT ["/app/server"]
 ```dockerfile
 COPY
 ```
-
 优先于：
 
 ```dockerfile
 ADD
 ```
-
 ---
 
 ### 6. ARG 和 ENV 有什么区别？
@@ -1528,7 +1392,6 @@ ENV
 ↓
 运行时环境变量
 ```
-
 例如：
 
 ```dockerfile
@@ -1536,7 +1399,6 @@ ARG VERSION=1.0
 
 ENV APP_ENV=prod
 ```
-
 ---
 
 ### 7. EXPOSE 会自动开放端口吗？
@@ -1546,19 +1408,16 @@ ENV APP_ENV=prod
 ```dockerfile
 EXPOSE 8080
 ```
-
 只是声明应用使用：
 
 ```text
 8080
 ```
-
 真正的端口映射：
 
 ```bash
 docker run -p 8080:8080 app
 ```
-
 ---
 
 ### 8. 为什么 Go 项目适合多阶段构建？
@@ -1572,7 +1431,6 @@ docker run -p 8080:8080 app
 运行阶段
 通常只需要 Go 二进制
 ```
-
 所以：
 
 ```text
@@ -1584,7 +1442,6 @@ server
  ↓
 alpine / distroless / scratch
 ```
-
 可以减少最终镜像中的无用内容。[Docker Documentation](https://docs.docker.com/get-started/docker-concepts/building-images/multi-stage-builds/?utm_source=chatgpt.com)
 
 ---
@@ -1596,13 +1453,11 @@ alpine / distroless / scratch
 ```dockerfile
 FROM golang:1.20 AS builder
 ```
-
 定义：
 
 ```text
 builder
 ```
-
 构建阶段。
 
 然后：
@@ -1610,7 +1465,6 @@ builder
 ```dockerfile
 COPY --from=builder /app/server /app/server
 ```
-
 表示：
 
 > 从 builder 阶段复制编译好的 server 到最终镜像。
@@ -1631,7 +1485,6 @@ RUN go mod download
 
 COPY . .
 ```
-
 是比较常见的 Go Dockerfile 写法。
 
 ---
@@ -1645,7 +1498,6 @@ COPY . .
 ```dockerfile
 USER appuser
 ```
-
 或者使用合适的非 root UID/GID。
 
 ---
@@ -1657,7 +1509,6 @@ USER appuser
 ```dockerfile
 FROM scratch
 ```
-
 理解成：
 
 > **一个几乎什么都没有的空白基础镜像。**
@@ -1669,7 +1520,6 @@ Go 程序如果：
 ```bash
 CGO_ENABLED=0
 ```
-
 并且没有额外运行时依赖，就比较适合这种模式。
 
 ---
@@ -1685,13 +1535,11 @@ CMD ["./server"]
 
 CMD ["./test"]
 ```
-
 最终使用：
 
 ```text
 ./test
 ```
-
 所以通常应该只保留一个 `CMD`。Docker 官方文档也明确规定，一个 Dockerfile 中只有最后一个 `CMD` 会生效。[Docker Documentation](https://docs.docker.com/reference/dockerfile?utm_source=chatgpt.com)
 
 ---
@@ -1705,7 +1553,6 @@ CMD ["./test"]
 +
 可覆盖的默认参数
 ```
-
 例如：
 
 ```dockerfile
@@ -1713,7 +1560,6 @@ ENTRYPOINT ["/app/server"]
 
 CMD ["--config=/etc/app/config.yaml"]
 ```
-
 这样既能固定应用，又允许部署环境覆盖默认参数。
 
 ---
@@ -1750,12 +1596,10 @@ CMD ["--config=/etc/app/config.yaml"]
               │
               └────── COPY --from ──────→
 ```
-
 真正掌握 Dockerfile，重点不是记住几十个指令，而是理解四件事情：
 
 > **1. 怎么构建程序**  
 > **2. 怎么把程序放进镜像**  
 > **3. 怎么让容器启动程序**  
 > **4. 怎么让最终镜像尽可能合理、安全、易维护**
-
-
+

@@ -12,8 +12,8 @@ tags: ["Hugo"]
 
 ## test
 test
-LoveIt提供了admonition shortcode，支持 12 种样式，可以在页面中插入提示的横幅。代码如下
-## 主题自带的admonition样式
+LoveIt 提供了 admonition shortcode，支持 12 种样式，可以在页面中插入提示的横幅。代码如下
+## 主题自带的 admonition 样式
 
 {{< admonition type=note >}}
 一个 **注意** 横幅
@@ -66,5 +66,4 @@ LoveIt提供了admonition shortcode，支持 12 种样式，可以在页面中�
 {{< admonition type=quote >}}
 一个 **引用** 横幅
 {{< /admonition >}}
-
-
+

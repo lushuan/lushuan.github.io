@@ -21,9 +21,8 @@ summary: "记录 Kubernetes v1.20 以上版本创建 PVC 一直 Pending 的排�
 ## 一、故障描述
 {{< admonition warning >}}
 PVC 显示创建不成功：kubectl get pvc -n efk 显示 Pending，这是由于版本太高导致的。k8sv1.20 以上版本默认禁止使用 selfLink。
-(selfLink：通过 API 访问资源自身的 URL，例如一个 Pod 的 link 可能是 /api/v1/namespaces/ns36aa8455/pods/sc-cluster-test-1-6bc58d44d6-r8hld)。
+（selfLink：通过 API 访问资源自身的 URL，例如一个 Pod 的 link 可能是 /api/v1/namespaces/ns36aa8455/pods/sc-cluster-test-1-6bc58d44d6-r8hld）。
 {{< /admonition >}}
-
 
 ## 二、故障解决
 ``` shell

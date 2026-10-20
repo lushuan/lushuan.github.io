@@ -35,7 +35,6 @@ function myfunc
   echo "hello world $1"
 }
 ```
-
 或者
 ```shell
 myfunc() 
@@ -51,7 +50,6 @@ myfunc()
 
 函数参数是 Shell 位置参数的一种，在函数内部可以使用 $n 来接收，例如，$1 表示第一个参数，$2 表示第二个参数，以此类推。除了 n，还有另外三个比较重要的变量，# 可以获取传递的参数的个数，$@ 或者 $* 可以一次性获取所有的参数。
 
-
 ```shell
 #!/bin/bash
 function show(){
@@ -60,5 +58,4 @@ function show(){
 	echo "Age is: $3"
 }
 show shuanlu https://lu_shuan.gitee.io/gitbook 109
-```
-
+```

@@ -31,12 +31,11 @@ summary: "解析 MySQL 8.0 中 utf8mb4 字符集下 VARCHAR 长度与中文存�
 
 > ⚠️ **VARCHAR(n)** 的 `n` 是“字符数”而不是字节数，**即最多能存储 n 个字符**（无论中文还是英文）。
 
-### ✅ 举例：
+### ✅ 举例
 
 ```sql
 description VARCHAR(10) CHARACTER SET utf8mb4;
 ```
-
 * 能存储 **10 个字符**；
 * 如果全部是中文，能放 **10 个汉字**；
 * 实际占用空间为 **30 字节（约）**；
@@ -102,7 +101,7 @@ description VARCHAR(10) CHARACTER SET utf8mb4;
       ```sql
       DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
       ```
-    * 避免混用 `utf8`（老版本3字节）与 `utf8mb4`。
+    * 避免混用 `utf8`（老版本 3 字节）与 `utf8mb4`。
 
 ---
 
@@ -124,7 +123,6 @@ CREATE TABLE `honeypot_info` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='蜜罐信息表';
 ```
-
 ---
 
 ## 五、📊 总结表（常用字段长度建议）
@@ -133,9 +131,9 @@ CREATE TABLE `honeypot_info` (
 | -------------- | --------------- | ------- |
 | `VARCHAR(10)`  | 10 个字符（≈10 个汉字） | “运行正常”  |
 | `VARCHAR(50)`  | 50 字符           | 姓名、简短标签 |
-| `VARCHAR(100)` | 邮箱、URL简短版本      |         |
+| `VARCHAR(100)` | 邮箱、URL 简短版本      |         |
 | `VARCHAR(255)` | 常用文本描述字段        |         |
 | `VARCHAR(512)` | 说明或较长备注         |         |
 | `TEXT`         | 不限长度            | 日志、说明文档 |
 | `JSON`         | 不限              | 动态结构化数据 |
-
+

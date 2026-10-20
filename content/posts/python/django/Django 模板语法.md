@@ -20,7 +20,7 @@ summary: "基于 Django 3.2 详解模板引擎 DTL 与模板语法，涵盖模�
 <!--more-->
 
 ## 一、Django 模板语法
-模板引擎是一种可以让开发者把服务端数据填充到html网页中完成渲染效果的技术。它实现了把前端代码和服务端代码分离的作用，让项目中的业务逻辑代码和数据表现代码分离，让前端开发者和服务端开发者可以更好地完成协同开发。
+模板引擎是一种可以让开发者把服务端数据填充到 HTML 网页中完成渲染效果的技术。它实现了把前端代码和服务端代码分离的作用，让项目中的业务逻辑代码和数据表现代码分离，让前端开发者和服务端开发者可以更好地完成协同开发。
 
 {{< admonition info >}}
 静态网页：页面上的数据都是写死的，万年不变
@@ -28,21 +28,19 @@ summary: "基于 Django 3.2 详解模板引擎 DTL 与模板语法，涵盖模�
 动态网页：页面上的数据是从后端动态获取的（比如后端获取当前时间；后端获取数据库数据然后传递给前端页面）
 {{< /admonition >}}
 
-Django框架中内置了web开发领域非常出名的一个DjangoTemplate模板引擎（DTL）。[DTL官方文档](https://docs.djangoproject.com/zh-hans/3.2/topics/templates/)
+Django 框架中内置了 web 开发领域非常出名的一个 DjangoTemplate 模板引擎（DTL）。[DTL 官方文档](https://docs.djangoproject.com/zh-hans/3.2/topics/templates/)
 
-要在django框架中使用模板引擎把视图中的数据更好的展示给客户端，需要完成3个步骤：
+要在 django 框架中使用模板引擎把视图中的数据更好的展示给客户端，需要完成 3 个步骤：
 
 {{< admonition info >}}
 
 1. 在项目配置文件中指定保存模板文件的模板目录。一般模板目录都是设置在项目根目录或者主应用目录下。
-2. 在视图中基于django提供的渲染函数绑定模板文件和需要展示的数据变量
+2. 在视图中基于 django 提供的渲染函数绑定模板文件和需要展示的数据变量
 3. 在模板目录下创建对应的模板文件，并根据模板引擎内置的模板语法，填写输出视图传递过来的数据。
 
 {{< /admonition >}}
 
-
-
-配置模板目录：在当前项目根目录下创建了模板目录templates. 然后在settings.py的模板相关配置中，找到TEMPLATES配置项，填写DIRS设置模板目录。
+配置模板目录：在当前项目根目录下创建了模板目录 templates. 然后在 settings.py 的模板相关配置中，找到 TEMPLATES 配置项，填写 DIRS 设置模板目录。
 
 ```Python
 # 模板引擎配置
@@ -64,10 +62,9 @@ TEMPLATES = [
     },
 ]
 ```
-
 ### 简单案例
 
-为了方便接下来的演示内容，我这里创建一个新的子应用myapp
+为了方便接下来的演示内容，我这里创建一个新的子应用 myapp
 ```
 python manage.py startapp myapp
 ```
@@ -83,7 +80,7 @@ INSTALLED_APPS = [
     'myapp',   # 开发者创建的子应用，这填写就是子应用的导包路径
 ]
 ```
-总路由加载子应用路由,urls.py，代码：
+总路由加载子应用路由，urls.py，代码：
 ```Python
 from django.contrib import admin
 from django.urls import path,include
@@ -94,7 +91,7 @@ urlpatterns = [
     path("tem/", include("myapp.urls")),
 ]
 ```
-在子应用目录下创建urls.py子路由文件，代码如下：
+在子应用目录下创建 urls.py 子路由文件，代码如下：
 ```Python
 """子应用路由"""
 from django.urls import path, re_path
@@ -113,7 +110,7 @@ def index(request):
     # return render(request, "模板文件路径",context={字典格式：要在客户端中展示的数据})
     return render(request, "index.html",context={"name":name})
 ```
-### render函数内部本质
+### render 函数内部本质
 ![django-template-render](/images/python/django-template-render.png "django render函数内部本质")
 
 ```Python
@@ -140,14 +137,14 @@ def index(request):
     # data["message"] = "你好！"
     # return render(request,"index.html", data)
 ```
-1. DTL模板文件与普通html文件的区别在哪里？
-DTL模板文件是一种带有特殊语法的HTML文件，这个HTML文件可以被Django编译，可以传递参数进去，实现数据动态化。在编译完成后，生成一个普通的HTML文件，然后发送给客户端。
+1. DTL 模板文件与普通 HTML 文件的区别在哪里？
+DTL 模板文件是一种带有特殊语法的 HTML 文件，这个 HTML 文件可以被 Django 编译，可以传递参数进去，实现数据动态化。在编译完成后，生成一个普通的 HTML 文件，然后发送给客户端。
 
-2. 开发中，我们一般把开发中的文件分2种，分别是静态文件和动态文件。
+2. 开发中，我们一般把开发中的文件分 2 种，分别是静态文件和动态文件。
 {{< admonition tip >}}
-* 静态文件，数据保存在当前文件，不需要经过任何处理就可以展示出去。普通html文件，图片，视频，音频等这一类文件叫静态文件。
+* 静态文件，数据保存在当前文件，不需要经过任何处理就可以展示出去。普通 HTML 文件，图片，视频，音频等这一类文件叫静态文件。
 
-* 动态文件，数据并不在当前文件，而是要经过服务端或其他程序进行编译转换才可以展示出去。 编译转换的过程往往就是使用正则或其他技术把文件内部具有特殊格式的变量转换成真实数据。 动态文件，一般数据会保存在第三方存储设备，如数据库中。django的模板文件，就属于动态文件。
+* 动态文件，数据并不在当前文件，而是要经过服务端或其他程序进行编译转换才可以展示出去。编译转换的过程往往就是使用正则或其他技术把文件内部具有特殊格式的变量转换成真实数据。动态文件，一般数据会保存在第三方存储设备，如数据库中。django 的模板文件，就属于动态文件。
 {{< /admonition >}}
 
 ### 模板语法
@@ -218,8 +215,8 @@ def index(request):
 | last            | 获取列表/元组的最后一个成员              | {{liast \| last}}               |
 | first           | 获取列表/元组的第一个成员                | {{list\|first}}                 |
 | length          | 获取数据的长度                           | {{list \| length}}              |
-| default         | 当变量没有值的情况下, 系统输出默认值,    | {{str\|default=“默认值”}}       |
-| safe            | 让系统不要对内容中的html代码进行实体转义 | {{htmlcontent\| safe}}          |
+| default         | 当变量没有值的情况下，系统输出默认值，    | {{str\|default=“默认值”}}       |
+| safe            | 让系统不要对内容中的 HTML 代码进行实体转义 | {{htmlcontent\| safe}}          |
 | upper           | 字母转换成大写                           | {{str \| upper}}                |
 | lower           | 字母转换成小写                           | {{str \| lower}}                |
 | title           | 每个单词首字母转换成大写                 | {{str \| title}}                |
@@ -259,7 +256,7 @@ def index(request):
     <p>{{ content2 | truncatechars:6 | upper }}</p>
 ```
 #### 自定义过滤器
-虽然官方已经提供了许多内置的过滤器给开发者,但是很明显,还是会有存在不足的时候。例如:希望输出用户的手机号码时, 13912345678 —-» 139*****678，这时我们就需要自定义过滤器。要声明自定义过滤器并且能在模板中正常使用,需要完成2个前置的工作:
+虽然官方已经提供了许多内置的过滤器给开发者，但是很明显，还是会有存在不足的时候。例如：希望输出用户的手机号码时， 13912345678 —-» 139*****678，这时我们就需要自定义过滤器。要声明自定义过滤器并且能在模板中正常使用，需要完成 2 个前置的工作：
 ```
 # 1. 当前使用和声明过滤器的子应用必须在setting.py配置文件中的INSTALLED_APPS中注册了!!!
 INSTALLED_APPS = [
@@ -313,7 +310,7 @@ def index(request):
 ```
 #### 标签
 ##### if
-视图代码,myapp.views.py:
+视图代码，myapp.views.py:
 
 ```Python
 def index(request):
@@ -329,7 +326,7 @@ def index(request):
     ]
     return render(request, 'index.html', locals())
 ```
-模板代码,templates/index.html，代码：
+模板代码，templates/index.html，代码：
 
 路由代码：
 ```Python
@@ -343,7 +340,7 @@ urlpatterns = [
 ]
 ```
 ##### for
-视图代码, myapp.views.py:
+视图代码， myapp.views.py:
 ```Python
 def index7(request):
     book_list1 = [
@@ -449,21 +446,21 @@ urlpatterns = [
     path("index", views.index),
 ]
 ```
-循环中, 模板引擎提供的forloop对象,用于给开发者获取循环次数或者判断循环过程的.
+循环中，模板引擎提供的 forloop 对象，用于给开发者获取循环次数或者判断循环过程的。
 
 | 属性                | 描述                                      |
 | :------------------ | :---------------------------------------- |
-| forloop.counter     | 显示循环的次数,从1开始                    |
-| forloop.counter0    | 显示循环的次数,从0开始                    |
-| forloop.revcounter0 | 倒数显示循环的次数,从0开始                |
-| forloop.revcounter  | 倒数显示循环的次数,从1开始                |
-| forloop.first       | 判断如果本次是循环的第一次,则结果为True   |
-| forloop.last        | 判断如果本次是循环的最后一次,则结果为True |
+| forloop.counter     | 显示循环的次数，从 1 开始                    |
+| forloop.counter0    | 显示循环的次数，从 0 开始                    |
+| forloop.revcounter0 | 倒数显示循环的次数，从 0 开始                |
+| forloop.revcounter  | 倒数显示循环的次数，从 1 开始                |
+| forloop.first       | 判断如果本次是循环的第一次，则结果为 True   |
+| forloop.last        | 判断如果本次是循环的最后一次，则结果为 True |
 | forloop.parentloop  | 在嵌套循环中，指向当前循环的上级循环      |
 
 #### 模板嵌套继承
 
-传统的模板分离技术,依靠{% include “模板文件名”%}实现,这种方式,虽然达到了页面代码复用的效果,但是由此也会带来大量的碎片化模板,导致维护模板的成本上升.因此, Django框架中除了提供这种模板分离技术以外,还并行的提供了 模板继承给开发者.
+传统的模板分离技术，依靠{% include “模板文件名”%}实现，这种方式，虽然达到了页面代码复用的效果，但是由此也会带来大量的碎片化模板，导致维护模板的成本上升。因此， Django 框架中除了提供这种模板分离技术以外，还并行的提供了 模板继承给开发者。
 
 {{< admonition info >}}
 {{< raw >}}{% include "模板文件名"%}{{< /raw >}}  # 模板嵌入
@@ -477,18 +474,18 @@ urlpatterns = [
 {{< raw >}}{% extends “base.html” %}{{< /raw >}}
 {{< /admonition >}}
 
-视图, myapp.views.py代码:
+视图， myapp.views.py 代码：
 ```Python
 def index(request):
     """模板继承"""
     return render(request,"myapp/index.html",locals())
 ```
-子模板, templates/index.html
+子模板， templates/index.html
 {{< admonition info >}}
 {{< raw >}} {% extends "base.html" %} {{< /raw >}}
 {{< /admonition >}}
 
-父模板, templates/base.html
+父模板， templates/base.html
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -510,13 +507,13 @@ def index(request):
 {{block.super}}
 {{< /admonition >}}
 
-视图myapp.views.py, 代码:
+视图 myapp.views.py，代码：
 ```Python
 def home(request):
     """模板继承"""
     return render(request, "myapp/index6.html", locals())
 ```
-路由 myapp.urls.py,代码:
+路由 myapp.urls.py，代码：
 ```Python
 from django.urls import path
 from . import views
@@ -525,7 +522,7 @@ urlpatterns = [
     path("home/", views.home),
 ]
 ```
-子模板index6.html,代码:
+子模板 index6.html，代码：
 ```html
 {{< raw >}}{% extends "base.html" %}{{< /raw >}}
 {% block title %}index3的标题{% endblock  %}
@@ -535,7 +532,7 @@ urlpatterns = [
     {{ block.super }}
 {% endblock %}
 ```
-父模板base.html,代码:
+父模板 base.html，代码：
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -554,13 +551,13 @@ urlpatterns = [
 ```
 {{< admonition tip >}}
 - 如果你在模版中使用 {{< raw >}}{% extends %}{{< /raw >}} 标签，它必须是模版中的第一个标签。其他的任何情况下，模版继承都将无法工作。
-- 在base模版中设置越多的 {{< raw >}}{% block %}{{< /raw >}} 标签越好。请记住，子模版不必定义全部父模版中的blocks，所以，你可以在大多数blocks中填充合理的默认内容，然后，只定义你需要的那一个。多一点钩子总比少一点好。
-- 为了更好的可读性，你也可以给你的 {{< raw >}}{% endblock %}{{< /raw >}} 标签一个 名字 。例如：{{< raw >}}{% block content `}...{% endblock content %}{{< /raw >}},在大型模版中，这个方法帮你清楚地看到哪一个　 {{< raw >}}{% block %}{{< /raw >}} 标签被关闭了。
+- 在 base 模版中设置越多的 {{< raw >}}{% block %}{{< /raw >}} 标签越好。请记住，子模版不必定义全部父模版中的 blocks，所以，你可以在大多数 blocks 中填充合理的默认内容，然后，只定义你需要的那一个。多一点钩子总比少一点好。
+- 为了更好的可读性，你也可以给你的 {{< raw >}}{% endblock %}{{< /raw >}} 标签一个 名字。例如：{{< raw >}}{% block content `}...{% endblock content %}{{< /raw >}}，在大型模版中，这个方法帮你清楚地看到哪一个　 {{< raw >}}{% block %}{{< /raw >}} 标签被关闭了。
 - 不能在一个模版中定义多个相同名字的 block 标签。
 {{< /admonition >}}
 
 ### 静态文件
-开发中在开启了debug模式时，django可以通过配置，允许用户通过对应的url地址访问django的静态文件。
+开发中在开启了 debug 模式时，django 可以通过配置，允许用户通过对应的 URL 地址访问 django 的静态文件。
 
 setting.py，代码：
 ```Python
@@ -577,5 +574,5 @@ urlpatterns = [
 ]
 ```
 {{< admonition >}}
-项目上线以后，关闭debug模式时，django默认是不提供静态文件的访问支持，项目部署的时候，我们会通过收集静态文件使用nginx这种web服务器来提供静态文件的访问支持。
+项目上线以后，关闭 debug 模式时，django 默认是不提供静态文件的访问支持，项目部署的时候，我们会通过收集静态文件使用 Nginx 这种 web 服务器来提供静态文件的访问支持。
 {{< /admonition >}}

@@ -20,22 +20,22 @@ summary: "基于真实边缘网关记录 KubeEdge v1.17.4 云端 amd64 结合边
 <!--more-->
 
 ## 一、前言
-最近在做网络内生安全方面的一个项目，需要在物联网IOT边端设备上部署软蜜罐和蜜网，为了方便管理边端设备服务，选型华为的[KubeEdge开源方案](https://kubeedge.io/zh/),
-当然使用k8s 定制版的 k3s 也可以，这里由于设备资源有限最终还是选择了KubeEdge,但是在网上找了很多资料以及官网都没有找到基于云端amd64+边端arm64架构组合的环境搭建，
-基本上都是云端amd64+边端amd64组合的方案，更多的是一种演示。本文是基于真实采购的边缘网关搭建的一整套流程，在此做一下记录，方便后面回溯复用。
+最近在做网络内生安全方面的一个项目，需要在物联网 IOT 边端设备上部署软蜜罐和蜜网，为了方便管理边端设备服务，选型华为的[KubeEdge 开源方案](https://kubeedge.io/zh/)，
+当然使用 K8s 定制版的 k3s 也可以，这里由于设备资源有限最终还是选择了 KubeEdge，但是在网上找了很多资料以及官网都没有找到基于云端 amd64+边端 arm64 架构组合的环境搭建，
+基本上都是云端 amd64+边端 amd64 组合的方案，更多的是一种演示。本文是基于真实采购的边缘网关搭建的一整套流程，在此做一下记录，方便后面回溯复用。
 
 ## 二、KubeEdge 介绍
-KubeEdge是一个开源系统，用于将容器化应用程序编排功能扩展到Edge的主机。它基于Kubernetes构建，并为网络应用程序提供基础架构支持、云和边缘之间的部署和元数据同步。
+KubeEdge 是一个开源系统，用于将容器化应用程序编排功能扩展到 Edge 的主机。它基于 Kubernetes 构建，并为网络应用程序提供基础架构支持、云和边缘之间的部署和元数据同步。
 
-目标是创建一个开放平台，使能边缘计算，将容器化应用编排功能扩展到基于Kubernetes构建的边缘节点和设备，并为云和边缘之间的网络、应用部署和元数据同步提供基础架构支持。
+目标是创建一个开放平台，使能边缘计算，将容器化应用编排功能扩展到基于 Kubernetes 构建的边缘节点和设备，并为云和边缘之间的网络、应用部署和元数据同步提供基础架构支持。
 
-简单的讲就是将云端和终端硬件设备在同一局域网进行了打通，并方便管理边端设备，边缘设备可以理解为RTU、边缘网关，而这些边缘网关又串联了支持485、232等协议的设备，例如电扇、空调、温湿度变送器都可以接入到边缘网关进行管理，而云端又管理了边端设备，间接的管理了各种终端设备。
+简单的讲就是将云端和终端硬件设备在同一局域网进行了打通，并方便管理边端设备，边缘设备可以理解为 RTU、边缘网关，而这些边缘网关又串联了支持 485、232 等协议的设备，例如电扇、空调、温湿度变送器都可以接入到边缘网关进行管理，而云端又管理了边端设备，间接的管理了各种终端设备。
 
 优势
-1. k8s 原生支持，也就是说需要提前搭建一套k8s 集群，无需高可用，生产建议高可用
-2. 边端设备管理：通过 Kubernetes 的原生API，并由CRD来管理边缘设备
-3. 极致轻量的边缘代理：在资源有限的边缘端上运行的非常轻量级的边缘代理(EdgeCore)，边端服务使用的内存占用降至约 70MB
-4. 异构性：支持x86、ARMv7、ARMv8，这个个人认为是最重要的，因为物联网边端设备更多使用的是arm架构，并且还会对操作系统进行相应的裁剪，来保障安全和低耗能，尤其是一些物联网RTOS设备
+1. K8s 原生支持，也就是说需要提前搭建一套 K8s 集群，无需高可用，生产建议高可用
+2. 边端设备管理：通过 Kubernetes 的原生 API，并由 CRD 来管理边缘设备
+3. 极致轻量的边缘代理：在资源有限的边缘端上运行的非常轻量级的边缘代理（EdgeCore），边端服务使用的内存占用降至约 70MB
+4. 异构性：支持 x86、ARMv7、ARMv8，这个个人认为是最重要的，因为物联网边端设备更多使用的是 arm 架构，并且还会对操作系统进行相应的裁剪，来保障安全和低耗能，尤其是一些物联网 RTOS 设备
 
 - **一句话介绍**：把 Kubernetes 的能力“下沉”到边缘，让边缘节点（IoT 设备、工控机、边缘服务器等）也能像云端节点一样被统一调度、管理。
 
@@ -46,7 +46,7 @@ KubeEdge是一个开源系统，用于将容器化应用程序编排功能扩展
 | deviceController、edgeController、cloudhub   | edged、edgeHub、metaManager、eventBus、serviceBus、edgeMesh |
 | 主要跑在数据中心/公有云                               | 主要跑在工厂、门店、机房、摄像头等设备上                                   |
 
-### KubeEdge解决的核心痛点
+### KubeEdge 解决的核心痛点
 
 | 场景痛点             | KubeEdge 提供的能力                            |
 | ---------------- | ----------------------------------------- |
@@ -64,7 +64,6 @@ KubeEdge是一个开源系统，用于将容器化应用程序编排功能扩展
 3. **零售连锁**：门店收银、广告推送、客流分析本地化，降低云成本
 4. **视频边缘分析**：摄像头实时推理、智能告警，减少视频上云带宽
 5. **智能交通**：路口红绿灯、车流监控在路侧计算，中心调度策略
-
 
 ### 优势/价值
 
@@ -106,7 +105,6 @@ KubeEdge是一个开源系统，用于将容器化应用程序编排功能扩展
 │     │  应用容器（Pod）                      │
 └───────────────────────────────────────────┘
 ```
-
 * **CloudCore**
 
     * 部署在云端集群（一般与 kube-apiserver、controller-manager、scheduler 同机或同网段）。
@@ -185,7 +183,6 @@ spec:
   - name: app
     image: your-app:arm64
 ```
-
 云端与边缘混部时，CloudCore 与 EdgeCore **通过协议解耦，不依赖相同 CPU 架构**，所以完全可行。
 
 ### 5. 总结
@@ -204,23 +201,22 @@ spec:
 
 | IP           | 主机名    | OS                                        | ARCH    | 角色 | 负载                   |
 | :----------- | ------ | :---------------------------------------- | :------ | -- | -------------------- |
-| 192.168.2.118 | master | Kylin Linux Advanced Server V10 (Halberd) | x86_64 | 云端 | K8s，docker，cloudcore |
-| 192.168.4.50 | node1  | Ubuntu 20.04                              | aarch64 | 边端 | docker，edgecore      |
+| 192.168.2.118 | master | Kylin Linux Advanced Server V10 (Halberd) | x86_64 | 云端 | K8s，Docker，cloudcore |
+| 192.168.4.50 | node1  | Ubuntu 20.04                              | aarch64 | 边端 | Docker，edgecore      |
 
-
-部署KubeEdge组件版本,根据 Kubernetes 版本进行选定
+部署 KubeEdge 组件版本，根据 Kubernetes 版本进行选定
 master 节点
-1. kubernetes v1.28.0
+1. Kubernetes v1.28.0
 2. keadm v1.17.4
 3. metrics-server v0.7.2 可选
 4. 操作系统和架构：Kylin v10 amd64
 
-node节点
+node 节点
 1. keadm v1.17.4
-2. docker v26.1.3
+2. Docker v26.1.3
 3. containerd v1.7.24
 4. cri-dockerd v0.3.4
-5. cni v1.8.0
+5. CNI v1.8.0
 6. 操作系统和架构：Ubuntu 20.04 arm64
 
 提示
@@ -228,7 +224,7 @@ node节点
 - root 或者 具有 sudo 权限的用户
 
 ## 五、KubeEdge 环境准备
-边端node节点
+边端 node 节点
 ```
 sudo apt-get update 
 sudo apt-get upgrade
@@ -262,15 +258,14 @@ EOF
 hostnamectl set-hostname node1
 ```
 
-- 部署分为两部分，云端也就是k8s master 节点，另一部分是边端，部署顺序为先云端后边端
+- 部署分为两部分，云端也就是 K8s master 节点，另一部分是边端，部署顺序为先云端后边端
 
 ## 六、Cloud 节点部署
-- 运行在 amd64 master节点
+- 运行在 amd64 master 节点
 ### 部署前准备
-云端 master 节点需要对外暴露一个广播地址,边缘节点在加入集群时会用到，这里是通过metallb进行创建
+云端 master 节点需要对外暴露一个广播地址，边缘节点在加入集群时会用到，这里是通过 metallb 进行创建
 
-
-创建`IPAddressPool`和`L2Advertisement`
+创建 `IPAddressPool` 和 `L2Advertisement`
 ```
 kubectl -n metallb-system get IPAddressPool
 
@@ -309,7 +304,7 @@ kubectl -n metallb-system get IPAddressPool
 kubectl -n metallb-system get L2Advertisement
 ```
 
-### 部署cloudcore
+### 部署 cloudcore
 保存为 `deploy-cloud.sh`：
 
 ```bash
@@ -460,7 +455,6 @@ kubectl -n kubeedge get pod
 # 获取token，24h 失效
 keadm gettoken
 ```
-
 ### 指定 metallb 自定义的广播地址
 
 ```
@@ -495,7 +489,7 @@ status:
 ```
 telnet 192.168.2.220 10000
 ```
-修改cloudcore config
+修改 cloudcore config
 ```
 $ kubectl -n kubeedge get cm cloudcore -o yaml|grep dynamicController -A 2
       dynamicController:
@@ -601,8 +595,7 @@ ls /etc/systemd/system/edgecore.service
 # 配置文件
 ls /etc/kubeedge/config/edgecore.yaml
 ```
-
-安装CNI 网络插件-需要科学上网,KubeEdge 官方推荐安装方式(可选)
+安装 CNI 网络插件-需要科学上网，KubeEdge 官方推荐安装方式（可选）
 ```
 # 查看是否已安装
 $ ls -lh /opt/cni/bin/
@@ -663,12 +656,12 @@ cni-plugins-linux-amd64-v1.1.1.tgz             100%[============================
 
 ```
 
-- cni 离线安装,[下载指定版本](https://github.com/containernetworking/plugins/releases),高版本会向后兼容
+- CNI 离线安装，[下载指定版本](https://github.com/containernetworking/plugins/releases)，高版本会向后兼容
 
 ### 注意
 
-1.  edge边缘节点不要部署kubelet
-2.  `/etc/kubeedge/config/edgecore.yaml` 修改mqtt 连接地址
+1.  edge 边缘节点不要部署 kubelet
+2.  `/etc/kubeedge/config/edgecore.yaml` 修改 mqtt 连接地址
 
 ## 八、KubeEdge 验证部署
 
@@ -694,7 +687,6 @@ NAME     STATUS   ROLES           AGE   VERSION                     LABELS
 master   Ready    control-plane   62d   v1.28.0                     beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,kubernetes.io/arch=amd64,kubernetes.io/hostname=master,kubernetes.io/os=linux,node-role.kubernetes.io/control-plane=,node.kubernetes.io/exclude-from-external-load-balancers=
 node1    Ready    agent,edge      31m   v1.28.11-kubeedge-v1.17.4   beta.kubernetes.io/arch=arm64,beta.kubernetes.io/os=linux,kubernetes.io/arch=arm64,kubernetes.io/hostname=node1,kubernetes.io/os=linux,node-role.kubernetes.io/agent=,node-role.kubernetes.io/edge=
 ```
-
 应该能看到 Edge 节点（ARM 工控机）处于 `Ready` 状态。
 
 测试运行 Pod，在云端将 pod 调度至边端：
@@ -711,7 +703,6 @@ spec:
   - name: nginx
     image: nginx:alpine
 ```
-
 `kubectl apply -f nginx-edge.yaml`
 
 节点容忍
@@ -751,7 +742,7 @@ spec:
         imagePullPolicy: IfNotPresent
 ```
 
-## 九、CloudCore 配置文件参数释义(回顾)
+## 九、CloudCore 配置文件参数释义（回顾）
 ```
 [root@master soft-honeypot]# kubectl -n kubeedge get cm cloudcore -o yaml
 apiVersion: v1
@@ -889,7 +880,6 @@ data:
           taskWorkers: 1
 ```
 
-
 ### 🔑 顶层配置
 
 #### `commonConfig`
@@ -925,7 +915,7 @@ data:
 * **writeTimeout**：消息写入的超时时间（秒）。
 * **unixsocket**：是否启用本地 Unix Socket 通道。
 * **websocket**：基于 WebSocket 的边缘连接配置（常用）。
-* **https**：提供 HTTPS 连接的配置。
+* **HTTPS**：提供 HTTPS 连接的配置。
 * **quic**：启用 QUIC 协议（性能更好，但默认关闭）。
 
 ---
@@ -1023,9 +1013,8 @@ data:
 * **syncController** → CRD 同步一致性
 * **taskManager** → 分布式任务调度
 
-
 ## 十、后记
-### KubeEdge 边缘节点无法通过Service 创建NodePort类型
+### KubeEdge 边缘节点无法通过 Service 创建 NodePort 类型
 原因和 Kubernetes 与 KubeEdge 的架构有关
 
 #### 1️⃣ NodePort 工作机制
@@ -1034,8 +1023,6 @@ data:
 
 * NodePort Service 会在 **每个 Node 的 kube-proxy 上**创建 iptables 或 ipvs 规则，把指定的 `nodePort` 映射到 Pod 的 targetPort。
 * 也就是说，NodePort 实际是在节点网络层做端口映射，由 kube-proxy 负责。
-
-
 
 #### 2️⃣ KubeEdge 的边缘节点限制
 
@@ -1048,8 +1035,6 @@ data:
 
 * Pod 会创建并运行成功。
 * 但 NodePort 不会在边缘节点生效，也不会监听端口。
-
-
 
 #### 3️⃣ 解决方案
 
@@ -1076,15 +1061,13 @@ data:
     * 在边缘节点上，LB IP 或外部流量可以直接访问 Pod。
     * 但是需要 MetalLB 或类似组件支持。
 
-
 #### 总结
 
 * NodePort **在 KubeEdge 边缘节点上不会自动创建监听端口**。
 * 如果想在边缘节点直接访问服务，请使用 **hostPort**。
 * NodePort 主要用于云端节点或完整 Kubernetes 集群环境，不适合裸边缘节点直接暴露。
 
-
 ## 十一、参考
 1. [KubeEdge 官网](https://kubeedge.io/zh/)
 2. [KubeEdge 和 Kubernetes 部署对应版本关系](https://github.com/kubeedge/kubeedge?tab=readme-ov-file#kubernetes-compatibility)
-
+

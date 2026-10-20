@@ -61,7 +61,6 @@ Docker、containerd、runc……这些上层工具做的事情，归根结底就
 │              两者组合 = 一个"容器"进程                      │
 └─────────────────────────────────────────────────────────┘
 ```
-
 接下来，我们先玩 **Namespaces**，再玩 **CGroups**，最后把它们粘在一起。
 
 ---
@@ -75,7 +74,6 @@ Docker、containerd、runc……这些上层工具做的事情，归根结底就
 ```bash
 ps aux | head -5
 ```
-
 你会看到 PID 1 是 `systemd`（或 `init`），后面跟着成百上千个进程。现在想象一下：**如果一个进程只能看到自己，看不到宿主机的其他进程，它是不是就像运行在一台独立的"机器"上？**
 
 这就是 **PID Namespace** 要做的事。
@@ -92,7 +90,6 @@ Linux 提供了 `unshare` 命令，可以在不创建新进程树的前提下，
 # bash        : 在新环境中启动一个 shell
 unshare --pid --fork --mount-proc bash
 ```
-
 > ⚠️ **为什么必须加 `--mount-proc`？**
 > 如果不加，新 shell 中的 `/proc` 仍然指向宿主机的进程信息，`ps` 命令依然会列出所有宿主机进程。`--mount-proc` 会在新 Namespace 中重新挂载一个干净的 `/proc`，让 `ps` 只能看到本 Namespace 内的进程。
 
@@ -102,7 +99,6 @@ unshare --pid --fork --mount-proc bash
 # 在新 Namespace 中查看进程
 ps aux
 ```
-
 **对比观察：**
 
 | 观察项 | 宿主机 | 新 PID Namespace |
@@ -120,13 +116,11 @@ sleep 3600 &
 echo $!
 # 输出: 2
 ```
-
 **退出新 Namespace：**
 
 ```bash
 exit
 ```
-
 > 📌 **小结**：PID Namespace 并没有创建新的内核，它只是给进程换了一套"编号规则"。新 Namespace 里的 PID 1 在宿主机上其实有一个完全不同的 PID（比如 29831），只是它自己不知道。
 
 ### 2.3 UTS Namespace：独立的主机名
@@ -135,14 +129,12 @@ exit
 # 进入新的 UTS Namespace
 unshare --uts bash
 ```
-
 ```bash
 # 修改主机名（不影响宿主机）
 hostname my-container
 hostname
 # 输出: my-container
 ```
-
 回到宿主机验证：
 
 ```bash
@@ -150,7 +142,6 @@ exit
 hostname
 # 输出: 仍然是原来的主机名
 ```
-
 ### 2.4 Mount Namespace：独立的文件系统视图
 
 Mount Namespace 是最特殊的一个——它隔离的不是某个简单的标识符，而是**整个文件系统的挂载点视图**。
@@ -159,7 +150,6 @@ Mount Namespace 是最特殊的一个——它隔离的不是某个简单的标�
 # 进入新的 Mount Namespace
 unshare --mount bash
 ```
-
 ```bash
 # 在新 NS 中创建一个 tmpfs 挂载
 mkdir /tmp/my_isolated_fs
@@ -169,7 +159,6 @@ mount -t tmpfs tmpfs /tmp/my_isolated_fs
 mount | grep my_isolated_fs
 # 输出: tmpfs on /tmp/my_isolated_fs type tmpfs ...
 ```
-
 回到宿主机：
 
 ```bash
@@ -177,7 +166,6 @@ exit
 mount | grep my_isolated_fs
 # 无输出 ← 宿主机完全不知道这个挂载的存在
 ```
-
 > 📌 这就是为什么 Docker 容器能拥有独立的 `/`。容器运行时通过 `pivot_root` 系统调用将进程的根目录切换到容器镜像的 rootfs，配合 Mount Namespace，进程就"以为"自己运行在一套独立的文件系统上。
 
 ### 2.5 Network Namespace：独立的网络栈
@@ -186,19 +174,16 @@ mount | grep my_isolated_fs
 # 进入新的 Network Namespace
 unshare --net bash
 ```
-
 ```bash
 # 查看网络接口
 ip addr
 # 只有 lo，且状态为 DOWN，没有 eth0
 ```
-
 ```bash
 exit
 ip addr
 # 宿主机一切正常
 ```
-
 > 真实的容器网络远比这复杂（需要 veth pair、bridge、iptables 等），这里只演示隔离效果。
 
 ### 2.6 组合多个 Namespace
@@ -215,7 +200,6 @@ unshare \
   --mount-proc \
   bash
 ```
-
 进入后依次验证：
 
 ```bash
@@ -224,7 +208,6 @@ hostname my-box    # 可以随意改主机名
 ip addr            # 只有 lo
 mount | head -5    # 独立的挂载视图
 ```
-
 **此刻，你已经拥有了一个"看起来像独立机器"的进程环境。但它还没有资源限制——它可以吃光宿主机的内存和 CPU。这就轮到 CGroups 出场了。**
 
 ---
@@ -245,7 +228,6 @@ ls /sys/fs/cgroup/
 # 如果看到的是 cgroup.controllers 等文件，则是 v2
 cat /sys/fs/cgroup/cgroup.controllers 2>/dev/null
 ```
-
 > ⚠️ **以下所有 CGroups 操作均基于 v1。** v2 采用统一层级树，路径和写入方式完全不同，文末有简要对照。
 
 ### 3.2 准备一个"吃资源"的进程
@@ -260,7 +242,6 @@ bash -c 'arr=(); for i in $(seq 1 500); do arr+=("$(head -c 1M /dev/zero | base6
 EAT_PID=$!
 echo "吃内存进程 PID: $EAT_PID"
 ```
-
 ### 3.3 限制内存：200MB 上限
 
 ```bash
@@ -279,7 +260,6 @@ cgset -r memory.limit_in_bytes=209715200 mycontainer
 cgget -r memory.limit_in_bytes mycontainer
 # 输出: memory.limit_in_bytes: 209715200
 ```
-
 ### 3.4 把进程"关进"CGroup
 
 ```bash
@@ -290,7 +270,6 @@ echo $EAT_PID > /sys/fs/cgroup/memory/mycontainer/tasks
 cat /sys/fs/cgroup/memory/mycontainer/tasks
 # 应输出 $EAT_PID
 ```
-
 ### 3.5 观察 OOM：精准击杀
 
 由于进程不断申请内存，而 CGroup 上限只有 200MB，很快内核的 **OOM Killer** 就会介入：
@@ -299,13 +278,11 @@ cat /sys/fs/cgroup/memory/mycontainer/tasks
 # 等待几秒后检查
 dmesg | grep -i "killed process" | tail -3
 ```
-
 你会看到类似输出：
 
 ```
 Memory cgroup out of memory: Killed process 29845 (bash) total-vm:...
 ```
-
 **关键观察：**
 
 - 被杀掉的**只有** CGroup 内的进程。
@@ -316,7 +293,6 @@ Memory cgroup out of memory: Killed process 29845 (bash) total-vm:...
 ps -p $EAT_PID
 # 输出: 无此进程
 ```
-
 > ⚠️ **安全提示**：不要将 PID 1（systemd）或关键系统服务写入 CGroup 再设一个极小的内存上限，否则可能导致系统关键进程被 OOM Kill。
 
 ### 3.6 限制 CPU
@@ -339,7 +315,6 @@ echo $CPU_PID > /sys/fs/cgroup/cpu/mycontainer/tasks
 # 在另一个终端观察 CPU 占用（应为 ~50%）
 top -p $CPU_PID
 ```
-
 ### 3.7 清理 CGroup
 
 ```bash
@@ -354,7 +329,6 @@ cgdelete -r cpu:/mycontainer
 ls /sys/fs/cgroup/memory/ | grep mycontainer
 # 无输出
 ```
-
 > ⚠️ **清理顺序**：必须先 `kill` 掉 CGroup 内的所有进程，再执行 `cgdelete`。否则删除会失败（`Device or resource busy`）。
 
 ---
@@ -401,14 +375,12 @@ echo "验证 CGroup 限制:"
 echo "  内存上限: $(cat /sys/fs/cgroup/memory/$CONTAINER_NAME/memory.limit_in_bytes) bytes"
 echo "  CPU 配额: $(cat /sys/fs/cgroup/cpu/$CONTAINER_NAME/cpu.cfs_quota_us) / $(cat /sys/fs/cgroup/cpu/$CONTAINER_NAME/cpu.cfs_period_us)"
 ```
-
 运行它：
 
 ```bash
 chmod +x mini-container.sh
 sudo ./mini-container.sh
 ```
-
 输出示例：
 
 ```
@@ -425,7 +397,6 @@ sudo ./mini-container.sh
   内存上限: 209715200 bytes
   CPU 配额: 50000 / 100000
 ```
-
 **清理脚本：**
 
 ```bash
@@ -443,7 +414,6 @@ cgdelete -r cpu:/$CONTAINER_NAME 2>/dev/null
 
 echo "清理完成。"
 ```
-
 ---
 
 ## 五、回归 Docker：从手动到自动
@@ -503,7 +473,6 @@ docker run nginx
     └── execve("/docker-entrypoint.sh")
             → 容器进程启动
 ```
-
 容器不是黑盒。拆开它，里面只有 Linux 内核用了二十多年的老手艺：**Namespace 给你一间独立的房间，CGroup 给你划好房间的面积上限。** Docker 做的事情，就是帮你把门和墙自动砌好。
 
 希望下次你敲下 `docker run` 时，脑海里浮现的不再是一个魔法指令，而是 `clone`、`pivot_root`、`cgroup.procs` 这些朴素而精妙的系统调用。

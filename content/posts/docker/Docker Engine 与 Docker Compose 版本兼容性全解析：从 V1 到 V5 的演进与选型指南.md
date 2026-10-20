@@ -61,7 +61,6 @@ Docker 官方在 2025 年对 Compose 进行了重大架构升级后，选择将�
 2026.06  ── Compose v5.1.4（Docker Desktop 4.42 捆绑）
 2026.08  ── Compose v5.4.0（当前最新）
 ```
-
 ---
 
 ## 三、Docker Engine 与 Compose 版本兼容矩阵
@@ -122,7 +121,6 @@ Docker Compose 与 Docker Engine 之间的通信依赖 **Docker Engine API**，�
 ⚠️ 需谨慎测试：v5.0.x（可能部分功能异常）
 ❌ 不建议：v5.1+ （API 依赖过高）
 ```
-
 ### 4.3 下载地址
 
 ```bash
@@ -135,7 +133,6 @@ https://github.com/docker/compose/releases?page=2#release-v2.40.3
 # 最新 v5.4.0（需 Docker 27+，仅供参考）
 https://github.com/docker/compose/releases?page=1#release-v5.4.0
 ```
-
 ### 4.4 安装命令（插件模式）
 
 ```bash
@@ -153,7 +150,6 @@ sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
 docker compose version
 # 预期输出：Docker Compose version v2.24.1
 ```
-
 ---
 
 ## 五、Compose V1 与 V2（含 V5）的核心区别
@@ -201,7 +197,6 @@ docker compose up -d
 docker compose ps
 docker compose logs -f
 ```
-
 如需兼容旧脚本：
 ```bash
 # 创建符号链接（全局生效，不依赖 Shell 类型）
@@ -234,7 +229,6 @@ which docker-compose
 └── 还在用 Compose V1？
     └── 🚨 立即迁移！V1 已无安全补丁
 ```
-
 ### 6.2 生产环境最佳实践
 
 | 实践 | 说明 |
@@ -273,7 +267,6 @@ cd /path/to/your/project
 docker compose config   # 验证 YAML 解析
 docker compose up -d    # 启动
 ```
-
 ### 6.4 关于 `version` 字段的说明
 
 自 Compose v1.27+ / V2 起，`docker-compose.yml` 中的 `version` 字段**已被弃用**：
@@ -290,7 +283,6 @@ services:
   web:
     image: nginx
 ```
-
 > 省略 `version` 字段后，Compose 将使用最新的 Compose Specification 进行解析，所有现代特性均可用。
 
 ---
@@ -317,4 +309,4 @@ services:
 - Docker Engine 25.0 Release Notes：https://docs.docker.com/engine/release-notes/25.0/#2500
 - Docker Desktop Release Notes（含 Compose 版本记录）：https://docs.docker.com/desktop/release-notes/
 - Compose Specification：https://github.com/compose-spec/compose-spec
-
+

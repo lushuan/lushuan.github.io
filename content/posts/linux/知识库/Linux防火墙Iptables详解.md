@@ -23,27 +23,27 @@ iptables 是运维中的重点但不算是特别的难点，是网站访问的�
 
 ## 一、概述
 - 封端口
-- 封IP
-- 实现Nat上网
+- 封 IP
+- 实现 Nat 上网
   - 共享上网
-  - 端口映射(端口转发)，ip 映射
+  - 端口映射（端口转发），ip 映射
 
 ## 二、核心解释
-- iptables适用linux所有发行版，yum安装方式为 "yum install iptables-services"
-- iptables基于linux netfilter, Netfilter是Linux 2.4.x引入的一个子系统，它作为一个通用的、抽象的框架，提供一整套的hook函数的管理机制，使得诸如数据包过滤、网络地址转换(NAT)和基于协议类型的连接跟踪成为了可能
-- linux 内核中，netfilter， nf_* 的配置都会影响netfilter的性能
-- iptables结构：iptables -> Tables -> Chains -> Rules. 即tables由chains组成，而chains由rules组成
-- iptables 支持表类型有 filter （默认）， nat， mangle， raw  ， 优先级  raw > mangle > nat > filter
-- iptables 的 nat 功能依赖linux内核的net.ipv4.ip_forward， net.ipv6.ip_forward
-- iptables 的 nat 功能包含snat，dnat，其中snat仅用于postrouting
-    - MASQUERADE是SNAT的一个特例，主要用于动态返回snat地址
-- 防火墙实例: (/etc/sysconfig/iptables）
+- iptables 适用 Linux 所有发行版，yum 安装方式为 "yum install iptables-services"
+- iptables 基于 Linux netfilter, Netfilter 是 Linux 2.4.x 引入的一个子系统，它作为一个通用的、抽象的框架，提供一整套的 hook 函数的管理机制，使得诸如数据包过滤、网络地址转换（NAT）和基于协议类型的连接跟踪成为了可能
+- Linux 内核中，netfilter， nf_* 的配置都会影响 netfilter 的性能
+- iptables 结构：iptables -> Tables -> Chains -> Rules. 即 tables 由 chains 组成，而 chains 由 rules 组成
+- iptables 支持表类型有 filter（默认）， nat， mangle， raw，优先级  raw > mangle > nat > filter
+- iptables 的 nat 功能依赖 Linux 内核的 net.ipv4.ip_forward， net.ipv6.ip_forward
+- iptables 的 nat 功能包含 snat，dnat，其中 snat 仅用于 postrouting
+    - MASQUERADE 是 SNAT 的一个特例，主要用于动态返回 snat 地址
+- 防火墙实例： (/etc/sysconfig/iptables）
 
-## 三、iptables和netfilter的关系
-Iptables和netfilter的关系是一个很容易让人搞不清的问题。很多人知道iptables却不知道netfilter。其实iptables只是Linux防火墙的管理工具而已，位于/sbin/iptables。真正实现防火墙功能的是netfilter，它是Linux内核中实现包过滤的内部结构。
+## 三、iptables 和 netfilter 的关系
+Iptables 和 netfilter 的关系是一个很容易让人搞不清的问题。很多人知道 iptables 却不知道 netfilter。其实 iptables 只是 Linux 防火墙的管理工具而已，位于/sbin/iptables。真正实现防火墙功能的是 netfilter，它是 Linux 内核中实现包过滤的内部结构。
 
 ## 四、iptables 管理
-安装了`iptables-service`后方便通过systemd管理iptables服务
+安装了 `iptables-service` 后方便通过 systemd 管理 iptables 服务
 ```shell
 $ sudo yum install iptables-services
 $ sudo rpm -ql iptables-services
@@ -65,10 +65,10 @@ $ sudo rpm -ql iptables
 ...
 ```
 
-注意: 使用`iptables` 记得将`firewalld` 关闭掉`systemctl disable firewalld`
+注意：使用 `iptables` 记得将 `firewalld` 关闭掉 `systemctl disable firewalld`
 
 防火墙激活  
-防火墙是默认嵌入到linux内核中，但是没有默认激活,`lsmod`查看内核中加载了哪些模块
+防火墙是默认嵌入到 Linux 内核中，但是没有默认激活，`lsmod` 查看内核中加载了哪些模块
 ```shell
 $ sudo lsmod|egrep "iptables|nat|filter"
 xt_nat                 12681  4 
@@ -135,31 +135,30 @@ Chain OUTPUT (policy ACCEPT)
 target     prot opt source               destination  
 ```
 
-
-## 五、iptables传输数据包的过程
-1. 当一个数据包进入网卡时，它首先进入PREROUTING链，内核根据数据包目的IP判断是否需要转送出去。
-2. 如果数据包就是进入本机的，它就会沿着图向下移动，到达INPUT链。数据包到了INPUT链后，任何进程都会收到它。本机上运行的程序可以发送数据包，这些数据包会经过OUTPUT链，然后到达POSTROUTING链输出。
-3. 如果数据包是要转发出去的，且内核允许转发，数据包就会如图所示向右移动，经过FORWARD链，然后到达POSTROUTING链输出。
+## 五、iptables 传输数据包的过程
+1. 当一个数据包进入网卡时，它首先进入 PREROUTING 链，内核根据数据包目的 IP 判断是否需要转送出去。
+2. 如果数据包就是进入本机的，它就会沿着图向下移动，到达 INPUT 链。数据包到了 INPUT 链后，任何进程都会收到它。本机上运行的程序可以发送数据包，这些数据包会经过 OUTPUT 链，然后到达 POSTROUTING 链输出。
+3. 如果数据包是要转发出去的，且内核允许转发，数据包就会如图所示向右移动，经过 FORWARD 链，然后到达 POSTROUTING 链输出。
 
 ![iptables-process](/images/linux/iptables-process.png "iptables传输数据包的过程")
 
-## 六、4表-5链-规则
+## 六、4 表-5 链-规则
 
 ### 防火墙的种类及使用说明
 - 硬件：整个企业入口
-  - 三层路由：H3C 华为 Cisco(思科)
+  - 三层路由：H3C 华为 Cisco（思科）
   - 防火墙：深信服
-- 软件：开源软件 网站内部 封ip
-  - iptables 写入到Linux 内核中 以后服务docker 工作在4层
+- 软件：开源软件 网站内部 封 ip
+  - iptables 写入到 Linux 内核中 以后服务 Docker 工作在 4 层
   - firewalld C7
   - nftables C8
-  - ufw(ubuntu fire wall) Ubuntu
-- 云防火墙(公有云)
+  - ufw(Ubuntu fire wall) Ubuntu
+- 云防火墙（公有云）
   - 阿里云
-    - 安全组(封ip,封端口)
-    - NAT网关(共享上网，端口映射)
-    - waf应用防火墙
-- waf防火墙(应用防火墙，处理7层的攻击)SQL注入
+    - 安全组（封 ip，封端口）
+    - NAT 网关（共享上网，端口映射）
+    - waf 应用防火墙
+- waf 防火墙（应用防火墙，处理 7 层的攻击）SQL 注入
 
 名词简要熟悉
 - 容器
@@ -168,23 +167,23 @@ target     prot opt source               destination
 - 规则：准许或拒绝规则，未来写的防火墙条件就是各种防火墙规则
 
 详细解释：
-- 表（tables）提供特定的功能，iptables内置了4个表，即filter表、nat表、mangle表和raw表，分别用于实现包过滤，网络地址转换、包重构(修改)和数据跟踪处理。
-- 链（chains）是数据包传播的路径，每一条链其实就是众多规则中的一个检查清单，每一条链中可以有一条或数条规则。当一个数据包到达一个链时，iptables就会从链中第一条规则开始检查，看该数据包是否满足规则所定义的条件。如果满足，系统就会根据该条规则所定义的方法处理该数据包；否则iptables将继续检查下一条规则，如果该数据包不符合链中任一条规则，iptables就会根据该链预先定义的默认策略来处理数据包。
-- Iptables采用“表”和“链”的分层结构。在RHEL4中是三张表五个链。现在RHEL5、6成了四张表五个链了，不过多出来的那个表用的也不太多，所以基本还是和以前一样。下面罗列一下这四张表和五个链。注意一定要明白这些表和链的关系及作用。
+- 表（tables）提供特定的功能，iptables 内置了 4 个表，即 filter 表、nat 表、mangle 表和 raw 表，分别用于实现包过滤，网络地址转换、包重构（修改）和数据跟踪处理。
+- 链（chains）是数据包传播的路径，每一条链其实就是众多规则中的一个检查清单，每一条链中可以有一条或数条规则。当一个数据包到达一个链时，iptables 就会从链中第一条规则开始检查，看该数据包是否满足规则所定义的条件。如果满足，系统就会根据该条规则所定义的方法处理该数据包；否则 iptables 将继续检查下一条规则，如果该数据包不符合链中任一条规则，iptables 就会根据该链预先定义的默认策略来处理数据包。
+- Iptables 采用“表”和“链”的分层结构。在 RHEL4 中是三张表五个链。现在 RHEL5、6 成了四张表五个链了，不过多出来的那个表用的也不太多，所以基本还是和以前一样。下面罗列一下这四张表和五个链。注意一定要明白这些表和链的关系及作用。
 
 ![iptables-四表五链](/images/linux/iptables-四表五链.png "四表五链")
 
 ### 规则表
-1. filter表——三个链：INPUT、FORWARD、OUTPUT  
+1. filter 表——三个链：INPUT、FORWARD、OUTPUT  
 作用：过滤数据包  内核模块：iptables_filter.  
-2. Nat表——三个链：PREROUTING、POSTROUTING、OUTPUT  
+2. Nat 表——三个链：PREROUTING、POSTROUTING、OUTPUT  
 作用：用于网络地址转换（IP、端口） 内核模块：iptable_nat  
-3. Mangle表——五个链：PREROUTING、POSTROUTING、INPUT、OUTPUT、FORWARD  
-作用：修改数据包的服务类型、TTL、并且可以配置路由实现QOS内核模块：iptable_mangle(别看这个表这么麻烦，咱们设置策略时几乎都不会用到它)  
-4. Raw表——两个链：OUTPUT、PREROUTING  
+3. Mangle 表——五个链：PREROUTING、POSTROUTING、INPUT、OUTPUT、FORWARD  
+作用：修改数据包的服务类型、TTL、并且可以配置路由实现 QOS 内核模块：iptable_mangle（别看这个表这么麻烦，咱们设置策略时几乎都不会用到它）  
+4. Raw 表——两个链：OUTPUT、PREROUTING  
 作用：决定数据包是否被状态跟踪机制处理 内核模块：iptable_raw  
 
-备注：常用的表有filter、Nat这两个表
+备注：常用的表有 filter、Nat 这两个表
 
 ### 规则链
 1. INPUT——进来的数据包应用此规则链中的策略
@@ -195,7 +194,7 @@ target     prot opt source               destination
 5. POSTROUTING——对数据包作路由选择后应用此链中的规则  
 （所有的数据包出来的时候都先由这个链处理）
 
-备注：常用的规则链有INPUT、OUTPUT、FORWARD
+备注：常用的规则链有 INPUT、OUTPUT、FORWARD
 
 ## 七、四表五链详解
 `iptables` 是 Linux 系统中用于配置防火墙规则的核心工具，基于 **Netfilter** 框架实现。它的核心逻辑围绕 **四表五链** 展开，用于控制网络数据包的传输和处理流程。
@@ -264,7 +263,7 @@ target     prot opt source               destination
 
 ### 四、处理优先级
 1. **表的优先级**：`raw` → `mangle` → `nat` → `filter`。  
-   （例如：`PREROUTING` 链中，先处理 `raw` 表规则，再处理 `mangle` 表，最后是 `nat` 表。）
+（例如：`PREROUTING` 链中，先处理 `raw` 表规则，再处理 `mangle` 表，最后是 `nat` 表。）
 
 2. **链的流程**：  
    - **入站流量**：PREROUTING → INPUT  
@@ -296,7 +295,7 @@ target     prot opt source               destination
 ## 八、iptables 执行流程
 工作流程小结：
 1. 防火墙是层层过滤的，实际是按照配置规则的顺序从上到下，从前到后进行过滤的。
-2. 如果成功匹配规则，即明确表示是拒绝(DROP)还是接受(ACCEPT),数据包就不再向下匹配新的规则
+2. 如果成功匹配规则，即明确表示是拒绝（DROP）还是接受（ACCEPT），数据包就不再向下匹配新的规则
 3. 如果规则中没有明确表明是阻止还是通过的，也就是没有匹配规则，向下进行匹配，直到匹配默认规则得到明确的阻止还是通过
 4. 防火墙的默认规则是所有规则都匹配完才会匹配的
 
@@ -313,12 +312,11 @@ target     prot opt source               destination
 | `--sport`  | `--source-port`         | 匹配 **源端口**（需配合 `-p tcp` 或 `-p udp`，如 `--sport 22`）。             |
 | `--dport`  | `--destination-port`    | 匹配 **目标端口**（需配合 `-p tcp` 或 `-p udp`，如 `--dport 80`）。           |
 | `-A`       | `--append`              | 在规则链 **末尾追加** 新规则（如 `-A INPUT`）。                               |
-| `-I`       | `--insert`              | 在规则链 **指定位置插入** 新规则（默认插入到开头，如 `-I INPUT 2` 插到第2条）。|
-| `-D`       | `--delete`              | 从规则链中 **删除** 指定规则（如 `-D INPUT 3` 删除第3条规则）。               |
+| `-I`       | `--insert`              | 在规则链 **指定位置插入** 新规则（默认插入到开头，如 `-I INPUT 2` 插到第 2 条）。|
+| `-D`       | `--delete`              | 从规则链中 **删除** 指定规则（如 `-D INPUT 3` 删除第 3 条规则）。               |
 | `-L`       | `--list`                | 列出规则链内容（如 `iptables -L INPUT`）。                                    |
 | `-F`       | `--flush`               | 清空规则链（如 `iptables -F INPUT`）。                                        |
 | `-N`       | `--new-chain`           | 创建自定义链（如 `iptables -N MY_CHAIN`）。                                   |
-
 
 ## 十、iptables filter 表案例
 ```shell
@@ -354,9 +352,8 @@ $ iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 $ iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 ```
 
-
 ### 实践：限制 ip 连接数
-限制来自任何IP地址的TCP连接到端口22（SSH默认端口），如果来自同一IP的并发连接数超过100，则拒绝这些连接，并使用ICMP端口不可达消息作为响应
+限制来自任何 IP 地址的 TCP 连接到端口 22（SSH 默认端口），如果来自同一 IP 的并发连接数超过 100，则拒绝这些连接，并使用 ICMP 端口不可达消息作为响应
 ```bash
 $ iptables -A INPUT -p tcp --dport 22 -m connlimit --connlimit-above 100 --connlimit-mask 32 -j REJECT --reject-with icmp-port-unreachable
 $ iptables  -nL --line-numbers
@@ -368,16 +365,16 @@ num  target     prot opt source               destination
 ```
 命令参数释义：
 
-- `-A INPUT`: 将规则添加到INPUT链中。INPUT链处理所有入站数据包。
-- `-p tcp`: 指定协议为TCP。
-- `--dport 22`: 目标端口是22，即SSH服务的默认端口。
-- `-m connlimit`: 使用connlimit模块来限制每个客户端IP的并发连接数。
-- `--connlimit-above 100`: 如果一个源IP地址发起的并发连接数超过100，则应用此规则。
-- `--connlimit-mask 32`: 对于IPv4，这表示针对单个IP地址进行限制（子网掩码长度为32意味着每个独立的IP地址）。
-- `-j REJECT`: 匹配条件后执行的目标动作是REJECT（拒绝）。
-- `--reject-with icmp-port-unreachable`: 当拒绝数据包时，发送ICMP端口不可达的消息作为响应。
+- `-A INPUT`: 将规则添加到 INPUT 链中。INPUT 链处理所有入站数据包。
+- `-p tcp`: 指定协议为 TCP。
+- `--dport 22`: 目标端口是 22，即 SSH 服务的默认端口。
+- `-m connlimit`: 使用 connlimit 模块来限制每个客户端 IP 的并发连接数。
+- `--connlimit-above 100`: 如果一个源 IP 地址发起的并发连接数超过 100，则应用此规则。
+- `--connlimit-mask 32`: 对于 IPv4，这表示针对单个 IP 地址进行限制（子网掩码长度为 32 意味着每个独立的 IP 地址）。
+- `-j REJECT`: 匹配条件后执行的目标动作是 REJECT（拒绝）。
+- `--reject-with icmp-port-unreachable`: 当拒绝数据包时，发送 ICMP 端口不可达的消息作为响应。
 
-这条规则将会对尝试连接到服务器上SSH服务（端口22）的所有流量生效，若某个IP地址的并发连接数超过了100，则新的连接请求将被拒绝，并返回ICMP端口不可达的消息给发起者。这样可以有效防止单一来源的过多连接请求，有助于防范一些类型的Dos攻击或滥用行为。
+这条规则将会对尝试连接到服务器上 SSH 服务（端口 22）的所有流量生效，若某个 IP 地址的并发连接数超过了 100，则新的连接请求将被拒绝，并返回 ICMP 端口不可达的消息给发起者。这样可以有效防止单一来源的过多连接请求，有助于防范一些类型的 Dos 攻击或滥用行为。
 
 ### 生产配置参考
 ```shell
@@ -421,15 +418,15 @@ $ iptables-save
 ### 二、匹配条件参数
 | 参数 | 说明 |
 |------|------|
-| `-s <IP/网段>` | 匹配**源IP地址**。<br>示例：`-s 192.168.1.100` 或 `-s 10.0.0.0/24` |
-| `-d <IP/网段>` | 匹配**目标IP地址**。 |
-| `-p <协议>` | 匹配协议类型（如 `tcp`, `udp`, `icmp`, `all`）。<br>示例：`-p tcp` |
+| `-s <IP/网段>` | 匹配**源 IP 地址**。<br>示例：`-s 192.168.1.100` 或 `-s 10.0.0.0/24` |
+| `-d <IP/网段>` | 匹配**目标 IP 地址**。 |
+| `-p <协议>` | 匹配协议类型（如 `tcp`， `udp`， `icmp`， `all`）。<br>示例：`-p tcp` |
 | `--sport <端口>` | 匹配**源端口**（需配合 `-p tcp` 或 `-p udp`）。<br>示例：`--sport 8080` |
 | `--dport <端口>` | 匹配**目标端口**。<br>示例：`--dport 22` |
 | `-i <网卡>` | 匹配**输入网卡**（如 `eth0`）。<br>示例：`-i eth0` |
 | `-o <网卡>` | 匹配**输出网卡**。 |
-| `-m <模块>` | 使用扩展模块（如 `state`, `multiport`, `iprange`）。<br>示例：`-m state --state ESTABLISHED` |
-| `--state <状态>` | 匹配连接状态（如 `NEW`, `ESTABLISHED`, `RELATED`）。 |
+| `-m <模块>` | 使用扩展模块（如 `state`， `multiport`， `iprange`）。<br>示例：`-m state --state ESTABLISHED` |
+| `--state <状态>` | 匹配连接状态（如 `NEW`， `ESTABLISHED`， `RELATED`）。 |
 
 ---
 
@@ -504,9 +501,8 @@ $ iptables -A INPUT -p icmp -j DROP
 掌握这些参数后，可以灵活配置防火墙规则，实现流量过滤、NAT 转换、日志记录等功能。
 
 ## 十二、iptables 总结
-iptables 在工作中也是常用到的服务，重要但是不是很复杂，这里找了一个iptables[面试参考](https://www.jianshu.com/p/19422676b854)，自己可以写一写，加深巩固下,在生产环境层面执行前最好是先在测试环境验证下
+iptables 在工作中也是常用到的服务，重要但是不是很复杂，这里找了一个 iptables[面试参考](https://www.jianshu.com/p/19422676b854)，自己可以写一写，加深巩固下，在生产环境层面执行前最好是先在测试环境验证下
 
 ## 十三、参考
-1. [iptables详细教程：基础、架构、清空规则、追加规则、应用实例](https://lesca.me/archives/iptables-tutorial-structures-configuratios-examples.html)
-
-
+1. [iptables 详细教程：基础、架构、清空规则、追加规则、应用实例](https://lesca.me/archives/iptables-tutorial-structures-configuratios-examples.html)
+

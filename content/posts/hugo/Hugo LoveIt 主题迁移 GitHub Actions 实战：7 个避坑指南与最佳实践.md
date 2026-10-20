@@ -64,9 +64,7 @@ git remote add all git@github.com:username/repo.git
 git remote set-url --add --push all git@gitee.com:username/repo.git
 git push all main
 ```
-
 > 💡 **建议**：GitHub Actions 的 workflow 中也可以加一个 step 同步到 Gitee，实现 push 一次、双端自动更新。
-
 
 ### 2. Git Push 连接拒绝：代理配置
 
@@ -85,9 +83,7 @@ git config --get http.https://github.com.proxy
 # 强制推送测试
 git push github main --force
 ```
-
 > 💡 **注意**：此配置仅对 `https://github.com` 生效，不影响其他 Git 仓库。取消代理用 `git config --unset http.https://github.com.proxy`。
-
 
 ### 3. 私有仓库 + GitHub Actions = 💰 $48/年
 
@@ -107,7 +103,6 @@ git push github main --force
 fatal: No url found for submodule path 'themes/LoveIt' in .gitmodules
 Error: The process '/usr/bin/git' failed with exit code 128
 ```
-
 **根因**：LoveIt 主题的引入方式决定了 `checkout` 步骤的配置。
 
 #### 方式 A：在线 Submodule（推荐）
@@ -218,7 +213,6 @@ Hugo 构建时如果缺少 `--baseURL`，生成的 HTML 中所有链接都是相
   appId = "PLACEHOLDER_VALINE_APP_ID"
   appKey = "PLACEHOLDER_VALINE_APP_KEY"
 ```
-
 #### Step 3：deploy.yml 中 sed 注入（必须在 Checkout 之后）
 
 ```yaml
@@ -234,7 +228,6 @@ Hugo 构建时如果缺少 `--baseURL`，生成的 HTML 中所有链接都是相
     sed -i "s|PLACEHOLDER_VALINE_APP_ID|${{ secrets.VALINE_APP_ID }}|g" config.toml
     sed -i "s|PLACEHOLDER_VALINE_APP_KEY|${{ secrets.VALINE_APP_KEY }}|g" config.toml
 ```
-
 > 🔒 **安全保障**：`${{ secrets.XXX }}` 在服务端展开，即使有人 fork 你的仓库也无法获取你的 Secrets。GitHub 还会自动对日志中的 Secret 值脱敏为 `***`。
 
 ---
@@ -304,13 +297,12 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 ```
-
 ---
 
 ## 四、补充建议
 
 1.  **本地预览与 CI 一致性**：确保本地 `hugo version` 与 `HUGO_VERSION` 环境变量一致，避免 "本地正常、CI 报错" 的经典问题
-2.  **VSCode GitHub Actions 扩展**：安装后主要用于 YAML Schema 校验和自动补全，Secrets 管理仍建议在网页端操作
+2.  **VS Code GitHub Actions 扩展**：安装后主要用于 YAML Schema 校验和自动补全，Secrets 管理仍建议在网页端操作
 3.  **首次迁移验证**：Inject 步骤后可临时加 `grep -c "PLACEHOLDER" config.toml` 断言占位符已全部替换，确认无误后删除
 4.  **缓存优化**：后续可加入 `actions/cache` 缓存 Hugo modules 和 npm 依赖，将构建时间从 2-3 分钟缩短至 30 秒内
 

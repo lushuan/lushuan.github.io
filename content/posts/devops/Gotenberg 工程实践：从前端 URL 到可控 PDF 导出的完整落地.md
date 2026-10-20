@@ -19,7 +19,6 @@ summary: "记录基于 Gotenberg 实现前端 URL 到可控 PDF 导出的完整�
 
 <!--more-->
 
-
 > Gotenberg、Chromium、URL 转 PDF、Vue SPA、ECharts、A4 分页、`waitForExpression`
 
 在很多后台系统中，“导出 PDF”看起来只是一个按钮，真正做起来却很容易从一个简单功能变成一条完整的渲染链路。
@@ -59,7 +58,6 @@ curl \
   --form 'waitForExpression=window.__PDF_READY__ === true' \
   -o output-a4.pdf
 ```
-
 先不要急着记住每一个参数。**第一遍的目标只有一个：确认这条链路能够稳定地产生 PDF。**
 
 然后按照下面的顺序逐步观察：
@@ -81,7 +79,6 @@ A4 纸张尺寸是否正确？
       ↓
 最终再把参数固化到后端代码
 ```
-
 后面的章节都可以看成是在**解释、调整和验证这条 POC**：
 
 - `extraHttpHeaders` 解决“页面需要登录怎么办”；
@@ -93,7 +90,6 @@ A4 纸张尺寸是否正确？
 - `printBackground=true` 解决“为什么 PDF 里的背景色消失”；
 - `scale=1` 解决“为什么页面被缩小后出现白边”；
 - 批量导出和并发控制则是在 POC 跑通以后，再把单次转换工程化。
-
 
 ---
 
@@ -118,13 +114,11 @@ A4 纸张尺寸是否正确？
 ```text
 “前端把当前页面下载成 PDF”
 ```
-
 变成了：
 
 ```text
 “后端能够访问一个 URL，把完整页面渲染成 PDF，并支持批量执行。”
 ```
-
 这也是选择 Gotenberg 的起点。
 
 ---
@@ -148,7 +142,6 @@ Chromium
   ↓
 把长图放进 PDF
 ```
-
 这种方式能够解决“后端生成 PDF”的问题，但它实际上更接近“网页截图”，而不是“网页打印”。
 
 主要问题有几个。
@@ -178,7 +171,6 @@ A4
 第 3 页
 ...
 ```
-
 如果继续沿用截图方案，就需要自己解决图片切割、页高计算、比例换算等问题。
 
 ### 3. 固定等待不可靠
@@ -188,7 +180,6 @@ A4
 ```text
 Sleep(8s)
 ```
-
 页面快的时候，8 秒是在浪费时间；页面慢的时候，8 秒又可能不够。
 
 ### 4. 项目维护状态也是技术选型的重要因素
@@ -216,7 +207,6 @@ printToPDF
  ↓
 PDF
 ```
-
 这和截图方案的思路完全不同。
 
 截图方案是：
@@ -224,13 +214,11 @@ PDF
 ```text
 网页 → 图片 → PDF
 ```
-
 Gotenberg 更接近：
 
 ```text
 网页 → 浏览器打印 → PDF
 ```
-
 因此，页面本身可以继续使用 Vue、React 等前端框架，也可以包含普通 DOM、CSS、Canvas、ECharts 等内容。
 
 除了 URL 转 PDF，Gotenberg 还提供 HTML、Markdown、Office 文档转换，以及 PDF 合并、拆分、旋转、水印等能力。本文主要关注其中最适合前端页面导出的 Chromium URL → PDF 能力。
@@ -266,7 +254,6 @@ Gotenberg 的优势并不只是“能生成 PDF”，更重要的是它把 Chrom
 部分数据缺失
 DOM 尚未生成
 ```
-
 ### 问题二：在哪里分页？
 
 A4 的高度是固定的，而页面内容高度是动态的。
@@ -280,7 +267,6 @@ A4 的高度是固定的，而页面内容高度是动态的。
 ──────────────
 卡片剩余内容
 ```
-
 对于报告、数据看板、统计页面来说，这种结果通常不可接受。
 
 所以这次实践最终形成了一个非常明确的分工：
@@ -295,7 +281,6 @@ Gotenberg / Chromium
 前端 JS
     负责“什么时候准备好，以及动态分页”
 ```
-
 ---
 
 ## 五、先用 curl 做 POC，再开始后端编码
@@ -323,7 +308,6 @@ curl
    ↓
 再次生成
 ```
-
 整个过程可以拆成几个阶段。
 
 ### 第一阶段：先确认“能生成”
@@ -367,13 +351,11 @@ curl
 ```bash
 --form 'extraHttpHeaders={"x-token":"<TOKEN>"}'
 ```
-
 或者：
 
 ```bash
 --form 'extraHttpHeaders={"Authorization":"Bearer <TOKEN>"}'
 ```
-
 Gotenberg 会将这些 Header 交给 Chromium，使页面导航以及页面后续的 HTTP 请求能够携带相应 Header。
 
 这种方式特别适合前后端分离、API 使用 Token 鉴权的 SPA。
@@ -387,7 +369,6 @@ Gotenberg 会将这些 Header 交给 Chromium，使页面导航以及页面后�
 ```bash
 --form 'cookies=@cookies.json;type=application/json'
 ```
-
 例如：
 
 ```json
@@ -403,7 +384,6 @@ Gotenberg 会将这些 Header 交给 Chromium，使页面导航以及页面后�
   }
 ]
 ```
-
 两种方案的选择很简单：
 
 | 方案 | 更适合 |
@@ -434,7 +414,6 @@ Gotenberg 会将这些 Header 交给 Chromium，使页面导航以及页面后�
     ↓
 固定画布、打印 CSS、分页、图表重绘
 ```
-
 屏幕布局和打印布局并不是一回事。
 
 例如屏幕模式可能根据浏览器窗口宽度执行：
@@ -442,7 +421,6 @@ Gotenberg 会将这些 Header 交给 Chromium，使页面导航以及页面后�
 ```text
 transform: scale(...)
 ```
-
 把一个固定宽度的页面缩放到当前窗口中。
 
 但打印模式如果继续使用这种缩放，DOM 的实际布局尺寸就可能和纸张尺寸不一致，从而影响分页计算。
@@ -452,7 +430,6 @@ transform: scale(...)
 ```text
 ?pdf=1
 ```
-
 作为一个非常明确的打印模式开关。
 
 前端可以根据：
@@ -460,7 +437,6 @@ transform: scale(...)
 ```js
 const isPrintMode = route.query.pdf === '1'
 ```
-
 决定是否：
 
 - 关闭屏幕态缩放；
@@ -487,7 +463,6 @@ const isPrintMode = route.query.pdf === '1'
 --form 'paperWidth=8.27' \
 --form 'paperHeight=11.69'
 ```
-
 这当然可以工作。
 
 但问题在于：页面的排版实际上已经由前端 CSS 决定。如果后端再用英寸定义一次纸张尺寸，就出现了两套尺寸体系：
@@ -503,7 +478,6 @@ CSS / DOM / @page
         ↓
 页面布局尺寸
 ```
-
 这两套体系之间需要进行转换，复杂页面中很容易出现细微的比例、边距和分页差异。
 
 因此最终选择：
@@ -511,7 +485,6 @@ CSS / DOM / @page
 ```bash
 --form 'preferCssPageSize=true'
 ```
-
 Gotenberg 的这个参数会优先使用 CSS `@page` 定义的页面尺寸，而不是 Form 参数中的 `paperWidth` / `paperHeight`。
 
 这样页面和纸张使用同一套布局定义。
@@ -534,13 +507,11 @@ Gotenberg 的这个参数会优先使用 CSS `@page` 定义的页面尺寸，而
   }
 }
 ```
-
 其中：
 
 ```text
 1920 × 297 / 210 ≈ 2715.43
 ```
-
 也就是说，用一个固定宽度的 DOM 画布，再按照 A4 的 `210:297` 比例计算页面高度。
 
 这样就可以建立一个比较稳定的关系：
@@ -550,7 +521,6 @@ Gotenberg 的这个参数会优先使用 CSS `@page` 定义的页面尺寸，而
         ↕
 一个固定高度的 DOM 画布
 ```
-
 前端的分页计算就有了明确基准。
 
 ### 为什么不再同时设置两套纸张尺寸？
@@ -564,7 +534,6 @@ Gotenberg 的这个参数会优先使用 CSS `@page` 定义的页面尺寸，而
 ```bash
 preferCssPageSize=true
 ```
-
 并让 `@page` 成为页面尺寸的唯一来源。
 
 ---
@@ -592,7 +561,6 @@ curl \
   --form 'waitForExpression=window.__PDF_READY__ === true' \
   -o output.pdf
 ```
-
 几个关键参数可以这样理解：
 
 | 参数 | 作用 |
@@ -621,7 +589,6 @@ curl \
 ```bash
 --form 'waitDelay=5s'
 ```
-
 逻辑很简单：
 
 ```text
@@ -631,7 +598,6 @@ curl \
  ↓
 生成 PDF
 ```
-
 问题也很明显。
 
 页面如果 2 秒就完成：
@@ -639,7 +605,6 @@ curl \
 ```text
 浪费 3 秒
 ```
-
 页面如果 7 秒才完成：
 
 ```text
@@ -647,31 +612,26 @@ curl \
  ↓
 拿到半成品
 ```
-
 所以更合理的思路是让页面自己告诉 Gotenberg：
 
 ```text
 “我准备好了。”
 ```
-
 Gotenberg 提供了 `waitForExpression`：
 
 ```bash
 --form 'waitForExpression=window.__PDF_READY__ === true'
 ```
-
 前端则维护：
 
 ```js
 window.__PDF_READY__ = false
 ```
-
 在所有打印准备工作完成以后：
 
 ```js
 window.__PDF_READY__ = true
 ```
-
 一个简化后的准备流程可以是：
 
 ```js
@@ -697,13 +657,11 @@ paginateForPdf()
 // 所有打印准备工作结束
 window.__PDF_READY__ = true
 ```
-
 这里有一个很重要的细节：
 
 ```text
 window.__PDF_READY__ = true
 ```
-
 是**赋值**；
 
 而 Gotenberg 中：
@@ -711,7 +669,6 @@ window.__PDF_READY__ = true
 ```text
 window.__PDF_READY__ === true
 ```
-
 是**判断**。
 
 两者职责不同。
@@ -721,13 +678,11 @@ window.__PDF_READY__ === true
 ```text
 “我猜 5 秒应该够了”
 ```
-
 变成：
 
 ```text
 “页面完成所有准备工作后，再通知打印引擎。”
 ```
-
 对于包含异步 API、ECharts、动态 DOM 的 SPA，这种方式明显更可靠。
 
 ---
@@ -743,13 +698,11 @@ window.__PDF_READY__ === true
 ```text
 400px
 ```
-
 变成：
 
 ```text
 720px
 ```
-
 如果提前写死分页位置，很容易产生空白或者切断。
 
 因此实践中采用了“测量真实高度 + 按模块分页 + 动态补偿模块间距”的方式。这里的 JS 参与分页，其实有**两个目的**，而不只是防止模块被切断。
@@ -771,7 +724,6 @@ window.__PDF_READY__ === true
         ↓
 放得下 → 继续放置
 ```
-
 例如：
 
 ```text
@@ -787,7 +739,6 @@ window.__PDF_READY__ === true
 
 整个模块移动到下一页
 ```
-
 而不是：
 
 ```text
@@ -797,7 +748,6 @@ window.__PDF_READY__ === true
 ──────────── ← 切页线
 后 200px 到下一页
 ```
-
 这就是动态分页最重要的原则：
 
 > **分页单位应该尽量是“业务模块”，而不是任意一个 DOM 高度。**
@@ -824,7 +774,6 @@ window.__PDF_READY__ === true
 │                      │
 └──────────────────────┘
 ```
-
 如果完全依赖普通文档流，浏览器只会按照 DOM 顺序把模块从上往下排列。**它并不知道这些模块在视觉上应该均匀地分布在这一页中。**
 
 结果就是：模块全部集中在页面上方，下面留下很大的空白。技术上 PDF 是正确的，但视觉上会显得“挤在一起”，缺少报告页面应有的段落感。
@@ -844,7 +793,6 @@ window.__PDF_READY__ === true
 
 剩余 600px
 ```
-
 可以把这部分剩余空间均匀补偿到模块之间：
 
 ```text
@@ -858,7 +806,6 @@ window.__PDF_READY__ === true
 
 页面刚好填满
 ```
-
 这里的 180px 只是示意，实际值应该根据当前页面剩余空间、模块数量、最小间距等条件动态计算。核心原则是：**只增加模块之间的间距，不压缩模块自身高度。**
 
 这样做有三个直接收益：
@@ -890,7 +837,6 @@ Chromium
   ↓
 按照最终布局执行原生打印
 ```
-
 ### 为什么需要实时测量
 
 不要简单地把每个模块的理论高度相加。
@@ -900,7 +846,6 @@ Chromium
 ```js
 getBoundingClientRect()
 ```
-
 读取浏览器实际布局结果。
 
 因为真实高度还会受到：
@@ -932,7 +877,6 @@ break-inside
 break-before
 break-after
 ```
-
 以及兼容性更广的旧属性：
 
 ```css
@@ -940,7 +884,6 @@ page-break-inside
 page-break-before
 page-break-after
 ```
-
 ### `break-inside`
 
 控制元素内部是否允许分页。
@@ -953,7 +896,6 @@ page-break-after
   page-break-inside: avoid;
 }
 ```
-
 含义是：
 
 > 尽量不要把这个模块从中间切开。
@@ -970,7 +912,6 @@ page-break-after
   page-break-before: always;
 }
 ```
-
 可以让一个重要章节从新页开始。
 
 ### `break-after`
@@ -983,7 +924,6 @@ page-break-after
   page-break-after: always;
 }
 ```
-
 适合封面、章节分隔等场景。
 
 ### `page-break-*` 与 `break-*` 有什么区别？
@@ -1006,7 +946,6 @@ page-break-after
   page-break-inside: avoid;
 }
 ```
-
 这样 CSS 负责表达“分页规则”，JS 负责处理“动态高度下的精确分页”。
 
 ---
@@ -1027,7 +966,6 @@ if (instance) {
   instance.resize()
 }
 ```
-
 这一步解决的是：
 
 ```text
@@ -1037,7 +975,6 @@ ECharts 仍使用旧尺寸
         ↓
 打印时 Canvas 内容异常
 ```
-
 重新 `resize()` 后：
 
 ```text
@@ -1049,7 +986,6 @@ ECharts 仍使用旧尺寸
         ↓
 Gotenberg 开始打印
 ```
-
 因此对于 ECharts、Chart.js、AntV 等 Canvas 图表，一个通用原则是：
 
 > **图表重绘完成之后，再发送 PDF_READY 信号。**
@@ -1068,7 +1004,6 @@ Gotenberg 开始打印
 --form 'paperWidth=8.27' \
 --form 'paperHeight=11.69'
 ```
-
 思路没有错：A4 就是 `210mm × 297mm`。
 
 但实际页面已经有自己的 `@page` 和 DOM 尺寸，这时后端再定义一套纸张尺寸，容易出现布局和分页上的细微差异。
@@ -1078,7 +1013,6 @@ Gotenberg 开始打印
 ```bash
 --form 'preferCssPageSize=true'
 ```
-
 让 CSS `@page` 成为纸张尺寸的主要来源。
 
 **经验：纸张尺寸最好只由一处负责。**
@@ -1090,7 +1024,6 @@ Gotenberg 开始打印
 ```bash
 --form 'scale=0.6'
 ```
-
 作为尝试。
 
 结果内容整体缩小，四周出现明显白边。
@@ -1104,7 +1037,6 @@ Gotenberg 开始打印
 ```bash
 --form 'scale=1'
 ```
-
 **经验：排版错乱时，优先检查页面尺寸、CSS 和分页，不要第一时间靠 `scale` 救场。**
 
 ### 3. `singlePage`：看起来完整，实际上不适合打印
@@ -1114,7 +1046,6 @@ Gotenberg 开始打印
 ```bash
 --form 'singlePage=true'
 ```
-
 它的思路是把整个内容变成一张超长页面。
 
 这样看起来不会被切开，但如果最终还要打印到 A4，就会产生整体缩小的问题。
@@ -1132,7 +1063,6 @@ Gotenberg 开始打印
 ```bash
 --form 'waitDelay=5s'
 ```
-
 作为固定等待。
 
 单份 PDF 感觉不明显，但批量导出 60 个页面以后：
@@ -1142,7 +1072,6 @@ Gotenberg 开始打印
 = 300s
 = 5 分钟
 ```
-
 这 5 分钟全部来自固定等待。
 
 而页面有的可能 1 秒就准备好了，有的可能需要更久。
@@ -1154,7 +1083,6 @@ waitForExpression
         ↓
 window.__PDF_READY__ === true
 ```
-
 让页面自己报告完成状态。
 
 `waitDelay` 则退回到兜底角色。
@@ -1184,7 +1112,6 @@ Gotenberg 的 Chromium 模块会管理转换请求，超过可用并发能力的
   ↓
 CPU / 内存 / 页面复杂度成为吞吐瓶颈
 ```
-
 对于几十到几百个页面，不建议简单地启动几百个 goroutine，然后全部同时请求同一个 Gotenberg。
 
 更合理的做法是：
@@ -1216,7 +1143,6 @@ CPU / 内存 / 页面复杂度成为吞吐瓶颈
                 ├─ Gotenberg #3
                 └─ Gotenberg #4
 ```
-
 多个实例共同承担批量任务。
 
 因此，真正的优化方向不是简单地“把一个实例的并发调到最大”，而是：
@@ -1240,7 +1166,6 @@ docker run -d \
   -p "4000:3000" \
   gotenberg/gotenberg:8
 ```
-
 调试时，可以临时提高日志级别：
 
 ```bash
@@ -1257,13 +1182,11 @@ docker run -d \
   --chromium-clear-cache \
   --chromium-clear-cookies
 ```
-
 然后：
 
 ```bash
 docker logs -f gotenberg-debug
 ```
-
 ### 为什么 debug 日志仍然看不到完整的浏览器 Network？
 
 这是一个很容易误解的地方。
@@ -1283,13 +1206,11 @@ POST xxx
 401
 500
 ```
-
 完整地变成：
 
 ```text
 docker logs gotenberg-debug
 ```
-
 如果需要定位页面内部 API 是否失败，更有效的方法通常是：
 
 1. 前端增加临时 API 请求日志；
@@ -1306,13 +1227,11 @@ Chromium 是否正常？
 转换是否失败？
 转换耗时多久？
 ```
-
 而不适合单独承担：
 
 ```text
 页面内部所有 XHR/fetch 到底请求了什么？
 ```
-
 另外，调试容器不要和生产容器同时绑定同一个宿主机端口。
 
 ---
@@ -1352,7 +1271,6 @@ Chromium printToPDF
       ↓
 得到 PDF
 ```
-
 这里最重要的认识是：
 
 > **Gotenberg 并没有替代前端，而是把浏览器的打印能力搬到了后端。**
@@ -1366,7 +1284,6 @@ Gotenberg 参数是否正确
         ×
 页面是否在正确的时机进入打印
 ```
-
 ---
 
 ## 十八、职责划分：到底谁负责什么
@@ -1411,7 +1328,6 @@ Gotenberg 参数是否正确
 ```text
 waitDelay
 ```
-
 是简单但粗糙的方案。
 
 更可靠的是：
@@ -1421,7 +1337,6 @@ waitForExpression
         ↓
 window.__PDF_READY__
 ```
-
 ### 原则三：纸张尺寸最好只有一个权威来源
 
 如果页面已经通过 CSS `@page` 定义纸张，就使用：
@@ -1429,7 +1344,6 @@ window.__PDF_READY__
 ```text
 preferCssPageSize=true
 ```
-
 不要让后端和前端同时维护两套尺寸。
 
 ### 原则四：不要用 `scale` 解决真正的排版问题
@@ -1445,7 +1359,6 @@ DOM 宽度
 margin
 分页算法
 ```
-
 ### 原则五：复杂页面需要“CSS + JS”双保险
 
 CSS 负责声明：
@@ -1455,7 +1368,6 @@ CSS 负责声明：
 哪里不允许分页
 哪里必须换页
 ```
-
 JS 负责处理：
 
 ```text
@@ -1464,7 +1376,6 @@ JS 负责处理：
 图表尺寸
 分页位置
 ```
-
 ### 原则六：批量导出要从一开始考虑吞吐量
 
 一个页面能导出来只是 POC。
@@ -1479,7 +1390,6 @@ JS 负责处理：
 失败率
 多实例扩容
 ```
-
 ### 原则七：先 POC，再工程化
 
 最值得保留的研发习惯可能不是某个参数，而是：
@@ -1497,7 +1407,6 @@ PDF 效果确认
    ↓
 后端代码化
 ```
-
 这样能够把最不确定的“PDF 排版问题”前置解决。
 
 ---
@@ -1533,7 +1442,6 @@ Gotenberg
     ↓
 鉴权、任务编排、并发控制、重试、文件管理
 ```
-
 最终，Gotenberg 并不是一个“把 HTML 变成 PDF 的黑盒子”。
 
 更准确地说，它是一个**把浏览器原生打印能力服务化的基础设施组件**。
@@ -1555,4 +1463,4 @@ Gotenberg
 
 - Gotenberg 官方文档：
   https://gotenberg.dev/docs/getting-started/introduction
-
+

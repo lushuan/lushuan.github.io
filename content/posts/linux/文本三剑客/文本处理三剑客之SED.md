@@ -19,13 +19,13 @@ sed 是一种流编辑器，一次处理一行内容，基于"模式空间"完�
 
 <!--more-->
 
-# 文本处理三剑客之SED
-- Stream EDitor, 流编辑器
-- sed是一种流编辑器，它一次处理一行内容。处理时，把当前处理的行存储在临时缓冲区中，称为"模式空间"（pattern space），接着用sed命令处理缓冲区中的内容，处理完成后，把缓冲区的内容送往屏幕。然后读入下一行，执行下一个循环。如果没有使用诸如‘D’的特殊命令，那会在两个循环之间清空模式空间，但不会清空保留空间。这样不断重复，直到文件末尾。文件内容并没有改变，除非你使用重定向存储输出。
-- 功能：主要用来自动编辑一个或多个文件,简化对文件的反复操作,编写转换程序等
+# 文本处理三剑客之 SED
+- Stream EDitor，流编辑器
+- sed 是一种流编辑器，它一次处理一行内容。处理时，把当前处理的行存储在临时缓冲区中，称为"模式空间"（pattern space），接着用 sed 命令处理缓冲区中的内容，处理完成后，把缓冲区的内容送往屏幕。然后读入下一行，执行下一个循环。如果没有使用诸如‘D’的特殊命令，那会在两个循环之间清空模式空间，但不会清空保留空间。这样不断重复，直到文件末尾。文件内容并没有改变，除非你使用重定向存储输出。
+- 功能：主要用来自动编辑一个或多个文件，简化对文件的反复操作，编写转换程序等
 - 参考： http://www.gnu.org/software/sed/manual/sed.html
 
-简单地说sed主要是用来编辑文件，那么可以从四个角度来学这个命令，增删查改
+简单地说 sed 主要是用来编辑文件，那么可以从四个角度来学这个命令，增删查改
 
 ## 一、初体验
 在行首添加一行
@@ -36,7 +36,6 @@ sed '1i\AAA' aa.txt
 ```shell
 sed '$a\AAA' aa.txt  
 ```
-
 
 ## 二、基础
 ### 用法
@@ -72,7 +71,7 @@ sed '$a\AAA' aa.txt  
 | ---- | ---- |
 |d| 删除模式空间匹配的行，并立即启用下一轮循环   |
 |p| 打印当前模式空间内容，追加到默认输出之后   |
-|a| [\\]text 在指定行后面追加文本，支持使用\n实现多行追加   |
+|a| [\\]text 在指定行后面追加文本，支持使用\n 实现多行追加   |
 |i| [\\\]text 在行前面插入文本   |
 |c| [\\]text 替换行为单行或多行文本   |
 |w| /path/file 保存模式匹配的行至指定文件   |
@@ -94,17 +93,17 @@ sed '$a\AAA' aa.txt  
 | sed '2p' /tmp/passwd |  打印第二行| 
 | sed -n '2p' /tmp/passwd  | 静默输出第二行| 
 | sed -n '1,4p' /tmp/passwd  | 静默输出一至四行| 
-| sed -n '/root/p' /tmp/passwd | 静默输出匹配包含root字符串的行| 
-| sed -n '2,/root/p' /tmp/passwd | 从2行开始，静默输出匹配包含root字符串的行| 
+| sed -n '/root/p' /tmp/passwd | 静默输出匹配包含 root 字符串的行| 
+| sed -n '2，/root/p' /tmp/passwd | 从 2 行开始，静默输出匹配包含 root 字符串的行| 
 | sed -n '/^$/=' file | 显示空行行号| 
 | sed -n -e '/^$/p' -e '/^$/=' file| | 
-| sed '/root/a\superman' /tmp/passwd | 在匹配root字符串行后追加superman| 
-| sed '/root/i\superman' /tmp/passwd | 在匹配root字符串行前追加superman| 
-| sed '/root/c\superman' /tmp/passwd | 重写匹配root字符串的行| 
+| sed '/root/a\superman' /tmp/passwd | 在匹配 root 字符串行后追加 superman| 
+| sed '/root/i\superman' /tmp/passwd | 在匹配 root 字符串行前追加 superman| 
+| sed '/root/c\superman' /tmp/passwd | 重写匹配 root 字符串的行| 
 | sed '/^$/d' file   |  清空文件| 
-| sed '1,10d' file   |   删除文件的1-10行| 
-| nl /tmp/passwd | sed '2,5d' |  删除文件的2-5行| 
-| nl /tmp/passwd | sed '2a tea'|  在第二行追加tea| 
+| sed '1,10d' file   |   删除文件的 1-10 行| 
+| nl /tmp/passwd | sed '2,5d' |  删除文件的 2-5 行| 
+| nl /tmp/passwd | sed '2a tea'|  在第二行追加 tea| 
 | sed 's/test/mytest/g' example |   文件替换| 
 | sed -n 's/root/&superman/p' /tmp/passwd | 在匹配的单词后添加内容| 
 | sed -n 's/root/superman&/p' /tmp/passwd | 在匹配的单词前添加内容| 
@@ -112,10 +111,10 @@ sed '$a\AAA' aa.txt  
 | sed –i 's/dog/cat/g' pets   | 替换生效| 
 
 ## 三、总结
-添加使用append,insert命令，删除使用delete,修改使用copy,subsitute命令,查看print 结合-n 静默输出，可以覆盖百分之八十以上的场景
+添加使用 append,insert 命令，删除使用 delete，修改使用 copy,subsitute 命令，查看 print 结合-n 静默输出，可以覆盖百分之八十以上的场景
 
 ## 四、高级编辑命令
-- P： 打印模式空间开端至\n内容，并追加到默认输出之前
+- P：打印模式空间开端至\n 内容，并追加到默认输出之前
 - h: 把模式空间中的内容覆盖至保持空间中
 - H：把模式空间中的内容追加至保持空间中
 - g: 从保持空间取出数据覆盖至模式空间
@@ -125,8 +124,7 @@ sed '$a\AAA' aa.txt  
 - N：读取匹配到的行的下一行追加至模式空间
 - d: 删除模式空间中的行
 - D：如果模式空间包含换行符，则删除直到第一个换行符的模式空间中的文本，并不会读取新的输入行，而使用合成的模式空间重新启动循环。如果模式空间
-不包含换行符，则会像发出d命令那样启动正常的新循环
-
+不包含换行符，则会像发出 d 命令那样启动正常的新循环
 
 ## 五、练习
 - 1、删除centos7系统/etc/grub2.cfg文件中所有以空白开头的行行首的空白字符
@@ -134,16 +132,15 @@ sed '$a\AAA' aa.txt  
 - 3、在centos6系统/root/install.log每一行行首增加#号
 - 4、在/etc/fstab文件中不以#开头的行的行首增加#号
 - 5、处理/etc/fstab路径,使用sed命令取出其目录名和基名
-- 6、利用sed 取出ifconfig命令中本机的IPv4地址
-- 7、统计centos安装光盘中Package目录下的所有rpm文件的以.分隔倒数第二个字段的重复次数
-- 8、统计/etc/init.d/functions文件中每个单词的出现次数，并排序（用grep和sed两种方法分别实现）
-- 9、将文本文件的n和n+1行合并为一行，n为奇数行
+- 6、利用 sed 取出 ifconfig 命令中本机的 IPv4 地址
+- 7、统计 CentOS 安装光盘中 Package 目录下的所有 RPM 文件的以。分隔倒数第二个字段的重复次数
+- 8、统计/etc/init.d/functions文件中每个单词的出现次数，并排序（用 grep 和 sed 两种方法分别实现）
+- 9、将文本文件的 n 和 n+1 行合并为一行，n 为奇数行
 
 ## 六、思维导图
 ![sed](/images/linux/sed-1.jpg "sed")
 
-
 ## 七、参考
 1. [linux-sed-command](https://www.linuxprobe.com/linux-sed-command.html)
-2. [sed常用命令](https://blog.csdn.net/qq_33326449/article/details/117868811)
-
+2. [sed 常用命令](https://blog.csdn.net/qq_33326449/article/details/117868811)
+

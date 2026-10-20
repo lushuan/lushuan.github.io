@@ -24,22 +24,20 @@ Redis（REmote DIctionary Service）是一个开源（BSD 许可）的内存数�
 
 ![redis explained](/images/redis/redis-explained.png "redis explained")
 
-
 ### 使用场景
 1. 数据库
 2. 缓存
 3. MQ
 
-### Redis优势
+### Redis 优势
 - 性能极高
-- 数据类型丰富，单键值对最大支持512M大小的数据
+- 数据类型丰富，单键值对最大支持 512M 大小的数据
 - 简单易用，支持所有主流编程语言
 - 支持数据持久化，主从复制，哨兵模式等高可用特性
 ### 竞品对比
 Memcached vs Redis
 
 ![redis-1](/images/redis/redis-vs-memcached.png "redis-vs-memcached")
-
 
 ## 二、安装配置
 这里安装的环境是 Linux Ubuntu 22.04.4 LTS 操作系统，其它安装方式见[安装介绍](https://redis.ac.cn/docs/install/install-redis/)
@@ -54,7 +52,7 @@ sudo apt-get update
 sudo apt-get install redis
 ```
 
-Linux Centos 安装方式：
+Linux CentOS 安装方式：
 ```shell
 $ yum install redis -y
 ```
@@ -108,7 +106,7 @@ OK
 
 ## 三、常用命令
 Redis 的[使用命令](https://redis.io/docs/latest/commands/)很多，这里重点介绍几种常用的命令
-### 键命令(Key)
+### 键命令（Key）
 ```
 SET key value #: 设置键值对
 GET key #: 获取键的值（仅限字符串类型）
@@ -119,7 +117,7 @@ KEYS pattern #: 查找所有匹配指定模式的键
 SCAN cursor [MATCH pattern] [COUNT count] [TYPE type] #: 通过游标迭代遍历键
 ```
 注意：`KEYS` 命令会遍历整个键空间，键数量较多时会阻塞服务器，生产环境建议使用 `SCAN` 命令代替。
-### 字符串命令(String)
+### 字符串命令（String）
 ```
 APPEND key value #: 向键的值追加内容
 STRLEN key #: 获取键值的长度
@@ -128,7 +126,7 @@ DECR key #: 将键的值自减 1
 INCRBY key increment #: 将键的值增加指定的数值
 DECRBY key decrement #: 将键的值减少指定的数值
 ```
-### 哈希命令(Hash)
+### 哈希命令（Hash）
 ```
 HSET key field value #: 设置哈希表中字段的值
 HGET key field #: 获取哈希表中字段的值
@@ -175,7 +173,7 @@ HDEL user email
 HKEYS user   # 输出: 1) "name" 2) "age"
 
 ```
-### 列表命令(List)
+### 列表命令（List）
 ```
 LPUSH key value [value …] #: 在列表头部插入一个或多个值
 RPUSH key value [value …] #: 在列表尾部追加一个或多个值
@@ -222,7 +220,7 @@ LRANGE numbers 0 -1   # 输出: 1) "3" 2) "1"
 LTRIM numbers 0 0
 LRANGE numbers 0 -1   # 输出: 1) "3"
 ```
-### 集合命令(Set)
+### 集合命令（Set）
 ```
 SADD key member [member …] #: 向集合中添加一个或多个成员
 SREM key member [member …] #: 从集合中移除一个或多个成员
@@ -231,7 +229,7 @@ SISMEMBER key member #: 检查成员是否存在于集合中
 SINTER key [key …] #: 获取多个集合的交集
 SUNION key [key …] #: 获取多个集合的并集
 ```
-Set 使用实例，注意，由于 set 不是有序数据类型，所以运行以下命令时，项的顺序可能会有所不同:
+Set 使用实例，注意，由于 set 不是有序数据类型，所以运行以下命令时，项的顺序可能会有所不同：
 ```
 # 初始化集合
 SADD fruits apple banana orange
@@ -264,7 +262,7 @@ SUNION fruits fruits2   # 输出: 1) "apple" 2) "orange" 3) "pear" 4) "peach" 5)
 SRANDMEMBER fruits   # 输出: "pear"
 
 ```
-### 有序集合命令(Sorted Set)
+### 有序集合命令（Sorted Set）
 ```
 ZADD key score member [score member …] #: 向有序集合中添加一个或多个带分数的成员
 ZREM key member [member …] #: 从有序集合中移除一个或多个成员
@@ -332,25 +330,25 @@ ZADD key score member [score member ...]
 ZADD scores 90 "John Doe" 80 "Jane Doe" 95 "Bob Smith"
 
 ```
-### 5种基本数据类型
+### 5 种基本数据类型
 首先对 Redis 来说，所有的 key（键）都是字符串。我们在谈基础数据结构时，讨论的是存储值的数据类型，主要包括常见的 5 种数据类型，分别是：String、List、Set、Zset、Hash。
 
 ![redis-datatype](/images/redis/db-redis-ds-1.jpeg "redis datatype common in use")
 
 | 结构类型         | 结构存储的值                               | 结构的读写能力                                               |
 | ---------------- | ------------------------------------------ | ------------------------------------------------------------ |
-| **String字符串** | 可以是字符串、整数或浮点数                 | 对整个字符串或字符串的一部分进行操作；对整数或浮点数进行自增或自减操作； |
-| **List列表**     | 一个链表，链表上的每个节点都包含一个字符串 | 对链表的两端进行push和pop操作，读取单个或多个元素；根据值查找或删除元素； |
-| **Set集合**      | 包含字符串的无序集合                       | 字符串的集合，包含基础的方法有查看是否存在、添加、获取、删除；还包含计算交集、并集、差集等 |
-| **Hash散列**     | 包含键值对的无序散列表                     | 包含方法有添加、获取、删除单个元素                           |
-| **Zset有序集合** | 和散列一样，用于存储键值对                 | 字符串成员与浮点数分数之间的有序映射；元素的排列顺序由分数的大小决定；包含方法有添加、获取、删除单个元素以及根据分值范围或成员来获取元素 |
+| **String 字符串** | 可以是字符串、整数或浮点数                 | 对整个字符串或字符串的一部分进行操作；对整数或浮点数进行自增或自减操作； |
+| **List 列表**     | 一个链表，链表上的每个节点都包含一个字符串 | 对链表的两端进行 push 和 pop 操作，读取单个或多个元素；根据值查找或删除元素； |
+| **Set 集合**      | 包含字符串的无序集合                       | 字符串的集合，包含基础的方法有查看是否存在、添加、获取、删除；还包含计算交集、并集、差集等 |
+| **Hash 散列**     | 包含键值对的无序散列表                     | 包含方法有添加、获取、删除单个元素                           |
+| **Zset 有序集合** | 和散列一样，用于存储键值对                 | 字符串成员与浮点数分数之间的有序映射；元素的排列顺序由分数的大小决定；包含方法有添加、获取、删除单个元素以及根据分值范围或成员来获取元素 |
 
-#### String字符串
+#### String 字符串
 String 是 Redis 中最基本的数据类型，一个 key 对应一个 value。
 
 String 类型是二进制安全的，意思是 Redis 的 String 可以包含任何数据，如数字、字符串、jpg 图片或者序列化的对象。
 
-#### List列表
+#### List 列表
 Redis 中的 List 其实就是链表（Redis 用双端链表实现 List）。
 
 使用 List 结构，我们可以轻松地实现最新消息排队功能（比如新浪微博的 TimeLine）。List 的另一个应用就是消息队列，可以利用 List 的 PUSH 操作，将任务存放在 List 中，然后工作线程再用 POP 操作将任务取出进行执行。
@@ -358,17 +356,17 @@ Redis 中的 List 其实就是链表（Redis 用双端链表实现 List）。
 #### Set 集合
 Redis 的 Set 是 String 类型的无序集合。集合成员是唯一的，这就意味着集合中不能出现重复的数据。
 
-Redis 中集合是通过哈希表实现的，所以添加、删除、查找的复杂度都是 O(1)。
+Redis 中集合是通过哈希表实现的，所以添加、删除、查找的复杂度都是 O（1）。
 
 #### Hash 散列
 Redis Hash 是一个 String 类型的 field（字段）和 value（值）的映射表，Hash 特别适合用于存储对象。
 
-#### Zset有序集合
+#### Zset 有序集合
 Redis 有序集合和集合一样也是 String 类型元素的集合，且不允许重复的成员。不同的是每个元素都会关联一个 double 类型的分数，Redis 正是通过分数来为集合中的成员进行从小到大的排序。
 
 有序集合的成员是唯一的，但分数（score）却可以重复。有序集合是通过两种数据结构实现的：ziplist（压缩列表）和 skiplist（跳跃表），当数据量较小时使用 ziplist，数据量较大时切换为 skiplist。
 
-### 5种高级数据类型
+### 5 种高级数据类型
 - 消息队列 Stream
 - 地理空间 Geospatial
 - HyperLogLog：一种用来做基数统计的算法
@@ -379,7 +377,7 @@ Redis 有序集合和集合一样也是 String 类型元素的集合，且不允
 ### 什么是 Redis 事务
 Redis 事务的本质是一组命令的集合。事务支持一次执行多个命令，一个事务中所有命令都会被序列化。在事务执行过程中，会按照顺序串行化执行队列中的命令，其他客户端提交的命令请求不会插入到事务执行命令序列中。总结说：Redis 事务就是一次性、顺序性、排他性地执行一个队列中的一系列命令。
 
-### Redis事务相关命令和使用
+### Redis 事务相关命令和使用
 - MULTI：开启事务，Redis 会将后续的命令逐个放入队列中，然后使用 EXEC 命令来原子化执行这个命令系列。
 - EXEC：执行事务中的所有操作命令。
 - DISCARD：取消事务，放弃执行事务块中的所有命令。
@@ -408,12 +406,12 @@ OK
 - AOF(Append Only File)
 
 ### RDB
-RDB 就是 Redis DataBase 的缩写，中文名为快照/内存快照，RDB持久化是把当前进程数据生成快照保存到磁盘上的过程，由于是某一时刻的快照，那么快照中的值要早于或者等于内存中的值。
+RDB 就是 Redis DataBase 的缩写，中文名为快照/内存快照，RDB 持久化是把当前进程数据生成快照保存到磁盘上的过程，由于是某一时刻的快照，那么快照中的值要早于或者等于内存中的值。
 
 可以理解为数据的快照机制，是某一个时间点上数据的完整副本，就是定时或者手动地给数据做一下快照，所以触发方式有两种，定时或者手动触发
 
-在某个快照时间点修改过的数据就会丢失掉，所以RDB 更适合用来做备份
-#### Redis中默认的周期性设置
+在某个快照时间点修改过的数据就会丢失掉，所以 RDB 更适合用来做备份
+#### Redis 中默认的周期性设置
 ```
 # 周期性执行条件的设置格式为
 save <seconds> <changes>
@@ -475,7 +473,6 @@ root@k8s-master01:/var/lib/redis#
 
 针对 RDB 不适合实时持久化的问题，Redis 提供了 AOF 持久化方式来解决。
 
-
 ### AOF
 Redis 是“写后”日志，Redis 先执行命令，把数据写入内存，然后才记录日志。日志里记录的是 Redis 收到的每一条命令，这些命令是以文本形式保存。PS：大多数的数据库采用的是写前日志（WAL），例如 MySQL，通过写前日志和两阶段提交，实现数据和逻辑的一致性。
 
@@ -491,7 +488,7 @@ Redis 是“写后”日志，Redis 先执行命令，把数据写入内存，�
 
 但是它需要我们使用额外的元数据信息去记录哪些数据被修改了，这会带来额外的空间开销问题。那么，还有什么方法既能利用 RDB 的快速恢复，又能以较小的开销做到尽量少丢数据呢？这个时候就需要引入 RDB 和 AOF 的混合方式解决方案了。
 
-#### redis.conf中配置AOF
+#### redis.conf 中配置 AOF
 默认情况下，Redis 是没有开启 AOF 的，可以通过配置 redis.conf 文件来开启 AOF 持久化，关于 AOF 的配置如下：
 ```
 # appendonly参数开启AOF持久化
@@ -526,11 +523,10 @@ aof-rewrite-incremental-fsync yes
 - appendfilename：这个参数项很好理解，就是 AOF 文件的名字。
 - appendfsync：这个参数项是 AOF 功能最重要的设置项之一，主要用于设置“真正执行”操作命令向 AOF 文件中同步的策略。可选值有 always（每条命令都同步，最安全但性能最差）、everysec（每秒同步一次，默认值，兼顾性能和安全）、no（由操作系统决定何时同步）。
 
-### RDB和AOF混合方式
+### RDB 和 AOF 混合方式
 Redis 4.0 中提出了一个混合使用 AOF 日志和内存快照的方法。简单来说，内存快照以一定的频率执行，在两次快照之间，使用 AOF 日志记录这期间的所有命令操作。
 
 这样一来，快照不用很频繁地执行，这就避免了频繁 fork 对主线程的影响。而且，AOF 日志也只需记录两次快照间的操作，也就是说，不需要记录所有操作了，因此，就不会出现文件过大的情况了，也可以避免重写开销。可以通过配置 `aof-use-rdb-preamble yes` 开启混合持久化（Redis 4.0 起默认开启）。
-
 
 ## 七、主从复制
 我们知道要避免单点故障，即保证高可用，便需要冗余（副本）方式提供集群服务。而 Redis 提供了主从库模式，以保证数据副本的一致，主从库之间采用的是读写分离的方式。本文主要阐述 Redis 的主从复制。
@@ -541,14 +537,13 @@ Redis 4.0 中提出了一个混合使用 AOF 日志和内存快照的方法。�
 - 数据冗余：主从复制实现了数据的热备份，是持久化之外的一种数据冗余方式。
 - 故障恢复：当主节点出现问题时，可以由从节点提供服务，实现快速的故障恢复；实际上是一种服务的冗余。
 - 负载均衡：在主从复制的基础上，配合读写分离，可以由主节点提供写服务，由从节点提供读服务（即写 Redis 数据时应用连接主节点，读 Redis 数据时应用连接从节点），分担服务器负载；尤其是在写少读多的场景下，通过多个从节点分担读负载，可以大大提高 Redis 服务器的并发量。
-- 高可用基石：除了上述作用以外，主从复制还是哨兵和集群能够实现的基础，因此说主从复制是Redis高可用的基础。
+- 高可用基石：除了上述作用以外，主从复制还是哨兵和集群能够实现的基础，因此说主从复制是 Redis 高可用的基础。
 
 主从库之间采用的是读写分离的方式。
 - 读操作：主库、从库都可以接收；
 - 写操作：首先到主库执行，然后，主库将写操作同步给从库。
 
 ![redis explained](/images/redis/db-redis-copy-1.png "redis 读写分离")
-
 
 这里在同一台主机上演示，备份 `redis.conf` 为 `redis-6380.conf`，修改以下四个配置项：
 ```
@@ -579,7 +574,7 @@ role:slave
 ```
 
 ## 八、高可用：哨兵机制（Redis Sentinel）
-在上文主从复制的基础上，如果主节点出现故障该怎么办呢？ 在 Redis 主从集群中，哨兵机制是实现主从库自动切换的关键机制，它有效地解决了主从复制模式下故障转移的问题。
+在上文主从复制的基础上，如果主节点出现故障该怎么办呢？在 Redis 主从集群中，哨兵机制是实现主从库自动切换的关键机制，它有效地解决了主从复制模式下故障转移的问题。
 
 ### 哨兵机制（Redis Sentinel）
 Redis Sentinel，即 Redis 哨兵，在 Redis 2.8 版本开始引入。哨兵的核心功能是主节点的自动故障转移。
@@ -588,11 +583,11 @@ Redis Sentinel，即 Redis 哨兵，在 Redis 2.8 版本开始引入。哨兵的
 
 ![redis explained](/images/redis/db-redis-sen-1.png "redis 哨兵机制")
 
-哨兵实现了什么功能呢？下面是Redis官方文档的描述：
+哨兵实现了什么功能呢？下面是 Redis 官方文档的描述：
 
 - 监控（Monitoring）：哨兵会不断地检查主节点和从节点是否运作正常。
 - 自动故障转移（Automatic failover）：当主节点不能正常工作时，哨兵会开始自动故障转移操作，它会将失效主节点的其中一个从节点升级为新的主节点，并让其他从节点改为复制新的主节点。
-- 配置提供者（Configuration provider）：客户端在初始化时，通过连接哨兵来获得当前Redis服务的主节点地址。
+- 配置提供者（Configuration provider）：客户端在初始化时，通过连接哨兵来获得当前 Redis 服务的主节点地址。
 - 通知（Notification）：哨兵可以将故障转移的结果发送给客户端。
 
 其中，监控和自动故障转移功能，使得哨兵可以及时发现主节点故障并完成转移；而配置提供者和通知功能，则需要在与客户端的交互中才能体现。
@@ -618,10 +613,4 @@ redis-sentinel sentinel.conf
 - [Redis 设计与实现](https://huangz.works/redisbook1e/index.html#id9)
 - https://datmt.com/backend/redis-command-cheatsheet/
 - https://pdai.tech/md/db/nosql-redis/db-redis-overview.html
-
-
-
-
-
-
-
+

@@ -42,7 +42,7 @@ summary: "基于 Nginx 构建高性能静态镜像下载站的完整实践，涵
 | CI/CD 产物归档 | 构建产物、测试报告、Artifact | 写入由 CI 完成，读取走 HTTP |
 | 数据集/模型分发 | ML 训练集、基准测试数据 | 内网高速传输，无需鉴权 |
 | 日志/审计归档 | 合规日志、监控报表历史文件 | 追加写入 + 只读检索 |
-| 离线容器镜像 | docker save 导出的 tar 包 | air-gap 环境下的 K8s 部署 |
+| 离线容器镜像 | Docker save 导出的 tar 包 | air-gap 环境下的 K8s 部署 |
 
 ### ❌ 不适合的场景与替代方案
 
@@ -53,7 +53,7 @@ summary: "基于 Nginx 构建高性能静态镜像下载站的完整实践，涵
 | 版本管理与回滚 | 文件覆盖即丢失历史 | Git LFS / Pulp / Aptly |
 | 精细化带宽限速 | `limit_rate` 粒度粗，无法按用户/时段 | 专用 CDN / 流量网关 |
 | 全文搜索/元数据检索 | autoindex 仅列文件名 | Elasticsearch + 自定义前端 |
-| 海量小文件 (>10万) | 每文件一次 syscall，inode 压力大 | 对象存储 / 打包后分发 |
+| 海量小文件（>10 万） | 每文件一次 syscall，inode 压力大 | 对象存储 / 打包后分发 |
 | 公网 HTTPS + 自动证书 | 需手动配置 SSL 续签 | Caddy / Traefik（自动 ACME） |
 | 多节点复制/高可用 | 单机服务，无冗余 | MinIO replication / rsync + cron |
 
@@ -68,7 +68,6 @@ summary: "基于 Nginx 构建高性能静态镜像下载站的完整实践，涵
             │否
         ✅ Nginx 静态文件站 ← 你在这里
 ```
-
 > **经验法则**：< 1TB、只读、内网、团队 < 50 人 → Nginx 是最简最优解。超出任一维度，优先考虑专用制品管理平台。
 
 ---
@@ -89,7 +88,6 @@ echo "mirror test" > /data/mirror-releases/1.txt
 chown nginx:nginx /data/mirror-releases/1.txt
 chmod 644 /data/mirror-releases/1.txt
 ```
-
 > ⚠️ Nginx worker 以 `nginx` 用户运行，数据目录及所有文件的 owner 必须是 `nginx`，否则返回 403。
 
 ### 2.2 编写站点配置
@@ -147,7 +145,6 @@ server {
     }
 }
 ```
-
 ### 2.3 确认主配置 include
 
 检查 `/usr/local/nginx/conf/nginx.conf` 的 `http` 块中包含：
@@ -155,7 +152,6 @@ server {
 ```nginx
 include /usr/local/nginx/conf/conf.d/*.conf;
 ```
-
 若缺失需手动添加。
 
 ### 2.4 语法检查与重载
@@ -167,7 +163,6 @@ mkdir /var/log/nginx
 
 systemctl reload nginx
 ```
-
 ### 2.5 防火墙放行
 
 ```bash
@@ -175,7 +170,6 @@ firewall-cmd --permanent --add-port=8899/tcp
 firewall-cmd --reload
 firewall-cmd --list-ports | grep 8899
 ```
-
 ### 2.6 验证测试
 
 ```bash
@@ -189,7 +183,6 @@ curl -O http://<服务器IP>:8899/1.txt
 # 浏览器访问目录列表
 # http://<服务器IP>:8899/
 ```
-
 ---
 
 ## 三、关键参数深度解析
@@ -199,7 +192,7 @@ curl -O http://<服务器IP>:8899/1.txt
 | 参数 | 作用 | 注意事项 |
 | :--- | :--- | :--- |
 | `limit_except GET HEAD` | 仅允许读取方法 | **必须在 location 内**，放 server 块报 emerg |
-| `user nginx` | worker 降权运行 | master(root) 绑端口，worker(nginx) 提供文件 |
+| `user nginx` | worker 降权运行 | master（root） 绑端口，worker（Nginx） 提供文件 |
 | `server_name _` | 通配所有域名/IP | 内网服务无需绑定特定域名 |
 
 ### ⚡ 性能类
@@ -224,10 +217,10 @@ curl -O http://<服务器IP>:8899/1.txt
 
 | 参数 | 值 | 含义 |
 | :--- | :--- | :--- |
-| `expires 30d` | 30天 | 镜像/安装包极少变更，长缓存减少重复请求 |
+| `expires 30d` | 30 天 | 镜像/安装包极少变更，长缓存减少重复请求 |
 | `Cache-Control: immutable` | - | 浏览器省略条件请求，直接复用缓存 |
-| `keepalive_timeout 120s` | 2分钟 | 大文件下载耗时长，避免频繁重建 TCP |
-| `send_timeout 300s` | 5分钟 | 容忍慢速客户端 |
+| `keepalive_timeout 120s` | 2 分钟 | 大文件下载耗时长，避免频繁重建 TCP |
+| `send_timeout 300s` | 5 分钟 | 容忍慢速客户端 |
 
 ---
 
@@ -249,7 +242,6 @@ tail -f /var/log/nginx/mirror_error.log          # 看错误
 curl -vI http://localhost:8899/目标文件           # 看响应头
 ps -eo pid,user,comm | grep '[n]ginx'            # 确认 master=root worker=nginx
 ```
-
 ---
 
 ## 五、总结

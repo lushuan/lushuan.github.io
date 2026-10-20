@@ -19,10 +19,8 @@ summary: "记录节点因 CNI 网络插件未部署而持续 NotReady 的修复�
 
 <!--more-->
 
-# Kubelet 系统污点引发的 CNI 部署死锁排查实录
-
-在修复好网络模式变更导致控制平面组件异常和证书过期的问题后，发现节点还是 NotReady 的状态，本篇文档记录一下Node 节点为NotReady 的修复的全记录，NotReady 的原因有很多，这里出现该问题
-的原因则很明显是 cni 网络插件没有部署，在部署好cni 网络插件后，再思索一下为什么k8s 调整了使用operator 部署。最后引申出这种部署方式的好处有哪些？
+在修复好网络模式变更导致控制平面组件异常和证书过期的问题后，发现节点还是 NotReady 的状态，本篇文档记录一下 Node 节点为 NotReady 的修复的全记录，NotReady 的原因有很多，这里出现该问题
+的原因则很明显是 CNI 网络插件没有部署，在部署好 CNI 网络插件后，再思索一下为什么 K8s 调整了使用 operator 部署。最后引申出这种部署方式的好处有哪些？
 
 ## 1. 灾难降临：故障现场与第一震撼现象 (The Incident)
 
@@ -39,8 +37,8 @@ k8s-master01   NotReady   <none>   84s   v1.28.11
 
 - 基础设施：VMware 虚拟机
 - 架构版本：Kubernetes v1.28/操作系统内核版本 5.15.0
-- 诱发变更: 该k8s 集群是在2024年搭建的，当时用作自己的测试学习，当时还基于该环境整理了一篇部署文档，[Ubuntu-server部署k8s1.28(containerd版本)集群
-  ](https://blog.dazhongma.top/ubuntu-server%E9%83%A8%E7%BD%B2k8s1.28containerd%E7%89%88%E6%9C%AC%E9%9B%86%E7%BE%A4/),上一篇文档是记录切换网络模式解决控制平面组件异常的问题，也就是[网络模式变更为什么会摧残k8s集群](https://blog.dazhongma.top/%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%BC%8F%E5%8F%98%E6%9B%B4%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E6%B4%97%E6%AE%8Bk8s%E9%9B%86%E7%BE%A4/),本篇记录了Node 节点NotReady 各种原因中的其中一个CNI 网络插件问题。
+- 诱发变更：该 K8s 集群是在 2024 年搭建的，当时用作自己的测试学习，当时还基于该环境整理了一篇部署文档，[Ubuntu-server 部署 k8s1.28（containerd 版本）集群
+  ](https://blog.dazhongma.top/ubuntu-server%E9%83%A8%E7%BD%B2k8s1.28containerd%E7%89%88%E6%9C%AC%E9%9B%86%E7%BE%A4/)，上一篇文档是记录切换网络模式解决控制平面组件异常的问题，也就是[网络模式变更为什么会摧残 K8s 集群](https://blog.dazhongma.top/%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%BC%8F%E5%8F%98%E6%9B%B4%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E6%B4%97%E6%AE%8Bk8s%E9%9B%86%E7%BE%A4/)，本篇记录了 Node 节点 NotReady 各种原因中的其中一个 CNI 网络插件问题。
 
 ## 2. 顺藤摸瓜：多维度排查与见招拆招 (The Exploration)
 
@@ -57,26 +55,25 @@ k8s-master01   NotReady   <none>   84s   v1.28.11
 | P2 | 证书过期（kubelet client 证书） | kubelet 无法认证 apiserver |
 | P3 | 内核参数被修改 | 网络、文件句柄等达到上限 |
 
-当然这里已经确认了是CNI 插件的问题，就先按照解决CNI 插件问题的方式进行处理。在处理的过程中是如何遇到CNI部署死锁的问题，又是如何处理的？
+当然这里已经确认了是 CNI 插件的问题，就先按照解决 CNI 插件问题的方式进行处理。在处理的过程中是如何遇到 CNI 部署死锁的问题，又是如何处理的？
 
+### 2.1 部署 K8s 集群部署网络插件 Calico
 
-### 2.1 部署 k8s集群部署网络插件 calico
+常见的网络插件有多种，比如 Flannel、Calico 和 Cilium，本次实验使用 Calico。
 
-常见的网络插件有多种，比如flannel、Calico和Cilium，本次实验使用Calico。
-
-首先访问Calico帮助文档https://docs.tigera.io/calico/latest/getting-started/kubernetes/quickstart
+首先访问 Calico 帮助文档 https://docs.tigera.io/calico/latest/getting-started/kubernetes/quickstart
 
 #### master 节点
-calico 部署使用的是operator 的方式，且不再和kube-system 共用一个namespace，另起了一个namespace calico-system,引入了istio 相关组件服务，详情可以看下calico官网
+Calico 部署使用的是 operator 的方式，且不再和 kube-system 共用一个 namespace，另起了一个 namespace calico-system，引入了 Istio 相关组件服务，详情可以看下 Calico 官网
 
 配置插件需要的环境
 ```shell
 wget https://raw.githubusercontent.com/projectcalico/calico/v3.27.2/manifests/tigera-operator.yaml
 kubectl create -f tigera-operator.yaml
 ```
-下载客户端资源文件并修改pod 网段地址，因为我们的pod的网段和配置文件不一样
+下载客户端资源文件并修改 pod 网段地址，因为我们的 pod 的网段和配置文件不一样
 
-注意：部署operator 时需要连接外网加载该镜像`quay.io/tigera/operator:v1.32.5`,建议使用[dockerproxy](https://dockerproxy.net/)代理来处理
+注意：部署 operator 时需要连接外网加载该镜像 `quay.io/tigera/operator:v1.32.5`，建议使用[dockerproxy](https://dockerproxy.net/)代理来处理
 
 ```shell
 # 下载客户端资源文件
@@ -85,17 +82,17 @@ curl -LO https://raw.githubusercontent.com/projectcalico/calico/v3.27.2/manifest
 sed -i 's/cidr: 192.168.0.0/cidr: 10.244.0.0/g' custom-resources.yaml
 kubectl create -f custom-resources.yaml
 ```
-查看集群 calico pod 创建过程，大约会耗时三分钟,部署成功后，所有node 节点为Ready 状态
+查看集群 Calico pod 创建过程，大约会耗时三分钟，部署成功后，所有 node 节点为 Ready 状态
 ```shell
 watch kubectl get all -o wide -n calico-system
 ```
 {{< admonition tip >}}
-以上方法是在dockerhub 网络仓库正常访问情况下执行的，如果dockerhub 网络仓库访问异常可以使用离线部署的方式
+以上方法是在 dockerhub 网络仓库正常访问情况下执行的，如果 dockerhub 网络仓库访问异常可以使用离线部署的方式
 
-2024.6 月份docker hub 被墙了后，就不能方便的下载 docker 镜像了，这里使用离线的方式进行部署。
+2024.6 月份 Docker hub 被墙了后，就不能方便的下载 Docker 镜像了，这里使用离线的方式进行部署。
 {{< /admonition >}}
 
-calico v3.27 相关镜像列表
+Calico v3.27 相关镜像列表
 ```
 docker.io/calico/cni:v3.27.2
 docker.io/calico/kube-controllers:v3.27.2
@@ -127,13 +124,12 @@ sudo ctr -n k8s.io images import node-driver-registrar.tar
 
 参考：[calico_3.27 quick install 官网](https://docs.tigera.io/calico/3.27/getting-started/kubernetes/quickstart)
 
-
-## 顺藤摸瓜：多维度排查与见招拆招
-上面的部署k8s cni calico 网络插件是一个常规流程，但是由于我之前部署的结构是单master + 单node 节点，cni 网络插件被我部署到了node 节点上，现在在master 节点上还需要移除污点调度
+## 3. 顺藤摸瓜：多维度排查与见招拆招
+上面的部署 K8s CNI Calico 网络插件是一个常规流程，但是由于我之前部署的结构是单 master + 单 node 节点，CNI 网络插件被我部署到了 node 节点上，现在在 master 节点上还需要移除污点调度
 ```shell
 kubectl taint nodes k8s-master01 node.kubernetes.io/not-ready:NoSchedule-
 ```
-此刻发现部署的过程中，创建了`tigera-operator`和`calico-system`
+此刻发现部署的过程中，创建了 `tigera-operator` 和 `calico-system`
 ```shell
 $kubectl get ns
 NAME               STATUS   AGE
@@ -143,7 +139,7 @@ kube-public        Active   28h
 kube-system        Active   28h
 tigera-operator    Active   26h
 ```
-此刻发现tigera-operator pod 异常重启
+此刻发现 tigera-operator pod 异常重启
 ```shell
 
 $ kubectl get node
@@ -171,7 +167,7 @@ Events:
 
 既然容器能跑起来再挂掉，说明不是 K8s 调度的锅，而是 Operator 进程内部由于缺少某些初始化条件或者配置冲突崩了。
 
-目前是已经部署了tigera-operator 但是pod 异常重启
+目前是已经部署了 tigera-operator 但是 pod 异常重启
 
 ### 核心排查命令查看 pod 更多信息
 对于这种启动即崩溃（Exit Code 通常是 1 或 137/255）的 Operator，我们需要看它到底在临死前喊了什么。请执行以下命令抓取它的崩尸日志：
@@ -227,7 +223,7 @@ $ kubectl logs -n tigera-operator tigera-operator-7595bb75f4-g7rpl
 
 > Operator 需要网络通了才能去创建 Calico；而网络要通，又必须等 Operator 起来去创建 Calico。
 
-## 🛠️ 破局方案
+## 4. 🛠️ 破局方案
 
 既然通过 ClusterIP 走不通，我们需要**绕过内部 Service，让 Operator 直接通过宿主机的物理网络（APIServer 的物理 IP）进行通信**。
 
@@ -237,7 +233,7 @@ $ kubectl logs -n tigera-operator tigera-operator-7595bb75f4-g7rpl
 
 我们需要将 Tigera Operator 的 Deployment 改为使用**宿主机网络模式（hostNetwork: true）**。这样它就会直接用 `k8s-master01` 的物理网络，不再通过 `10.96.0.1` 绕路。
 
-先将tigera-operator.yaml 进行备份，再进行如下修改，在 `spec.template.spec` 标签下，加入 `hostNetwork: true` 和 `dnsPolicy: ClusterFirstWithHostNet`：
+先将 tigera-operator.yaml 进行备份，再进行如下修改，在 `spec.template.spec` 标签下，加入 `hostNetwork: true` 和 `dnsPolicy: ClusterFirstWithHostNet`：
 ```yaml
 spec:
   replicas: 1
@@ -272,7 +268,6 @@ kubectl apply -f tigera-operator.yaml
           value: "6443"
 
 ```
-
 ### 🎯 期待的效果
 
 完成上述修改后，旧的 Pod 会被销毁，新的 Pod 会直接带着宿主机的网络权限拉起。此时它再去调 APIServer 就能一路畅通。
@@ -283,11 +278,10 @@ kubectl apply -f tigera-operator.yaml
 watch -n 2 "kubectl get pods -n tigera-operator && kubectl get nodes"
 
 ```
-
 一旦 Operator 成功挺住不崩，它就会立刻在后台把真正的 `calico-node` 等组件一股脑生出来，节点很快就会刷成 **`Ready`**！
 
 ### 一波三折并非期待的效果
-在49 行到 51 行这一段
+在 49 行到 51 行这一段
 ```shell
 envFrom:
 - configMapRef:
@@ -328,9 +322,6 @@ Tigera Operator 默认会去读取一个叫 kubernetes-services-endpoint 的 Con
             optional: true
 
 ```
-
-
-
 ### 🎯 修改后的观察
 
 改完后，原本处于 `CrashLoopBackOff` 的 Pod 会瞬间被销毁重建。接着通过日志盯死它：
@@ -377,8 +368,7 @@ NAME           STATUS   ROLES    AGE    VERSION
 k8s-master01   Ready    <none>   155m   v1.28.11
 ```
 
-
-## 📝 故障复盘报告：K8s 控制平面瘫痪与 CNI 复合死锁救援
+## 5. 📝 故障复盘报告：K8s 控制平面瘫痪与 CNI 复合死锁救援
 
 ###  1. 故障全景摘要
 
@@ -401,7 +391,6 @@ root@k8s-master01:/etc/kubernetes# netstat -ntlp | grep 6443
 # 输出为空，APIServer 未启动
 
 ```
-
 ##### 1.2 原因剖析
 
 在对集群进行组件调整或升级时，`/etc/kubernetes/manifests/` 下的静态 Pod YAML 文件中指定的组件镜像版本（如 `v1.28.11`）与本地实际存在的镜像、或国内加速源的 Tag 未对齐，导致宿主机 `kubelet` 无法正常拉起控制平面容器。
@@ -419,7 +408,6 @@ tcp6       0      0 :::6443                 :::* LISTEN      4467/kube-apiserver
 
 ```
 
-
 核心端口恢复监听，`curl -k https://192.168.1.11:6443/version` 成功拿到 `v1.28.0` 响应，控制平面救活。
 
 ---
@@ -436,7 +424,6 @@ NAME           STATUS     ROLES    AGE   VERSION
 k8s-master01   NotReady   <none>   84s   v1.28.11
 
 ```
-
 ##### 2.2 原因剖析
 
 在整个容器运行时重置或故障期间，原本的 Calico 网络插件容器被全部清理。Kubelet 启动后，检测到集群内**没有任何可用的 CNI 网络插件**，无法为 Pod 分配 IP 建立网络平面。
@@ -461,14 +448,12 @@ NAME                               READY   STATUS   RESTARTS      AGE
 tigera-operator-7595bb75f4-g7rpl   0/1     Error    3 (36s ago)   57s
 
 ```
-
 利用诊断利器 `kubectl logs -n tigera-operator <pod-name>` 抓取临终日志，暴露核心报错：
 
 ```text
 [ERROR] Get "https://10.96.0.1:443/api?timeout=32s": dial tcp 10.96.0.1:443: connect: no route to host
 
 ```
-
 ##### 3.2 原因剖析（核心死锁逻辑）
 
 1. Tigera Operator 作为一个普通 Pod 启动，默认根据内部配置或 ConfigMap，尝试通过 Kubernetes 内置的集群服务虚拟 IP（**ClusterIP: `10.96.0.1**`）去和 APIServer 握手通讯。
@@ -496,7 +481,6 @@ env:
 
 ```
 
-
 3. **合体验证**：
    重新配置后，新生的 Operator 容器秒级成功运行（`READY 1/1 Status: Running`），并立刻向下派发 Calico 核心组件。
 4. **大功告成**：
@@ -507,8 +491,6 @@ NAME           STATUS   ROLES    AGE    VERSION
 k8s-master01   Ready    <none>   155m   v1.28.11
 
 ```
-
-
 
 ---
 

@@ -48,7 +48,6 @@ Git 是一个**分布式版本控制系统**。
     ↓
 重构代码
 ```
-
 Git 会把这些变化保存下来。
 
 以后你可以：
@@ -66,7 +65,6 @@ Git 会把这些变化保存下来。
 -   把代码同步到 GitHub / GitLab / Gitee
 
 -   多人同时开发同一个项目
-
 
 Git 的一个重要特点是：
 
@@ -86,7 +84,6 @@ Git 的一个重要特点是：
 本地仓库
 远程仓库
 ```
-
 可以把它理解成：
 
 ```
@@ -104,7 +101,6 @@ Git 的一个重要特点是：
   │                              │ git fetch/pull
   └──────────────────────────────┘
 ```
-
 ---
 
 ### 1\. 工作区
@@ -120,7 +116,6 @@ my-project/
 ├── service/
 └── README.md
 ```
-
 你修改 `main.go`，这就是**工作区发生变化**。
 
 ---
@@ -138,21 +133,18 @@ main.go
 user.go
 README.md
 ```
-
 但是这次只想提交：
 
 ```
 main.go
 user.go
 ```
-
 那么：
 
 ```
 git add main.go
 git add user.go
 ```
-
 这两个文件进入暂存区。
 
 然后：
@@ -160,7 +152,6 @@ git add user.go
 ```
 git commit -m "新增用户功能"
 ```
-
 只会提交已经进入暂存区的内容。
 
 所以：
@@ -176,7 +167,6 @@ git commit -m "新增用户功能"
    ↓
 本地仓库
 ```
-
 这是理解 Git 最重要的一条链路。
 
 ---
@@ -188,13 +178,11 @@ git commit -m "新增用户功能"
 ```
 git --version
 ```
-
 例如：
 
 ```
 git version 2.41.0
 ```
-
 ---
 
 ### 2\. 配置用户名
@@ -202,13 +190,11 @@ git version 2.41.0
 ```
 git config --global user.name "你的名字"
 ```
-
 例如：
 
 ```
 git config --global user.name "张三"
 ```
-
 ---
 
 ### 3\. 配置邮箱
@@ -216,19 +202,16 @@ git config --global user.name "张三"
 ```
 git config --global user.email "you@example.com"
 ```
-
 查看配置：
 
 ```
 git config --global --list
 ```
-
 如果想知道配置到底来自哪个文件：
 
 ```
 git config --list --show-origin
 ```
-
 这个命令非常有用。
 
 例如你排查 Git 代理问题时，可以看到：
@@ -237,7 +220,6 @@ git config --list --show-origin
 file:C:/Users/lushu/.gitconfig
 http.proxy=http://127.0.0.1:7897
 ```
-
 甚至可以发现当前项目 `.git/config` 中存在额外配置。
 
 ---
@@ -249,19 +231,16 @@ http.proxy=http://127.0.0.1:7897
 ```
 cd my-project
 ```
-
 执行：
 
 ```
 git init
 ```
-
 Git 会创建：
 
 ```
 .git/
 ```
-
 这个目录保存 Git 的版本信息。
 
 一般情况下：
@@ -277,14 +256,12 @@ Git 会创建：
 ```
 git status
 ```
-
 例如：
 
 ```
 modified: main.go
 untracked: test.go
 ```
-
 表示：
 
 ```
@@ -294,7 +271,6 @@ main.go
 test.go
     新文件，尚未被 Git 跟踪
 ```
-
 一个非常实用的习惯：
 
 > **不知道 Git 当前是什么状态时，先执行** `**git status**`**。**
@@ -308,7 +284,6 @@ test.go
 ```
 git diff
 ```
-
 查看：
 
 > 工作区相对于暂存区发生了什么变化。
@@ -319,13 +294,11 @@ git diff
 - old code
 + new code
 ```
-
 如果已经 `git add`：
 
 ```
 git diff
 ```
-
 可能看不到已经暂存的修改。
 
 这时使用：
@@ -333,7 +306,6 @@ git diff
 ```
 git diff --cached
 ```
-
 查看：
 
 > 暂存区准备提交什么。
@@ -349,7 +321,6 @@ git diff --cached
     ↓
 看暂存区修改
 ```
-
 ---
 
 ## 七、提交代码：add + commit
@@ -361,13 +332,11 @@ git diff --cached
 ```
 git add main.go
 ```
-
 添加所有修改：
 
 ```
 git add .
 ```
-
 ---
 
 ### 2\. 提交
@@ -375,7 +344,6 @@ git add .
 ```
 git commit -m "新增用户查询功能"
 ```
-
 于是：
 
 ```
@@ -385,7 +353,6 @@ git commit -m "新增用户查询功能"
    ↓ git commit
 本地仓库
 ```
-
 ---
 
 ## 八、一次完整的日常开发流程
@@ -403,14 +370,12 @@ git commit -m "完成 xxx 功能"
 
 git push
 ```
-
 如果不确定自己做了什么，可以：
 
 ```
 git status
 git diff
 ```
-
 确认无误后：
 
 ```
@@ -418,7 +383,6 @@ git add .
 git commit -m "xxx"
 git push
 ```
-
 ---
 
 ## 九、查看提交历史
@@ -428,26 +392,22 @@ git push
 ```
 git log
 ```
-
 更适合日常查看：
 
 ```
 git log --oneline
 ```
-
 例如：
 
 ```
 7e31c21 优化 PDF 导出
 4a812ef 增加报告接口
 ```
-
 查看图形化分支关系：
 
 ```
 git log --oneline --graph --decorate --all
 ```
-
 这个命令非常值得掌握。
 
 ---
@@ -467,7 +427,6 @@ A → B → C
         ↑
        HEAD
 ```
-
 如果切换到另一个分支：
 
 ```
@@ -477,7 +436,6 @@ A → B → C → D
             ↑
            HEAD
 ```
-
 HEAD 就跟着当前分支移动。
 
 所以：
@@ -485,7 +443,6 @@ HEAD 就跟着当前分支移动。
 ```
 git status
 ```
-
 通常会告诉你当前所在分支。
 
 ---
@@ -497,7 +454,6 @@ git status
 ```
 main.go
 ```
-
 你修改了一堆代码，但是发现：
 
 > 这些修改全部不要了。
@@ -507,13 +463,11 @@ Git 2.41 推荐使用：
 ```
 git restore main.go
 ```
-
 恢复所有工作区修改：
 
 ```
 git restore .
 ```
-
 注意：
 
 > **这个操作会丢失尚未提交的工作区修改。**
@@ -529,7 +483,6 @@ git restore .
 ```
 git add main.go
 ```
-
 之后发现：
 
 > 我不想暂存这个文件了。
@@ -539,7 +492,6 @@ git add main.go
 ```
 git restore --staged main.go
 ```
-
 此时：
 
 ```
@@ -547,7 +499,6 @@ git restore --staged main.go
    ↓ git restore --staged
 工作区
 ```
-
 注意：
 
 > 它只是取消暂存，不会删除你写的代码。
@@ -561,7 +512,6 @@ git restore --staged main.go
 ```
 git restore main.go
 ```
-
 意思：
 
 > 我刚才修改的不要了。
@@ -573,7 +523,6 @@ git restore main.go
 ```
 git restore --staged main.go
 ```
-
 意思：
 
 > 不提交这个文件，但代码修改保留。
@@ -588,7 +537,6 @@ git restore --staged main.go
 git restore --staged main.go
 git restore main.go
 ```
-
 最终恢复到最近一次提交的状态。
 
 ---
@@ -602,13 +550,11 @@ A → B → C
         ↑
        HEAD
 ```
-
 刚提交完：
 
 ```
 C
 ```
-
 发现：
 
 > 这个 commit 提交错了。
@@ -618,7 +564,6 @@ C
 ```
 git reset --soft HEAD~1
 ```
-
 结果：
 
 ```
@@ -628,7 +573,6 @@ B
 
 C 中的修改仍然保留在暂存区
 ```
-
 适合：
 
 > commit message 写错、想重新提交。
@@ -640,7 +584,6 @@ C 中的修改仍然保留在暂存区
 ```
 git reset HEAD~1
 ```
-
 修改仍然保留在工作区。
 
 ---
@@ -650,7 +593,6 @@ git reset HEAD~1
 ```
 git reset --hard HEAD~1
 ```
-
 非常危险。
 
 因为：
@@ -672,7 +614,6 @@ hard
     ↓
 修改也删除
 ```
-
 ---
 
 ## 十五、已经提交并推送到远程怎么办？
@@ -684,26 +625,22 @@ hard
 ```
 只在本地
 ```
-
 可以考虑：
 
 ```
 git reset
 ```
-
 但是如果：
 
 ```
 已经 push 到 GitHub/GitLab
 ```
-
 不要轻易：
 
 ```
 git reset --hard
 git push --force
 ```
-
 因为这可能修改共享历史。
 
 更安全的方式通常是：
@@ -711,13 +648,11 @@ git push --force
 ```
 git revert <commit>
 ```
-
 例如：
 
 ```
 git revert 9f9bc9a
 ```
-
 Git 会创建一个新的 commit：
 
 ```
@@ -725,7 +660,6 @@ A → B → C → D
              ↑
           revert C
 ```
-
 历史仍然完整。
 
 ---
@@ -739,7 +673,6 @@ A → B → C → D
 ```
 git reset --hard HEAD~1
 ```
-
 结果发现：
 
 > 我刚才那个提交其实还想要。
@@ -749,20 +682,17 @@ git reset --hard HEAD~1
 ```
 git reflog
 ```
-
 看到类似：
 
 ```
 9f9bc9a HEAD@{1}: commit: pdf 工程实践
 7e31c21 HEAD@{2}: checkout: moving from dev to main
 ```
-
 然后：
 
 ```
 git reset --hard 9f9bc9a
 ```
-
 恢复过去的状态。
 
 所以可以记住：
@@ -778,19 +708,16 @@ git reset --hard 9f9bc9a
 ```
 git rm test.txt
 ```
-
 然后：
 
 ```
 git commit -m "删除 test.txt"
 ```
-
 如果只是误删了文件，但还没有提交：
 
 ```
 git restore test.txt
 ```
-
 可以恢复。
 
 ---
@@ -812,7 +739,6 @@ A → B → C ─────────D
               ↑
              main
 ```
-
 不同分支可以独立开发。
 
 ---
@@ -822,7 +748,6 @@ A → B → C ─────────D
 ```
 git branch
 ```
-
 例如：
 
 ```
@@ -830,7 +755,6 @@ git branch
   dev
   feature/login
 ```
-
 `*` 表示当前分支。
 
 ---
@@ -842,20 +766,17 @@ Git 2.41 推荐：
 ```
 git switch -c feature/login
 ```
-
 等价于：
 
 ```
 git branch feature/login
 git switch feature/login
 ```
-
 如果项目使用老版本 Git，也可以：
 
 ```
 git checkout -b feature/login
 ```
-
 所以：
 
 > 新 Git 推荐 `switch`；老项目中仍经常看到 `checkout`。
@@ -869,13 +790,11 @@ git checkout -b feature/login
 ```
 git switch main
 ```
-
 老方式：
 
 ```
 git checkout main
 ```
-
 ---
 
 ## 二十二、删除分支
@@ -885,13 +804,11 @@ git checkout main
 ```
 git branch -d feature/login
 ```
-
 强制删除：
 
 ```
 git branch -D feature/login
 ```
-
 `-D` 要谨慎，因为它可能删除尚未合并的分支。
 
 ---
@@ -904,7 +821,6 @@ git branch -D feature/login
 main
 feature/login
 ```
-
 现在想：
 
 > 把 feature/login 合并到 main。
@@ -917,7 +833,6 @@ feature/login
 git switch main
 git merge feature/login
 ```
-
 意思是：
 
 ```
@@ -925,7 +840,6 @@ feature/login
        ↓
       main
 ```
-
 不是反过来。
 
 ---
@@ -939,7 +853,6 @@ A → B → C
          ↑
       feature
 ```
-
 而 main 还停留在：
 
 ```
@@ -947,13 +860,11 @@ A → B
      ↑
     main
 ```
-
 执行：
 
 ```
 git merge feature
 ```
-
 Git 可以直接把 main 移动到 C。
 
 这就是：
@@ -961,7 +872,6 @@ Git 可以直接把 main 移动到 C。
 ```
 Fast-forward
 ```
-
 ---
 
 ## 二十五、什么是 Merge Conflict？
@@ -975,7 +885,6 @@ main
 feature
     也修改 main.go 第 10 行
 ```
-
 两个分支对同一位置进行了不同修改。
 
 Git 无法判断：
@@ -993,14 +902,12 @@ main 分支代码
 feature 分支代码
 >>>>>>> feature
 ```
-
 人工修改成最终正确代码后：
 
 ```
 git add main.go
 git commit
 ```
-
 完成冲突解决。
 
 如果发现：
@@ -1012,7 +919,6 @@ git commit
 ```
 git merge --abort
 ```
-
 回到 merge 前的状态。
 
 ---
@@ -1030,7 +936,6 @@ main
       ├── feature/report
       └── bugfix/pdf
 ```
-
 日常：
 
 ```
@@ -1050,7 +955,6 @@ bugfix/*
     ↓
 Bug 修复
 ```
-
 开发完成后：
 
 ```
@@ -1060,7 +964,6 @@ feature/login
        ↓
       main
 ```
-
 具体采用哪种分支模型，要根据团队实际流程决定。
 
 不要机械照搬某一种 Git Flow。
@@ -1076,7 +979,6 @@ feature/login
 ```
 feature/report
 ```
-
 代码写了一半：
 
 ```
@@ -1084,7 +986,6 @@ A
 B
 C
 ```
-
 但是突然需要：
 
 > 紧急修复一个 Bug。
@@ -1096,7 +997,6 @@ C
 ```
 git stash
 ```
-
 当前工作就被暂时保存起来。
 
 然后：
@@ -1104,7 +1004,6 @@ git stash
 ```
 git switch main
 ```
-
 处理紧急任务。
 
 ---
@@ -1114,14 +1013,12 @@ git switch main
 ```
 git stash list
 ```
-
 例如：
 
 ```
 stash@{0}: WIP on feature/report
 stash@{1}: WIP on dev
 ```
-
 ---
 
 ## 二十九、恢复 stash
@@ -1131,19 +1028,16 @@ stash@{1}: WIP on dev
 ```
 git stash apply
 ```
-
 恢复并删除 stash：
 
 ```
 git stash pop
 ```
-
 删除：
 
 ```
 git stash drop stash@{0}
 ```
-
 所以：
 
 ```
@@ -1155,7 +1049,6 @@ stash pop
     ↓
 恢复，同时删除 stash
 ```
-
 ---
 
 ## 三十、远程仓库是什么？
@@ -1175,7 +1068,6 @@ GitHub、GitLab、Gitee 等则是：
        ↓
 GitHub
 ```
-
 ---
 
 ## 三十一、查看远程仓库
@@ -1183,26 +1075,22 @@ GitHub
 ```
 git remote
 ```
-
 查看详细地址：
 
 ```
 git remote -v
 ```
-
 例如：
 
 ```
 origin  https://github.com/zhangsan/zhangsan.github.io.git (fetch)
 origin  https://github.com/zhangsan/zhangsan.github.io.git (push)
 ```
-
 这里的：
 
 ```
 origin
 ```
-
 只是一个**远程仓库别名**。
 
 它不是 GitHub 的固定名称。
@@ -1215,13 +1103,11 @@ gitee
 company
 upstream
 ```
-
 但如果只有一个远程仓库，通常使用：
 
 ```
 origin
 ```
-
 最符合 Git 社区习惯。
 
 ---
@@ -1231,13 +1117,11 @@ origin
 ```
 git remote add origin https://github.com/username/project.git
 ```
-
 查看：
 
 ```
 git remote -v
 ```
-
 ---
 
 ## 三十三、修改远程仓库地址
@@ -1247,7 +1131,6 @@ git remote -v
 ```
 git remote set-url origin https://github.com/username/project.git
 ```
-
 不需要删除再重新添加。
 
 ---
@@ -1259,32 +1142,27 @@ git remote set-url origin https://github.com/username/project.git
 ```
 github
 ```
-
 改成：
 
 ```
 origin
 ```
-
 执行：
 
 ```
 git remote rename github origin
 ```
-
 然后：
 
 ```
 git remote -v
 ```
-
 得到：
 
 ```
 origin  https://github.com/zhangsan/zhangsan.github.io.git (fetch)
 origin  https://github.com/zhangsan/zhangsan.github.io.git (push)
 ```
-
 ---
 
 ## 三十五、推送到远程仓库
@@ -1294,13 +1172,11 @@ origin  https://github.com/zhangsan/zhangsan.github.io.git (push)
 ```
 git push -u origin main
 ```
-
 这里：
 
 ```
 -u
 ```
-
 的作用是：
 
 > 建立本地 `main` 与远程 `origin/main` 的关联。
@@ -1310,13 +1186,11 @@ git push -u origin main
 ```
 git push
 ```
-
 而不需要每次写：
 
 ```
 git push origin main
 ```
-
 ---
 
 ## 三十六、理解 upstream
@@ -1328,7 +1202,6 @@ git push origin main
 ```
 git push -u origin main
 ```
-
 以后：
 
 ```
@@ -1338,13 +1211,11 @@ git push -u origin main
       ↓
 origin/main
 ```
-
 于是：
 
 ```
 git push
 ```
-
 Git 就知道：
 
 > 当前 main 应该推送到 origin/main。
@@ -1354,13 +1225,11 @@ Git 就知道：
 ```
 git branch -vv
 ```
-
 例如：
 
 ```
 * main  9f9bc9a [origin/main] pdf 工程实践
 ```
-
 ---
 
 ## 三十七、git fetch 和 git pull 的区别
@@ -1372,7 +1241,6 @@ git branch -vv
 ```
 git fetch origin
 ```
-
 意思：
 
 > 把远程最新信息下载到本地，但不自动修改当前工作分支。
@@ -1384,7 +1252,6 @@ GitHub
    ↓
 本地远程跟踪分支
 ```
-
 ---
 
 ### git pull
@@ -1392,7 +1259,6 @@ GitHub
 ```
 git pull
 ```
-
 可以简单理解为：
 
 ```
@@ -1400,7 +1266,6 @@ git fetch
 +
 把远程更新整合到当前分支
 ```
-
 所以：
 
 ```
@@ -1412,14 +1277,12 @@ pull
     ↓
 获取 + 整合
 ```
-
 实际工作中，如果你想先看看远程发生了什么：
 
 ```
 git fetch
 git log --oneline --graph --decorate --all
 ```
-
 通常比直接 `git pull` 更容易理解和控制。
 
 ---
@@ -1431,13 +1294,11 @@ git log --oneline --graph --decorate --all
 ```
 git clone https://github.com/username/project.git
 ```
-
 例如：
 
 ```
 git clone https://github.com/zhangsan/zhangsan.github.io.git
 ```
-
 Git 会自动：
 
 1.  下载仓库
@@ -1450,7 +1311,6 @@ Git 会自动：
 
 5.  建立远程跟踪关系
 
-
 ---
 
 ## 三十九、多人协作时的基本流程
@@ -1460,13 +1320,11 @@ Git 会自动：
 ```
 origin/dev
 ```
-
 你准备开发：
 
 ```
 feature/report
 ```
-
 可以：
 
 ```
@@ -1478,20 +1336,17 @@ git pull
 
 git switch -c feature/report
 ```
-
 开发：
 
 ```
 git add .
 git commit -m "新增报告功能"
 ```
-
 推送：
 
 ```
 git push -u origin feature/report
 ```
-
 然后通过 GitLab/GitHub 创建 Merge Request / Pull Request。
 
 ---
@@ -1504,7 +1359,6 @@ git push -u origin feature/report
 rejected
 non-fast-forward
 ```
-
 通常意味着：
 
 > 远程分支已经比本地更新。
@@ -1518,13 +1372,11 @@ A → B → C
 本地：
 A → B → D
 ```
-
 你直接 push：
 
 ```
 git push
 ```
-
 Git 会拒绝。
 
 先获取远程更新：
@@ -1532,25 +1384,21 @@ Git 会拒绝。
 ```
 git fetch origin
 ```
-
 然后根据团队策略决定：
 
 ```
 git pull --rebase
 ```
-
 或者：
 
 ```
 git pull
 ```
-
 解决冲突后：
 
 ```
 git push
 ```
-
 ---
 
 ## 四十一、Git 中最重要的几个“不要”
@@ -1560,7 +1408,6 @@ git push
 ```
 git reset --hard
 ```
-
 可能直接丢失未提交代码。
 
 ---
@@ -1570,7 +1417,6 @@ git reset --hard
 ```
 git push --force
 ```
-
 可能覆盖别人已经推送的提交。
 
 如果确实需要强制推送，优先：
@@ -1578,7 +1424,6 @@ git push --force
 ```
 git push --force-with-lease
 ```
-
 它比 `--force` 更安全。
 
 ---
@@ -1592,12 +1437,11 @@ git push --force-with-lease
 =======
 >>>>>>>
 ```
-
 分别代表什么，再决定最终代码。
 
 ---
 
-### 4\. 不要把所有修改都直接 git add .
+### 4\. 不要把所有修改都直接 git add 
 
 尤其是在大型项目中。
 
@@ -1607,7 +1451,6 @@ git push --force-with-lease
 git status
 git diff
 ```
-
 确认修改内容。
 
 再：
@@ -1615,7 +1458,6 @@ git diff
 ```
 git add
 ```
-
 ---
 
 ## 四十二、日常最值得掌握的 Git 命令
@@ -1627,28 +1469,24 @@ git add
 ```
 git status
 ```
-
 ### 查看修改
 
 ```
 git diff
 git diff --cached
 ```
-
 ### 提交
 
 ```
 git add .
 git commit -m "xxx"
 ```
-
 ### 历史
 
 ```
 git log --oneline
 git reflog
 ```
-
 ### 撤销
 
 ```
@@ -1657,7 +1495,6 @@ git restore --staged <file>
 git reset
 git revert
 ```
-
 ### 分支
 
 ```
@@ -1666,7 +1503,6 @@ git switch
 git switch -c
 git merge
 ```
-
 ### 临时保存
 
 ```
@@ -1674,7 +1510,6 @@ git stash
 git stash list
 git stash pop
 ```
-
 ### 远程仓库
 
 ```
@@ -1683,7 +1518,6 @@ git remote add
 git remote rename
 git remote set-url
 ```
-
 ### 远程同步
 
 ```
@@ -1691,7 +1525,6 @@ git fetch
 git pull
 git push
 ```
-
 ---
 
 ## 四十三、真正需要记住的 Git 思维模型
@@ -1715,7 +1548,6 @@ git push
   │                              │ git fetch
   └──────────────────────────────┘
 ```
-
 然后再记住：
 
 ```
@@ -1775,7 +1607,6 @@ git push
     ↓
 把我的本地提交发布到远程
 ```
-
 ---
 
 ## 四十四、推荐的一套日常 Git SOP
@@ -1808,7 +1639,6 @@ git commit -m "完成 xxx 功能"
 # 8. 推送
 git push
 ```
-
 如果多人协作：
 
 ```
@@ -1826,7 +1656,6 @@ git push
                            │
                          工作区
 ```
-
 这就是绝大多数软件开发人员每天实际使用 Git 的核心流程。
 
 ---
@@ -1838,7 +1667,6 @@ Git 真正难的地方不是：
 ```
 git xxx
 ```
-
 而是理解：
 
 ```
@@ -1856,7 +1684,6 @@ git xxx
        ↓
 这次操作会不会改写别人历史？
 ```
-
 一旦这个思维建立起来，Git 命令反而很容易查。
 
 **建议把 Git 的学习重点放在四条主线：**
@@ -1867,7 +1694,6 @@ git xxx
 ③ commit → merge → revert/reset
 ④ fetch → pull → push
 ```
-
 这四条线真正掌握以后，日常开发中 80%～90% 的 Git 问题都能定位。
 
 ---
@@ -1882,7 +1708,6 @@ git reset --hard
 master
 git push origin master
 ```
-
 这些命令本身并没有全部“过时”，但现代 Git 更推荐根据意图使用更明确的命令，例如：
 
 ```
@@ -1891,13 +1716,11 @@ git restore
 main
 git push -u origin main
 ```
-
 特别是：
 
 ```
 git checkout
 ```
-
 过去同时承担：
 
 ```
@@ -1907,7 +1730,6 @@ git checkout
 +
 恢复文件
 ```
-
 现代 Git 将其中的职责拆开：
 
 ```
@@ -1917,7 +1739,6 @@ git switch
 git restore
     → 文件恢复
 ```
-
 这样对于初学者更加直观。
 
 同时，`reset`、`revert`、`restore` 三者不要混为一谈：
@@ -1932,7 +1753,5 @@ reset
 revert
     → 用新提交抵消已有提交
 ```
-
 这也是现代 Git 学习中非常值得建立的一个核心概念。
-
-
+

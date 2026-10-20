@@ -30,19 +30,19 @@ Docker 是一个用于构建、运行和分发应用程序的平台。它允许�
 Docker 化和部署 Django 应用程序是一个相对简单的过程。涉及的主要步骤是：
 1. 为您的 Django 应用程序创建 Dockerfile。
 2. 从 Dockerfile 构建 Docker 映像。
-3. 将Docker镜像部署到生产环境。
+3. 将 Docker 镜像部署到生产环境。
 ## 一、准备
-基于 Python 3.9、Django 3.2、docker 20.10.13
+基于 Python 3.9、Django 3.2、Docker 20.10.13
 ### 软件安装
 - Docker
 - Python3
-### 创建Django项目
+### 创建 Django 项目
 ```
 pip install django==3.2
 django-admin startproject django-demo
 ```
 这行代码将会在当前目录下创建一个 simplesite 目录
-让我们看看 startproject 创建了些什么:
+让我们看看 startproject 创建了些什么：
 ```
 django-demo/
     manage.py
@@ -55,14 +55,14 @@ django-demo/
 ```
 这些目录和文件的用处是：
 
-- 最外层的 mysite/ 根目录只是你项目的容器， 根目录名称对 Django 没有影响，你可以将它重命名为任何你喜欢的名称。
+- 最外层的 mysite/ 根目录只是你项目的容器，根目录名称对 Django 没有影响，你可以将它重命名为任何你喜欢的名称。
 - manage.py: 一个让你用各种方式管理 Django 项目的命令行工具。
 - 里面一层的 mysite/ 目录包含你的项目，它是一个纯 Python 包。
 - mysite/__init__.py：一个空文件，告诉 Python 这个目录应该被认为是一个 Python 包。
 - mysite/settings.py：Django 项目的配置文件。
 - mysite/urls.py：Django 项目的 URL 声明，就像你网站的“目录”。
 - mysite/asgi.py：作为你的项目的运行在 ASGI 兼容的 Web 服务器上的入口。
-- mysite/wsgi.py：作为你的项目的运行在 WSGI 兼容的Web服务器上的入口。
+- mysite/wsgi.py：作为你的项目的运行在 WSGI 兼容的 Web 服务器上的入口。
 
 如果你的当前目录不是外层的 mysite 目录的话，请切换到此目录，然后运行下面的命令：
 ```
@@ -168,4 +168,4 @@ CONTAINER ID  IMAGE                       COMMAND               CREATED        S
 
 ## 三、参考
 - [Python 镜像的全方位指南 原创](https://blog.51cto.com/jiemei/8712683)
-
+

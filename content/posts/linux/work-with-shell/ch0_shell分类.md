@@ -46,13 +46,13 @@ tcsh 是近几年崛起的一个免费软件（Linux 下的 C shell 其实就是
 - tcsh 提供了一个命令列（command line）编辑程序。
 - 提供了命令列补全功能。
 - 提供了拼字更正功能。它能够自动检测并且更正在命令列拼错的命令或是单字。
-- 危险命令侦测并提醒的功能，避免您一个不小心执行了rm* 这种杀伤力极大的命令。
+- 危险命令侦测并提醒的功能，避免您一个不小心执行了 rm* 这种杀伤力极大的命令。
 - 提供常用命令的快捷方式（shortcut）。
 
 ## 五、ash
 一个简单的轻量级的 Shell，占用资源少，适合运行于低内存环境，但是与下面讲到的 bash shell 完全兼容
 
-## 六、Shell分类总结
+## 六、Shell 分类总结
 
 在大部份的 UNIX 系统，三种著名且广被支持的 shell 是 Bourne shell（AT&T shell，在 Linux 下是 BASH）、C shell（Berkeley shell，在 Linux 下是 TCSH）和 Korn shell（Bourne shell 的超集）。
 

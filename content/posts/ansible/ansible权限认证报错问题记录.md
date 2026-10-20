@@ -19,21 +19,21 @@ summary: "记录 Ansible 通过 SSH 连接目标主机时出现 Permission denie
 <!--more-->
 
 ## 一、问题描述
-通过ansible命令直接ping多台机器的网络状态，提示报错
+通过 Ansible 命令直接 ping 多台机器的网络状态，提示报错
 
 {{< admonition failure >}}
 172.16.24.220 | UNREACHABLE! => {
     "changed": false, 
-    "msg": "Failed to connect to the host via ssh: Permission denied (publickey,gssapi-keyex,gssapi-with-mic,password).\r\n", 
+    "msg": "Failed to connect to the host via SSH: Permission denied (publickey,gssapi-keyex,gssapi-with-mic,password).\r\n", 
     "unreachable": true
 }
 {{< /admonition >}}
 ## 二、问题处理
-解决方式：单向的ssh验证
+解决方式：单向的 SSH 验证
 
-ssh-keygen一路回车,主要是用来免密通信的
+ssh-keygen 一路回车，主要是用来免密通信的
 
-ssh-copy-id 172.16.24.220 需要输入对应主机的root密码
+ssh-copy-id 172.16.24.220 需要输入对应主机的 root 密码
 ```shell
 $ ssh-keygen 
 Generating public/private rsa key pair.
@@ -77,4 +77,4 @@ and check to make sure that only the key(s) you wanted were added.
     "ping": "pong"
 }
 ```
-
+

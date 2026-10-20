@@ -18,8 +18,7 @@ summary: "本文通过一张全景图和相关资料，梳理 Kubernetes 创建 
 
 <!--more-->
 
-- [当Kubernetes创建Pod时发生了什么-全景图](https://hugo-picture.oss-cn-beijing.aliyuncs.com/what-happens-when-k8s.svg)
+- [当 Kubernetes 创建 Pod 时发生了什么-全景图](https://hugo-picture.oss-cn-beijing.aliyuncs.com/what-happens-when-k8s.svg)
 - https://github.com/jamiehannaford/what-happens-when-k8s/tree/master/zh-cn
-
 
 ![what-happens-when-k8s](/images/kubernetes/what-happens-when-k8s.svg "what-happens-when-k8s")

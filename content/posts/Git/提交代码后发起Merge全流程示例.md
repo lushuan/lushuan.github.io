@@ -44,7 +44,6 @@ summary: "本文以团队协作场景为例，用纯命令行演示员工开发�
 git clone git@github.com:company/project.git
 cd project
 ```
-
 > 克隆远程仓库到本地。之后所有操作都在该项目目录下进行。
 
 ---
@@ -55,7 +54,6 @@ cd project
 git checkout master
 git pull origin master
 ```
-
 > 确保自己基于最新的主干开发，避免冲突。
 
 ---
@@ -65,7 +63,6 @@ git pull origin master
 ```bash
 git checkout -b feature/add-login-api
 ```
-
 > 创建并切换到自己的分支，命名要有意义（`feature/` 开头表示新功能）。
 
 ---
@@ -76,7 +73,6 @@ git checkout -b feature/add-login-api
 git add .
 git commit -m "feat: add login API with JWT authentication"
 ```
-
 > * `git add .` 表示把修改的文件加入暂存区
 > * `git commit -m` 提交说明必须简洁明确（推荐遵守 [Conventional Commit](https://www.conventionalcommits.org/) 规范）
 
@@ -87,7 +83,6 @@ git commit -m "feat: add login API with JWT authentication"
 ```bash
 git push origin feature/add-login-api
 ```
-
 > 把分支上传到远程仓库，供技术经理审核。
 
 ---
@@ -115,7 +110,6 @@ git push origin feature/add-login-api
 ```bash
 git fetch origin
 ```
-
 > 获取所有远程更新（包括员工新建的 feature 分支）。
 
 ---
@@ -125,7 +119,6 @@ git fetch origin
 ```bash
 git checkout feature/add-login-api
 ```
-
 > 切换到该功能分支。
 
 然后查看变更：
@@ -134,7 +127,6 @@ git checkout feature/add-login-api
 git log --oneline --graph --decorate
 git diff master
 ```
-
 > * `git diff master`：查看和主分支的代码差异
 > * `git log`：确认提交历史是否干净，有没有多余的提交
 
@@ -154,13 +146,11 @@ git diff master
 git checkout master
 git pull origin master
 ```
-
 合并 feature 分支：
 
 ```bash
 git merge --no-ff feature/add-login-api -m "merge: add login API feature"
 ```
-
 > `--no-ff` 表示保留合并节点，方便以后追踪是谁合并的。
 
 ---
@@ -170,7 +160,6 @@ git merge --no-ff feature/add-login-api -m "merge: add login API feature"
 ```bash
 git push origin master
 ```
-
 > 把合并后的主干更新到远程仓库。
 > 此时 Merge Request 可在平台上关闭或自动关闭。
 
@@ -184,7 +173,6 @@ git push origin master
 git branch -d feature/add-login-api          ## 删除本地分支
 git push origin --delete feature/add-login-api  ## 删除远程分支
 ```
-
 ---
 
 ## 五、🚨 第三阶段：合并后发现问题 → 回滚方案
@@ -202,7 +190,6 @@ git push origin --delete feature/add-login-api  ## 删除远程分支
 ```bash
 git log --oneline
 ```
-
 找到合并提交的 ID（假设是 `abc1234`）
 
 2️⃣ 执行回滚：
@@ -210,7 +197,6 @@ git log --oneline
 ```bash
 git revert -m 1 abc1234
 ```
-
 > `-m 1` 表示保留主分支（master）为主线，撤销 merge 分支的改动。
 > 这会生成一个新的提交，用来反向取消那次合并。
 
@@ -219,7 +205,6 @@ git revert -m 1 abc1234
 ```bash
 git push origin master
 ```
-
 ---
 
 #### 🧨 情况 2：回滚到某个稳定版本（比如上一个成功的 commit）
@@ -229,14 +214,12 @@ git push origin master
 ```bash
 git log --oneline
 ```
-
 找到一个稳定版本（假设是 `789abcd`），然后执行：
 
 ```bash
 git reset --hard 789abcd
 git push origin master --force
 ```
-
 > **⚠️ 警告：**
 > 这种方法会重写远程历史（危险操作），必须 **确保团队成员知道**，否则他们本地的 master 会混乱。
 
@@ -249,7 +232,6 @@ git push origin master --force
   ```bash
   git pull origin master
   ```
-
   保证自己的分支基于最新的主干。
 * 命名规范化：
 
@@ -266,7 +248,6 @@ git push origin master --force
   fix: correct user token expiry
   refactor: simplify session handling
   ```
-
 ---
 
 ## 七、✅ 总结：完整命令流程复盘
@@ -277,7 +258,7 @@ git push origin master --force
 | 员工   | 创建分支     | `git checkout -b feature/add-login-api`                                                    |
 | 员工   | 开发提交     | `git add . && git commit -m "feat: add login api"`                                         |
 | 员工   | 推送分支     | `git push origin feature/add-login-api`                                                    |
-| 员工   | 发起 MR    | （网页操作）                                                                                     |
+| 员工   | 发起 MR    |（网页操作）                                                                                     |
 | 技术经理 | 拉取更新     | `git fetch origin`                                                                         |
 | 技术经理 | 检查分支     | `git checkout feature/add-login-api`                                                       |
 | 技术经理 | 查看差异     | `git diff master`                                                                          |
@@ -285,4 +266,3 @@ git push origin master --force
 | 技术经理 | 推送主干     | `git push origin master`                                                                   |
 | 技术经理 | 清理分支     | `git branch -d feature/add-login-api && git push origin --delete feature/add-login-api`    |
 | 技术经理 | 回滚合并（如需） | `git revert -m 1 <merge_commit_id>`                                                        |
-

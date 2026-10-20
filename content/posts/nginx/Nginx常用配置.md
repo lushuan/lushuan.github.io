@@ -20,7 +20,7 @@ summary: "系统整理 Nginx 常用命令、常用模块与核心配置，并给
 <!--more-->
 
 ## 一、背景
-整理在使用 Nginx 过程中频繁使用的Nginx 常用配置，另外补充一些常用命令和解决方案
+整理在使用 Nginx 过程中频繁使用的 Nginx 常用配置，另外补充一些常用命令和解决方案
 
 ## 二、Nginx 命令行常用命令
 - nginx -s reload # 向主进程发送信号，重新加载配置文件，热重启
@@ -31,7 +31,7 @@ summary: "系统整理 Nginx 常用命令、常用模块与核心配置，并给
 - nginx -t -c <配置路径> # 检查配置是否有问题，如果已经在配置目录，则不需要 - c
 
 ## 三、常用模块
-nginx模块分为两种，官方和第三方，我们通过命令 nginx -V 查看 nginx已经安装的模块
+Nginx 模块分为两种，官方和第三方，我们通过命令 nginx -V 查看 Nginx 已经安装的模块
 ```
 [root@www ~]# nginx -V
 nginx version: nginx/1.20.1
@@ -42,30 +42,29 @@ configure arguments: --prefix=/usr/share/nginx --sbin-path=/usr/sbin/nginx --mod
 
 ```
 
-| Nginx模块名称               | 模块作用                                                     |
+| Nginx 模块名称               | 模块作用                                                     |
 | --------------------------- | ------------------------------------------------------------ |
-| ngx_http_access_module      | 四层基于IP的访问控制，可以通过匹配客户端源IP地址进行限制     |
-| ngx_http_auth_basic_module  | 状态页，使用basic机制进行用户认证，在编译安装nginx的时候需要添加编译参数--withhttp_stub_status_module，否则配置完成之后监测时会提示语法错误 |
+| ngx_http_access_module      | 四层基于 IP 的访问控制，可以通过匹配客户端源 IP 地址进行限制     |
+| ngx_http_auth_basic_module  | 状态页，使用 basic 机制进行用户认证，在编译安装 Nginx 的时候需要添加编译参数--withhttp_stub_status_module，否则配置完成之后监测时会提示语法错误 |
 | ngx_http_stub_status_module | 状态统计模块                                                 |
 | ngx_http_gzip_module        | 文件的压缩功能                                               |
 | ngx_http_gzip_static_module | 静态压缩模块                                                 |
-| ngx_http_ssl_module         | nginx 的https 功能                                           |
-| ngx_http_rewrite_module     | 重定向模块，解析和处理rewrite请求                            |
+| ngx_http_ssl_module         | Nginx 的 HTTPS 功能                                           |
+| ngx_http_rewrite_module     | 重定向模块，解析和处理 rewrite 请求                            |
 | ngx_http_referer_module     | 防盗链功能，基于访问安全考虑                                 |
-| ngx_http_proxy_module       | 将客户端的请求以http协议转发至指定服务器进行处理             |
-| ngx_stream_proxy_module     | tcp负载，将客户端的请求以tcp协议转发至指定服务器处理         |
-| ngx_http_fastcgi_module     | 将客户端对php的请求以fastcgi协议转发至指定服务器处理         |
-| ngx_http_uwsgi_module       | 将客户端对Python的请求以uwsgi协议转发至指定服务器处理        |
-| ngx_http_headers_module     | 可以实现对头部报文添加指定的key与值                          |
+| ngx_http_proxy_module       | 将客户端的请求以 HTTP 协议转发至指定服务器进行处理             |
+| ngx_stream_proxy_module     | TCP 负载，将客户端的请求以 TCP 协议转发至指定服务器处理         |
+| ngx_http_fastcgi_module     | 将客户端对 php 的请求以 fastcgi 协议转发至指定服务器处理         |
+| ngx_http_uwsgi_module       | 将客户端对 Python 的请求以 uwsgi 协议转发至指定服务器处理        |
+| ngx_http_headers_module     | 可以实现对头部报文添加指定的 key 与值                          |
 | ngx_http_upstream_module    | 负载均衡模块，提供服务器分组转发、权重分配、状态监测、调度算法等高级功能 |
 | ngx_stream_upstream_module  | 后端服务器分组转发、权重分配、状态监测、调度算法等高级功能   |
-| ngx_http_fastcgi_module     | 实现通过fastcgi协议将指定的客户端请求转发至php-fpm处理       |
-| ngx_http_flv_module         | 为flv伪流媒体服务端提供支持                                  |
+| ngx_http_fastcgi_module     | 实现通过 fastcgi 协议将指定的客户端请求转发至 php-fpm 处理       |
+| ngx_http_flv_module         | 为 flv 伪流媒体服务端提供支持                                  |
 
 ## 四、Nginx 核心配置
 ### 配置块嵌套
 ![nginx-configuration-inner](/images/nginx/nginx-configuration-inner.png "配置块嵌套")
-
 
 ### Nginx 默认配置文件
 ```
@@ -134,12 +133,12 @@ http {
 ```
 - main: 全局设置
 - events: 配置影响 Nginx 服务器或与用户的网络连接
-- http:http 模块设置
+- HTTP:HTTP 模块设置
 - upstream: 负载均衡设置
-- server:http 服务器配置，一个 http 模块中可以有多个 server 模块
-- location:url 匹配配置，一个 server 模块中可以包含多个 location 模块
+- server:HTTP 服务器配置，一个 HTTP 模块中可以有多个 server 模块
+- location:URL 匹配配置，一个 server 模块中可以包含多个 location 模块
 
-一个 nginx 配置文件的结构就像 nginx.conf 显示的那样，配置文件的语法规则：
+一个 Nginx 配置文件的结构就像 nginx.conf 显示的那样，配置文件的语法规则：
 
 1. 配置文件由模块组成
 2. 使用#添加注释
@@ -148,21 +147,20 @@ http {
 5. 每一条语句结尾必须是分号结束
 6. 以区段形式的配置参数，需要有闭合的花括号 {}
 7. 不同作用域的配置参数，不能瞎嵌套
-    - server{}是用于定义nginx的 http核心模块功能的子配置，必须放置在http{}括号中
-    - 写在http{}外层，与其同级，语法报错
-8. include配置参数：`include /etc/nginx/default.d/*.conf;`
+    - server{}是用于定义 Nginx 的 HTTP 核心模块功能的子配置，必须放置在 HTTP{}括号中
+    - 写在 HTTP{}外层，与其同级，语法报错
+8. include 配置参数：`include /etc/nginx/default.d/*.conf;`
    - 导入外部的配置文件，优化，简化主配置文件的格式
-   - http{}利用include导入外部的 server{}配置
-   - include得写在http{}花括号内，才表示给这个区域导入外部的配置文件
-   - 只针对http{}区域生效
+   - HTTP{}利用 include 导入外部的 server{}配置
+   - include 得写在 HTTP{}花括号内，才表示给这个区域导入外部的配置文件
+   - 只针对 HTTP{}区域生效
 
-### Http Location 指令模块
+### HTTP Location 指令模块
 
 location 是 `ngx_http_core_module` 核心模块下的指令，并且是最常用的指令，这里做一下整理记录
 
-
 ![nginx-location-match-uri](/images/nginx/nginx-location-match-uri.png "location 匹配规则")
-指令的Location
+指令的 Location
 ```
 Syntax:	location [ = | ~ | ~* | ^~ ] uri { ... }
 location @name { ... }
@@ -195,19 +193,19 @@ location ~* \.(gif|jpg|jpeg)$ {
 }
 ```
 {{< admonition type=example >}}
-" / "请求将匹配配置A， " /index.html "请求将匹配配置B， " /documents/document.html "请求将匹配配置C， " /images/1.gif "请求将匹配配置D， " /documents/1.jpg "请求将匹配配置E。
+" / "请求将匹配配置 A， " /index.html "请求将匹配配置 B， " /documents/document.html "请求将匹配配置 C， " /images/1.gif "请求将匹配配置 D， " /documents/1.jpg "请求将匹配配置 E。
 {{< /admonition >}}
 
 ## 五、Nginx 场景方案
 ### Nginx 配置动静分离
 #### 什么是动静分离
 - 在 Web 开发中，通常来说，动态资源其实就是指那些后台资源，而静态资源就是指 HTML，JavaScript，CSS，img 等文件。
-- 在使用前后端分离之后，可以很大程度的提升静态资源的访问速度，同时在开发过程中也可以让前后端开发并行可以有效的缩短开发时间，也可以有效的减少联调时间 。
+- 在使用前后端分离之后，可以很大程度的提升静态资源的访问速度，同时在开发过程中也可以让前后端开发并行可以有效的缩短开发时间，也可以有效的减少联调时间。
 - 适合中小型网站
 
 #### 动静分离方案
 - 直接使用不同的域名，把静态资源放在独立的云服务器上，这种方案也是目前比较推崇的。
-- 动态请求和静态文件放在一起，通过 nginx 配置分开
+- 动态请求和静态文件放在一起，通过 Nginx 配置分开
 ```
 server {
   location /www/ {
@@ -220,7 +218,7 @@ server {
   }
 }
 ```
-### nginx 配置反向代理
+### Nginx 配置反向代理
 反向代理常用于不想把端口暴露出去，直接访问域名处理请求。
 ```
 server {
@@ -284,7 +282,7 @@ server {
 }
 ```
 #### 常用负载均衡策略
-**round-robin / 轮询**： 到应用服务器的请求以 round-robin / 轮询的方式被分发
+**round-robin / 轮询**：到应用服务器的请求以 round-robin / 轮询的方式被分发
 ```
 upstream phpServer{
     server 127.0.0.1:9501 weight=3;
@@ -292,7 +290,7 @@ upstream phpServer{
     server 127.0.0.1:9503;
 }
 ```
-在这个配置中，每 5 个新请求将会如下的在应用实例中分派： 3 个请求分派去 9501, 一个去 9502, 另外一个去 9503.
+在这个配置中，每 5 个新请求将会如下的在应用实例中分派： 3 个请求分派去 9501，一个去 9502，另外一个去 9503.
 
 **least-connected / 最少连接**：下一个请求将被分派到活动连接数量最少的服务器
 ```
@@ -305,7 +303,7 @@ upstream phpServer{
 ```
 当某些请求需要更长时间来完成时，最少连接可以更公平的控制应用实例上的负载。
 
-**ip-hash/IP 散列**： 使用 hash 算法来决定下一个请求要选择哪个服务器 (基于客户端 IP 地址)
+**ip-hash/IP 散列**：使用 hash 算法来决定下一个请求要选择哪个服务器（基于客户端 IP 地址）
 ```
 upstream phpServer{
     ip_hash;
@@ -361,7 +359,7 @@ server {
 
 ### URLRewrite 伪静态配置
 能隐藏后端服务器的地址
-- URLRewrite的使用场景
+- URLRewrite 的使用场景
 - 配置方式
 
 ```
@@ -392,20 +390,20 @@ location / {
 ### 配置防盗链
  防盗链本质上是存在自己服务器上的资源，只能由自己的服务器来访问，其实更多的时候网站还是希望自己能够有更多的流量进来，而不是添加防盗链防止别人引用，只是在个别的情况，例如微信公众号文章中的图片不允许别人引用时会添加防盗链
 
-- http协议中的referer
-- nginx 防盗链配置
-- 使用浏览器或curl检测
+- HTTP 协议中的 referer
+- Nginx 防盗链配置
+- 使用浏览器或 curl 检测
 - 返回错误码
 - 返回错误页面
-- 整合rewrite 返回报错图片
+- 整合 rewrite 返回报错图片
 
 防盗链配置
 ```
 valid_referes none | blocked |server_names | strings ...;
 ```
--  none，检测referer 头域不存在的情况
-- blocked,检测referer头域的值被防火墙或者代理服务器删除或伪装的情况。这种情况头域的值不以"http://" 或 "https://" 开头
-- server_names,设置一个或多个URL，检测Referer头域的值是否是这些URL中的某一个
+-  none，检测 referer 头域不存在的情况
+- blocked，检测 referer 头域的值被防火墙或者代理服务器删除或伪装的情况。这种情况头域的值不以"http://" 或 "https://" 开头
+- server_names，设置一个或多个 URL，检测 Referer 头域的值是否是这些 URL 中的某一个
 
 配置示例
 ```
@@ -437,9 +435,9 @@ error_page 500 502 503 504 /50x.html;
 
 ### Nginx 高可用配置
 - 高可用场景及解决方案
-- 安装keepalived
-- 选举方式(优先级配置)
-- 示例节点`192.168.143.101`和`192.168.143.102`,vip `192.168.143.100`
+- 安装 keepalived
+- 选举方式（优先级配置）
+- 示例节点 `192.168.143.101` 和 `192.168.143.102`，vip `192.168.143.100`
 安装
 ```
 # 安装依赖
@@ -447,7 +445,7 @@ $ yum install openssl-devel
 $ yum install keepalived
 $ vim /etc/keepalived/keepalived.conf
 ```
-`192.168.143.101` master 节点keepalived配置
+`192.168.143.101` master 节点 keepalived 配置
 ```
 ! Configuration File for keepalived
 
@@ -471,7 +469,7 @@ vrrp_instance demo_keepalived {
     }
 }
 ```
-`192.168.143.102` backup 节点keepalived配置
+`192.168.143.102` backup 节点 keepalived 配置
 ```
 ! Configuration File for keepalived
 
@@ -497,20 +495,20 @@ vrrp_instance demo_keepalived {
 
 ```
 
-### Nginx https 加密认证访问
-#### https 证书配置
-- https原理
+### Nginx HTTPS 加密认证访问
+#### HTTPS 证书配置
+- HTTPS 原理
  - CA 机构
  - 证书
- - 客户端(浏览器)
+ - 客户端（浏览器）
  - 服务器端
 - 证书自签名
 - 在线证书申请 
 
 #### 证书自签名
-一般是用在内网中，通过openssl进行创建，对于公网还是需要进行申请购买的
+一般是用在内网中，通过 openssl 进行创建，对于公网还是需要进行申请购买的
 
-生产nginx 自签名证书
+生产 Nginx 自签名证书
 ```
 # 命名时作区分使用(个人习惯)
 $ host_ip=192.168.143.101
@@ -533,18 +531,18 @@ $ openssl req -new -key server_${host_ip}.key -out server.csr
 $ openssl x509 -req -days 3650 -in server.csr -CA ca.crt -CAkey server_${host_ip}.key -CAcreateserial -out server_${host_ip}.crt
 ```
 总结：
-1. 生成私钥`server_${host_ip}.key`
-2. 生成没有密码的私钥key(可选)
-3. 自签名的 CA ca.crt 证书，该证书包含CA机构的公钥
-4. 生成证书签名csr请求(CSR)
-5. 公钥验签(签名)
+1. 生成私钥 `server_${host_ip}.key`
+2. 生成没有密码的私钥 key（可选）
+3. 自签名的 CA ca.crt 证书，该证书包含 CA 机构的公钥
+4. 生成证书签名 csr 请求（CSR）
+5. 公钥验签（签名）
 6. 验证证书
 
-- [图形化工具XCA](https://hohnstaedt.de/xca/)
+- [图形化工具 XCA](https://hohnstaedt.de/xca/)
 
-### Nginx 开启http并重定向到https
-#### 开启http
-开启http很简单，直接把listen 80;加到listen 443 ssl;上面去就可以了。或者新加一个server配置，如下：
+### Nginx 开启 HTTP 并重定向到 HTTPS
+#### 开启 HTTP
+开启 HTTP 很简单，直接把 listen 80；加到 listen 443 SSL；上面去就可以了。或者新加一个 server 配置，如下：
 ```
 server {
     listen 443 ssl;
@@ -582,10 +580,10 @@ server {
 }
 
 ```
-#### 重定向到https的两种方式
-要把http重定向到https也很简单，具体可以使用两种配置来实现。
+#### 重定向到 HTTPS 的两种方式
+要把 HTTP 重定向到 HTTPS 也很简单，具体可以使用两种配置来实现。
 
-第一种方式使用return 301如下：
+第一种方式使用 return 301 如下：
 ```
 server {
     listen 80;
@@ -594,7 +592,7 @@ server {
 }
 
 ```
-第二种方式使用rewrite如下：
+第二种方式使用 rewrite 如下：
 ```
 server {
     listen 80;
@@ -603,9 +601,9 @@ server {
 }
 
 ```
-对于return和rewrite的区别，可以阅读这篇文章：[Creating NGINX Rewrite Rules](https://blog.nginx.org/blog/creating-nginx-rewrite-rules)
+对于 return 和 rewrite 的区别，可以阅读这篇文章：[Creating NGINX Rewrite Rules](https://blog.nginx.org/blog/creating-nginx-rewrite-rules)
 
-### nginx 对客户端和上游服务器使用keepalive 配置详解
+### Nginx 对客户端和上游服务器使用 keepalive 配置详解
 Nginx 中的 keepalive 是一种机制，用于在客户端和服务器之间保持连接的活跃状态，从而避免每次请求都需要重新建立 TCP 连接所带来的开销。这可以显著提高性能，尤其是在高延迟网络环境中。以下是对 Nginx 配置 keepalive 的详细介绍。
 
 #### 1. HTTP Keepalive
@@ -616,9 +614,9 @@ Nginx 中的 keepalive 是一种机制，用于在客户端和服务器之间保
   ```nginx
   keepalive_timeout 65;
   ```
-  上面的例子表示如果一个连接在65秒内没有活动，那么它将被关闭。
+  上面的例子表示如果一个连接在 65 秒内没有活动，那么它将被关闭。
 
-- **keepalive_requests**：指定一个 keep-alive 连接上可以服务的最大请求数量。默认情况下这个值是100。
+- **keepalive_requests**：指定一个 keep-alive 连接上可以服务的最大请求数量。默认情况下这个值是 100。
   ```nginx
   keepalive_requests 100;
   ```
@@ -628,7 +626,7 @@ Nginx 中的 keepalive 是一种机制，用于在客户端和服务器之间保
   keepalive_disable msie6;
   ```
 ### 2. Upstream Keepalive
-nginx 对上游服务器使用keepalive 配置详解
+Nginx 对上游服务器使用 keepalive 配置详解
 
 当与上游服务器（如应用服务器）通信时，也可以使用 keepalive 来优化连接。这需要通过 `upstream` 块进行配置，并且需要使用 `keepalive` 指令来指定要缓存的空闲 keepalive 连接数。
 
@@ -659,23 +657,23 @@ server {
 通过适当的配置，Nginx 的 keepalive 功能可以帮助提升网站或应用的响应速度和整体性能。
 
 ### Nginx 内存与文件缓冲区
-Nginx 作为一款高性能的HTTP和反向代理服务器，其处理请求的能力很大程度上依赖于其对内存和文件缓冲区的有效管理。下面介绍Nginx反向代理的内存与文件缓冲区的核心流程。
+Nginx 作为一款高性能的 HTTP 和反向代理服务器，其处理请求的能力很大程度上依赖于其对内存和文件缓冲区的有效管理。下面介绍 Nginx 反向代理的内存与文件缓冲区的核心流程。
 
 #### Header 缓冲区
 
-- **proxy_buffer_size**：这个指令用于设置读取来自后端服务器响应的第一部分（通常包括响应头）的缓冲区大小。由于响应头可能包含一些较大的Cookie或其它元数据，适当调整这个值可以确保头部信息能够被完整地缓存而不会导致额外的磁盘I/O操作。
+- **proxy_buffer_size**：这个指令用于设置读取来自后端服务器响应的第一部分（通常包括响应头）的缓冲区大小。由于响应头可能包含一些较大的 Cookie 或其它元数据，适当调整这个值可以确保头部信息能够被完整地缓存而不会导致额外的磁盘 I/O 操作。
 
 #### Body 缓冲区
 
-- **proxy_buffering on;**：启用或禁用缓冲功能。当开启时，Nginx会尝试先将从上游服务器接收到的数据存储到由`proxy_buffers`指定的内存缓冲区中。如果响应数据量超过了内存缓冲区容量，则超出部分会被写入由`proxy_temp_path`定义的临时文件中。若关闭(`off`)，则所有响应内容都将直接发送给客户端，而不经过任何缓冲，这可能会增加客户端等待时间并减少服务器性能。
+- **proxy_buffering on;**：启用或禁用缓冲功能。当开启时，Nginx 会尝试先将从上游服务器接收到的数据存储到由 `proxy_buffers` 指定的内存缓冲区中。如果响应数据量超过了内存缓冲区容量，则超出部分会被写入由 `proxy_temp_path` 定义的临时文件中。若关闭（`off`），则所有响应内容都将直接发送给客户端，而不经过任何缓冲，这可能会增加客户端等待时间并减少服务器性能。
 
-- **proxy_buffers 32 64k;**：此指令定义了用于存储响应体的缓冲区数量及其大小。在这个例子中，它表示分配了32个每个大小为64KB的缓冲块来保存响应体数据。合理的配置可以根据预期的响应体大小及系统资源状况进行调整，以优化性能。
+- **proxy_buffers 32 64k;**：此指令定义了用于存储响应体的缓冲区数量及其大小。在这个例子中，它表示分配了 32 个每个大小为 64KB 的缓冲块来保存响应体数据。合理的配置可以根据预期的响应体大小及系统资源状况进行调整，以优化性能。
 
-- **proxy_max_temp_file_size 1G;**：当响应体过大以至于超过内存缓冲区容量时，Nginx会将多余的数据写入临时文件。该参数限制了这些临时文件的最大总尺寸，默认情况下是1GB。如果达到这个限制，Nginx将停止向磁盘写入新的数据，并开始直接将剩余的响应流式传输给客户端。
+- **proxy_max_temp_file_size 1G;**：当响应体过大以至于超过内存缓冲区容量时，Nginx 会将多余的数据写入临时文件。该参数限制了这些临时文件的最大总尺寸，默认情况下是 1GB。如果达到这个限制，Nginx 将停止向磁盘写入新的数据，并开始直接将剩余的响应流式传输给客户端。
 
-- **proxy_temp_file_write_size 8k;**：控制一次写入临时文件的数据量。这里的例子表明每次写操作的大小被设定为8KB。合理设置这个值有助于平衡磁盘I/O负载，尤其是在处理大量并发请求时尤为重要。
+- **proxy_temp_file_write_size 8k;**：控制一次写入临时文件的数据量。这里的例子表明每次写操作的大小被设定为 8KB。合理设置这个值有助于平衡磁盘 I/O 负载，尤其是在处理大量并发请求时尤为重要。
 
-通过上述配置，Nginx能有效地管理反向代理过程中的数据流动，既保证了快速响应又能有效利用服务器资源。需要注意的是，实际应用中应根据具体情况（如服务器硬件条件、预计的流量规模等）调整这些参数，以实现最佳性能。
+通过上述配置，Nginx 能有效地管理反向代理过程中的数据流动，既保证了快速响应又能有效利用服务器资源。需要注意的是，实际应用中应根据具体情况（如服务器硬件条件、预计的流量规模等）调整这些参数，以实现最佳性能。
 
 **示例**
 ```
@@ -716,13 +714,13 @@ http {
 
 配置解释：
 
-- `proxy_buffer_size 128k;`：增大了header部分的缓冲区大小到128KB，适用于包含较大头部信息的情况。
-- `proxy_buffering on;`：启用缓冲功能。这意味着Nginx会尝试先将从后端服务器接收到的数据存储在内存中，而不是直接传递给客户端。
-- `proxy_buffers 32 64k;`：设置了32块每块64KB大小的缓冲区来存储响应体内容。这样总共提供了2MB（32*64KB）的内存空间来缓存响应体数据。
-- `proxy_max_temp_file_size 1G;`：当响应体太大以至于超过内存缓冲区容量时，Nginx会将超出的数据写入磁盘上的临时文件，此设置限制了这些临时文件的最大总尺寸为1GB。
-- `proxy_temp_file_write_size 8k;`：控制了一次写入磁盘临时文件的数据量为8KB，有助于平衡磁盘I/O操作。
+- `proxy_buffer_size 128k;`：增大了 header 部分的缓冲区大小到 128KB，适用于包含较大头部信息的情况。
+- `proxy_buffering on;`：启用缓冲功能。这意味着 Nginx 会尝试先将从后端服务器接收到的数据存储在内存中，而不是直接传递给客户端。
+- `proxy_buffers 32 64k;`：设置了 32 块每块 64KB 大小的缓冲区来存储响应体内容。这样总共提供了 2MB（32*64KB）的内存空间来缓存响应体数据。
+- `proxy_max_temp_file_size 1G;`：当响应体太大以至于超过内存缓冲区容量时，Nginx 会将超出的数据写入磁盘上的临时文件，此设置限制了这些临时文件的最大总尺寸为 1GB。
+- `proxy_temp_file_write_size 8k;`：控制了一次写入磁盘临时文件的数据量为 8KB，有助于平衡磁盘 I/O 操作。
 
-这个配置实例展示了如何使用上述参数来优化Nginx作为反向代理时的性能表现。根据实际情况，比如后端服务响应的数据量、服务器硬件资源等，你可以适当调整这些数值以达到最佳效果。
+这个配置实例展示了如何使用上述参数来优化 Nginx 作为反向代理时的性能表现。根据实际情况，比如后端服务响应的数据量、服务器硬件资源等，你可以适当调整这些数值以达到最佳效果。
 
 ### Nginx 对客户端的限制
 Nginx 提供了多种配置选项来限制客户端请求，包括对请求体大小、头部大小、超时时间等方面的控制。以下是对你提到的关键词进行补充并给出完整释义，以及一个配置示例。
@@ -731,15 +729,15 @@ Nginx 提供了多种配置选项来限制客户端请求，包括对请求体�
 
 - **client_body_buffer_size**：设置用于读取客户端请求体（body）的缓冲区大小。如果请求体超过了这个缓冲区大小，数据将被写入磁盘上的临时文件。这对于处理大文件上传等场景非常重要。
   
-- **client_header_buffer_size**：设置用于读取客户端请求头（header）的缓冲区大小。大多数情况下，默认值足以满足需求，但如果客户端发送非常大的请求头（如包含大量Cookie或长URL），则可能需要增加此值。
+- **client_header_buffer_size**：设置用于读取客户端请求头（header）的缓冲区大小。大多数情况下，默认值足以满足需求，但如果客户端发送非常大的请求头（如包含大量 Cookie 或长 URL），则可能需要增加此值。
   
-- **client_body_temp_path**：指定当请求体超过`client_body_buffer_size`时，Nginx将请求体数据写入磁盘的临时文件存储路径。合理设置可以避免系统默认临时目录空间不足的问题。
+- **client_body_temp_path**：指定当请求体超过 `client_body_buffer_size` 时，Nginx 将请求体数据写入磁盘的临时文件存储路径。合理设置可以避免系统默认临时目录空间不足的问题。
   
-- **client_max_body_size 1000M;**：定义允许客户端请求的最大主体大小。如果请求体超过这个值，Nginx会返回413 (Request Entity Too Large)错误。设置为0可禁用检查。
+- **client_max_body_size 1000M;**：定义允许客户端请求的最大主体大小。如果请求体超过这个值，Nginx 会返回 413（Request Entity Too Large）错误。设置为 0 可禁用检查。
   
-- **client_body_timeout**：设置等待客户端发送请求体的超时时间。如果在设定的时间内没有收到完整的请求体，Nginx将关闭连接。
+- **client_body_timeout**：设置等待客户端发送请求体的超时时间。如果在设定的时间内没有收到完整的请求体，Nginx 将关闭连接。
   
-- **client_header_timeout**：设置等待客户端发送请求头的超时时间。如果在这个时间内没有收到完整的请求头，Nginx也将关闭连接。
+- **client_header_timeout**：设置等待客户端发送请求头的超时时间。如果在这个时间内没有收到完整的请求头，Nginx 也将关闭连接。
 
 #### 配置示例
 
@@ -778,14 +776,13 @@ http {
     }
 }
 ```
-
 #### 补充说明
 
-- 对于处理大文件上传的场景，除了调整`client_body_buffer_size`和`client_max_body_size`外，还需要确保服务器有足够的磁盘空间来存放临时文件，并且正确设置了`client_body_temp_path`。
-- `client_body_timeout`和`client_header_timeout`可以根据实际网络状况和应用需求进行调整，以平衡性能和用户体验。
-- 考虑安全性，建议根据实际情况合理设置`client_max_body_size`，防止因过大的请求导致服务器资源耗尽。
+- 对于处理大文件上传的场景，除了调整 `client_body_buffer_size` 和 `client_max_body_size` 外，还需要确保服务器有足够的磁盘空间来存放临时文件，并且正确设置了 `client_body_temp_path`。
+- `client_body_timeout` 和 `client_header_timeout` 可以根据实际网络状况和应用需求进行调整，以平衡性能和用户体验。
+- 考虑安全性，建议根据实际情况合理设置 `client_max_body_size`，防止因过大的请求导致服务器资源耗尽。
 
-### Nginx Gzip压缩
+### Nginx Gzip 压缩
 使用示例
 ```
 http {
@@ -821,11 +818,10 @@ http {
 }
 ```
 
-
 #### Gzip 动态压缩及缺点
-缺点：开启gzip 压缩后，sendfile 零拷贝则会失效
+缺点：开启 gzip 压缩后，sendfile 零拷贝则会失效
 #### Gzip 静态压缩
-静态压缩开始不会导致sendfile 零拷贝失效
+静态压缩开始不会导致 sendfile 零拷贝失效
 
 ### Nginx 配置正向代理与反向代理缓存
 正向代理配置参考
@@ -834,7 +830,7 @@ $ proxy_pass $scheme://$host$request_uri;
 $ resolver 8.8.8.8;
 ```
 
-反向代理缓存proxy_cache配置示例
+反向代理缓存 proxy_cache 配置示例
 ```
 http {
 ...
@@ -866,19 +862,19 @@ proxy_cache_path /ngx_tmp levels=1:2 keys_zone=test_cache:100m inactive=1d max_s
 }
 ```
 
-nginx 反向代理缓存proxy_cache 配置的优点
+Nginx 反向代理缓存 proxy_cache 配置的优点
 
-Nginx的`proxy_cache`配置主要用于实现反向代理缓存，它有多个显著的好处，可以极大地提升Web应用的性能和可靠性：
+Nginx 的 `proxy_cache` 配置主要用于实现反向代理缓存，它有多个显著的好处，可以极大地提升 Web 应用的性能和可靠性：
 
 #### 提高响应速度
 
 - **减少后端服务器负载**：通过缓存静态内容或频繁请求的数据，可以大幅减少后端服务器处理请求的次数，从而提高响应速度。
-- **快速响应用户请求**：对于已经缓存的内容，Nginx可以直接从本地磁盘提供服务，而不需要转发到后端服务器进行处理，这大大加快了响应时间。
+- **快速响应用户请求**：对于已经缓存的内容，Nginx 可以直接从本地磁盘提供服务，而不需要转发到后端服务器进行处理，这大大加快了响应时间。
 
 #### 增强系统的可扩展性和稳定性
 
 - **平滑流量高峰**：在流量高峰期，缓存可以减轻后端服务器的压力，避免因过载导致的服务中断或响应迟缓。
-- **提高可用性**：即使后端服务器暂时不可用（例如由于维护或故障），Nginx也可以继续为用户提供缓存的内容，确保服务的连续性。
+- **提高可用性**：即使后端服务器暂时不可用（例如由于维护或故障），Nginx 也可以继续为用户提供缓存的内容，确保服务的连续性。
 
 #### 优化资源利用
 
@@ -887,15 +883,15 @@ Nginx的`proxy_cache`配置主要用于实现反向代理缓存，它有多个�
 
 #### 灵活的配置选项
 
-- **细粒度控制**：Nginx提供了丰富的指令来控制缓存行为，比如设置缓存的有效期、如何更新缓存、哪些响应应该被缓存等。
+- **细粒度控制**：Nginx 提供了丰富的指令来控制缓存行为，比如设置缓存的有效期、如何更新缓存、哪些响应应该被缓存等。
 - **支持条件缓存**：可以根据请求方法、响应头等多种条件决定是否缓存响应，使得缓存策略更加灵活和精确。
 
 #### 实现简单且高效
 
-- **易于部署和管理**：与应用程序级别的缓存相比，Nginx的反向代理缓存配置相对简单，容易集成到现有架构中。
-- **高效的存储机制**：Nginx采用高效的文件系统存储方式，并支持内存缓存以加速频繁访问的内容。
+- **易于部署和管理**：与应用程序级别的缓存相比，Nginx 的反向代理缓存配置相对简单，容易集成到现有架构中。
+- **高效的存储机制**：Nginx 采用高效的文件系统存储方式，并支持内存缓存以加速频繁访问的内容。
 
-合理地使用Nginx的`proxy_cache`不仅可以显著提升用户体验，还能增强整个系统的稳定性和效率。不过需要注意的是，缓存策略的设计应当考虑到数据的一致性和时效性要求，以免影响到用户的体验或业务逻辑的正确执行。
+合理地使用 Nginx 的 `proxy_cache` 不仅可以显著提升用户体验，还能增强整个系统的稳定性和效率。不过需要注意的是，缓存策略的设计应当考虑到数据的一致性和时效性要求，以免影响到用户的体验或业务逻辑的正确执行。
 
 ### Nginx 配置带宽限制
 Nginx 提供了多种方式来限制带宽，以满足不同的需求场景。这通常用于防止服务器过载、保障服务质量或控制内容分发速度等。下面是一些常见的使用场景以及相应的配置示例。
@@ -922,12 +918,11 @@ server {
     }
 }
 ```
-
-在这个例子中，`limit_rate` 指令设置了每个响应的最大传输速率（这里是100KB/s），而 `limit_rate_after` 则指定了在开始限速之前允许传输的数据量（这里是500KB）。这意味着对于前500KB的数据，不会有任何速率限制，之后的速度将被限制在100KB/s。
+在这个例子中，`limit_rate` 指令设置了每个响应的最大传输速率（这里是 100KB/s），而 `limit_rate_after` 则指定了在开始限速之前允许传输的数据量（这里是 500KB）。这意味着对于前 500KB 的数据，不会有任何速率限制，之后的速度将被限制在 100KB/s。
 
 #### 场景二：基于连接数和请求频率的流量控制
 
-有时，除了限制带宽外，还需要对来自单个IP地址的并发连接数或请求频率进行限制，以防止恶意攻击或滥用资源。
+有时，除了限制带宽外，还需要对来自单个 IP 地址的并发连接数或请求频率进行限制，以防止恶意攻击或滥用资源。
 
 示例配置：
 
@@ -952,8 +947,7 @@ http {
     }
 }
 ```
-
-这里使用了 `limit_req_zone` 和 `limit_req` 来限制每个IP地址的请求频率，同时通过 `limit_rate` 来限制带宽。这样可以有效地保护服务器免受过多请求的影响，同时也控制了数据传输速度。
+这里使用了 `limit_req_zone` 和 `limit_req` 来限制每个 IP 地址的请求频率，同时通过 `limit_rate` 来限制带宽。这样可以有效地保护服务器免受过多请求的影响，同时也控制了数据传输速度。
 
 #### 场景三：针对不同用户组应用不同的带宽限制
 
@@ -979,17 +973,16 @@ server {
     }
 }
 ```
+在这个配置中，我们使用了 `map` 指令根据自定义的 HTTP 头（本例中的 `X-User-Type`）来决定使用哪个下载速率。这使得可以根据用户的类别灵活地调整服务等级。
 
-在这个配置中，我们使用了 `map` 指令根据自定义的HTTP头（本例中的 `X-User-Type`）来决定使用哪个下载速率。这使得可以根据用户的类别灵活地调整服务等级。
-
-这些只是Nginx带宽限制的一些基础应用场景和配置示例。实际部署时，你可能需要根据具体的需求和环境进行适当的调整。
+这些只是 Nginx 带宽限制的一些基础应用场景和配置示例。实际部署时，你可能需要根据具体的需求和环境进行适当的调整。
 
 ### Nginx 并发数限制
 Nginx 的并发限制功能主要用于控制来自单一客户端或一组客户端的连接数，以防止服务器过载或被滥用。通过使用 `limit_conn_zone` 和 `limit_conn` 指令，可以有效地管理资源并确保服务的稳定性。以下是几个常见的使用场景及相应的配置示例。
 
-#### 场景一：限制单个IP地址的最大并发连接数
+#### 场景一：限制单个 IP 地址的最大并发连接数
 
-在Web服务器上，可能会遇到某些用户同时发起大量请求的情况，这可能导致服务器资源耗尽，影响其他用户的访问体验。通过限制每个IP地址的最大并发连接数，可以有效缓解这种问题。
+在 Web 服务器上，可能会遇到某些用户同时发起大量请求的情况，这可能导致服务器资源耗尽，影响其他用户的访问体验。通过限制每个 IP 地址的最大并发连接数，可以有效缓解这种问题。
 
 示例配置：
 
@@ -1011,10 +1004,9 @@ http {
     }
 }
 ```
+在这个例子中，`limit_conn_zone` 使用 `$binary_remote_addr` 变量作为键（即客户端的 IP 地址），并在共享内存区域 `addr` 中保存状态信息，大小为 10MB。然后，在具体的 `location` 块中使用 `limit_conn` 来指定每个 IP 地址允许的最大并发连接数为 10。
 
-在这个例子中，`limit_conn_zone` 使用 `$binary_remote_addr` 变量作为键（即客户端的IP地址），并在共享内存区域 `addr` 中保存状态信息，大小为10MB。然后，在具体的 `location` 块中使用 `limit_conn` 来指定每个IP地址允许的最大并发连接数为10。
-
-#### 场景二：根据不同的URL路径应用不同的并发限制
+#### 场景二：根据不同的 URL 路径应用不同的并发限制
 
 有时需要对不同类型的资源应用不同的并发限制策略。例如，对于静态资源和动态内容可能希望设置不同的最大并发连接数。
 
@@ -1044,8 +1036,7 @@ http {
     }
 }
 ```
-
-此配置为 `/static/` 路径下的请求设置了基于IP地址的并发限制，而为 `/api/` 路径下的请求设置了基于URI的并发限制。
+此配置为 `/static/` 路径下的请求设置了基于 IP 地址的并发限制，而为 `/api/` 路径下的请求设置了基于 URI 的并发限制。
 
 #### 场景三：结合速率限制与并发限制
 
@@ -1077,11 +1068,9 @@ http {
     }
 }
 ```
+这个例子展示了如何同时应用并发限制和速率限制来保护你的 Web 应用。通过这种方式，既可以控制同一时间内的最大连接数，也能平滑请求到达的速率，避免瞬间的大流量冲击。
 
-这个例子展示了如何同时应用并发限制和速率限制来保护你的Web应用。通过这种方式，既可以控制同一时间内的最大连接数，也能平滑请求到达的速率，避免瞬间的大流量冲击。
-
-以上是关于Nginx并发限制的一些典型应用场景及其配置示例。根据实际情况调整这些参数，可以帮助你更好地管理和优化你的Web服务性能。
-
+以上是关于 Nginx 并发限制的一些典型应用场景及其配置示例。根据实际情况调整这些参数，可以帮助你更好地管理和优化你的 Web 服务性能。
 
 ### Nginx 日志管理
 - 应用场景
@@ -1092,7 +1081,7 @@ http {
 [ngx_http_log_module](https://nginx.org/en/docs/http/ngx_http_log_module.html)
 
 #### 日志内存缓冲区
-包日志压缩解压缩与json格式输出样例
+包日志压缩解压缩与 JSON 格式输出样例
 
 示例
 ```
@@ -1107,12 +1096,12 @@ http {
     ...
 }
 ```
-#### json格式输出
-要在Nginx中配置日志格式为JSON输出，你需要定义一个自定义的日志格式，并使用`log_format`指令将其设置为JSON结构。以下是一个示例配置，展示了如何设置Nginx以JSON格式记录访问日志。
+#### JSON 格式输出
+要在 Nginx 中配置日志格式为 JSON 输出，你需要定义一个自定义的日志格式，并使用 `log_format` 指令将其设置为 JSON 结构。以下是一个示例配置，展示了如何设置 Nginx 以 JSON 格式记录访问日志。
 
 示例配置
 
-首先，在你的Nginx配置文件（通常是`nginx.conf`或位于`sites-available`目录下的某个配置文件）中的`http`块内添加如下定义：
+首先，在你的 Nginx 配置文件（通常是 `nginx.conf` 或位于 `sites-available` 目录下的某个配置文件）中的 `http` 块内添加如下定义：
 
 ```nginx
 http {
@@ -1139,16 +1128,15 @@ http {
     }
 }
 ```
-
 **释义**
 
-- **log_format**：这里我们定义了一个名为`json_combined`的日志格式。使用`escape=json`确保所有特殊字符都被正确转义，避免破坏JSON结构。
+- **log_format**：这里我们定义了一个名为 `json_combined` 的日志格式。使用 `escape=json` 确保所有特殊字符都被正确转义，避免破坏 JSON 结构。
 - **字段说明**：
   - `$time_local`: 请求的本地时间。
-  - `$remote_addr`: 客户端IP地址。
+  - `$remote_addr`: 客户端 IP 地址。
   - `$remote_user`: 远程用户（通常用于身份验证；如果没有，则为空）。
   - `$request`: 完整的原始请求行。
-  - `$status`: HTTP响应状态码。
+  - `$status`: HTTP 响应状态码。
   - `$body_bytes_sent`: 发送给客户端的字节数，不包括响应头的大小。
   - `$request_time`: 请求处理时间，单位为秒，精度达到毫秒。
   - `$http_referer`: 来源页面（即用户是从哪个页面链接过来的）。
@@ -1156,7 +1144,7 @@ http {
 
 日志输出样例
 
-基于上述配置，一条典型的Nginx访问日志记录将以如下JSON格式输出到`/var/log/nginx/access.log`文件中：
+基于上述配置，一条典型的 Nginx 访问日志记录将以如下 JSON 格式输出到 `/var/log/nginx/access.log` 文件中：
 
 ```json
 {
@@ -1171,11 +1159,9 @@ http {
   "http_user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
 }
 ```
-
-这个例子展示了一个HTTP GET请求的日志条目，其中包含了请求的各种详细信息。通过将Nginx的日志格式化为JSON，可以更方便地进行日志分析、监控以及与其他系统集成。
+这个例子展示了一个 HTTP GET 请求的日志条目，其中包含了请求的各种详细信息。通过将 Nginx 的日志格式化为 JSON，可以更方便地进行日志分析、监控以及与其他系统集成。
 
 #### 日志切割
-
 
 **日志分隔的必要性**   
 - **避免单个文件过大**：长时间运行会导致日志文件占用过多磁盘空间。
@@ -1185,10 +1171,10 @@ http {
 ---
 
 ##### 使用 `logrotate` 工具（推荐）
-`logrotate` 是Linux系统自带的日志管理工具，支持自动化轮转、压缩和删除旧日志。
+`logrotate` 是 Linux 系统自带的日志管理工具，支持自动化轮转、压缩和删除旧日志。
 
 ###### **步骤：**
-1. **编辑Nginx的logrotate配置文件**  
+1. **编辑 Nginx 的 logrotate 配置文件**  
    通常路径为 `/etc/logrotate.d/nginx`，内容如下：
    ```bash
    /var/log/nginx/*.log {  # 匹配Nginx日志路径
@@ -1213,18 +1199,17 @@ http {
    ```
 
 3. **验证日志分隔**  
-   检查 `/var/log/nginx` 目录是否生成类似 `access.log.1.gz` 的压缩文件，并确认Nginx正常写入新日志。
+   检查 `/var/log/nginx` 目录是否生成类似 `access.log.1.gz` 的压缩文件，并确认 Nginx 正常写入新日志。
 
 ---
 
-
 ##### **关键注意事项**
 1. **权限问题**  
-   - 确保新日志文件所有者（如 `www-data`）与Nginx运行用户一致。
+   - 确保新日志文件所有者（如 `www-data`）与 Nginx 运行用户一致。
    - `logrotate` 配置中使用 `create` 指令设置权限。
 
 2. **信号机制**  
-   - `kill -USR1` 通知Nginx重新打开日志文件，无需重启服务。
+   - `kill -USR1` 通知 Nginx 重新打开日志文件，无需重启服务。
    - 也可用 `nginx -s reopen` 命令实现相同效果。
 
 3. **轮转周期调整**  
@@ -1266,26 +1251,26 @@ http {
 
 ### Nginx upstream 重试机制
 探测上游服务器健康状态
-- 重试机制(被动重试机制和主动重试机制)
+- 重试机制（被动重试机制和主动重试机制）
 - 状态检查
 
-Nginx的`upstream`模块用于定义一组服务器，这些服务器可以是提供相同服务的多个后端实例。Nginx能够根据配置将请求分配给这些上游服务器，并且在某些情况下自动进行重试，这有助于提高系统的可用性和可靠性。
+Nginx 的 `upstream` 模块用于定义一组服务器，这些服务器可以是提供相同服务的多个后端实例。Nginx 能够根据配置将请求分配给这些上游服务器，并且在某些情况下自动进行重试，这有助于提高系统的可用性和可靠性。
 
 #### 被动态式重试机制
 
-当一个请求发送到上游服务器失败时（例如由于超时、连接失败或返回了错误码），Nginx可以根据配置决定是否以及如何重试该请求。这个过程通过`proxy_next_upstream`指令来控制。它允许你指定在什么条件下Nginx应该尝试转发请求到下一个可用的上游服务器。
+当一个请求发送到上游服务器失败时（例如由于超时、连接失败或返回了错误码），Nginx 可以根据配置决定是否以及如何重试该请求。这个过程通过 `proxy_next_upstream` 指令来控制。它允许你指定在什么条件下 Nginx 应该尝试转发请求到下一个可用的上游服务器。
 
 **可用条件包括**
 
 - `error`: 当与服务器建立连接、传递请求或读取响应头时发生错误。
-- `timeout`: 超时发生时（由其他指令如`proxy_connect_timeout`, `proxy_read_timeout`等定义）。
+- `timeout`: 超时发生时（由其他指令如 `proxy_connect_timeout`， `proxy_read_timeout` 等定义）。
 - `invalid_header`: 服务器返回无效响应头。
-- `http_500`, `http_502`, `http_503`, `http_504`: 分别对应HTTP状态码500, 502, 503和504。
-- `non_idempotent`: 默认情况下，只有幂等请求（如GET, HEAD）会被重试。设置此选项可允许非幂等请求（如POST）也被重试。
+- `http_500`， `http_502`， `http_503`， `http_504`: 分别对应 HTTP 状态码 500, 502, 503 和 504。
+- `non_idempotent`: 默认情况下，只有幂等请求（如 GET, HEAD）会被重试。设置此选项可允许非幂等请求（如 POST）也被重试。
 
 示例配置
 
-下面是一个使用`proxy_next_upstream`的例子，展示了如何配置Nginx以实现动态式重试机制：
+下面是一个使用 `proxy_next_upstream` 的例子，展示了如何配置 Nginx 以实现动态式重试机制：
 
 ```nginx
 http {
@@ -1313,28 +1298,25 @@ http {
     }
 }
 ```
-
 在这个示例中
 
-- **upstream** 块定义了一个名为`backend`的组，包含三个后端服务器。最后一个标记为`backup`，这意味着只有在所有非备份服务器都无法使用时才会尝试联系它。
-- 在`location`块内，`proxy_pass`指令指定了要使用的上游服务器组。
-- `proxy_next_upstream`指令设置了在遇到错误、超时或收到特定HTTP状态码（500, 502, 503, 504）时尝试下一个上游服务器。
-- `proxy_next_upstream_timeout`设定了尝试下一个上游服务器的最大等待时间为60秒。
-- `proxy_next_upstream_tries`限制了对每个请求最多尝试3次上游服务器。
+- **upstream** 块定义了一个名为 `backend` 的组，包含三个后端服务器。最后一个标记为 `backup`，这意味着只有在所有非备份服务器都无法使用时才会尝试联系它。
+- 在 `location` 块内，`proxy_pass` 指令指定了要使用的上游服务器组。
+- `proxy_next_upstream` 指令设置了在遇到错误、超时或收到特定 HTTP 状态码（500, 502, 503, 504）时尝试下一个上游服务器。
+- `proxy_next_upstream_timeout` 设定了尝试下一个上游服务器的最大等待时间为 60 秒。
+- `proxy_next_upstream_tries` 限制了对每个请求最多尝试 3 次上游服务器。
 
-通过这种方式配置，Nginx可以在面对网络波动或其他临时性故障时更加健壮，确保用户请求尽可能得到成功处理。这对于构建高可用性的Web应用至关重要。
+通过这种方式配置，Nginx 可以在面对网络波动或其他临时性故障时更加健壮，确保用户请求尽可能得到成功处理。这对于构建高可用性的 Web 应用至关重要。
 
 #### 主动重试机制
-主动健康检查使用tengine模块
+主动健康检查使用 tengine 模块
 
-tengine版本(已应用到淘宝网上了)  
+tengine 版本（已应用到淘宝网上了）  
 https://github.com/yaoweibin/nginx_upstream_check_module
 
-nginx 商业版插件  
+Nginx 商业版插件  
 https://nginx.org/en/docs/http/ngx_http_upstream_hc_module.html
-
-
 
 ## 六、参考
 - https://nginx.org/en/docs/http/ngx_http_core_module.html#http
-- [Nginx Config](https://www.digitalocean.com/community/tools/nginx?global.app.lang=zhCN) 可以快速方便获得nginx的配置
+- [Nginx Config](https://www.digitalocean.com/community/tools/nginx?global.app.lang=zhCN) 可以快速方便获得 Nginx 的配置

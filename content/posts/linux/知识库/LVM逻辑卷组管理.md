@@ -15,64 +15,64 @@ featuredImage: "/images/scenery/cover-19.jpg"
 summary: "讲解 LVM 逻辑卷管理的核心概念（PV/VG/LV）、工作原理与动态扩缩容特点，并用通俗类比和完整操作示例演示磁盘分区到逻辑卷创建的全过程。"
 ---
 
-LVM（Logical Volume Manager）可将多个硬盘和分区组成逻辑卷统一管理，动态扩缩空间大小。本文讲解 PV、VG、LV 三个核心概念及其关系、LVM 的工作原理与特点，并用"小麦磨面粉"的通俗类比和 k8s 部署中的实际操作示例，演示从磁盘分区到逻辑卷创建使用的全过程。
+LVM（Logical Volume Manager）可将多个硬盘和分区组成逻辑卷统一管理，动态扩缩空间大小。本文讲解 PV、VG、LV 三个核心概念及其关系、LVM 的工作原理与特点，并用"小麦磨面粉"的通俗类比和 K8s 部署中的实际操作示例，演示从磁盘分区到逻辑卷创建使用的全过程。
 
 <!--more-->
 
 ## 一、背景
-部署 k8s 时需要对磁盘进行分区划分，正常情况下集成是直接给创建好的，现场在沟通过程中只提供了一块磁盘。
+部署 K8s 时需要对磁盘进行分区划分，正常情况下集成是直接给创建好的，现场在沟通过程中只提供了一块磁盘。
 本篇文章记录一下磁盘分区划分的原理和步骤，尽量选择大白话。
 
 ![lvm-1](/images/linux/lvm-1.jpg "lvm")
 
-## 二、lvm 介绍
-LVM——全称Logical Volume Manager，可以将多个硬盘和硬盘分区做成一个逻辑卷，并把这个逻辑卷作为一个整体来统一管理，动态调整分区的空间大小，提高磁盘管理灵活性。
+## 二、LVM 介绍
+LVM——全称 Logical Volume Manager，可以将多个硬盘和硬盘分区做成一个逻辑卷，并把这个逻辑卷作为一个整体来统一管理，动态调整分区的空间大小，提高磁盘管理灵活性。
 
-在安装CentOS 7的过程中选择自动分区时，默认就是以LVM的方案安装的系统。
+在安装 CentOS 7 的过程中选择自动分区时，默认就是以 LVM 的方案安装的系统。
 
-但是/boot分区必须独立出来，不能基于LVM创建。
+但是/boot 分区必须独立出来，不能基于 LVM 创建。
 
 ## 三、三个概念
 
-### PV(Physical Volume) 物理卷
-> 物理卷，Physical Volume，是LVM机制的基本存储设备，通常对应一个普通分区或是整个硬盘。  
-创建物理卷时，会在分区或磁盘头部创建一个用于记录LVM属性的保留区块，并把存储空间分割成默认大小为4MB的基本单元（Physical Extend，PE），从而构成物理卷。  
-普通分区先转换分区类型为8e；整块硬盘，可以将所有的空间划分为一个主分区再做调整
+### PV（Physical Volume） 物理卷
+> 物理卷，Physical Volume，是 LVM 机制的基本存储设备，通常对应一个普通分区或是整个硬盘。  
+创建物理卷时，会在分区或磁盘头部创建一个用于记录 LVM 属性的保留区块，并把存储空间分割成默认大小为 4MB 的基本单元（Physical Extend，PE），从而构成物理卷。  
+普通分区先转换分区类型为 8e；整块硬盘，可以将所有的空间划分为一个主分区再做调整
 
-### VG(Volume Group) 卷组
-卷组，Volume Group，是由一个或多个物理卷组成的一个整体。可以动态添加、移除物理卷，创建时可以指定PE大小
-### LV(Logical Volume) 逻辑卷
+### VG（Volume Group） 卷组
+卷组，Volume Group，是由一个或多个物理卷组成的一个整体。可以动态添加、移除物理卷，创建时可以指定 PE 大小
+### LV（Logical Volume） 逻辑卷
 逻辑卷，Logical Volume，建立在卷组之上，与物理卷没有直接关系。格式化后，即可挂载使用。
 
 ## 四、三者关系
 
 ![lvm](/images/linux/lvm.png "lvm")
 
-## 五、lvm特点
-LVM最大的特点就是可以对磁盘进行动态管理。因为逻辑卷的大小是可以动态调整的，而且不会丢失现有的数据。我们如果新增加了硬盘，其也不会改变现有上层的逻辑卷。作为一个动态磁盘管理机制，逻辑卷技术大大提高了磁盘管理的灵活性！
+## 五、LVM 特点
+LVM 最大的特点就是可以对磁盘进行动态管理。因为逻辑卷的大小是可以动态调整的，而且不会丢失现有的数据。我们如果新增加了硬盘，其也不会改变现有上层的逻辑卷。作为一个动态磁盘管理机制，逻辑卷技术大大提高了磁盘管理的灵活性！
 
 ## 六、工作原理
-1. 物理磁盘被格式化为PV，空间被划分为一个个的PE
-1. 不同的PV加入到同一个VG中，不同PV的PE全部进入到了VG的PE池内
-1. LV基于PE创建，大小为PE的整数倍，组成LV的PE可能来自不同的物理磁盘
-1. LV现在就直接可以格式化后挂载使用了
-1. LV的扩充缩减实际上就是增加或减少组成该LV的PE数量，其过程不会丢失原始数据
+1. 物理磁盘被格式化为 PV，空间被划分为一个个的 PE
+1. 不同的 PV 加入到同一个 VG 中，不同 PV 的 PE 全部进入到了 VG 的 PE 池内
+1. LV 基于 PE 创建，大小为 PE 的整数倍，组成 LV 的 PE 可能来自不同的物理磁盘
+1. LV 现在就直接可以格式化后挂载使用了
+1. LV 的扩充缩减实际上就是增加或减少组成该 LV 的 PE 数量，其过程不会丢失原始数据
 
 ## 七、讲个故事
-上面工作原理可以做一个类比，集成提供的挂载磁盘可以理解为一堆小麦，pv的作用是将这一堆小麦磨成面粉，
-不管挂载多少个磁盘pv都可以做成面粉，一堆一堆的面粉(pv格式化的各个磁盘)可以加入到一个VG中，
-这个VG可以理解为一个供销社将所有的面粉进行了纳管，当然也可以不同的面粉划分给不同的供销社,
-意思就是四块磁盘A、B、C、D 通过打面机pv做成了四份面粉，A、C份面粉卖给了大脚供销社VG-DJ,C、D两份面粉卖给了小脚供销社
-VG-XJ,现在亚洲舞王尼古拉斯赵四想要吃馒头，就选择了去大脚供销社去购买面粉，打算购买50斤面粉。这50斤面粉就是供销社提供的lv,
-lv 一小份的面粉是来自于vg供销社而不是pv 面粉制造机器。下面会给出示例从小麦生产到赵四购买面粉。
+上面工作原理可以做一个类比，集成提供的挂载磁盘可以理解为一堆小麦，pv 的作用是将这一堆小麦磨成面粉，
+不管挂载多少个磁盘 pv 都可以做成面粉，一堆一堆的面粉（pv 格式化的各个磁盘）可以加入到一个 VG 中，
+这个 VG 可以理解为一个供销社将所有的面粉进行了纳管，当然也可以不同的面粉划分给不同的供销社，
+意思就是四块磁盘 A、B、C、D 通过打面机 pv 做成了四份面粉，A、C 份面粉卖给了大脚供销社 VG-DJ,C、D 两份面粉卖给了小脚供销社
+VG-XJ，现在亚洲舞王尼古拉斯赵四想要吃馒头，就选择了去大脚供销社去购买面粉，打算购买 50 斤面粉。这 50 斤面粉就是供销社提供的 lv,
+lv 一小份的面粉是来自于 vg 供销社而不是 pv 面粉制造机器。下面会给出示例从小麦生产到赵四购买面粉。
 
 ## 八、操作
 ![lvm-2](/images/linux/lvm-2.jpg "lvm")
 
 ### 分区操作
-1、 查看磁盘  
+1、查看磁盘  
 
-通过`fdisk -l`可以看出集成提供了一块600多G的磁盘 `/dev/xvdc`
+通过 `fdisk -l` 可以看出集成提供了一块 600 多 G 的磁盘 `/dev/xvdc`
 ```shell
 $ fdisk -l
 ....
@@ -81,16 +81,16 @@ Units = sectors of 1 * 512 = 512 bytes
 Sector size (logical/physical): 512 bytes / 512 bytes
 I/O size (minimum/optimal): 512 bytes / 512 bytes
 ```
-2、 创建物理卷  
+2、创建物理卷  
 
-pv 将小麦加工成面粉，原理是物理磁盘被格式化为PV，空间被划分为一个个的PE
+pv 将小麦加工成面粉，原理是物理磁盘被格式化为 PV，空间被划分为一个个的 PE
 ```shell
 $ pvcreate /dev/xvdc
   Physical volume "/dev/xvdc" successfully created
 ```
-3、 创建逻辑卷组  
+3、创建逻辑卷组  
 
-将面粉运输至大脚供销社vgdata,vgdata 是自定义的逻辑卷组名
+将面粉运输至大脚供销社 vgdata,vgdata 是自定义的逻辑卷组名
 ```shell
 $ vgcreate vgdata /dev/xvdc
   Volume group "vgdata" successfully created
@@ -102,8 +102,8 @@ $ vgs
 ```
 4、创建逻辑卷  
 
-可以看得出来逻辑卷的创建是来自于逻辑卷组vg,后面的扩容也是从逻辑卷组进行扩容，这个步骤可以比喻为赵四去大脚超市
-购买了35斤的面粉
+可以看得出来逻辑卷的创建是来自于逻辑卷组 vg，后面的扩容也是从逻辑卷组进行扩容，这个步骤可以比喻为赵四去大脚超市
+购买了 35 斤的面粉
 ```yaml
 mkdir -p /var/lib/kubelet
 lvcreate -n lvkubelet -L +35G vgdata
@@ -135,7 +135,7 @@ Linux 系统使用逻辑卷来模拟物理分区，并在其中保存文件系�
 | -r  | --readahead  | 设置预读扇区数                       |
 | -R  | --regionsize | 指定将镜像分成多大的区                   |
 | -s  | snapshot     | 创建快照逻辑卷                       |
-| -Z  | --zero       | 将新逻辑卷的前1 KB数据设置为零             |
+| -Z  | --zero       | 将新逻辑卷的前 1 KB 数据设置为零             |
 | -m  | --mirrors    | 创建逻辑卷镜像                       |
 | 空   | --minor      | 指定设备的次设备号                     |
 
@@ -149,7 +149,7 @@ lvcreate -n lvtest -L +32G Vol1
 ## 十、创建文件系统
 此时只有逻辑卷没有文件系统，需要给逻辑卷指定文件系统
 
-这里的文件系统指定的是ext4，公司生产环境中使用的是 xfs 文件系统如`mkfs.xfs /dev/vgdata/lvkubelet`，以下示例使用的是ext4文件系统，不同文件系统的差别请自行了解，这里不做说明
+这里的文件系统指定的是 ext4，公司生产环境中使用的是 xfs 文件系统如 `mkfs.xfs /dev/vgdata/lvkubelet`，以下示例使用的是 ext4 文件系统，不同文件系统的差别请自行了解，这里不做说明
 ```shell
 sudo mkfs.ext4 /dev/Vol1/lvtest 
 mke2fs 1.41.12 (17-May-2010) 
@@ -187,7 +187,7 @@ sudo mount /dev/Vol1/lvtest /mnt/my_partition
 echo "/dev/mapper/$vgname-lvdocker /var/lib/docker xfs defaults 0 0" >> /etc/fstab
 ```
 
-### 修改LVM
+### 修改 LVM
 | 命 令      | 功 能       |
 |----------|-----------|
 | vgchange | 激活和禁用卷组   |
@@ -197,7 +197,7 @@ echo "/dev/mapper/$vgname-lvdocker /var/lib/docker xfs defaults 0 0" >> /etc/fst
 | lvextend | 增加逻辑卷的大小  |
 | lvreduce | 减小逻辑卷的大小  |
 
-通过以上命令可以完全控制你的LVM环境
+通过以上命令可以完全控制你的 LVM 环境
 
 如扩容
 
@@ -213,16 +213,16 @@ df -h
 
 ## 十一、LVM 命令汇总
 
-|功能|pv命令|vg命令|lv命令|
+|功能|pv 命令|vg 命令|lv 命令|
 |---|---|---|---|
 |扫描|pvscan|vgscan|lvscan|
-|Create创建|pvcreate|vgcreate|lvcreate|
-|Display显示|pvdisplay|vgdisplay|lvdisplay|
-|Remove移除|pvremove|vgremove|lvremove|
-|Extend扩展|-|vgextend|lvextend|
-|Reduce减少|-|vgreduce|lvreduce|
+|Create 创建|pvcreate|vgcreate|lvcreate|
+|Display 显示|pvdisplay|vgdisplay|lvdisplay|
+|Remove 移除|pvremove|vgremove|lvremove|
+|Extend 扩展|-|vgextend|lvextend|
+|Reduce 减少|-|vgreduce|lvreduce|
 
-关于收缩 LVM 逻辑卷，可以参考上面的命令lvreduce。这会涉及到数据安全性问题，谨慎使用
+关于收缩 LVM 逻辑卷，可以参考上面的命令 lvreduce。这会涉及到数据安全性问题，谨慎使用
 
 ## 十二、小结
 就是三步走，创建物理卷，创建卷组，创建逻辑卷，然后格式化并挂载使用。扩容的话，没有挂载使用，就正常扩，然后格式化挂载，已经挂载使用了，扩容后在线调整生效。

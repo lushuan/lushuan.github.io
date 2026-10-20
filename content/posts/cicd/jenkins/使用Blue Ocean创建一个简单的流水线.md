@@ -21,22 +21,22 @@ Blue Ocean 是 Jenkins 的开源子项目，为持续交付流水线提供了强
 
 ## 一、什么是 Blue Ocean?
 
-Blue Ocean 是Jenkins的开源子项目，在保证原有强大的功能不变的基础上，对持续交付(CD)Pipeline过程的可视化方面相较于Jenkins 之前的经典界面有了很大的提升。
+Blue Ocean 是 Jenkins 的开源子项目，在保证原有强大的功能不变的基础上，对持续交付（CD）Pipeline 过程的可视化方面相较于 Jenkins 之前的经典界面有了很大的提升。
 
-Blue Ocean 重新思考Jenkins的用户体验，从头开始设计Jenkins Pipeline, 但仍然与自由式作业兼容，Blue Ocean减少了混乱而且进一步明确了团队中每个成员的角色。Blue Ocean 的主要特性包括：
+Blue Ocean 重新思考 Jenkins 的用户体验，从头开始设计 Jenkins Pipeline，但仍然与自由式作业兼容，Blue Ocean 减少了混乱而且进一步明确了团队中每个成员的角色。Blue Ocean 的主要特性包括：
 
-- 持续交付(CD)Pipeline的 复杂可视化 ，可以让您快速直观地理解管道状态。
+- 持续交付（CD）Pipeline 的 复杂可视化，可以让您快速直观地理解管道状态。
 
-- Pipeline 编辑器 - 引导用户通过直观的、可视化的过程来创建Pipeline，从而使Pipeline的创建变得平易近人。
+- Pipeline 编辑器 - 引导用户通过直观的、可视化的过程来创建 Pipeline，从而使 Pipeline 的创建变得平易近人。
 
 - 个性化 以适应团队中每个成员不同角色的需求。
 
-- 在需要干预和/或出现问题时 精确定位 。 Blue Ocean 展示 Pipeline中需要关注的地方， 简化异常处理，提高生产力
+- 在需要干预和/或出现问题时 精确定位。 Blue Ocean 展示 Pipeline 中需要关注的地方，简化异常处理，提高生产力
 
-- 本地集成分支和合并请求, 在与GitHub 和 Bitbucket中的其他人协作编码时实现最大程度的开发人员生产力。
+- 本地集成分支和合并请求，在与 GitHub 和 Bitbucket 中的其他人协作编码时实现最大程度的开发人员生产力。
 
-## 二、访问Blue Ocean
-在系统管理>插件管理>可选插件中搜索 Blue Ocean >安装,安装成功之后，就可以在页面上看到Blue Ocean的图标,打开后注册git 仓库地址
+## 二、访问 Blue Ocean
+在系统管理>插件管理>可选插件中搜索 Blue Ocean >安装，安装成功之后，就可以在页面上看到 Blue Ocean 的图标，打开后注册 git 仓库地址
 认证后就可以创建流水线了。
 
 ![jenkins-blue-ocean-4](/images/cicd/jenkins-blue-ocean-4.png "Blue Ocean")
@@ -45,19 +45,18 @@ Blue Ocean 重新思考Jenkins的用户体验，从头开始设计Jenkins Pipeli
 创建流水线前需要先安装对应的插件
 - Blue Ocean  
 
-
-这边使用的git 仓库是gitee，使用gitlab 也是一样的方式，有两种认证的方式
+这边使用的 git 仓库是 gitee，使用 GitLab 也是一样的方式，有两种认证的方式
 1. 通过账号口令
-2. 通过生成 ssh 公钥在gitlab 或者gitee 仓库上进行注册
+2. 通过生成 SSH 公钥在 GitLab 或者 gitee 仓库上进行注册
 ![jenkins-blue-ocean](/images/cicd/jenkins-blue-ocean.png "Blue Ocean")
 
 首先先进行证书认证，然后再创建流水线，如果项目中没有 Jenkinsfile 文件，会自动生成一个文件并默认推到 master 分支。
 
-### 在Blue Ocean 查看任务进度视图
+### 在 Blue Ocean 查看任务进度视图
 点击对应的工作节点，可以查询任务运行过程中的日志详情
 ![jenkins-blue-ocean-3](/images/cicd/jenkins-blue-ocean-3.png "Blue Ocean")
 
-blue ocean 反向生成的pipeline 代码
+blue ocean 反向生成的 pipeline 代码
 ```
 pipeline {
   agent any
@@ -111,9 +110,6 @@ pipeline {
   }
 }
 ```
-
-
-
 
 ## 四、参考
 - https://www.jenkins.io/zh/doc/book/blueocean/

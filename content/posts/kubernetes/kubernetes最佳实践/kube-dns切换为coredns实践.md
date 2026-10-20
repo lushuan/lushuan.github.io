@@ -19,10 +19,10 @@ CoreDNS 相比 kube-dns 更轻量灵活，插件化架构支持更丰富的 DNS 
 
 <!--more-->
 
-## 一、kube-dns切换为coredns
-k8s版本及其dns适配版本
+## 一、kube-dns 切换为 CoreDNS
+K8s 版本及其 DNS 适配版本
 
-| k8s版本| coredns版本|镜像|镜像yaml|
+| K8s 版本| CoreDNS 版本|镜像|镜像 YAML|
 |---|---|---|---|
 |1.17|1.6.7|coredns-1.6.7.tar.gz|coredns-1.6.7.yaml|
 |1.22|1.8.4|coredns-1.8.4.tar.gz|coredns-1.8.4.yaml|
@@ -30,41 +30,38 @@ k8s版本及其dns适配版本
 coredns/coredns:1.6.7/1.8.4
 
 ## 二、操作
-根据版本选择对应的dns镜像以及yaml文件上传到其中一台master主机，以1.8.4 版本为例
+根据版本选择对应的 DNS 镜像以及 YAML 文件上传到其中一台 master 主机，以 1.8.4 版本为例
 
-如果是内网则将coredns-1.6.7/1.8.4.tar.gz 压缩包进行解压并上传至现场的harbor仓库，如果可以连接外网则直接修改 coredns-1.8.4.yaml 文件，将占位符{{ image_address }} 进行修改
+如果是内网则将 coredns-1.6.7/1.8.4.tar.gz 压缩包进行解压并上传至现场的 Harbor 仓库，如果可以连接外网则直接修改 coredns-1.8.4.yaml 文件，将占位符{{ image_address }} 进行修改
 
 ## 三、将原有的 kube-dns 停止
 ```shell
 $ kubectl scale deploy kube-dns  --replicas=0 -n kube-system
 $ kubectl scale deploy kube-dns-autoscaler  --replicas=0 -n kube-system
 ```
-## 四、部署coredns
+## 四、部署 CoreDNS
 ```shell
 $ kubectl apply -f coredns.yaml
 ```
 
-
-
-## 五、补充: kube-dns vs CoreDNS
-CoreDNS和kube-dns都是用于Kubernetes集群中的DNS解析服务，它们在不同方面有一些区别，适用于不同的场景。
+## 五、补充： kube-dns vs CoreDNS
+CoreDNS 和 kube-dns 都是用于 Kubernetes 集群中的 DNS 解析服务，它们在不同方面有一些区别，适用于不同的场景。
 另外还有一个方面是早期版本的 kube-dns 在 Kubernetes 中主要支持 IPv4。IPv6 的支持不如 CoreDNS 完善，并且在实际应用中可能会遇到限制。
 
-
 CoreDNS：
-- CoreDNS是一个开源的、轻量级的、灵活的DNS服务器，它是一个通用的DNS服务器，可以用于各种不同的环境和场景，不仅限于Kubernetes集群。
-- CoreDNS是一个插件驱动的DNS服务器，可以通过插件的方式支持各种功能，例如反向代理、负载均衡、缓存、DNSSEC等。
-- CoreDNS在Kubernetes集群中可以作为集群的默认DNS插件，用于提供内部服务发现和外部域名解析。它可以动态地解析Kubernetes集群内部的服务和Pod，并提供DNS记录。
+- CoreDNS 是一个开源的、轻量级的、灵活的 DNS 服务器，它是一个通用的 DNS 服务器，可以用于各种不同的环境和场景，不仅限于 Kubernetes 集群。
+- CoreDNS 是一个插件驱动的 DNS 服务器，可以通过插件的方式支持各种功能，例如反向代理、负载均衡、缓存、DNSSEC 等。
+- CoreDNS 在 Kubernetes 集群中可以作为集群的默认 DNS 插件，用于提供内部服务发现和外部域名解析。它可以动态地解析 Kubernetes 集群内部的服务和 Pod，并提供 DNS 记录。
 
 - kube-dns：
-- kube-dns是Kubernetes集群中的默认DNS解析服务，是一种基于SkyDNS的插件，与Kubernetes紧密集成。
-- kube-dns使用了一个集群内部的DNS服务器和一个外部的DNS服务器配合工作。集群内部的DNS服务器负责解析集群内的服务和Pod，并提供DNS记录。外部的DNS服务器负责解析集群外的域名，并提供DNS记录。
-- kube-dns的优点是它是Kubernetes的默认解析器，易于配置和使用，可以满足大多数基本的服务发现和域名解析需求。
+- kube-dns 是 Kubernetes 集群中的默认 DNS 解析服务，是一种基于 SkyDNS 的插件，与 Kubernetes 紧密集成。
+- kube-dns 使用了一个集群内部的 DNS 服务器和一个外部的 DNS 服务器配合工作。集群内部的 DNS 服务器负责解析集群内的服务和 Pod，并提供 DNS 记录。外部的 DNS 服务器负责解析集群外的域名，并提供 DNS 记录。
+- kube-dns 的优点是它是 Kubernetes 的默认解析器，易于配置和使用，可以满足大多数基本的服务发现和域名解析需求。
 
-综上所述，CoreDNS适用于更通用的环境和场景，可以满足更多的功能需求，而kube-dns是Kubernetes集群中的默认解析器，适用于基本的服务发现和域名解析需求。具体使用哪个取决于特定的需求和场景。
+综上所述，CoreDNS 适用于更通用的环境和场景，可以满足更多的功能需求，而 kube-dns 是 Kubernetes 集群中的默认解析器，适用于基本的服务发现和域名解析需求。具体使用哪个取决于特定的需求和场景。
 
 ## 六、参考
-[【kubernetes】部署-CoreDNS-服务](https://blog.csdn.net/qq_36073886/article/details/131117066)
+[【Kubernetes】部署-CoreDNS-服务](https://blog.csdn.net/qq_36073886/article/details/131117066)
 
 ## 七、coredns-1.6.7.yaml
 ```yaml
