@@ -8,3 +8,4 @@ public/django-模板语法/*
 public/
 resources/_gen
 .hugo_build.lock
+.dsg-tmp
